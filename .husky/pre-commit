@@ -1,0 +1,5 @@
+# Exit immediately if any command exits with a non-zero status.
+set -e
+
+echo 'Linting project before committing'
+npx lint-staged
