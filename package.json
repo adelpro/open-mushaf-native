@@ -18,6 +18,7 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
+    "lint:fix": "eslint . --fix",
     "prepare": "husky"
   },
   "jest": {
