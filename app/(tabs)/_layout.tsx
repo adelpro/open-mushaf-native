@@ -1,21 +1,24 @@
 import React from 'react';
 
+import { FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { useRecoilValue } from 'recoil';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { menuState } from '@/recoil/atoms';
+import { bottomMenuState } from '@/recoil/atoms';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const menuStateValue = useRecoilValue(menuState);
+
+  const menuStateValue = useRecoilValue<boolean>(bottomMenuState);
 
   return (
     <Tabs
       screenOptions={() => ({
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarLabelPosition: 'below-icon',
         tabBarStyle: {
           display: menuStateValue ? 'flex' : 'none',
         },
@@ -23,12 +26,12 @@ export default function TabLayout() {
       })}
     >
       <Tabs.Screen
-        name="index"
+        name="about"
         options={{
-          title: 'Home',
+          title: 'About',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? 'home' : 'home-outline'}
+              name={focused ? 'alert-circle' : 'alert-circle-outline'}
               color={color}
             />
           ),
@@ -44,24 +47,42 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="about"
+        name="index"
         options={{
-          title: 'About',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? 'alert-circle' : 'alert-circle-outline'}
+          title: 'Mushaf',
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6
+              name="book-quran"
+              size={28}
+              tyle={{ marginBottom: -3 }}
               color={color}
             />
           ),
         }}
       />
+
       <Tabs.Screen
-        name="fullscreen"
+        name="juzList"
         options={{
-          title: 'Fullscreen',
+          title: 'Juz List',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? 'square' : 'square-outline'}
+            <MaterialCommunityIcons
+              name={focused ? 'view-list' : 'view-list-outline'}
+              size={28}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="suraList"
+        options={{
+          title: 'Sura List',
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialCommunityIcons
+              name={focused ? 'view-list' : 'view-list-outline'}
+              size={28}
               color={color}
             />
           ),

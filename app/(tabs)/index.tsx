@@ -1,74 +1,58 @@
-import { Image, Platform, StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSetRecoilState } from 'recoil';
+
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import TopMenu from '@/components/TopMenu';
+import { topMenuState } from '@/recoil/atoms';
 
-export default function HomeScreen() {
+export default function MushafScreen() {
+  const setShowTopMenu = useSetRecoilState(topMenuState);
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }
-    >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{' '}
-          to see changes. Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this
-          starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText>{' '}
-          to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>{' '}
-          directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView style={styles.container}>
+      <TopMenu />
+      <TouchableOpacity
+        style={styles.content}
+        onPress={() => setShowTopMenu(true)}
+        onLongPress={() => alert('Long press on content')}
+      >
+        <ThemedView>
+          <ThemedText type="default">Fullscreen page content</ThemedText>
+        </ThemedView>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  topMenu: {
+    backgroundColor: 'rgba(0, 0, 0, 0.01)',
+    marginVertical: 10,
+    height: 60,
+    borderRadius: 5,
+    justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
     position: 'absolute',
+    top: 20,
+    left: 20,
+    right: 20,
+    zIndex: 2,
+  },
+  topMenuButton: {
+    marginHorizontal: 10,
+    padding: 10,
+  },
+  container: {
+    position: 'relative',
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -1,39 +1,49 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
+import { useRecoilState } from 'recoil';
 
 import { ThemedView } from '@/components/ThemedView';
 import { bottomMenuState, topMenuState } from '@/recoil/atoms';
 
 export default function TopMenu() {
-  const setMenuState = useSetRecoilState(bottomMenuState);
-  const [show, setShow] = useRecoilState(topMenuState);
+  const [showBottomMenuState, setBottomMenuState] =
+    useRecoilState<boolean>(bottomMenuState);
+  const [showTopMenuState, setShowTopMenuState] =
+    useRecoilState<boolean>(topMenuState);
 
   const toggleMenu = () => {
-    setMenuState((state: boolean) => !state);
+    setBottomMenuState((state: boolean) => !state);
   };
 
-  return show ? (
+  return showTopMenuState ? (
     <ThemedView style={styles.topMenu}>
       <TouchableOpacity
         style={styles.topMenuButton}
         onPress={() => {
-          setShow(false);
+          setShowTopMenuState(false);
           toggleMenu();
         }}
       >
-        <SimpleLineIcons
-          name="size-fullscreen"
-          size={40}
-          color={'rgba(0, 0, 0, 0.8)'}
-        />
+        {showBottomMenuState ? (
+          <SimpleLineIcons
+            name="size-fullscreen"
+            size={40}
+            color={'rgba(0, 0, 0, 0.8)'}
+          />
+        ) : (
+          <MaterialIcons
+            name="fullscreen-exit"
+            size={40}
+            color={'rgba(0, 0, 0, 0.8)'}
+          />
+        )}
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.topMenuButton}
         onPress={() => {
-          setShow(false);
+          setShowTopMenuState(false);
           alert('Search pressed');
         }}
       >

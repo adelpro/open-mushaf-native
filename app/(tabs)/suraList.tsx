@@ -9,7 +9,7 @@ import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
 import { topMenuState } from '@/recoil/atoms';
 
-export default function AboutScreen() {
+export default function SuraListScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
   return (
     <ParallaxScrollView
@@ -31,8 +31,8 @@ export default function AboutScreen() {
           <HelloWave />
         </ThemedView>
         <ThemedView style={styles.stepContainer}>
-          <ThemedText type="subtitle">About page</ThemedText>
-          <ThemedText>About page text</ThemedText>
+          <ThemedText type="subtitle">Sura list</ThemedText>
+          <ThemedText>Sura list page</ThemedText>
         </ThemedView>
       </TouchableOpacity>
     </ParallaxScrollView>

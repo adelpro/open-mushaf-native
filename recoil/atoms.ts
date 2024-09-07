@@ -1,14 +1,19 @@
+import * as SecureStore from 'expo-secure-store';
 import { atom, AtomEffect } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
-const { persistAtom } = recoilPersist();
+const { persistAtom } = recoilPersist({
+  key: 'recoil-persist', // Key for storage
+  storage: SecureStore,
+});
 export const bottomMenuState = atom<boolean>({
   key: 'BottomMenuState',
-  default: false,
+  default: true,
 });
+
 export const Persist = atom<boolean>({
-  key: 'BottomMenuState',
-  default: false,
+  key: 'BottomMenuStatePersist',
+  default: true,
   effects: [persistAtom],
 });
 
