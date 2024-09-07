@@ -1,0 +1,5 @@
+/.expo
+
+node_modules
+
+*-lock.json 

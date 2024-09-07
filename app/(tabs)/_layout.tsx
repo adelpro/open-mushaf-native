@@ -1,19 +1,22 @@
-import { Tabs } from "expo-router";
-import React from "react";
+import { Tabs } from 'expo-router';
+import React from 'react';
 
-import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { useRecoilValue } from 'recoil';
+import { menuState } from '@/recoil/atoms';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const menuStateValue = useRecoilValue(menuState);
 
   return (
     <Tabs
-      screenOptions={({ route }) => ({
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+      screenOptions={() => ({
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         tabBarStyle: {
-          display: route.name === "about" ? "none" : "flex",
+          display: menuStateValue ? 'flex' : 'none',
         },
         headerShown: false,
       })}
@@ -21,10 +24,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: 'Home',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "home" : "home-outline"}
+              name={focused ? 'home' : 'home-outline'}
               color={color}
             />
           ),
@@ -33,19 +36,19 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: "Settings",
+          title: 'Settings',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? "cog" : "cog-outline"} color={color} />
+            <TabBarIcon name={focused ? 'cog' : 'cog-outline'} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="about"
         options={{
-          title: "About",
+          title: 'About',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "alert-circle" : "alert-circle-outline"}
+              name={focused ? 'alert-circle' : 'alert-circle-outline'}
               color={color}
             />
           ),
@@ -54,10 +57,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="fullscreen"
         options={{
-          title: "Fullscreen",
+          title: 'Fullscreen',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "square" : "square-outline"}
+              name={focused ? 'square' : 'square-outline'}
               color={color}
             />
           ),
