@@ -1,11 +1,17 @@
 import { useEffect } from 'react';
 
 import {
+  Amiri_400Regular,
+  Amiri_400Regular_Italic,
+  Amiri_700Bold,
+  Amiri_700Bold_Italic,
+  useFonts,
+} from '@expo-google-fonts/amiri';
+import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 // eslint-disable-next-line import/order
 import * as SplashScreen from 'expo-splash-screen';
@@ -22,7 +28,10 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Amiri_400Regular,
+    Amiri_700Bold,
+    Amiri_400Regular_Italic,
+    Amiri_700Bold_Italic,
   });
 
   useEffect(() => {

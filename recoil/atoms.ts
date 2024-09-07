@@ -41,7 +41,7 @@ export const topMenuState = atom<boolean>({
   default: false,
   effects: [
     timerEffect(
-      parseInt(process.env.EXPO_PUBLIC_TOP_MENU_HIDE_DURATION_MS || '3000', 10),
+      parseInt(process.env.EXPO_PUBLIC_TOP_MENU_HIDE_DURATION_MS || '5000', 10),
     ),
   ],
 });

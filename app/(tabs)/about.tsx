@@ -31,7 +31,7 @@ export default function AboutScreen() {
           <HelloWave />
         </ThemedView>
         <ThemedView style={styles.stepContainer}>
-          <ThemedText type="subtitle">About page</ThemedText>
+          <ThemedText type="title">About page</ThemedText>
           <ThemedText>About page text</ThemedText>
         </ThemedView>
       </TouchableOpacity>

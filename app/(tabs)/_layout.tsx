@@ -22,13 +22,16 @@ export default function TabLayout() {
         tabBarStyle: {
           display: menuStateValue ? 'flex' : 'none',
         },
+        tabBarLabelStyle: {
+          fontFamily: 'Amiri_400Regular',
+        },
         headerShown: false,
       })}
     >
       <Tabs.Screen
         name="about"
         options={{
-          title: 'About',
+          title: 'حول التطبيق',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? 'alert-circle' : 'alert-circle-outline'}
@@ -40,7 +43,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'Settings',
+          title: 'الإعدادات',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'cog' : 'cog-outline'} color={color} />
           ),
@@ -49,7 +52,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Mushaf',
+          title: 'المصحف',
           tabBarIcon: ({ color }) => (
             <FontAwesome6
               name="book-quran"
@@ -64,7 +67,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="juzList"
         options={{
-          title: 'Juz List',
+          title: 'قائمة الأجزاء',
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
               name={focused ? 'view-list' : 'view-list-outline'}
@@ -78,7 +81,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="suraList"
         options={{
-          title: 'Sura List',
+          title: 'قائمة السور',
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
               name={focused ? 'view-list' : 'view-list-outline'}
