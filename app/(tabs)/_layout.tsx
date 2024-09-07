@@ -22,6 +22,7 @@ export default function TabLayout() {
         tabBarStyle: {
           display: menuStateValue ? 'flex' : 'none',
         },
+
         tabBarLabelStyle: {
           fontFamily: 'Amiri_400Regular',
         },
