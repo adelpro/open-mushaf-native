@@ -1,9 +1,11 @@
-import { ThemedView } from '@/components/ThemedView';
-import { bottomMenuState, topMenuState } from '@/recoil/atoms';
-import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
+
+import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+
+import { ThemedView } from '@/components/ThemedView';
+import { bottomMenuState, topMenuState } from '@/recoil/atoms';
 
 export default function TopMenu() {
   const setMenuState = useSetRecoilState(bottomMenuState);

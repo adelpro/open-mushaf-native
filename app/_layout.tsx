@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import {
   DarkTheme,
   DefaultTheme,
@@ -5,12 +7,14 @@ import {
 } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+// eslint-disable-next-line import/order
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { RecoilRoot } from 'recoil';
+
+import { useColorScheme } from '@/hooks/useColorScheme';
+
 import TopMenu from './(tabs)/TopMenu';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.

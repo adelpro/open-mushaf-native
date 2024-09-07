@@ -1,5 +1,6 @@
+import { Image, Platform, StyleSheet } from 'react-native';
+
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform } from 'react-native';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
