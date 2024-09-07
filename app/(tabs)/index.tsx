@@ -1,14 +1,17 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
+import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSetRecoilState } from 'recoil';
 
-import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
 import { topMenuState } from '@/recoil/atoms';
 
-export default function MushafScreen() {
+const blurhash =
+  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
+
+export default function HomeScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
   return (
     <SafeAreaView style={styles.container}>
@@ -18,8 +21,14 @@ export default function MushafScreen() {
         onPress={() => setShowTopMenu(true)}
         onLongPress={() => alert('Long press on content')}
       >
-        <ThemedView>
-          <ThemedText type="default">Fullscreen page content</ThemedText>
+        <ThemedView style={styles.container}>
+          <Image
+            style={styles.image}
+            source="/assets/images/icon.png"
+            placeholder={{ blurhash }}
+            contentFit="cover"
+            transition={1000}
+          />
         </ThemedView>
       </TouchableOpacity>
     </SafeAreaView>
@@ -47,6 +56,8 @@ const styles = StyleSheet.create({
   },
   container: {
     position: 'relative',
+    width: '100%',
+    height: '100%',
     flex: 1,
   },
   content: {
@@ -54,5 +65,10 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  image: {
+    flex: 1,
+    width: '100%',
+    backgroundColor: '#0553',
   },
 });

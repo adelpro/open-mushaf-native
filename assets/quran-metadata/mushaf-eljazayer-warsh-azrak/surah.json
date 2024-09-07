@@ -1,0 +1,1028 @@
+[
+  {
+    "number": 1,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0671\u0644\u0652\u0641\u064e\u0627\u062a\u0650\u062d\u064e\u0629\u0650",
+    "englishName": "Al-Faatiha",
+    "englishNameTranslation": "The Opening",
+    "numberOfAyahs": 7,
+    "revelationType": "Meccan",
+    "startingPage": 1
+  },
+  {
+    "number": 2,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0628\u064e\u0642\u064e\u0631\u064e\u0629\u0650",
+    "englishName": "Al-Baqara",
+    "englishNameTranslation": "The Cow",
+    "numberOfAyahs": 286,
+    "revelationType": "Medinan",
+    "startingPage": 2
+  },
+  {
+    "number": 3,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0653\u0644\u0650 \u0639\u0650\u0645\u06e1\u0631\u064e\u0627\u0646\u064e",
+    "englishName": "Aal-i-Imraan",
+    "englishNameTranslation": "The Family of Imraan",
+    "numberOfAyahs": 200,
+    "revelationType": "Medinan",
+    "startingPage": 57
+  },
+  {
+    "number": 4,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0646\u0651\u0650\u0633\u064e\u0627\u0621\u0650",
+    "englishName": "An-Nisaa",
+    "englishNameTranslation": "The Women",
+    "numberOfAyahs": 176,
+    "revelationType": "Medinan",
+    "startingPage": 86
+  },
+  {
+    "number": 5,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0645\u064e\u0627\u0626\u0640\u0650\u062f\u064e\u0629\u0650",
+    "englishName": "Al-Maaida",
+    "englishNameTranslation": "The Table",
+    "numberOfAyahs": 120,
+    "revelationType": "Medinan",
+    "startingPage": 119
+  },
+  {
+    "number": 6,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0623\u064e\u0646\u06e1\u0639\u064e\u0627\u0645\u0650",
+    "englishName": "Al-An'aam",
+    "englishNameTranslation": "The Cattle",
+    "numberOfAyahs": 165,
+    "revelationType": "Meccan",
+    "startingPage": 169
+  },
+  {
+    "number": 7,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0623\u064e\u0639\u06e1\u0631\u064e\u0627\u0641\u0650",
+    "englishName": "Al-A'raaf",
+    "englishNameTranslation": "The Heights",
+    "numberOfAyahs": 206,
+    "revelationType": "Meccan",
+    "startingPage": 151
+  },
+  {
+    "number": 8,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0623\u064e\u0646\u0641\u064e\u0627\u0644\u0650",
+    "englishName": "Al-Anfaal",
+    "englishNameTranslation": "The Spoils of War",
+    "numberOfAyahs": 75,
+    "revelationType": "Medinan",
+    "startingPage": 200
+  },
+  {
+    "number": 9,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062a\u0651\u064e\u0648\u06e1\u0628\u064e\u0629\u0650",
+    "englishName": "At-Tawba",
+    "englishNameTranslation": "The Repentance",
+    "numberOfAyahs": 129,
+    "revelationType": "Medinan",
+    "startingPage": 211
+  },
+  {
+    "number": 10,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u064a\u064f\u0648\u0646\u064f\u0633\u064e",
+    "englishName": "Yunus",
+    "englishNameTranslation": "Jonas",
+    "numberOfAyahs": 109,
+    "revelationType": "Meccan",
+    "startingPage": 234
+  },
+  {
+    "number": 11,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0647\u064f\u0648\u062f\u064d",
+    "englishName": "Hud",
+    "englishNameTranslation": "Hud",
+    "numberOfAyahs": 123,
+    "revelationType": "Meccan",
+    "startingPage": 249
+  },
+  {
+    "number": 12,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u064a\u064f\u0648\u0633\u064f\u0641\u064e",
+    "englishName": "Yusuf",
+    "englishNameTranslation": "Joseph",
+    "numberOfAyahs": 111,
+    "revelationType": "Meccan",
+    "startingPage": 266
+  },
+  {
+    "number": 13,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0631\u0651\u064e\u0639\u06e1\u062f\u0650",
+    "englishName": "Ar-Ra'd",
+    "englishNameTranslation": "The Thunder",
+    "numberOfAyahs": 43,
+    "revelationType": "Medinan",
+    "startingPage": 281
+  },
+  {
+    "number": 14,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0625\u0650\u0628\u06e1\u0631\u064e\u0627\u0647\u0650\u064a\u0645\u064e",
+    "englishName": "Ibrahim",
+    "englishNameTranslation": "Abraham",
+    "numberOfAyahs": 52,
+    "revelationType": "Meccan",
+    "startingPage": 289
+  },
+  {
+    "number": 15,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062d\u0650\u062c\u06e1\u0631\u0650",
+    "englishName": "Al-Hijr",
+    "englishNameTranslation": "The Rock",
+    "numberOfAyahs": 99,
+    "revelationType": "Meccan",
+    "startingPage": 296
+  },
+  {
+    "number": 16,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0646\u0651\u064e\u062d\u06e1\u0644\u0650",
+    "englishName": "An-Nahl",
+    "englishNameTranslation": "The Bee",
+    "numberOfAyahs": 128,
+    "revelationType": "Meccan",
+    "startingPage": 302
+  },
+  {
+    "number": 17,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0625\u0650\u0633\u06e1\u0631\u064e\u0627\u0621\u0650",
+    "englishName": "Al-Israa",
+    "englishNameTranslation": "The Night Journey",
+    "numberOfAyahs": 111,
+    "revelationType": "Meccan",
+    "startingPage": 318
+  },
+  {
+    "number": 18,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0643\u064e\u0647\u06e1\u0641\u0650",
+    "englishName": "Al-Kahf",
+    "englishNameTranslation": "The Cave",
+    "numberOfAyahs": 110,
+    "revelationType": "Meccan",
+    "startingPage": 332
+  },
+  {
+    "number": 19,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0645\u064e\u0631\u06e1\u064a\u064e\u0645\u064e",
+    "englishName": "Maryam",
+    "englishNameTranslation": "Mary",
+    "numberOfAyahs": 98,
+    "revelationType": "Meccan",
+    "startingPage": 347
+  },
+  {
+    "number": 20,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0637\u0647",
+    "englishName": "Taa-Haa",
+    "englishNameTranslation": "Taa-Haa",
+    "numberOfAyahs": 135,
+    "revelationType": "Meccan",
+    "startingPage": 356
+  },
+  {
+    "number": 21,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0623\u064e\u0646\u0628\u0650\u064a\u064e\u0627\u0621\u0650",
+    "englishName": "Al-Anbiyaa",
+    "englishNameTranslation": "The Prophets",
+    "numberOfAyahs": 112,
+    "revelationType": "Meccan",
+    "startingPage": 368
+  },
+  {
+    "number": 22,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062d\u064e\u062c\u0651\u0650",
+    "englishName": "Al-Hajj",
+    "englishNameTranslation": "The Pilgrimage",
+    "numberOfAyahs": 78,
+    "revelationType": "Medinan",
+    "startingPage": 379
+  },
+  {
+    "number": 23,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0645\u064f\u0624\u06e1\u0645\u0650\u0646\u064f\u0648\u0646\u064e",
+    "englishName": "Al-Muminoon",
+    "englishNameTranslation": "The Believers",
+    "numberOfAyahs": 118,
+    "revelationType": "Meccan",
+    "startingPage": 390
+  },
+  {
+    "number": 24,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0646\u0651\u064f\u0648\u0631\u0650",
+    "englishName": "An-Noor",
+    "englishNameTranslation": "The Light",
+    "numberOfAyahs": 64,
+    "revelationType": "Medinan",
+    "startingPage": 400
+  },
+  {
+    "number": 25,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0641\u064f\u0631\u06e1\u0642\u064e\u0627\u0646\u0650",
+    "englishName": "Al-Furqaan",
+    "englishNameTranslation": "The Criterion",
+    "numberOfAyahs": 77,
+    "revelationType": "Meccan",
+    "startingPage": 411
+  },
+  {
+    "number": 26,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0634\u0651\u064f\u0639\u064e\u0631\u064e\u0627\u0621\u0650",
+    "englishName": "Ash-Shu'araa",
+    "englishNameTranslation": "The Poets",
+    "numberOfAyahs": 227,
+    "revelationType": "Meccan",
+    "startingPage": 419
+  },
+  {
+    "number": 27,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0646\u0651\u064e\u0645\u06e1\u0644\u0650",
+    "englishName": "An-Naml",
+    "englishNameTranslation": "The Ant",
+    "numberOfAyahs": 93,
+    "revelationType": "Meccan",
+    "startingPage": 431
+  },
+  {
+    "number": 28,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0642\u064e\u0635\u064e\u0635\u0650",
+    "englishName": "Al-Qasas",
+    "englishNameTranslation": "The Stories",
+    "numberOfAyahs": 88,
+    "revelationType": "Meccan",
+    "startingPage": 442
+  },
+  {
+    "number": 29,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0639\u064e\u0646\u0643\u064e\u0628\u064f\u0648\u062a\u0650",
+    "englishName": "Al-Ankaboot",
+    "englishNameTranslation": "The Spider",
+    "numberOfAyahs": 69,
+    "revelationType": "Meccan",
+    "startingPage": 454
+  },
+  {
+    "number": 30,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0631\u0651\u064f\u0648\u0645\u0650",
+    "englishName": "Ar-Room",
+    "englishNameTranslation": "The Romans",
+    "numberOfAyahs": 60,
+    "revelationType": "Meccan",
+    "startingPage": 463
+  },
+  {
+    "number": 31,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0644\u064f\u0642\u06e1\u0645\u064e\u0627\u0646\u064e",
+    "englishName": "Luqman",
+    "englishNameTranslation": "Luqman",
+    "numberOfAyahs": 34,
+    "revelationType": "Meccan",
+    "startingPage": 470
+  },
+  {
+    "number": 32,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0633\u0651\u064e\u062c\u06e1\u062f\u064e\u0629\u0650",
+    "englishName": "As-Sajda",
+    "englishNameTranslation": "The Prostration",
+    "numberOfAyahs": 30,
+    "revelationType": "Meccan",
+    "startingPage": 475
+  },
+  {
+    "number": 33,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0623\u064e\u062d\u06e1\u0632\u064e\u0627\u0628\u0650",
+    "englishName": "Al-Ahzaab",
+    "englishNameTranslation": "The Clans",
+    "numberOfAyahs": 73,
+    "revelationType": "Medinan",
+    "startingPage": 478
+  },
+  {
+    "number": 34,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0633\u064e\u0628\u064e\u0625\u064d",
+    "englishName": "Saba",
+    "englishNameTranslation": "Sheba",
+    "numberOfAyahs": 54,
+    "revelationType": "Meccan",
+    "startingPage": 490
+  },
+  {
+    "number": 35,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0641\u064e\u0627\u0637\u0650\u0631\u064d",
+    "englishName": "Faatir",
+    "englishNameTranslation": "The Originator",
+    "numberOfAyahs": 45,
+    "revelationType": "Meccan",
+    "startingPage": 498
+  },
+  {
+    "number": 36,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u064a\u0633\u0653",
+    "englishName": "Yaseen",
+    "englishNameTranslation": "Yaseen",
+    "numberOfAyahs": 83,
+    "revelationType": "Meccan",
+    "startingPage": 505
+  },
+  {
+    "number": 37,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0635\u0651\u064e\u0627\u0641\u0651\u064e\u0627\u062a\u0650",
+    "englishName": "As-Saaffaat",
+    "englishNameTranslation": "Those drawn up in Ranks",
+    "numberOfAyahs": 182,
+    "revelationType": "Meccan",
+    "startingPage": 512
+  },
+  {
+    "number": 38,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0635\u0653",
+    "englishName": "Saad",
+    "englishNameTranslation": "The letter Saad",
+    "numberOfAyahs": 88,
+    "revelationType": "Meccan",
+    "startingPage": 521
+  },
+  {
+    "number": 39,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0632\u0651\u064f\u0645\u064e\u0631\u0650",
+    "englishName": "Az-Zumar",
+    "englishNameTranslation": "The Groups",
+    "numberOfAyahs": 75,
+    "revelationType": "Meccan",
+    "startingPage": 528
+  },
+  {
+    "number": 40,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u063a\u064e\u0627\u0641\u0650\u0631\u064d",
+    "englishName": "Ghafir",
+    "englishNameTranslation": "The Forgiver",
+    "numberOfAyahs": 85,
+    "revelationType": "Meccan",
+    "startingPage": 538
+  },
+  {
+    "number": 41,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0641\u064f\u0635\u0651\u0650\u0644\u064e\u062a\u06e1",
+    "englishName": "Fussilat",
+    "englishNameTranslation": "Explained in detail",
+    "numberOfAyahs": 54,
+    "revelationType": "Meccan",
+    "startingPage": 548
+  },
+  {
+    "number": 42,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0634\u0651\u064f\u0648\u0631\u064e\u0649\u0670",
+    "englishName": "Ash-Shura",
+    "englishNameTranslation": "Consultation",
+    "numberOfAyahs": 53,
+    "revelationType": "Meccan",
+    "startingPage": 555
+  },
+  {
+    "number": 43,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0632\u0651\u064f\u062e\u06e1\u0631\u064f\u0641\u0650",
+    "englishName": "Az-Zukhruf",
+    "englishNameTranslation": "Ornaments of gold",
+    "numberOfAyahs": 89,
+    "revelationType": "Meccan",
+    "startingPage": 563
+  },
+  {
+    "number": 44,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062f\u0651\u064f\u062e\u064e\u0627\u0646\u0650",
+    "englishName": "Ad-Dukhaan",
+    "englishNameTranslation": "The Smoke",
+    "numberOfAyahs": 59,
+    "revelationType": "Meccan",
+    "startingPage": 570
+  },
+  {
+    "number": 45,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062c\u064e\u0627\u062b\u0650\u064a\u064e\u0629\u0650",
+    "englishName": "Al-Jaathiya",
+    "englishNameTranslation": "Crouching",
+    "numberOfAyahs": 37,
+    "revelationType": "Meccan",
+    "startingPage": 573
+  },
+  {
+    "number": 46,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0623\u064e\u062d\u06e1\u0642\u064e\u0627\u0641\u0650",
+    "englishName": "Al-Ahqaf",
+    "englishNameTranslation": "The Dunes",
+    "numberOfAyahs": 35,
+    "revelationType": "Meccan",
+    "startingPage": 578
+  },
+  {
+    "number": 47,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0645\u064f\u062d\u064e\u0645\u0651\u064e\u062f\u064d",
+    "englishName": "Muhammad",
+    "englishNameTranslation": "Muhammad",
+    "numberOfAyahs": 38,
+    "revelationType": "Medinan",
+    "startingPage": 583
+  },
+  {
+    "number": 48,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0641\u064e\u062a\u06e1\u062d\u0650",
+    "englishName": "Al-Fath",
+    "englishNameTranslation": "The Victory",
+    "numberOfAyahs": 29,
+    "revelationType": "Medinan",
+    "startingPage": 588
+  },
+  {
+    "number": 49,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062d\u064f\u062c\u064f\u0631\u064e\u0627\u062a\u0650",
+    "englishName": "Al-Hujuraat",
+    "englishNameTranslation": "The Inner Apartments",
+    "numberOfAyahs": 18,
+    "revelationType": "Medinan",
+    "startingPage": 593
+  },
+  {
+    "number": 50,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0642\u0653",
+    "englishName": "Qaaf",
+    "englishNameTranslation": "The letter Qaaf",
+    "numberOfAyahs": 45,
+    "revelationType": "Meccan",
+    "startingPage": 596
+  },
+  {
+    "number": 51,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0630\u0651\u064e\u0627\u0631\u0650\u064a\u064e\u0627\u062a\u0650",
+    "englishName": "Adh-Dhaariyat",
+    "englishNameTranslation": "The Winnowing Winds",
+    "numberOfAyahs": 60,
+    "revelationType": "Meccan",
+    "startingPage": 600
+  },
+  {
+    "number": 52,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0637\u0651\u064f\u0648\u0631\u0650",
+    "englishName": "At-Tur",
+    "englishNameTranslation": "The Mount",
+    "numberOfAyahs": 49,
+    "revelationType": "Meccan",
+    "startingPage": 603
+  },
+  {
+    "number": 53,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0646\u0651\u064e\u062c\u06e1\u0645\u0650",
+    "englishName": "An-Najm",
+    "englishNameTranslation": "The Star",
+    "numberOfAyahs": 62,
+    "revelationType": "Meccan",
+    "startingPage": 606
+  },
+  {
+    "number": 54,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0642\u064e\u0645\u064e\u0631\u0650",
+    "englishName": "Al-Qamar",
+    "englishNameTranslation": "The Moon",
+    "numberOfAyahs": 55,
+    "revelationType": "Meccan",
+    "startingPage": 606
+  },
+  {
+    "number": 55,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0631\u0651\u064e\u062d\u06e1\u0645\u064e\u0670\u0646",
+    "englishName": "Ar-Rahmaan",
+    "englishNameTranslation": "The Beneficent",
+    "numberOfAyahs": 78,
+    "revelationType": "Medinan",
+    "startingPage": 613
+  },
+  {
+    "number": 56,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0648\u064e\u0627\u0642\u0650\u0639\u064e\u0629\u0650",
+    "englishName": "Al-Waaqia",
+    "englishNameTranslation": "The Inevitable",
+    "numberOfAyahs": 96,
+    "revelationType": "Meccan",
+    "startingPage": 616
+  },
+  {
+    "number": 57,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062d\u064e\u062f\u0650\u064a\u062f\u0650",
+    "englishName": "Al-Hadid",
+    "englishNameTranslation": "The Iron",
+    "numberOfAyahs": 29,
+    "revelationType": "Medinan",
+    "startingPage": 620
+  },
+  {
+    "number": 58,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0645\u064f\u062c\u064e\u0627\u062f\u0644\u064e\u0629\u0650",
+    "englishName": "Al-Mujaadila",
+    "englishNameTranslation": "The Pleading Woman",
+    "numberOfAyahs": 22,
+    "revelationType": "Medinan",
+    "startingPage": 626
+  },
+  {
+    "number": 59,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062d\u064e\u0634\u06e1\u0631\u0650",
+    "englishName": "Al-Hashr",
+    "englishNameTranslation": "The Exile",
+    "numberOfAyahs": 24,
+    "revelationType": "Medinan",
+    "startingPage": 630
+  },
+  {
+    "number": 60,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0645\u064f\u0645\u06e1\u062a\u064e\u062d\u0646\u064e\u0629\u0650",
+    "englishName": "Al-Mumtahana",
+    "englishNameTranslation": "She that is to be examined",
+    "numberOfAyahs": 13,
+    "revelationType": "Medinan",
+    "startingPage": 634
+  },
+  {
+    "number": 61,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0635\u0651\u064e\u0641\u0651\u0650",
+    "englishName": "As-Saff",
+    "englishNameTranslation": "The Ranks",
+    "numberOfAyahs": 14,
+    "revelationType": "Medinan",
+    "startingPage": 637
+  },
+  {
+    "number": 62,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062c\u064f\u0645\u064f\u0639\u064e\u0629\u0650",
+    "englishName": "Al-Jumu'a",
+    "englishNameTranslation": "Friday",
+    "numberOfAyahs": 11,
+    "revelationType": "Medinan",
+    "startingPage": 639
+  },
+  {
+    "number": 63,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0645\u064f\u0646\u064e\u0627\u0641\u0650\u0642\u064f\u0648\u0646\u064e",
+    "englishName": "Al-Munaafiqoon",
+    "englishNameTranslation": "The Hypocrites",
+    "numberOfAyahs": 11,
+    "revelationType": "Medinan",
+    "startingPage": 641
+  },
+  {
+    "number": 64,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062a\u0651\u064e\u063a\u064e\u0627\u0628\u064f\u0646\u0650",
+    "englishName": "At-Taghaabun",
+    "englishNameTranslation": "Mutual Disillusion",
+    "numberOfAyahs": 18,
+    "revelationType": "Medinan",
+    "startingPage": 643
+  },
+  {
+    "number": 65,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0637\u0651\u064e\u0644\u064e\u0627\u0642\u0650",
+    "englishName": "At-Talaaq",
+    "englishNameTranslation": "Divorce",
+    "numberOfAyahs": 12,
+    "revelationType": "Medinan",
+    "startingPage": 645
+  },
+  {
+    "number": 66,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062a\u0651\u064e\u062d\u06e1\u0631\u0650\u064a\u0645\u0650",
+    "englishName": "At-Tahrim",
+    "englishNameTranslation": "The Prohibition",
+    "numberOfAyahs": 12,
+    "revelationType": "Medinan",
+    "startingPage": 647
+  },
+  {
+    "number": 67,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0645\u064f\u0644\u06e1\u0643\u0650",
+    "englishName": "Al-Mulk",
+    "englishNameTranslation": "The Sovereignty",
+    "numberOfAyahs": 30,
+    "revelationType": "Meccan",
+    "startingPage": 650
+  },
+  {
+    "number": 68,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0642\u064e\u0644\u064e\u0645\u0650",
+    "englishName": "Al-Qalam",
+    "englishNameTranslation": "The Pen",
+    "numberOfAyahs": 52,
+    "revelationType": "Meccan",
+    "startingPage": 653
+  },
+  {
+    "number": 69,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062d\u064e\u0627\u0642\u0651\u064e\u0629\u0650",
+    "englishName": "Al-Haaqqa",
+    "englishNameTranslation": "The Reality",
+    "numberOfAyahs": 52,
+    "revelationType": "Meccan",
+    "startingPage": 655
+  },
+  {
+    "number": 70,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0645\u064e\u0639\u064e\u0627\u0631\u0650\u062c\u0650",
+    "englishName": "Al-Ma'aarij",
+    "englishNameTranslation": "The Ascending Stairways",
+    "numberOfAyahs": 44,
+    "revelationType": "Meccan",
+    "startingPage": 658
+  },
+  {
+    "number": 71,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0646\u064f\u0648\u062d\u064d",
+    "englishName": "Nooh",
+    "englishNameTranslation": "Noah",
+    "numberOfAyahs": 28,
+    "revelationType": "Meccan",
+    "startingPage": 660
+  },
+  {
+    "number": 72,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062c\u0650\u0646\u0651\u0650",
+    "englishName": "Al-Jinn",
+    "englishNameTranslation": "The Jinn",
+    "numberOfAyahs": 28,
+    "revelationType": "Meccan",
+    "startingPage": 663
+  },
+  {
+    "number": 73,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0645\u064f\u0632\u0651\u064e\u0645\u0651\u0650\u0644\u0650",
+    "englishName": "Al-Muzzammil",
+    "englishNameTranslation": "The Enshrouded One",
+    "numberOfAyahs": 20,
+    "revelationType": "Meccan",
+    "startingPage": 665
+  },
+  {
+    "number": 74,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0645\u064f\u062f\u0651\u064e\u062b\u0651\u0650\u0631\u0650",
+    "englishName": "Al-Muddaththir",
+    "englishNameTranslation": "The Cloaked One",
+    "numberOfAyahs": 56,
+    "revelationType": "Meccan",
+    "startingPage": 667
+  },
+  {
+    "number": 75,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0642\u0650\u064a\u064e\u0627\u0645\u064e\u0629\u0650",
+    "englishName": "Al-Qiyaama",
+    "englishNameTranslation": "The Resurrection",
+    "numberOfAyahs": 40,
+    "revelationType": "Meccan",
+    "startingPage": 670
+  },
+  {
+    "number": 76,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0625\u0650\u0646\u0633\u064e\u0627\u0646\u0650",
+    "englishName": "Al-Insaan",
+    "englishNameTranslation": "Man",
+    "numberOfAyahs": 31,
+    "revelationType": "Medinan",
+    "startingPage": 671
+  },
+  {
+    "number": 77,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0645\u064f\u0631\u06e1\u0633\u064e\u0644\u064e\u0627\u062a\u0650",
+    "englishName": "Al-Mursalaat",
+    "englishNameTranslation": "The Emissaries",
+    "numberOfAyahs": 50,
+    "revelationType": "Meccan",
+    "startingPage": 674
+  },
+  {
+    "number": 78,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0646\u0651\u064e\u0628\u064e\u0625\u0650",
+    "englishName": "An-Naba",
+    "englishNameTranslation": "The Announcement",
+    "numberOfAyahs": 40,
+    "revelationType": "Meccan",
+    "startingPage": 676
+  },
+  {
+    "number": 79,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0646\u0651\u064e\u0627\u0632\u0650\u0639\u064e\u0627\u062a\u0650",
+    "englishName": "An-Naazi'aat",
+    "englishNameTranslation": "Those who drag forth",
+    "numberOfAyahs": 46,
+    "revelationType": "Meccan",
+    "startingPage": 677
+  },
+  {
+    "number": 80,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0639\u064e\u0628\u064e\u0633\u064e",
+    "englishName": "Abasa",
+    "englishNameTranslation": "He frowned",
+    "numberOfAyahs": 42,
+    "revelationType": "Meccan",
+    "startingPage": 679
+  },
+  {
+    "number": 81,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062a\u0651\u064e\u0643\u06e1\u0648\u0650\u064a\u0631\u0650",
+    "englishName": "At-Takwir",
+    "englishNameTranslation": "The Overthrowing",
+    "numberOfAyahs": 29,
+    "revelationType": "Meccan",
+    "startingPage": 681
+  },
+  {
+    "number": 82,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0627\u0646\u0641\u0650\u0637\u064e\u0627\u0631\u0650",
+    "englishName": "Al-Infitaar",
+    "englishNameTranslation": "The Cleaving",
+    "numberOfAyahs": 19,
+    "revelationType": "Meccan",
+    "startingPage": 682
+  },
+  {
+    "number": 83,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0645\u064f\u0637\u064e\u0641\u0651\u0650\u0641\u0650\u064a\u0646\u064e",
+    "englishName": "Al-Mutaffifin",
+    "englishNameTranslation": "Defrauding",
+    "numberOfAyahs": 36,
+    "revelationType": "Meccan",
+    "startingPage": 683
+  },
+  {
+    "number": 84,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0627\u0646\u0634\u0650\u0642\u064e\u0627\u0642\u0650",
+    "englishName": "Al-Inshiqaaq",
+    "englishNameTranslation": "The Splitting Open",
+    "numberOfAyahs": 25,
+    "revelationType": "Meccan",
+    "startingPage": 684
+  },
+  {
+    "number": 85,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0628\u064f\u0631\u064f\u0648\u062c\u0650",
+    "englishName": "Al-Burooj",
+    "englishNameTranslation": "The Constellations",
+    "numberOfAyahs": 22,
+    "revelationType": "Meccan",
+    "startingPage": 686
+  },
+  {
+    "number": 86,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0637\u0651\u064e\u0627\u0631\u0650\u0642\u0650",
+    "englishName": "At-Taariq",
+    "englishNameTranslation": "The Morning Star",
+    "numberOfAyahs": 17,
+    "revelationType": "Meccan",
+    "startingPage": 687
+  },
+  {
+    "number": 87,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0623\u064e\u0639\u06e1\u0644\u064e\u0649\u0670",
+    "englishName": "Al-A'laa",
+    "englishNameTranslation": "The Most High",
+    "numberOfAyahs": 19,
+    "revelationType": "Meccan",
+    "startingPage": 688
+  },
+  {
+    "number": 88,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u063a\u064e\u0627\u0634\u0650\u064a\u064e\u0629\u0650",
+    "englishName": "Al-Ghaashiya",
+    "englishNameTranslation": "The Overwhelming",
+    "numberOfAyahs": 26,
+    "revelationType": "Meccan",
+    "startingPage": 689
+  },
+  {
+    "number": 89,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0641\u064e\u062c\u06e1\u0631\u0650",
+    "englishName": "Al-Fajr",
+    "englishNameTranslation": "The Dawn",
+    "numberOfAyahs": 30,
+    "revelationType": "Meccan",
+    "startingPage": 690
+  },
+  {
+    "number": 90,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0628\u064e\u0644\u064e\u062f\u0650",
+    "englishName": "Al-Balad",
+    "englishNameTranslation": "The City",
+    "numberOfAyahs": 20,
+    "revelationType": "Meccan",
+    "startingPage": 691
+  },
+  {
+    "number": 91,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0634\u0651\u064e\u0645\u06e1\u0633\u0650",
+    "englishName": "Ash-Shams",
+    "englishNameTranslation": "The Sun",
+    "numberOfAyahs": 15,
+    "revelationType": "Meccan",
+    "startingPage": 692
+  },
+  {
+    "number": 92,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0644\u0651\u064e\u064a\u06e1\u0644\u0650",
+    "englishName": "Al-Lail",
+    "englishNameTranslation": "The Night",
+    "numberOfAyahs": 21,
+    "revelationType": "Meccan",
+    "startingPage": 693
+  },
+  {
+    "number": 93,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0636\u0651\u064f\u062d\u064e\u0649\u0670",
+    "englishName": "Ad-Dhuhaa",
+    "englishNameTranslation": "The Morning Hours",
+    "numberOfAyahs": 11,
+    "revelationType": "Meccan",
+    "startingPage": 694
+  },
+  {
+    "number": 94,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0634\u0651\u064e\u0631\u06e1\u062d\u0650",
+    "englishName": "Ash-Sharh",
+    "englishNameTranslation": "The Consolation",
+    "numberOfAyahs": 8,
+    "revelationType": "Meccan",
+    "startingPage": 694
+  },
+  {
+    "number": 95,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062a\u0651\u0650\u064a\u0646\u0650",
+    "englishName": "At-Tin",
+    "englishNameTranslation": "The Fig",
+    "numberOfAyahs": 8,
+    "revelationType": "Meccan",
+    "startingPage": 694
+  },
+  {
+    "number": 96,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0639\u064e\u0644\u064e\u0642\u0650",
+    "englishName": "Al-Alaq",
+    "englishNameTranslation": "The Clot",
+    "numberOfAyahs": 19,
+    "revelationType": "Meccan",
+    "startingPage": 694
+  },
+  {
+    "number": 97,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0642\u064e\u062f\u06e1\u0631\u0650",
+    "englishName": "Al-Qadr",
+    "englishNameTranslation": "The Power, Fate",
+    "numberOfAyahs": 5,
+    "revelationType": "Meccan",
+    "startingPage": 695
+  },
+  {
+    "number": 98,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0628\u064e\u064a\u0651\u0650\u0646\u064e\u0629\u0650",
+    "englishName": "Al-Bayyina",
+    "englishNameTranslation": "The Evidence",
+    "numberOfAyahs": 8,
+    "revelationType": "Medinan",
+    "startingPage": 696
+  },
+  {
+    "number": 99,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0632\u0651\u064e\u0644\u06e1\u0632\u064e\u0644\u064e\u0629\u0650",
+    "englishName": "Az-Zalzala",
+    "englishNameTranslation": "The Earthquake",
+    "numberOfAyahs": 8,
+    "revelationType": "Medinan",
+    "startingPage": 967
+  },
+  {
+    "number": 100,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0639\u064e\u0627\u062f\u0650\u064a\u064e\u0627\u062a\u0650",
+    "englishName": "Al-Aadiyaat",
+    "englishNameTranslation": "The Chargers",
+    "numberOfAyahs": 11,
+    "revelationType": "Meccan",
+    "startingPage": 697
+  },
+  {
+    "number": 101,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0642\u064e\u0627\u0631\u0650\u0639\u064e\u0629\u0650",
+    "englishName": "Al-Qaari'a",
+    "englishNameTranslation": "The Calamity",
+    "numberOfAyahs": 11,
+    "revelationType": "Meccan",
+    "startingPage": 668
+  },
+  {
+    "number": 102,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u062a\u0651\u064e\u0643\u064e\u0627\u062b\u064f\u0631\u0650",
+    "englishName": "At-Takaathur",
+    "englishNameTranslation": "Competition",
+    "numberOfAyahs": 8,
+    "revelationType": "Meccan",
+    "startingPage": 699
+  },
+  {
+    "number": 103,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0639\u064e\u0635\u06e1\u0631\u0650",
+    "englishName": "Al-Asr",
+    "englishNameTranslation": "The Declining Day, Epoch",
+    "numberOfAyahs": 3,
+    "revelationType": "Meccan",
+    "startingPage": 699
+  },
+  {
+    "number": 104,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0647\u064f\u0645\u064e\u0632\u064e\u0629\u0650",
+    "englishName": "Al-Humaza",
+    "englishNameTranslation": "The Traducer",
+    "numberOfAyahs": 9,
+    "revelationType": "Meccan",
+    "startingPage": 700
+  },
+  {
+    "number": 105,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0641\u0650\u064a\u0644\u0650",
+    "englishName": "Al-Fil",
+    "englishNameTranslation": "The Elephant",
+    "numberOfAyahs": 5,
+    "revelationType": "Meccan",
+    "startingPage": 700
+  },
+  {
+    "number": 106,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0642\u064f\u0631\u064e\u064a\u06e1\u0634\u064d",
+    "englishName": "Quraish",
+    "englishNameTranslation": "Quraysh",
+    "numberOfAyahs": 4,
+    "revelationType": "Meccan",
+    "startingPage": 701
+  },
+  {
+    "number": 107,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0645\u064e\u0627\u0639\u064f\u0648\u0646\u0650",
+    "englishName": "Al-Maa'un",
+    "englishNameTranslation": "Almsgiving",
+    "numberOfAyahs": 7,
+    "revelationType": "Meccan",
+    "startingPage": 607017
+  },
+  {
+    "number": 108,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0643\u064e\u0648\u06e1\u062b\u064e\u0631\u0650",
+    "englishName": "Al-Kawthar",
+    "englishNameTranslation": "Abundance",
+    "numberOfAyahs": 3,
+    "revelationType": "Meccan",
+    "startingPage": 702
+  },
+  {
+    "number": 109,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0643\u064e\u0627\u0641\u0650\u0631\u064f\u0648\u0646\u064e",
+    "englishName": "Al-Kaafiroon",
+    "englishNameTranslation": "The Disbelievers",
+    "numberOfAyahs": 6,
+    "revelationType": "Meccan",
+    "startingPage": 702
+  },
+  {
+    "number": 110,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0646\u0651\u064e\u0635\u06e1\u0631\u0650",
+    "englishName": "An-Nasr",
+    "englishNameTranslation": "Divine Support",
+    "numberOfAyahs": 3,
+    "revelationType": "Medinan",
+    "startingPage": 702
+  },
+  {
+    "number": 111,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0645\u064e\u0633\u064e\u062f\u0650",
+    "englishName": "Al-Masad",
+    "englishNameTranslation": "The Palm Fibre",
+    "numberOfAyahs": 5,
+    "revelationType": "Meccan",
+    "startingPage": 703
+  },
+  {
+    "number": 112,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0625\u0650\u062e\u06e1\u0644\u064e\u0627\u0635\u0650",
+    "englishName": "Al-Ikhlaas",
+    "englishNameTranslation": "Sincerity",
+    "numberOfAyahs": 4,
+    "revelationType": "Meccan",
+    "startingPage": 703
+  },
+  {
+    "number": 113,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0641\u064e\u0644\u064e\u0642\u0650",
+    "englishName": "Al-Falaq",
+    "englishNameTranslation": "The Dawn",
+    "numberOfAyahs": 5,
+    "revelationType": "Meccan",
+    "startingPage": 704
+  },
+  {
+    "number": 114,
+    "name": "\u0633\u064f\u0648\u0631\u064e\u0629\u064f \u0627\u0644\u0646\u0651\u064e\u0627\u0633\u0650",
+    "englishName": "An-Naas",
+    "englishNameTranslation": "Mankind",
+    "numberOfAyahs": 6,
+    "revelationType": "Meccan",
+    "startingPage": 705
+  }
+]
