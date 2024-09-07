@@ -1,7 +1,12 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Image } from 'expo-image';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import {
+  PanGestureHandler,
+  PanGestureHandlerStateChangeEvent,
+  State,
+} from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSetRecoilState } from 'recoil';
 
@@ -15,47 +20,48 @@ const blurhash =
 export default function MushafScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
   const { index } = useLocalSearchParams();
+  const currentIndex = Array.isArray(index) ? index[0] : index;
+  const router = useRouter();
+
+  const handleSwipe = (event: PanGestureHandlerStateChangeEvent) => {
+    const { nativeEvent } = event;
+    if (nativeEvent.state === State.END) {
+      if (nativeEvent.translationX > 50) {
+        // Swipe Right - Go to the previous page
+        router.push(`/mushaf/${parseInt(currentIndex) + 1}`);
+      } else if (nativeEvent.translationX < -50) {
+        // Swipe Left - Go to the next page
+        router.push(`/mushaf/${parseInt(currentIndex) - 1}`);
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <TopMenu />
+
       <TouchableOpacity
         style={styles.content}
         onPress={() => setShowTopMenu(true)}
         onLongPress={() => alert('Long press on content')}
       >
-        <ThemedView style={styles.container}>
-          <Image
-            style={styles.image}
-            source={`/assets/mushaf-data/mushaf-elmadina-warsh-azrak/${index}.png`}
-            placeholder={{ blurhash }}
-            contentFit="fill"
-            transition={1000}
-          />
-        </ThemedView>
+        <PanGestureHandler onHandlerStateChange={handleSwipe}>
+          <ThemedView style={styles.container}>
+            <Image
+              style={styles.image}
+              source={`/assets/mushaf-data/mushaf-elmadina-warsh-azrak/${index}.png`}
+              placeholder={{ blurhash }}
+              contentFit="fill"
+              transition={1000}
+            />
+          </ThemedView>
+        </PanGestureHandler>
       </TouchableOpacity>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  topMenu: {
-    backgroundColor: 'rgba(0, 0, 0, 0.01)',
-    marginVertical: 10,
-    height: 60,
-    borderRadius: 5,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    right: 20,
-    zIndex: 2,
-  },
-  topMenuButton: {
-    marginHorizontal: 10,
-    padding: 10,
-  },
   container: {
     position: 'relative',
     display: 'flex',
@@ -77,5 +83,12 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'white',
     maxWidth: 400,
+  },
+  ball: {
+    width: 100,
+    height: 100,
+    borderRadius: 100,
+    backgroundColor: 'blue',
+    alignSelf: 'center',
   },
 });
