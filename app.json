@@ -26,8 +26,16 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-font"],
-
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-asset",
+        {
+          "assets": ["./assets/mushaf-data/mushaf-elmadina-warsh-azrak/**/*"]
+        }
+      ]
+    ],
     "experiments": {
       "typedRoutes": true
     }

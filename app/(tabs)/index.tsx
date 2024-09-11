@@ -11,7 +11,6 @@ import { useSetRecoilState } from 'recoil';
 
 import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
-import useLoadImage from '@/hooks/useLoadImages';
 import { topMenuState } from '@/recoil/atoms';
 import { handleSwipe } from '@/utils/handleSwipe';
 
@@ -25,10 +24,18 @@ export default function HomeScreen() {
   const router = useRouter();
   const { page: pageParam } = useLocalSearchParams();
   const defaultNumberOfPages = specs.defaultNumberOfPages;
-  const currentPage =
-    typeof pageParam === 'string' ? parseInt(pageParam, 10) : 1;
+  const getCurentPage = (): number => {
+    if (typeof pageParam !== 'string') {
+      return 1;
+    }
+    const result = parseInt(pageParam, 10);
+    if (isNaN(result)) {
+      return 1;
+    }
+    return result;
+  };
 
-  const imageSrc = useLoadImage(currentPage);
+  const currentPage = getCurentPage();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,15 +50,16 @@ export default function HomeScreen() {
             onHandlerStateChange={handleSwipe(
               currentPage,
               defaultNumberOfPages,
-
               router,
             )}
           >
             <ThemedView style={styles.container}>
-              {imageSrc && (
+              {currentPage && (
                 <Image
                   style={styles.image}
-                  source={{ uri: imageSrc }}
+                  source={require(
+                    `../../assets/mushaf-data/mushaf-elmadina-warsh-azrak/${1}.png`,
+                  )}
                   placeholder={{ blurhash }}
                   contentFit="fill"
                   transition={1000}
