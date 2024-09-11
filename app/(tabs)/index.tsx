@@ -1,19 +1,19 @@
-import { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
+  GestureHandlerRootView,
   PanGestureHandler,
-  PanGestureHandlerStateChangeEvent,
-  State,
 } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSetRecoilState } from 'recoil';
 
 import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
+import useLoadImage from '@/hooks/useLoadImages';
 import { topMenuState } from '@/recoil/atoms';
+import { handleSwipe } from '@/utils/handleSwipe';
 
 import specs from '../../assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json';
 
@@ -27,68 +27,40 @@ export default function HomeScreen() {
   const defaultNumberOfPages = specs.defaultNumberOfPages;
   const currentPage =
     typeof pageParam === 'string' ? parseInt(pageParam, 10) : 1;
-  const [imageSrc, setImageSrc] = useState<string>(
-    pageParam
-      ? `/assets/mushaf-data/mushaf-elmadina-warsh-azrak/${pageParam}.png`
-      : `/assets/mushaf-data/mushaf-elmadina-warsh-azrak/1.png`,
-  );
 
-  const handleSwipe = (event: PanGestureHandlerStateChangeEvent) => {
-    const { nativeEvent } = event;
-    if (nativeEvent.state === State.END) {
-      if (nativeEvent.translationX > 50) {
-        // Swipe Right - Go to the previous page
-        let page = currentPage + 1;
-        if (page > defaultNumberOfPages) {
-          page = defaultNumberOfPages;
-        }
-        console.log('swipe right to:', page, currentPage);
-        setImageSrc(
-          `/assets/mushaf-data/mushaf-elmadina-warsh-azrak/${page}.png`,
-        );
-        router.replace({
-          pathname: '/(tabs)',
-          params: { page: page.toString() },
-        });
-      } else if (nativeEvent.translationX < -50) {
-        // Swipe Left - Go to the next page
-        let page = currentPage - 1;
-        if (page < 1) {
-          page = 1;
-        }
-        console.log('swipe left to:', page);
-        setImageSrc(
-          `/assets/mushaf-data/mushaf-elmadina-warsh-azrak/${page}.png`,
-        );
-        router.replace({
-          pathname: '/(tabs)',
-          params: { page: page.toString() },
-        });
-      }
-    }
-  };
+  const imageSrc = useLoadImage(currentPage);
 
   return (
     <SafeAreaView style={styles.container}>
-      <TopMenu />
+      <GestureHandlerRootView>
+        <TopMenu />
+        <TouchableOpacity
+          style={styles.content}
+          onPress={() => setShowTopMenu(true)}
+          onLongPress={() => alert('Long press on content')}
+        >
+          <PanGestureHandler
+            onHandlerStateChange={handleSwipe(
+              currentPage,
+              defaultNumberOfPages,
 
-      <TouchableOpacity
-        style={styles.content}
-        onPress={() => setShowTopMenu(true)}
-        onLongPress={() => alert('Long press on content')}
-      >
-        <PanGestureHandler onHandlerStateChange={handleSwipe}>
-          <ThemedView style={styles.container}>
-            <Image
-              style={styles.image}
-              source={imageSrc}
-              placeholder={{ blurhash }}
-              contentFit="fill"
-              transition={1000}
-            />
-          </ThemedView>
-        </PanGestureHandler>
-      </TouchableOpacity>
+              router,
+            )}
+          >
+            <ThemedView style={styles.container}>
+              {imageSrc && (
+                <Image
+                  style={styles.image}
+                  source={{ uri: imageSrc }}
+                  placeholder={{ blurhash }}
+                  contentFit="fill"
+                  transition={1000}
+                />
+              )}
+            </ThemedView>
+          </PanGestureHandler>
+        </TouchableOpacity>
+      </GestureHandlerRootView>
     </SafeAreaView>
   );
 }
