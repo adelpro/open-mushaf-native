@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableHighlight } from 'react-native';
 
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
+  GestureHandlerRootView,
   PanGestureHandler,
   PanGestureHandlerStateChangeEvent,
   State,
 } from 'react-native-gesture-handler';
+//import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSetRecoilState } from 'recoil';
 
@@ -69,27 +71,30 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TopMenu />
+    <GestureHandlerRootView>
+      <SafeAreaView style={styles.container}>
+        <TopMenu />
 
-      <TouchableOpacity
-        style={styles.content}
-        onPress={() => setShowTopMenu(true)}
-        onLongPress={() => alert('Long press on content')}
-      >
-        <PanGestureHandler onHandlerStateChange={handleSwipe}>
-          <ThemedView style={styles.container}>
-            <Image
-              style={styles.image}
-              source={imageSrc}
-              placeholder={{ blurhash }}
-              contentFit="fill"
-              transition={1000}
-            />
-          </ThemedView>
-        </PanGestureHandler>
-      </TouchableOpacity>
-    </SafeAreaView>
+        <TouchableHighlight
+          underlayColor="#DDDDDD"
+          style={styles.content}
+          onPress={() => setShowTopMenu(true)}
+          onLongPress={() => alert('Long press on content')}
+        >
+          <PanGestureHandler onHandlerStateChange={handleSwipe}>
+            <ThemedView style={styles.container}>
+              <Image
+                style={styles.image}
+                source={imageSrc}
+                placeholder={{ blurhash }}
+                contentFit="fill"
+                transition={1000}
+              />
+            </ThemedView>
+          </PanGestureHandler>
+        </TouchableHighlight>
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
 

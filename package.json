@@ -51,7 +51,8 @@
     "react-native-screens": "3.31.1",
     "react-native-web": "~0.19.10",
     "recoil": "^0.7.7",
-    "recoil-persist": "^5.1.0"
+    "recoil-persist": "^5.1.0",
+    "react-native-pager-view": "6.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
