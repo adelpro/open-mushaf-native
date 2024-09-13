@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, TouchableHighlight } from 'react-native';
 
+import { Asset } from 'expo-asset';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
@@ -26,14 +27,28 @@ export default function HomeScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
   const router = useRouter();
   const { page: pageParam } = useLocalSearchParams();
+  const ImagePAth = '../../assets/mushaf-data/mushaf-elmadina-warsh-azrak/';
+  const imageExt = '.png';
+  const [imageSrc, setImageSrc] = useState<string>(
+    require(`${ImagePAth}1${imageExt}`),
+  );
   const defaultNumberOfPages = specs.defaultNumberOfPages;
   const currentPage =
     typeof pageParam === 'string' ? parseInt(pageParam, 10) : 1;
-  const [imageSrc, setImageSrc] = useState<string>(
-    pageParam
-      ? `/assets/mushaf-data/mushaf-elmadina-warsh-azrak/${pageParam}.png`
-      : `/assets/mushaf-data/mushaf-elmadina-warsh-azrak/1.png`,
-  );
+
+  const loadImage = async (pageNumber: number) => {
+    const asset = Asset.fromModule(`${ImagePAth}${pageNumber}${imageExt}`);
+    await asset.downloadAsync();
+    setImageSrc(asset.uri);
+  };
+
+  useEffect(() => {
+    if (isNaN(currentPage)) {
+      return;
+    }
+
+    loadImage(currentPage);
+  }, [currentPage]);
 
   const handleSwipe = (event: PanGestureHandlerStateChangeEvent) => {
     const { nativeEvent } = event;
@@ -44,28 +59,28 @@ export default function HomeScreen() {
         if (page > defaultNumberOfPages) {
           page = defaultNumberOfPages;
         }
-        console.log('swipe right to:', page, currentPage);
-        setImageSrc(
-          `/assets/mushaf-data/mushaf-elmadina-warsh-azrak/${page}.png`,
-        );
+
+        loadImage(page);
+
         router.replace({
           pathname: '/(tabs)',
           params: { page: page.toString() },
         });
+        console.log('Right image loaded successfully');
       } else if (nativeEvent.translationX < -50) {
         // Swipe Left - Go to the next page
         let page = currentPage - 1;
         if (page < 1) {
           page = 1;
         }
-        console.log('swipe left to:', page);
-        setImageSrc(
-          `/assets/mushaf-data/mushaf-elmadina-warsh-azrak/${page}.png`,
-        );
+
+        loadImage(page);
+
         router.replace({
           pathname: '/(tabs)',
           params: { page: page.toString() },
         });
+        console.log('Left image loaded successfully');
       }
     }
   };
@@ -83,13 +98,15 @@ export default function HomeScreen() {
         >
           <PanGestureHandler onHandlerStateChange={handleSwipe}>
             <ThemedView style={styles.container}>
-              <Image
-                style={styles.image}
-                source={imageSrc}
-                placeholder={{ blurhash }}
-                contentFit="fill"
-                transition={1000}
-              />
+              {imageSrc && (
+                <Image
+                  style={styles.image}
+                  source={imageSrc}
+                  placeholder={{ blurhash }}
+                  contentFit="fill"
+                  transition={1000}
+                />
+              )}
             </ThemedView>
           </PanGestureHandler>
         </TouchableHighlight>
