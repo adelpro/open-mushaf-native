@@ -21,11 +21,18 @@ export default function TabLayout() {
         tabBarLabelPosition: 'below-icon',
         tabBarStyle: {
           display: menuStateValue ? 'flex' : 'none',
+          justifyContent: 'center',
         },
 
         tabBarLabelStyle: {
           fontFamily: 'Amiri_400Regular',
+          paddingTop: 5,
         },
+
+        tabBarIconStyle: {
+          paddingTop: 5,
+        },
+
         headerShown: false,
       })}
     >

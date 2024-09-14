@@ -1,55 +1,37 @@
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { useSetRecoilState } from 'recoil';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
+import ChapterCard from '@/components/ChapterCard';
 import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
 import { topMenuState } from '@/recoil/atoms';
+import { Chapter } from '@/types/chapter';
+
+import chaptersJSON from '../../assets/quran-metadata/mushaf-elmadina-warsh-azrak/chapter.json';
 
 export default function JuzListScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={<></>}
-    >
+    <SafeAreaView>
       <TopMenu />
-      <TouchableOpacity
-        style={styles.container}
-        onPress={() => setShowTopMenu(true)}
-        onLongPress={() => alert('Long press on content')}
-      >
-        <ThemedView style={styles.titleContainer}>
-          <HelloWave />
-        </ThemedView>
-        <ThemedView style={styles.stepContainer}>
-          <ThemedText type="subtitle">Juz list</ThemedText>
-          <ThemedText>Juz list page</ThemedText>
+      <TouchableOpacity onPress={() => setShowTopMenu(true)}>
+        <ThemedView style={styles.container}>
+          {chaptersJSON.map((chapter: Chapter) => (
+            <ChapterCard key={chapter.number} chapter={chapter} />
+          ))}
         </ThemedView>
       </TouchableOpacity>
-    </ParallaxScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-
   container: {
-    display: 'flex',
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    width: '100%',
   },
 });
