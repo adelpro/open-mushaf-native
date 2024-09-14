@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
 import { StyleSheet, TouchableHighlight } from 'react-native';
 
-import { Asset } from 'expo-asset';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
@@ -14,8 +12,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSetRecoilState } from 'recoil';
 
+import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
+import useImagesArray from '@/hooks/useImagesArray';
 import { topMenuState } from '@/recoil/atoms';
 
 import specs from '../../assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json';
@@ -23,32 +23,33 @@ import specs from '../../assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
+const getCurrentPage = (value: string | string[]): number => {
+  const result = (() => {
+    if (typeof value === 'string') {
+      const num = parseInt(value, 10);
+      return !isNaN(num) ? num : 1;
+    }
+
+    if (Array.isArray(value)) {
+      const num = parseInt(value[0], 10);
+      return !isNaN(num) ? num : 1;
+    }
+
+    return 1;
+  })();
+
+  return result;
+};
+
 export default function HomeScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
   const router = useRouter();
   const { page: pageParam } = useLocalSearchParams();
-  const ImagePAth = '../../assets/mushaf-data/mushaf-elmadina-warsh-azrak/';
-  const imageExt = '.png';
-  const [imageSrc, setImageSrc] = useState<string>(
-    require(`${ImagePAth}1${imageExt}`),
-  );
+
   const defaultNumberOfPages = specs.defaultNumberOfPages;
-  const currentPage =
-    typeof pageParam === 'string' ? parseInt(pageParam, 10) : 1;
+  const currentPage = getCurrentPage(pageParam);
 
-  const loadImage = async (pageNumber: number) => {
-    const asset = Asset.fromModule(`${ImagePAth}${pageNumber}${imageExt}`);
-    await asset.downloadAsync();
-    setImageSrc(asset.uri);
-  };
-
-  useEffect(() => {
-    if (isNaN(currentPage)) {
-      return;
-    }
-
-    loadImage(currentPage);
-  }, [currentPage]);
+  const { assets, error } = useImagesArray();
 
   const handleSwipe = (event: PanGestureHandlerStateChangeEvent) => {
     const { nativeEvent } = event;
@@ -60,31 +61,24 @@ export default function HomeScreen() {
           page = defaultNumberOfPages;
         }
 
-        loadImage(page);
-
         router.replace({
-          pathname: '/(tabs)',
+          pathname: '/',
           params: { page: page.toString() },
         });
-        console.log('Right image loaded successfully');
       } else if (nativeEvent.translationX < -50) {
         // Swipe Left - Go to the next page
         let page = currentPage - 1;
-        if (page < 1) {
-          page = 1;
-        }
-
-        loadImage(page);
 
         router.replace({
-          pathname: '/(tabs)',
+          pathname: '/',
           params: { page: page.toString() },
         });
-        console.log('Left image loaded successfully');
       }
     }
   };
-
+  if (error) {
+    return <ThemedText>{error.message}</ThemedText>;
+  }
   return (
     <GestureHandlerRootView>
       <SafeAreaView style={styles.container}>
@@ -98,10 +92,10 @@ export default function HomeScreen() {
         >
           <PanGestureHandler onHandlerStateChange={handleSwipe}>
             <ThemedView style={styles.container}>
-              {imageSrc && (
+              {assets && (
                 <Image
                   style={styles.image}
-                  source={imageSrc}
+                  source={assets[currentPage].uri}
                   placeholder={{ blurhash }}
                   contentFit="fill"
                   transition={1000}
