@@ -143,8 +143,10 @@ const styles = StyleSheet.create({
   },
   bullet: {
     marginRight: 12,
+    fontWeight: '500',
+    color: '#6B7280',
+    marginLeft: 12,
     fontSize: 20,
-    color: '#007AFF',
   },
   listText: {
     fontSize: 16,

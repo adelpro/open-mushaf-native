@@ -11,7 +11,6 @@ import { bottomMenuState } from '@/recoil/atoms';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
   const menuStateValue = useRecoilValue<boolean>(bottomMenuState);
 
   return (
@@ -23,26 +22,51 @@ export default function TabLayout() {
           display: menuStateValue ? 'flex' : 'none',
           justifyContent: 'center',
         },
-
         tabBarLabelStyle: {
           fontFamily: 'Amiri_400Regular',
           paddingTop: 5,
         },
-
         tabBarIconStyle: {
           paddingTop: 5,
         },
-
         headerShown: false,
       })}
     >
       <Tabs.Screen
-        name="about"
+        name="suraList"
         options={{
-          title: 'حول التطبيق',
+          title: 'قائمة السور',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? 'alert-circle' : 'alert-circle-outline'}
+            <MaterialCommunityIcons
+              name={focused ? 'view-list' : 'view-list-outline'}
+              size={28}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="lists"
+        options={{
+          title: 'الفهرس',
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialCommunityIcons
+              name={focused ? 'view-list' : 'view-list-outline'}
+              size={28}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'المصحف',
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6
+              name="book-quran"
+              size={28}
+              style={{ marginBottom: -3 }}
               color={color}
             />
           ),
@@ -58,42 +82,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="index"
+        name="about"
         options={{
-          title: 'المصحف',
-          tabBarIcon: ({ color }) => (
-            <FontAwesome6
-              name="book-quran"
-              size={28}
-              tyle={{ marginBottom: -3 }}
-              color={color}
-            />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="lists"
-        options={{
-          title: 'الفهرس',
+          title: 'حول التطبيق',
           tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons
-              name={focused ? 'view-list' : 'view-list-outline'}
-              size={28}
-              color={color}
-            />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="suraList"
-        options={{
-          title: 'قائمة السور',
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons
-              name={focused ? 'view-list' : 'view-list-outline'}
-              size={28}
+            <TabBarIcon
+              name={focused ? 'alert-circle' : 'alert-circle-outline'}
               color={color}
             />
           ),
