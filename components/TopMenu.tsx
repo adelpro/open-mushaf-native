@@ -1,13 +1,16 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 
 import { Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { useRecoilState } from 'recoil';
 
 import { ThemedView } from '@/components/ThemedView';
+import { Colors } from '@/constants/Colors';
 import { bottomMenuState, topMenuState } from '@/recoil/atoms';
 
 export default function TopMenu() {
+  const colorScheme = useColorScheme();
+  const color = Colors[colorScheme ?? 'light'].tint;
   const [showBottomMenuState, setBottomMenuState] =
     useRecoilState<boolean>(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] =
@@ -27,17 +30,9 @@ export default function TopMenu() {
         }}
       >
         {showBottomMenuState ? (
-          <SimpleLineIcons
-            name="size-fullscreen"
-            size={40}
-            color={'rgba(0, 0, 0, 0.8)'}
-          />
+          <SimpleLineIcons name="size-fullscreen" size={40} color={color} />
         ) : (
-          <MaterialIcons
-            name="fullscreen-exit"
-            size={40}
-            color={'rgba(0, 0, 0, 0.8)'}
-          />
+          <MaterialIcons name="fullscreen-exit" size={40} color={color} />
         )}
       </TouchableOpacity>
       <TouchableOpacity
@@ -47,7 +42,7 @@ export default function TopMenu() {
           alert('Search pressed');
         }}
       >
-        <Ionicons name="search" size={40} color={'rgba(0, 0, 0, 0.8)'} />
+        <Ionicons name="search" size={40} color={color} />
       </TouchableOpacity>
     </ThemedView>
   ) : null;

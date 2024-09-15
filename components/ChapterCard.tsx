@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 
+import { Colors } from '@/constants/Colors';
 import { Chapter } from '@/types/chapter';
 
 import { ThemedText } from './ThemedText';
@@ -15,6 +16,8 @@ type Props = {
 
 export default function ChapterCard({ chapter }: Props) {
   const router = useRouter();
+  const colorScheme = useColorScheme();
+  const backgroundColor = Colors[colorScheme ?? 'light'].background;
 
   const handlePress = () => {
     router.replace({
@@ -24,7 +27,10 @@ export default function ChapterCard({ chapter }: Props) {
   };
 
   return (
-    <TouchableOpacity onPress={handlePress} style={styles.container}>
+    <TouchableOpacity
+      onPress={handlePress}
+      style={[styles.container, { backgroundColor }]}
+    >
       <ThemedView style={styles.content}>
         <ThemedText style={styles.number}>{chapter.number}</ThemedText>
         <ThemedView>

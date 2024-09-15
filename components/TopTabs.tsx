@@ -38,6 +38,7 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
           style={[
             styles.tabText,
             activeTab === 'surahs' && styles.activeTabText,
+            activeTab === 'surahs' && { color: currentColor },
           ]}
         >
           السور
@@ -56,7 +57,11 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
         ]}
       >
         <ThemedText
-          style={[styles.tabText, activeTab === 'juzs' && styles.activeTabText]}
+          style={[
+            styles.tabText,
+            activeTab === 'juzs' && styles.activeTabText,
+            activeTab === 'juzs' && { color: currentColor },
+          ]}
         >
           الأجزاء
         </ThemedText>
@@ -80,11 +85,11 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 24,
     lineHeight: 32,
-    color: '#6b7280', // Gray for inactive tabs
+    //color: '#6b7280', // Gray for inactive tabs
     fontWeight: '500',
   },
   activeTabText: {
-    color: '#1f2937', // Darker text for the active tab
+    //color: '#1f2937', // Darker text for the active tab
     fontWeight: '700',
   },
 });

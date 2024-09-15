@@ -1,4 +1,8 @@
-import { StyleSheet, TouchableHighlight } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableHighlight,
+} from 'react-native';
 
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -15,6 +19,8 @@ import { useSetRecoilState } from 'recoil';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import useImagesArray from '@/hooks/useImagesArray';
 import { topMenuState } from '@/recoil/atoms';
 
@@ -44,6 +50,10 @@ const getCurrentPage = (value: string | string[]): number => {
 export default function HomeScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
   const router = useRouter();
+  const colorScheme = useColorScheme();
+  const backgroundColor = Colors[colorScheme ?? 'light'].background;
+  const tint = Colors[colorScheme ?? 'light'].tint;
+
   const { page: pageParam } = useLocalSearchParams();
 
   const defaultNumberOfPages = specs.defaultNumberOfPages;
@@ -85,14 +95,14 @@ export default function HomeScreen() {
         <TopMenu />
 
         <TouchableHighlight
-          underlayColor="#DDDDDD"
+          underlayColor={backgroundColor}
           style={styles.content}
           onPress={() => setShowTopMenu(true)}
           onLongPress={() => alert('Long press on content')}
         >
           <PanGestureHandler onHandlerStateChange={handleSwipe}>
             <ThemedView style={styles.container}>
-              {assets && (
+              {assets ? (
                 <Image
                   style={styles.image}
                   source={assets[currentPage].uri}
@@ -100,6 +110,8 @@ export default function HomeScreen() {
                   contentFit="fill"
                   transition={1000}
                 />
+              ) : (
+                <ActivityIndicator size="large" color={tint} />
               )}
             </ThemedView>
           </PanGestureHandler>
