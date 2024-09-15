@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 
+import { Colors } from '@/constants/Colors'; // Ensure this import is correct
 import { Tabs } from '@/types/tabs';
 
 import { ThemedText } from './ThemedText';
@@ -12,6 +13,10 @@ type Props = {
 };
 
 export default function TopTabs({ activeTab, setActiveTab }: Props) {
+  const colorScheme = useColorScheme();
+  const currentColor = Colors[colorScheme ?? 'light'].tint;
+  const backgroundColor = Colors[colorScheme ?? 'light'].background; // Background color for active tab
+
   const handleTabPress = (tab: Tabs) => {
     setActiveTab(tab);
   };
@@ -20,7 +25,14 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
     <ThemedView style={styles.container}>
       <TouchableOpacity
         onPress={() => handleTabPress('surahs')}
-        style={[styles.tab, activeTab === 'surahs' && styles.activeTab]}
+        style={[
+          styles.tab,
+          activeTab === 'surahs' && {
+            backgroundColor: backgroundColor,
+            borderBottomWidth: 2,
+            borderBottomColor: currentColor,
+          },
+        ]}
       >
         <ThemedText
           style={[
@@ -34,7 +46,14 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
 
       <TouchableOpacity
         onPress={() => handleTabPress('juzs')}
-        style={[styles.tab, activeTab === 'juzs' && styles.activeTab]}
+        style={[
+          styles.tab,
+          activeTab === 'juzs' && {
+            backgroundColor: backgroundColor,
+            borderBottomWidth: 2,
+            borderBottomColor: currentColor,
+          },
+        ]}
       >
         <ThemedText
           style={[styles.tabText, activeTab === 'juzs' && styles.activeTabText]}
@@ -54,17 +73,15 @@ const styles = StyleSheet.create({
   },
   tab: {
     paddingVertical: 12,
-    paddingHorizontal: 30, // Wider tabs for better spacing
-    marginHorizontal: 10,
+    paddingHorizontal: 30,
+    width: 200,
+    alignItems: 'center', // Center align text within the tab
   },
   tabText: {
     fontSize: 24,
+    lineHeight: 32,
     color: '#6b7280', // Gray for inactive tabs
     fontWeight: '500',
-  },
-  activeTab: {
-    borderBottomWidth: 3, // Bottom-only border
-    borderBottomColor: '#1f2937', // Darker border for the active tab
   },
   activeTabText: {
     color: '#1f2937', // Darker text for the active tab

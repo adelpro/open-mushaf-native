@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
   },
   imageContianer: {
     width: '30%',
+    maxWidth: 100,
     height: '100%',
   },
   image: {
