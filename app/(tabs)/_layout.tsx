@@ -73,9 +73,9 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="juzList"
+        name="lists"
         options={{
-          title: 'قائمة الأجزاء',
+          title: 'الفهرس',
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
               name={focused ? 'view-list' : 'view-list-outline'}

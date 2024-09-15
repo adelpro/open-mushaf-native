@@ -4,35 +4,35 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 
-import { Chapter } from '@/types/chapter';
+import { Surah } from '@/types/surah';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
 type Props = {
-  chapter: Chapter;
+  surah: Surah;
 };
 
-export default function ChapterCard({ chapter }: Props) {
+export default function SurahCard({ surah }: Props) {
   const router = useRouter();
 
   const handlePress = () => {
     router.replace({
       pathname: '/',
-      params: { page: chapter.startingPage },
+      params: { page: surah.startingPage },
     });
   };
 
   return (
     <TouchableOpacity onPress={handlePress} style={styles.container}>
       <ThemedView style={styles.content}>
-        <ThemedText style={styles.number}>{chapter.number}</ThemedText>
+        <ThemedText style={styles.number}>{surah.number}</ThemedText>
         <ThemedView>
           <ThemedView>
-            <ThemedText style={styles.name}>{chapter.name}</ThemedText>
+            <ThemedText style={styles.name}>{surah.name}</ThemedText>
           </ThemedView>
           <ThemedText style={styles.englishName}>
-            {chapter.englishName}
+            {surah.englishName}
           </ThemedText>
         </ThemedView>
       </ThemedView>
