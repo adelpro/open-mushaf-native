@@ -56,7 +56,13 @@ const usePageOverlay = ({
   let prevX = marginX;
 
   const generateOverlay = () => {
-    const overlayElements: any[] = [];
+    const overlayElements: {
+      x: number;
+      y: number;
+      width: number;
+      aya: number;
+      surah: number;
+    }[] = [];
 
     if (!page) {
       return overlayElements;
@@ -120,7 +126,7 @@ const usePageOverlay = ({
     return overlayElements;
   };
 
-  return { overlay: generateOverlay() };
+  return { overlay: generateOverlay(), lineHeight };
 };
 
 export default usePageOverlay;
