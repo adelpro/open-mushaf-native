@@ -119,7 +119,6 @@ const usePageOverlay = ({
 
     return overlayElements;
   };
-  console.log('index', index, 'dimensions', dimensions);
 
   return { overlay: generateOverlay() };
 };
