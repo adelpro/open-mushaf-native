@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSetRecoilState } from 'recoil';
 
+import Overlay from '@/components/Overlay';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
@@ -27,17 +28,23 @@ const blurhash =
 
 const getCurrentPage = (value: string | string[]): number => {
   const result = (() => {
-    if (typeof value === 'string') {
-      const num = parseInt(value, 10);
-      return !isNaN(num) ? num : 1;
+    const num = Array.isArray(value)
+      ? parseInt(value[0], 10)
+      : parseInt(value, 10);
+
+    if (isNaN(num)) {
+      return 1;
     }
 
-    if (Array.isArray(value)) {
-      const num = parseInt(value[0], 10);
-      return !isNaN(num) ? num : 1;
+    if (num < 1) {
+      return 1;
     }
 
-    return 1;
+    if (num > specs.defaultNumberOfPages) {
+      return specs.defaultNumberOfPages;
+    }
+
+    return num;
   })();
 
   return result;
@@ -49,7 +56,6 @@ export default function HomeScreen() {
     customPageWidth: 0,
     customPageHeight: 0,
   });
-  console.log('dimensions', dimensions);
 
   const router = useRouter();
   const colorScheme = useColorScheme();
@@ -86,6 +92,9 @@ export default function HomeScreen() {
       } else if (nativeEvent.translationX < -50) {
         // Swipe Left - Go to the next page
         let page = currentPage - 1;
+        if (page < 1) {
+          page = 1;
+        }
 
         router.replace({
           pathname: '/',
@@ -112,7 +121,7 @@ export default function HomeScreen() {
               {assets ? (
                 <Image
                   style={styles.image}
-                  source={assets[currentPage].uri}
+                  source={assets[currentPage - 1].uri}
                   placeholder={{ blurhash }}
                   contentFit="fill"
                   transition={1000}
@@ -121,6 +130,7 @@ export default function HomeScreen() {
               ) : (
                 <ActivityIndicator size="large" color={tint} />
               )}
+              <Overlay index={currentPage} dimensions={dimensions} />
             </ThemedView>
           </PanGestureHandler>
         </Pressable>
