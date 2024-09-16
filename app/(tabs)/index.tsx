@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -12,7 +13,6 @@ import {
   PanGestureHandlerStateChangeEvent,
   State,
 } from 'react-native-gesture-handler';
-//import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSetRecoilState } from 'recoil';
 
@@ -22,6 +22,7 @@ import TopMenu from '@/components/TopMenu';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import useImagesArray from '@/hooks/useImagesArray';
+import usePageOverlay from '@/hooks/usePageOverlay';
 import { topMenuState } from '@/recoil/atoms';
 
 import specs from '../../assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json';
@@ -49,6 +50,10 @@ const getCurrentPage = (value: string | string[]): number => {
 
 export default function HomeScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
+  const [dimensions, setDimensions] = useState({
+    customPageWidth: 0,
+    customPageHeight: 0,
+  });
   const router = useRouter();
   const colorScheme = useColorScheme();
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
@@ -58,6 +63,18 @@ export default function HomeScreen() {
 
   const defaultNumberOfPages = specs.defaultNumberOfPages;
   const currentPage = getCurrentPage(pageParam);
+
+  const { overlay } = usePageOverlay({
+    index: currentPage,
+    dimensions,
+  });
+
+  const handleImageLoad = (event: {
+    source: { width: number; height: number };
+  }) => {
+    const { width, height } = event.source;
+    setDimensions({ customPageWidth: width, customPageHeight: height });
+  };
 
   const { assets, error } = useImagesArray();
 
@@ -109,12 +126,14 @@ export default function HomeScreen() {
                   placeholder={{ blurhash }}
                   contentFit="fill"
                   transition={1000}
+                  onLoad={handleImageLoad}
                 />
               ) : (
                 <ActivityIndicator size="large" color={tint} />
               )}
             </ThemedView>
           </PanGestureHandler>
+          <ThemedView>{overlay}</ThemedView>
         </TouchableHighlight>
       </SafeAreaView>
     </GestureHandlerRootView>

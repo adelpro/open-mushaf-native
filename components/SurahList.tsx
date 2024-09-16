@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { Chapter } from '@/types/chapter';
+import { Chapter } from '@/types';
 
 import ChapterCard from './ChapterCard';
 import { ThemedView } from './ThemedView';

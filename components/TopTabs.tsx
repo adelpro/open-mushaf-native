@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 
 import { Colors } from '@/constants/Colors'; // Ensure this import is correct
-import { Tabs } from '@/types/tabs';
+import { Tabs } from '@/types';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';

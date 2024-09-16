@@ -4,7 +4,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 
-import { Surah } from '@/types/surah';
+import { Surah } from '@/types';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';

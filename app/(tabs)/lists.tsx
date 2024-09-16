@@ -8,7 +8,7 @@ import SurahList from '@/components/SurahList';
 import TopMenu from '@/components/TopMenu';
 import TopTabs from '@/components/TopTabs';
 import { topMenuState } from '@/recoil/atoms';
-import { Tabs } from '@/types/tabs';
+import { Tabs } from '@/types';
 
 export default function ListsScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);

@@ -5,7 +5,7 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 
 import { Colors } from '@/constants/Colors';
-import { Chapter } from '@/types/chapter';
+import { Chapter } from '@/types';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
