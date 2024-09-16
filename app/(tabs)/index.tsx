@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSetRecoilState } from 'recoil';
 
-import Overlay from '@/components/Overlay';
+import PageOverlay from '@/components/PageOverlay';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
@@ -130,7 +130,7 @@ export default function HomeScreen() {
               ) : (
                 <ActivityIndicator size="large" color={tint} />
               )}
-              <Overlay index={currentPage} dimensions={dimensions} />
+              <PageOverlay index={currentPage} dimensions={dimensions} />
             </ThemedView>
           </PanGestureHandler>
         </Pressable>

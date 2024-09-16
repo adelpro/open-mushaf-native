@@ -11,7 +11,7 @@ type Props = {
   dimensions: { customPageWidth: number; customPageHeight: number };
 };
 
-export default function Overlay({ index, dimensions }: Props) {
+export default function PageOverlay({ index, dimensions }: Props) {
   // TODO add selected aya
   // TODO add show tafseer
 
