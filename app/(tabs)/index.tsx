@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableHighlight,
-} from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -22,7 +18,6 @@ import TopMenu from '@/components/TopMenu';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import useImagesArray from '@/hooks/useImagesArray';
-import usePageOverlay from '@/hooks/usePageOverlay';
 import { topMenuState } from '@/recoil/atoms';
 
 import specs from '../../assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json';
@@ -54,20 +49,16 @@ export default function HomeScreen() {
     customPageWidth: 0,
     customPageHeight: 0,
   });
+  console.log('dimensions', dimensions);
+
   const router = useRouter();
   const colorScheme = useColorScheme();
-  const backgroundColor = Colors[colorScheme ?? 'light'].background;
   const tint = Colors[colorScheme ?? 'light'].tint;
 
   const { page: pageParam } = useLocalSearchParams();
 
   const defaultNumberOfPages = specs.defaultNumberOfPages;
   const currentPage = getCurrentPage(pageParam);
-
-  const { overlay } = usePageOverlay({
-    index: currentPage,
-    dimensions,
-  });
 
   const handleImageLoad = (event: {
     source: { width: number; height: number };
@@ -111,8 +102,7 @@ export default function HomeScreen() {
       <SafeAreaView style={styles.container}>
         <TopMenu />
 
-        <TouchableHighlight
-          underlayColor={backgroundColor}
+        <Pressable
           style={styles.content}
           onPress={() => setShowTopMenu(true)}
           onLongPress={() => alert('Long press on content')}
@@ -133,8 +123,7 @@ export default function HomeScreen() {
               )}
             </ThemedView>
           </PanGestureHandler>
-          <ThemedView>{overlay}</ThemedView>
-        </TouchableHighlight>
+        </Pressable>
       </SafeAreaView>
     </GestureHandlerRootView>
   );

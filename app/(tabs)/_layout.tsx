@@ -33,19 +33,6 @@ export default function TabLayout() {
       })}
     >
       <Tabs.Screen
-        name="suraList"
-        options={{
-          title: 'قائمة السور',
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons
-              name={focused ? 'view-list' : 'view-list-outline'}
-              size={28}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="lists"
         options={{
           title: 'الفهرس',
