@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
-import usePageOverlay from '@/hooks/usePageOverLay';
+import { useSetRecoilState } from 'recoil';
 
-import { ThemedView } from './ThemedView';
+import usePageOverlay from '@/hooks/usePageOverLay';
+import { topMenuState } from '@/recoil/atoms';
 
 type Props = {
   index: number;
@@ -11,15 +12,16 @@ type Props = {
 };
 
 export default function PageOverlay({ index, dimensions }: Props) {
-  // TODO fix zindex with iamges and transparency
   // TODO add show tafseer
 
   const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
   const [show, setShow] = useState(false);
+  const setShowTopMenu = useSetRecoilState(topMenuState);
 
   const handleAyaClick = ({ aya, surah }: { aya: number; surah: number }) => {
     setSelectedAya({ aya, surah });
     setShow(true);
+    console.log({ aya, surah });
   };
 
   const { overlay, lineHeight } = usePageOverlay({
@@ -27,37 +29,37 @@ export default function PageOverlay({ index, dimensions }: Props) {
     dimensions,
   });
   return (
-    <ThemedView style={styles.container}>
+    <>
       {overlay.map(({ x: top, y: left, width, aya, surah }) => (
         <Pressable
           key={`${surah}-${aya}-${top}-${left}-${width}`}
           accessible={true}
           accessibilityLabel={`aya - ${aya} sura - ${surah}`}
           accessibilityRole="button"
-          style={{
-            position: 'absolute',
-            top,
-            left,
-            width,
-            height: lineHeight,
-            backgroundColor:
-              show && selectedAya.aya === aya && selectedAya.surah === surah
-                ? 'rgba(128, 128, 128, 0.5)'
-                : 'transparent',
-          }}
-          onPress={() => handleAyaClick({ aya, surah })}
-        />
+          style={[
+            styles.overlay,
+            {
+              top,
+              left,
+              width,
+              height: lineHeight,
+              backgroundColor:
+                show && selectedAya.aya === aya && selectedAya.surah === surah
+                  ? 'rgba(128, 128, 128, 0.5)'
+                  : 'transparent',
+            },
+          ]}
+          onPress={() => setShowTopMenu(true)}
+          onLongPress={() => handleAyaClick({ aya, surah })}
+        >
+          {/*  <ThemedText>{`aya - ${aya} sura - ${surah}`}</ThemedText> */}
+        </Pressable>
       ))}
-    </ThemedView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    height: '100%',
-    width: '100%',
-  },
   overlay: {
     position: 'absolute',
   },

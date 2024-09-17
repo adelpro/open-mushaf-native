@@ -12,7 +12,7 @@ const usePageOverlay = ({
   dimensions: { customPageWidth: number; customPageHeight: number };
 }) => {
   const coordinates = ayas.coordinates as Page[];
-  const page = coordinates[index] as Aya[];
+  const page: Aya[] = coordinates[index];
   const { customPageHeight, customPageWidth } = dimensions;
   const {
     defaultPageHeight,
@@ -20,7 +20,7 @@ const usePageOverlay = ({
     defaultMarginX,
     defaultMarginY,
     defaultLineHeight,
-    defaultFirstPAgesMarginX,
+    defaultFirstPagesMarginX,
     defaultFirstPagesWidth,
     defaultFirstPagesMarginY,
   } = specs;
@@ -36,24 +36,22 @@ const usePageOverlay = ({
 
   const calculateDimensions = () => {
     const lineHeight = defaultLineHeight * heightCoeff;
-    let marginX = defaultMarginX * heightCoeff;
-    if (index <= 2) marginX = defaultFirstPAgesMarginX * heightCoeff;
 
     const pageWidth =
       index <= 2
         ? defaultFirstPagesWidth * widthCoeff
         : defaultPageWidth * widthCoeff;
+
     const marginY =
       index <= 2
         ? defaultFirstPagesMarginY * widthCoeff
         : defaultMarginY * widthCoeff;
-
-    return { lineHeight, marginX, marginY, pageWidth };
+    return { lineHeight, marginY, pageWidth };
   };
 
-  const { lineHeight, marginX, pageWidth, marginY } = calculateDimensions();
+  const { lineHeight, pageWidth, marginY } = calculateDimensions();
 
-  let prevX = marginX;
+  let prevX = 0;
 
   const generateOverlay = () => {
     const overlayElements: {
@@ -72,13 +70,11 @@ const usePageOverlay = ({
       const defaultX: number = aya[2];
       const defaultY: number = aya[3];
 
-      // Dimensions correction
-      let X = defaultX * heightCoeff;
+      const X =
+        index <= 2
+          ? (defaultX - defaultFirstPagesMarginX) * heightCoeff
+          : (defaultX - defaultMarginX) * heightCoeff;
 
-      // Correction for 1/2 pages only
-      if (index <= 2) {
-        X = (defaultX - 100) * heightCoeff;
-      }
       const Y = defaultY * widthCoeff;
 
       // Drawing overlay for aya line (first part before the aya marker)
@@ -91,6 +87,7 @@ const usePageOverlay = ({
       });
 
       // Drawing overlay for aya line (last part after the aya marker in the same line)
+      // 93 minimum aya end marker width
       if (Y > 93) {
         overlayElements.push({
           x: X,
@@ -102,13 +99,16 @@ const usePageOverlay = ({
       }
 
       // Drawing overlay for multiple-line aya
-      const numberOfLines: number = Math.ceil((X - prevX) / lineHeight);
+
+      const numberOfLines: number = Math.ceil(
+        (X - prevX - lineHeight) / lineHeight,
+      );
 
       if (numberOfLines > 1) {
         let x = X;
         for (let i = 0; i < numberOfLines - 1; i++) {
           x -= lineHeight;
-          if (x >= 40) {
+          if (x >= lineHeight) {
             overlayElements.push({
               x: x,
               y: marginY,

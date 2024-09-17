@@ -1,11 +1,11 @@
 {
-  "defaultPageHeight": 616,
-  "defaultMarginX": 20,
+  "defaultPageHeight": 720,
+  "defaultMarginX": 0,
   "defaultPageWidth": 430,
   "defaultMarginY": 20,
-  "defaultLineHeight": 40,
+  "defaultLineHeight": 32,
   "defaultNumberOfPages": 604,
   "defaultFirstPagesWidth": 320,
-  "defaultFirstPAgesMarginX": 120,
-  "defaultFirstPagesMarginY": 20
+  "defaultFirstPagesMarginX": 120,
+  "defaultFirstPagesMarginY": 80
 }

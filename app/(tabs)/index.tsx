@@ -66,10 +66,8 @@ export default function HomeScreen() {
   const defaultNumberOfPages = specs.defaultNumberOfPages;
   const currentPage = getCurrentPage(pageParam);
 
-  const handleImageLoad = (event: {
-    source: { width: number; height: number };
-  }) => {
-    const { width, height } = event.source;
+  const handleImageLayout = (event: any) => {
+    const { width, height } = event.nativeEvent.layout;
     setDimensions({ customPageWidth: width, customPageHeight: height });
   };
 
@@ -111,13 +109,12 @@ export default function HomeScreen() {
       <SafeAreaView style={styles.container}>
         <TopMenu />
 
-        <Pressable
-          style={styles.content}
-          onPress={() => setShowTopMenu(true)}
-          onLongPress={() => alert('Long press on content')}
-        >
+        <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
           <PanGestureHandler onHandlerStateChange={handleSwipe}>
-            <ThemedView style={styles.container}>
+            <ThemedView
+              style={styles.imageContainer}
+              onLayout={handleImageLayout}
+            >
               {assets ? (
                 <Image
                   style={styles.image}
@@ -125,7 +122,6 @@ export default function HomeScreen() {
                   placeholder={{ blurhash }}
                   contentFit="fill"
                   transition={1000}
-                  onLoad={handleImageLoad}
                 />
               ) : (
                 <ActivityIndicator size="large" color={tint} />
@@ -141,6 +137,13 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+  },
+  imageContainer: {
     position: 'relative',
     display: 'flex',
     justifyContent: 'center',
@@ -148,6 +151,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     flex: 1,
+    borderColor: 'blue',
+    borderWidth: 2,
+    maxWidth: 400,
   },
   content: {
     flex: 1,
@@ -160,6 +166,5 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     backgroundColor: 'white',
-    maxWidth: 400,
   },
 });
