@@ -2,14 +2,14 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 
 import { Colors } from '@/constants/Colors'; // Ensure this import is correct
-import { Tabs } from '@/types';
+import { ListTabs } from '@/types';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
 type Props = {
-  setActiveTab: (tab: Tabs) => void;
-  activeTab: Tabs;
+  setActiveTab: (tab: ListTabs) => void;
+  activeTab: ListTabs;
 };
 
 export default function TopTabs({ activeTab, setActiveTab }: Props) {
@@ -17,7 +17,7 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
   const currentColor = Colors[colorScheme ?? 'light'].tint;
   const backgroundColor = Colors[colorScheme ?? 'light'].background; // Background color for active tab
 
-  const handleTabPress = (tab: Tabs) => {
+  const handleTabPress = (tab: ListTabs) => {
     setActiveTab(tab);
   };
 

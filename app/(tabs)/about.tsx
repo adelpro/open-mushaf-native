@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { useSetRecoilState } from 'recoil';
 
@@ -13,10 +13,7 @@ export default function AboutScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <TouchableOpacity
-        style={styles.container}
-        onPress={() => setShowTopMenu(true)}
-      >
+      <Pressable style={styles.container} onPress={() => setShowTopMenu(true)}>
         <TopMenu />
         <ThemedView style={styles.mainContent}>
           <ThemedView style={styles.contentBox}>
@@ -110,7 +107,7 @@ export default function AboutScreen() {
             © {new Date().getFullYear()} Open-Mushaf. جميع الحقوق محفوظة.
           </ThemedText>
         </ThemedView>
-      </TouchableOpacity>
+      </Pressable>
     </ThemedView>
   );
 }

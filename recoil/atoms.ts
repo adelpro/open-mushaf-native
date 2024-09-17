@@ -2,19 +2,30 @@ import * as SecureStore from 'expo-secure-store';
 import { atom, AtomEffect } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
+import { TafseerTabs } from '@/types';
+
+// TODO: use recoil-persist
 const { persistAtom } = recoilPersist({
-  key: 'recoil-persist', // Key for storage
+  key: 'open-mushaf', // Key for storage
   storage: SecureStore,
 });
+
 export const bottomMenuState = atom<boolean>({
   key: 'BottomMenuState',
   default: true,
+  //effects: [persistAtom],
 });
 
-export const Persist = atom<boolean>({
-  key: 'BottomMenuStatePersist',
-  default: true,
-  effects: [persistAtom],
+export const popupHeight = atom<number>({
+  key: 'PopupHeight',
+  default: 320,
+  //effects: [persistAtom],
+});
+
+export const tafseerTab = atom<TafseerTabs>({
+  key: 'TafseerTab',
+  default: 'katheer',
+  //effects: [persistAtom],
 });
 
 const timerEffect: (duration_ms: number) => AtomEffect<any> =

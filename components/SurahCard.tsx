@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -24,7 +24,7 @@ export default function SurahCard({ surah }: Props) {
   };
 
   return (
-    <TouchableOpacity onPress={handlePress} style={styles.container}>
+    <Pressable onPress={handlePress} style={styles.container}>
       <ThemedView style={styles.content}>
         <ThemedText style={styles.number}>{surah.number}</ThemedText>
         <ThemedView>
@@ -42,7 +42,7 @@ export default function SurahCard({ surah }: Props) {
           style={styles.image}
         />
       </ThemedView>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 

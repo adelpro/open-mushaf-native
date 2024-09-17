@@ -6,6 +6,8 @@ import { useSetRecoilState } from 'recoil';
 import usePageOverlay from '@/hooks/usePageOverLay';
 import { topMenuState } from '@/recoil/atoms';
 
+import TafseerPopup from './navigation/TafseerPopup';
+
 type Props = {
   index: number;
   dimensions: { customPageWidth: number; customPageHeight: number };
@@ -15,7 +17,7 @@ export default function PageOverlay({ index, dimensions }: Props) {
   // TODO add show tafseer
 
   const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState<boolean>(false);
   const setShowTopMenu = useSetRecoilState(topMenuState);
 
   const handleAyaClick = ({ aya, surah }: { aya: number; surah: number }) => {
@@ -55,6 +57,12 @@ export default function PageOverlay({ index, dimensions }: Props) {
           {/*  <ThemedText>{`aya - ${aya} sura - ${surah}`}</ThemedText> */}
         </Pressable>
       ))}
+      <TafseerPopup
+        show={show}
+        setShow={setShow}
+        aya={selectedAya.aya}
+        surah={selectedAya.surah}
+      />
     </>
   );
 }

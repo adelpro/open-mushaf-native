@@ -8,6 +8,7 @@ import { ThemedView } from './ThemedView';
 import chaptersJSON from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/chapter.json';
 
 export default function ChapterList() {
+  // TODO: add flatlist
   return (
     <ThemedView style={styles.container}>
       {chaptersJSON.map((chapter: Chapter) => (
