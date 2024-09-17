@@ -151,8 +151,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     flex: 1,
-    borderColor: 'blue',
-    borderWidth: 2,
     maxWidth: 400,
   },
   content: {

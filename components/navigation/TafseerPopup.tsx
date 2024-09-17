@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
+import HTML from 'react-native-render-html';
 import { useRecoilState } from 'recoil';
 
 import { popupHeight, tafseerTab } from '@/recoil/atoms';
@@ -82,7 +83,11 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
       tafseerText = 'لا يوجد تفسير.';
     }
 
-    return <ThemedText style={styles.tafseerContent}>{tafseerText}</ThemedText>;
+    return (
+      <ThemedView style={styles.tafseerContent}>
+        <HTML source={{ html: tafseerText }} />
+      </ThemedView>
+    );
   };
 
   useEffect(() => {
