@@ -6,7 +6,7 @@ import { useSetRecoilState } from 'recoil';
 import usePageOverlay from '@/hooks/usePageOverLay';
 import { topMenuState } from '@/recoil/atoms';
 
-import TafseerPopup from './navigation/TafseerPopup';
+import TafseerPopup from './TafseerPopup';
 
 type Props = {
   index: number;

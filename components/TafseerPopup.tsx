@@ -13,19 +13,19 @@ import { useRecoilState } from 'recoil';
 import { popupHeight, tafseerTab } from '@/recoil/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
 
-import surahs from '../../assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
-import baghawy from '../../assets/tafaseer/baghawy.json';
-import earab from '../../assets/tafaseer/earab.json';
-import katheer from '../../assets/tafaseer/katheer.json';
-import maany from '../../assets/tafaseer/maany.json';
-import muyassar from '../../assets/tafaseer/muyassar.json';
-import qortoby from '../../assets/tafaseer/qortoby.json';
-import saady from '../../assets/tafaseer/saady.json';
-import tabary from '../../assets/tafaseer/tabary.json';
-import tanweer from '../../assets/tafaseer/tanweer.json';
-import waseet from '../../assets/tafaseer/waseet.json';
-import { ThemedText } from '../ThemedText';
-import { ThemedView } from '../ThemedView';
+import { ThemedText } from './ThemedText';
+import { ThemedView } from './ThemedView';
+import surahs from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
+import baghawy from '../assets/tafaseer/baghawy.json';
+import earab from '../assets/tafaseer/earab.json';
+import katheer from '../assets/tafaseer/katheer.json';
+import maany from '../assets/tafaseer/maany.json';
+import muyassar from '../assets/tafaseer/muyassar.json';
+import qortoby from '../assets/tafaseer/qortoby.json';
+import saady from '../assets/tafaseer/saady.json';
+import tabary from '../assets/tafaseer/tabary.json';
+import tanweer from '../assets/tafaseer/tanweer.json';
+import waseet from '../assets/tafaseer/waseet.json';
 
 type Props = {
   show: boolean;
@@ -138,6 +138,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
           onPress={(e) => e.stopPropagation()}
           {...panResponder.panHandlers}
         >
+          {/* // FIXME: fix reizing not working */}
           <Pressable
             style={styles.resizer}
             onPressIn={() => setIsResizing(true)}
