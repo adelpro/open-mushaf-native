@@ -20,15 +20,12 @@ export default function TabLayout() {
         tabBarLabelPosition: 'below-icon',
         tabBarStyle: {
           display: menuStateValue ? 'flex' : 'none',
-          justifyContent: 'center',
+          height: 55,
         },
         tabBarLabelStyle: {
           fontFamily: 'Amiri_400Regular',
-          paddingTop: 5,
         },
-        tabBarIconStyle: {
-          paddingTop: 5,
-        },
+        tabBarIconStyle: {},
         headerShown: false,
       })}
     >
@@ -39,8 +36,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
               name={focused ? 'view-list' : 'view-list-outline'}
-              size={28}
               color={color}
+              size={28}
             />
           ),
         }}
@@ -52,8 +49,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <FontAwesome6
               name="book-quran"
-              size={28}
               style={{ marginBottom: -3 }}
+              size={28}
               color={color}
             />
           ),

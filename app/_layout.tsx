@@ -21,8 +21,12 @@ import { RecoilRoot } from 'recoil';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+// eslint-disable-next-line import/order
+import { I18nManager } from 'react-native';
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+I18nManager.forceRTL(true);
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();

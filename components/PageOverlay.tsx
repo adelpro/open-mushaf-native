@@ -23,7 +23,6 @@ export default function PageOverlay({ index, dimensions }: Props) {
   const handleAyaClick = ({ aya, surah }: { aya: number; surah: number }) => {
     setSelectedAya({ aya, surah });
     setShow(true);
-    console.log({ aya, surah });
   };
 
   const { overlay, lineHeight } = usePageOverlay({
@@ -53,9 +52,7 @@ export default function PageOverlay({ index, dimensions }: Props) {
           ]}
           onPress={() => setShowTopMenu(true)}
           onLongPress={() => handleAyaClick({ aya, surah })}
-        >
-          {/*  <ThemedText>{`aya - ${aya} sura - ${surah}`}</ThemedText> */}
-        </Pressable>
+        ></Pressable>
       ))}
       <TafseerPopup
         show={show}

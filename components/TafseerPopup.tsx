@@ -5,11 +5,13 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  useColorScheme,
 } from 'react-native';
 
-import HTML from 'react-native-render-html';
+import WebView from 'react-native-webview';
 import { useRecoilState } from 'recoil';
 
+import { Colors } from '@/constants/Colors';
 import { popupHeight, tafseerTab } from '@/recoil/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
 
@@ -36,7 +38,7 @@ type Props = {
 
 const tabLabels: Record<TafseerTabs, string> = {
   katheer: 'ابن كثير',
-  maaany: 'معاني القرآن',
+  maany: 'معاني القرآن',
   earab: 'إعراب القرآن',
   baghawy: 'البغوي',
   muyassar: 'الميسر',
@@ -56,7 +58,10 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
   const [surahName, setSurahName] = useState<string>('');
   const popupRef = useRef(null);
-
+  const colorScheme = useColorScheme();
+  const tintColor = Colors[colorScheme ?? 'light'].tint;
+  const { height: screenHeight } = Dimensions.get('window');
+  const maxPopupHeight = screenHeight * 0.7;
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
@@ -85,7 +90,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
 
     return (
       <ThemedView style={styles.tafseerContent}>
-        <HTML source={{ html: tafseerText }} />
+        <WebView originWhitelist={['*']} source={{ html: tafseerText }} />
       </ThemedView>
     );
   };
@@ -99,7 +104,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
       case 'katheer':
         setTafseerData(katheer as TafseerAya[]);
         break;
-      case 'maaany':
+      case 'maany':
         setTafseerData(maany as TafseerAya[]);
         break;
       case 'earab':
@@ -131,47 +136,45 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
 
   return show ? (
     <ThemedView style={styles.overlay}>
-      <Pressable style={styles.background} onPress={() => setShow(false)}>
-        <Pressable
-          ref={popupRef}
-          style={[styles.popup, { height: popupHeightValue }]}
-          onPress={(e) => e.stopPropagation()}
-          {...panResponder.panHandlers}
-        >
-          {/* // FIXME: fix reizing not working */}
-          <Pressable
-            style={styles.resizer}
-            onPressIn={() => setIsResizing(true)}
-          >
-            <ThemedText style={styles.resizerText}>⇕</ThemedText>
-          </Pressable>
-          <ScrollView contentContainerStyle={styles.scrollView}>
-            <Pressable onPress={() => setShow(false)}>
-              <ThemedText style={styles.closeButton}>✕</ThemedText>
-            </Pressable>
-            <ThemedText style={styles.title}>
-              {surahName} - الآية {aya}
-            </ThemedText>
-            <ThemedView style={styles.tabs}>
-              {Object.keys(tabLabels).map((key) => {
-                const tabKey = key as TafseerTabs;
-                return (
-                  <Pressable
-                    key={tabKey}
-                    style={[
-                      styles.tabButton,
-                      selectedTabValue === tabKey && styles.activeTab,
-                    ]}
-                    onPress={() => setSelectedTab(tabKey)}
-                  >
-                    <ThemedText>{tabLabels[tabKey]}</ThemedText>
-                  </Pressable>
-                );
-              })}
-            </ThemedView>
-            {renderTafseerContent(tafseerData)}
-          </ScrollView>
+      {/* <Pressable style={styles.background} onPress={() => setShow(false)} /> */}
+      <Pressable
+        ref={popupRef}
+        style={[styles.popup, { height: popupHeightValue }]}
+        onPress={(e) => e.stopPropagation()}
+        {...panResponder.panHandlers}
+      >
+        {/* // FIXME: fix reizing not working */}
+        <Pressable style={styles.resizer} onPressIn={() => setIsResizing(true)}>
+          <ThemedText
+            style={[styles.resizerIcon, { backgroundColor: tintColor }]}
+          />
         </Pressable>
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <Pressable onPress={() => setShow(false)}>
+            <ThemedText style={styles.closeButton}>✕</ThemedText>
+          </Pressable>
+          <ThemedText style={styles.title}>
+            {surahName} - الآية {aya}
+          </ThemedText>
+          <ThemedView style={styles.tabs}>
+            {Object.keys(tabLabels).map((key) => {
+              const tabKey = key as TafseerTabs;
+              return (
+                <Pressable
+                  key={tabKey}
+                  style={[
+                    styles.tabButton,
+                    selectedTabValue === tabKey && styles.activeTab,
+                  ]}
+                  onPress={() => setSelectedTab(tabKey)}
+                >
+                  <ThemedText>{tabLabels[tabKey]}</ThemedText>
+                </Pressable>
+              );
+            })}
+          </ThemedView>
+          {renderTafseerContent(tafseerData)}
+        </ScrollView>
       </Pressable>
     </ThemedView>
   ) : null;
@@ -186,7 +189,8 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    zIndex: 50,
+    //backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
   },
   background: {
     position: 'absolute',
@@ -207,6 +211,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     shadowOffset: { width: 0, height: 2 },
     elevation: 5,
+    zIndex: 100,
   },
   resizer: {
     alignSelf: 'center',
@@ -231,6 +236,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     justifyContent: 'flex-start',
+    backgroundColor: 'transparent',
   },
   tabButton: {
     paddingVertical: 10,
@@ -242,5 +248,10 @@ const styles = StyleSheet.create({
   },
   tafseerContent: {
     marginTop: 20,
+  },
+  resizerIcon: {
+    width: 60,
+    height: 3,
+    borderRadius: 3,
   },
 });

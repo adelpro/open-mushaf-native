@@ -1,11 +1,11 @@
 export type TafseerTabs =
   | 'katheer'
-  | 'maaany'
+  | 'maany'
   | 'earab'
   | 'baghawy'
   | 'muyassar'
   | 'qortoby'
   | 'tabary'
   | 'saady'
-  | 'tanweer'
-  | 'waseet';
+  | 'waseet'
+  | 'tanweer';
