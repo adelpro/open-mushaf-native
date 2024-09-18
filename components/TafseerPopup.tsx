@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import HTML from 'react-native-render-html';
+import WebView from 'react-native-webview';
 import { useRecoilState } from 'recoil';
 
 import { popupHeight, tafseerTab } from '@/recoil/atoms';
@@ -36,7 +36,7 @@ type Props = {
 
 const tabLabels: Record<TafseerTabs, string> = {
   katheer: 'ابن كثير',
-  maaany: 'معاني القرآن',
+  maany: 'معاني القرآن',
   earab: 'إعراب القرآن',
   baghawy: 'البغوي',
   muyassar: 'الميسر',
@@ -85,7 +85,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
 
     return (
       <ThemedView style={styles.tafseerContent}>
-        <HTML source={{ html: tafseerText }} />
+        <WebView originWhitelist={['*']} source={{ html: tafseerText }} />
       </ThemedView>
     );
   };
@@ -99,7 +99,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
       case 'katheer':
         setTafseerData(katheer as TafseerAya[]);
         break;
-      case 'maaany':
+      case 'maany':
         setTafseerData(maany as TafseerAya[]);
         break;
       case 'earab':
@@ -176,7 +176,6 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
     </ThemedView>
   ) : null;
 }
-
 const styles = StyleSheet.create({
   overlay: {
     position: 'absolute', // Changed from 'relative' to 'absolute'

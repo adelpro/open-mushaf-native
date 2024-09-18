@@ -1,6 +1,6 @@
 export type TafseerTabs =
   | 'katheer'
-  | 'maaany'
+  | 'maany'
   | 'earab'
   | 'baghawy'
   | 'muyassar'
