@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.adelpro.openmushafnative"
     },
     "web": {
       "bundler": "metro",
@@ -33,6 +34,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2360a464-857f-4685-8c0f-be166a166847"
+      }
     }
   }
 }

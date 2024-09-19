@@ -1,0 +1,21 @@
+{
+  "build": {
+    "preview": {
+      "android": {
+        "buildType": "apk",
+        "distribution": "internal",
+        "releaseChannel": "preview"
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "app-bundle",
+        "releaseChannel": "production"
+      },
+      "autoIncrement": true
+    }
+  },
+  "cli": {
+    "appVersionSource": "version"
+  }
+}
