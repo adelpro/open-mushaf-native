@@ -16,6 +16,6 @@
     }
   },
   "cli": {
-    "appVersionSource": "version"
+    "appVersionSource": "remote"
   }
 }
