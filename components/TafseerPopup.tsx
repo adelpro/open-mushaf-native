@@ -12,6 +12,8 @@ import {
   GestureHandlerRootView,
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
+  PanGestureHandlerStateChangeEvent,
+  State,
 } from 'react-native-gesture-handler';
 import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
@@ -48,6 +50,8 @@ const tabLabels: Record<TafseerTabs, string> = {
 export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   const [popupHeightValue, setPopupHeight] =
     useRecoilState<number>(popupHeight);
+  const [opacity, setOpacity] = useState(1);
+
   const [isResizing, setIsResizing] = useState(false);
   const [selectedTabValue, setSelectedTab] =
     useRecoilState<TafseerTabs>(tafseerTab);
@@ -62,12 +66,35 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   const handleGesture = useCallback(
     (event: PanGestureHandlerGestureEvent) => {
       if (isResizing && popupRef.current) {
-        const newHeight =
-          Dimensions.get('window').height - event.nativeEvent.translationY;
-        setPopupHeight(Math.max(30, newHeight));
+        const windowHeight = Dimensions.get('window').height;
+        const newHeight = Math.min(
+          Math.max(
+            0.3 * windowHeight,
+            windowHeight - event.nativeEvent.translationY,
+          ),
+          0.7 * windowHeight,
+        );
+        setPopupHeight(Math.max(100, newHeight)); // Set a min height for better UX
       }
     },
     [isResizing, setPopupHeight],
+  );
+
+  // Handle gesture state change
+  const handleGestureStateChange = useCallback(
+    (event: PanGestureHandlerStateChangeEvent) => {
+      if (event.nativeEvent.state === State.BEGAN) {
+        setOpacity(0.8);
+        setIsResizing(true);
+      } else if (
+        event.nativeEvent.state === State.END ||
+        event.nativeEvent.state === State.CANCELLED
+      ) {
+        setOpacity(1);
+        setIsResizing(false);
+      }
+    },
+    [setIsResizing],
   );
 
   const renderTafseerContent = (tafseer: TafseerAya[] | null): JSX.Element => {
@@ -75,7 +102,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
     const tafseerText = ayaTafseer?.text || 'لا يوجد تفسير.';
 
     return (
-      <ThemedView /* style={styles.tafseerContent} */>
+      <ThemedView>
         <HTMLView
           value={tafseerText}
           stylesheet={{ p: { color: textColor } }}
@@ -99,10 +126,16 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
       <Pressable style={styles.background} onPress={() => setShow(false)}>
         <Pressable
           ref={popupRef}
-          style={[styles.popup, { height: popupHeightValue, backgroundColor }]}
+          style={[
+            styles.popup,
+            { height: popupHeightValue, backgroundColor, opacity },
+          ]}
           onPress={(e) => e.stopPropagation()}
         >
-          <PanGestureHandler onGestureEvent={handleGesture}>
+          <PanGestureHandler
+            onGestureEvent={handleGesture}
+            onHandlerStateChange={handleGestureStateChange}
+          >
             <Pressable
               style={styles.resizer}
               onPressIn={() => setIsResizing(true)}
@@ -114,7 +147,12 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
             </Pressable>
           </PanGestureHandler>
 
-          <ScrollView contentContainerStyle={styles.scrollView}>
+          <ScrollView
+            contentContainerStyle={[
+              styles.scrollView,
+              { backgroundColor, opacity },
+            ]}
+          >
             <ThemedText style={styles.title}>
               {surahName} - الآية {aya}
             </ThemedText>
@@ -204,8 +242,4 @@ const styles = StyleSheet.create({
   activeTab: {
     borderBottomWidth: 2,
   },
-  tafseerContent: {
-    marginTop: 20,
-  },
-  tafseerText: {},
 });

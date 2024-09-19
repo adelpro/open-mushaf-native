@@ -46,19 +46,19 @@ export default function RootLayout() {
   }
 
   return (
-    <RecoilRoot>
-      <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
-        <ThemeProvider
-          value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-        >
-          <GestureHandlerRootView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <RecoilRoot>
+        <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
+          <ThemeProvider
+            value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+          >
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen name="+not-found" />
             </Stack>
-          </GestureHandlerRootView>
-        </ThemeProvider>
-      </ReactNativeRecoilPersistGate>
-    </RecoilRoot>
+          </ThemeProvider>
+        </ReactNativeRecoilPersistGate>
+      </RecoilRoot>
+    </GestureHandlerRootView>
   );
 }
