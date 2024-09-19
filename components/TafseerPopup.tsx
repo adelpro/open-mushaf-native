@@ -1,13 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
-  PanResponder,
   Pressable,
   ScrollView,
   StyleSheet,
   useColorScheme,
+  View,
 } from 'react-native';
 
+import {
+  GestureHandlerRootView,
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from 'react-native-gesture-handler';
 import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
 
@@ -48,31 +53,33 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
     useRecoilState<TafseerTabs>(tafseerTab);
   const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
   const [surahName, setSurahName] = useState<string>('');
-  const popupRef = useRef(null);
+  const popupRef = useRef<View | null>(null);
   const colorScheme = useColorScheme();
-  const colorTint = Colors[colorScheme ?? 'light'].tint;
+  const textColor = Colors[colorScheme ?? 'light'].text;
+  const tintColor = Colors[colorScheme ?? 'light'].tint;
+  const backgroundColor = Colors[colorScheme ?? 'light'].background;
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderMove: (_evt, gestureState) => {
-        if (isResizing && popupRef.current) {
-          const newHeight =
-            Dimensions.get('window').height - gestureState.moveY;
-          setPopupHeight(Math.max(30, newHeight));
-        }
-      },
-      onPanResponderRelease: () => setIsResizing(false),
-    }),
-  ).current;
+  const handleGesture = useCallback(
+    (event: PanGestureHandlerGestureEvent) => {
+      if (isResizing && popupRef.current) {
+        const newHeight =
+          Dimensions.get('window').height - event.nativeEvent.translationY;
+        setPopupHeight(Math.max(30, newHeight));
+      }
+    },
+    [isResizing, setPopupHeight],
+  );
 
   const renderTafseerContent = (tafseer: TafseerAya[] | null): JSX.Element => {
     const ayaTafseer = tafseer?.find((t) => t.aya === aya && t.sura === surah);
     const tafseerText = ayaTafseer?.text || 'لا يوجد تفسير.';
 
     return (
-      <ThemedView style={styles.tafseerContent}>
-        <HTMLView value={tafseerText} stylesheet={styles.tafseerText} />
+      <ThemedView /* style={styles.tafseerContent} */>
+        <HTMLView
+          value={tafseerText}
+          stylesheet={{ p: { color: textColor } }}
+        />
       </ThemedView>
     );
   };
@@ -88,22 +95,25 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   if (!show) return null;
 
   return (
-    <ThemedView style={styles.overlay}>
+    <GestureHandlerRootView style={styles.overlay}>
       <Pressable style={styles.background} onPress={() => setShow(false)}>
         <Pressable
           ref={popupRef}
-          style={[styles.popup, { height: popupHeightValue }]}
+          style={[styles.popup, { height: popupHeightValue, backgroundColor }]}
           onPress={(e) => e.stopPropagation()}
-          {...panResponder.panHandlers}
         >
-          <Pressable
-            style={styles.resizer}
-            onPressIn={() => setIsResizing(true)}
-          >
-            <ThemedView
-              style={[styles.resizerIcon, { backgroundColor: colorTint }]}
-            />
-          </Pressable>
+          <PanGestureHandler onGestureEvent={handleGesture}>
+            <Pressable
+              style={styles.resizer}
+              onPressIn={() => setIsResizing(true)}
+              onPressOut={() => setIsResizing(false)}
+            >
+              <ThemedView
+                style={[styles.resizerIcon, { backgroundColor: tintColor }]}
+              />
+            </Pressable>
+          </PanGestureHandler>
+
           <ScrollView contentContainerStyle={styles.scrollView}>
             <ThemedText style={styles.title}>
               {surahName} - الآية {aya}
@@ -129,7 +139,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
           </ScrollView>
         </Pressable>
       </Pressable>
-    </ThemedView>
+    </GestureHandlerRootView>
   );
 }
 

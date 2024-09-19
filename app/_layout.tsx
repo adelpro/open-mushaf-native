@@ -14,6 +14,7 @@ import {
 } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ReactNativeRecoilPersist, {
   ReactNativeRecoilPersistGate,
 } from 'react-native-recoil-persist';
@@ -50,10 +51,12 @@ export default function RootLayout() {
         <ThemeProvider
           value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
         >
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
+          <GestureHandlerRootView>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </GestureHandlerRootView>
         </ThemeProvider>
       </ReactNativeRecoilPersistGate>
     </RecoilRoot>
