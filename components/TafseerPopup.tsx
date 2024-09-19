@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 
 import {
-  GestureHandlerRootView,
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
   PanGestureHandlerStateChangeEvent,
@@ -50,8 +49,9 @@ const tabLabels: Record<TafseerTabs, string> = {
 export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   const [popupHeightValue, setPopupHeight] =
     useRecoilState<number>(popupHeight);
+  const [currentPopupHeight, setCurrentPopupHeight] =
+    useState<number>(popupHeightValue);
   const [opacity, setOpacity] = useState(1);
-  const [isResizing, setIsResizing] = useState(false);
   const [selectedTabValue, setSelectedTab] =
     useRecoilState<TafseerTabs>(tafseerTab);
   const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
@@ -64,37 +64,34 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
 
   const handleGesture = useCallback(
     (event: PanGestureHandlerGestureEvent) => {
-      if (isResizing && popupRef.current) {
+      if (popupRef?.current) {
         const windowHeight = Dimensions.get('window').height;
-        const newHeight = Math.min(
-          Math.max(
-            0.3 * windowHeight,
-            windowHeight - event.nativeEvent.translationY,
-          ),
-          0.7 * windowHeight,
-        );
-        setPopupHeight(Math.max(100, newHeight)); // Set a min height for better UX
+        const translationY = event.nativeEvent.translationY;
+
+        const newHeight = popupHeightValue - translationY;
+
+        if (newHeight > windowHeight * 0.7 || newHeight < windowHeight * 0.3) {
+          return;
+        }
+
+        setCurrentPopupHeight(newHeight);
       }
     },
-    [isResizing, setPopupHeight],
+    [popupHeightValue],
   );
 
   const handleGestureStateChange = useCallback(
     (event: PanGestureHandlerStateChangeEvent) => {
-      console.log('Gesture state:', event.nativeEvent.state);
       if (event.nativeEvent.state === State.BEGAN) {
         setOpacity(0.8);
-        setIsResizing(true);
-      } else if (
-        event.nativeEvent.state === State.END ||
-        event.nativeEvent.state === State.CANCELLED
-      ) {
-        console.log('Gesture ended or cancelled');
-        setOpacity(1); // Reset opacity to 1 after resizing is complete
-        setIsResizing(false);
+      } else if (event.nativeEvent.state === State.CANCELLED) {
+        setOpacity(1);
+      } else if (event.nativeEvent.state === State.END) {
+        setPopupHeight(currentPopupHeight);
+        setOpacity(1);
       }
     },
-    [],
+    [currentPopupHeight, setPopupHeight],
   );
 
   const renderTafseerContent = (tafseer: TafseerAya[] | null): JSX.Element => {
@@ -122,13 +119,13 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   if (!show) return null;
 
   return (
-    <GestureHandlerRootView style={styles.overlay}>
+    <ThemedView style={styles.overlay}>
       <Pressable style={styles.background} onPress={() => setShow(false)}>
         <Pressable
           ref={popupRef}
           style={[
             styles.popup,
-            { height: popupHeightValue, backgroundColor, opacity },
+            { height: currentPopupHeight, backgroundColor, opacity },
           ]}
           onPress={(e) => e.stopPropagation()}
         >
@@ -136,11 +133,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
             onGestureEvent={handleGesture}
             onHandlerStateChange={handleGestureStateChange}
           >
-            <Pressable
-              style={styles.resizer}
-              onPressIn={() => setIsResizing(true)}
-              onPressOut={() => setIsResizing(false)}
-            >
+            <Pressable style={styles.resizer}>
               <ThemedView
                 style={[styles.resizerIcon, { backgroundColor: tintColor }]}
               />
@@ -177,7 +170,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
           </ScrollView>
         </Pressable>
       </Pressable>
-    </GestureHandlerRootView>
+    </ThemedView>
   );
 }
 
@@ -215,12 +208,15 @@ const styles = StyleSheet.create({
   },
   resizer: {
     alignSelf: 'center',
-    padding: 10,
+    width: '60%',
+    paddingVertical: 10,
+    paddingHorizontal: 30,
   },
   resizerIcon: {
     width: 80,
     height: 3,
     borderRadius: 3,
+    alignSelf: 'center',
   },
   scrollView: {
     padding: 20,

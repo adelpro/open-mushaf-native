@@ -1,20 +1,23 @@
 import React from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, useColorScheme } from 'react-native';
 
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 
-import { Surah } from '@/types';
+import { Colors } from '@/constants/Colors';
+import { Chapter } from '@/types';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
 type Props = {
-  surah: Surah;
+  surah: Chapter;
 };
 
 export default function SurahCard({ surah }: Props) {
   const router = useRouter();
+  const colorScheme = useColorScheme();
+  const backgroundColor = Colors[colorScheme ?? 'light'].background;
 
   const handlePress = () => {
     router.replace({
@@ -24,7 +27,10 @@ export default function SurahCard({ surah }: Props) {
   };
 
   return (
-    <Pressable onPress={handlePress} style={styles.container}>
+    <Pressable
+      onPress={handlePress}
+      style={[styles.container, { backgroundColor }]}
+    >
       <ThemedView style={styles.content}>
         <ThemedText style={styles.number}>{surah.number}</ThemedText>
         <ThemedView>
@@ -40,6 +46,7 @@ export default function SurahCard({ surah }: Props) {
         <Image
           source={require('../assets/images/background-list-left.png')}
           style={styles.image}
+          contentFit="fill"
         />
       </ThemedView>
     </Pressable>
@@ -94,13 +101,14 @@ const styles = StyleSheet.create({
   },
   imageContianer: {
     width: '30%',
+    maxWidth: 100,
     height: '100%',
   },
   image: {
     width: '100%',
     height: '100%',
-    resizeMode: 'stretch',
     borderRadius: 5,
     padding: 1,
+    resizeMode: 'stretch',
   },
 });
