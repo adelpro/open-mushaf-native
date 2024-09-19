@@ -1,28 +1,21 @@
 import React from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import { Surah } from '@/types';
+import { Chapter } from '@/types';
 
 import SurahCard from './SurahCard';
 import { ThemedView } from './ThemedView';
-import surahsJSON from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/chapter.json';
+import surahsJSON from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
 
-const SurahList = () => {
-  // Render function for FlatList items
-  const renderItem = ({ item }: { item: Surah }) => <SurahCard surah={item} />;
-
+export default function SurahsList() {
   return (
     <ThemedView style={styles.container}>
-      <FlatList
-        data={surahsJSON}
-        keyExtractor={(item) => item.number.toString()} // Use surah number as key
-        renderItem={renderItem}
-        contentContainerStyle={styles.flatListContent} // Optional: to add padding or styling
-      />
+      {surahsJSON.map((surah: Chapter) => (
+        <SurahCard key={surah.number} surah={surah} />
+      ))}
     </ThemedView>
   );
-};
-
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -31,9 +24,4 @@ const styles = StyleSheet.create({
     padding: 20,
     width: '100%',
   },
-  flatListContent: {
-    // Optional: Add styles for FlatList content container
-  },
 });
-
-export default SurahList;

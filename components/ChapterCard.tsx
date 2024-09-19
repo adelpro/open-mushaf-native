@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
+import { Pressable, StyleSheet, useColorScheme } from 'react-native';
 
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -27,7 +27,7 @@ export default function ChapterCard({ chapter }: Props) {
   };
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={handlePress}
       style={[styles.container, { backgroundColor }]}
     >
@@ -49,7 +49,7 @@ export default function ChapterCard({ chapter }: Props) {
           contentFit="fill"
         />
       </ThemedView>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
@@ -109,5 +109,6 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 5,
     padding: 1,
+    resizeMode: 'stretch',
   },
 });
