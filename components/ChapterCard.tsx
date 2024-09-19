@@ -46,6 +46,7 @@ export default function ChapterCard({ chapter }: Props) {
         <Image
           source={require('../assets/images/background-list-left.png')}
           style={styles.image}
+          contentFit="fill"
         />
       </ThemedView>
     </TouchableOpacity>
@@ -106,7 +107,6 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-    resizeMode: 'stretch',
     borderRadius: 5,
     padding: 1,
   },

@@ -5,27 +5,20 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  useColorScheme,
 } from 'react-native';
 
 import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
 
+import { Colors } from '@/constants/Colors';
 import { popupHeight, tafseerTab } from '@/recoil/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 import surahs from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
-import baghawy from '../assets/tafaseer/baghawy.json';
-import earab from '../assets/tafaseer/earab.json';
-import katheer from '../assets/tafaseer/katheer.json';
-import maany from '../assets/tafaseer/maany.json';
-import muyassar from '../assets/tafaseer/muyassar.json';
-import qortoby from '../assets/tafaseer/qortoby.json';
-import saady from '../assets/tafaseer/saady.json';
-import tabary from '../assets/tafaseer/tabary.json';
-import tanweer from '../assets/tafaseer/tanweer.json';
-import waseet from '../assets/tafaseer/waseet.json';
+import tafaseer from '../assets/tafaseer';
 
 type Props = {
   show: boolean;
@@ -56,6 +49,8 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
   const [surahName, setSurahName] = useState<string>('');
   const popupRef = useRef(null);
+  const colorScheme = useColorScheme();
+  const colorTint = Colors[colorScheme ?? 'light'].tint;
 
   const panResponder = useRef(
     PanResponder.create({
@@ -72,16 +67,8 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   ).current;
 
   const renderTafseerContent = (tafseer: TafseerAya[] | null): JSX.Element => {
-    let tafseerText: string = '';
-    if (tafseer) {
-      const ayaTafseer = tafseer.find((t) => t.aya === aya && t.sura === surah);
-      if (ayaTafseer) {
-        tafseerText = ayaTafseer.text;
-      }
-    }
-    if (!tafseerText) {
-      tafseerText = 'لا يوجد تفسير.';
-    }
+    const ayaTafseer = tafseer?.find((t) => t.aya === aya && t.sura === surah);
+    const tafseerText = ayaTafseer?.text || 'لا يوجد تفسير.';
 
     return (
       <ThemedView style={styles.tafseerContent}>
@@ -91,45 +78,16 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   };
 
   useEffect(() => {
-    setSurahName(surahs[surah]?.name);
+    setSurahName(surahs[surah]?.name ?? '');
   }, [surah]);
 
   useEffect(() => {
-    switch (selectedTabValue) {
-      case 'katheer':
-        setTafseerData(katheer as TafseerAya[]);
-        break;
-      case 'maany':
-        setTafseerData(maany as TafseerAya[]);
-        break;
-      case 'earab':
-        setTafseerData(earab as TafseerAya[]);
-        break;
-      case 'baghawy':
-        setTafseerData(baghawy as TafseerAya[]);
-        break;
-      case 'muyassar':
-        setTafseerData(muyassar as TafseerAya[]);
-        break;
-      case 'qortoby':
-        setTafseerData(qortoby as TafseerAya[]);
-        break;
-      case 'tabary':
-        setTafseerData(tabary as TafseerAya[]);
-        break;
-      case 'saady':
-        setTafseerData(saady as TafseerAya[]);
-        break;
-      case 'tanweer':
-        setTafseerData(tanweer as TafseerAya[]);
-        break;
-      case 'waseet':
-        setTafseerData(waseet as TafseerAya[]);
-        break;
-    }
+    setTafseerData(tafaseer[selectedTabValue] as TafseerAya[]);
   }, [selectedTabValue]);
 
-  return show ? (
+  if (!show) return null;
+
+  return (
     <ThemedView style={styles.overlay}>
       <Pressable style={styles.background} onPress={() => setShow(false)}>
         <Pressable
@@ -138,17 +96,15 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
           onPress={(e) => e.stopPropagation()}
           {...panResponder.panHandlers}
         >
-          {/* // FIXME: fix reizing not working */}
           <Pressable
             style={styles.resizer}
             onPressIn={() => setIsResizing(true)}
           >
-            <ThemedText style={styles.resizerText}>⇕</ThemedText>
+            <ThemedView
+              style={[styles.resizerIcon, { backgroundColor: colorTint }]}
+            />
           </Pressable>
           <ScrollView contentContainerStyle={styles.scrollView}>
-            <Pressable onPress={() => setShow(false)}>
-              <ThemedText style={styles.closeButton}>✕</ThemedText>
-            </Pressable>
             <ThemedText style={styles.title}>
               {surahName} - الآية {aya}
             </ThemedText>
@@ -174,18 +130,19 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
         </Pressable>
       </Pressable>
     </ThemedView>
-  ) : null;
+  );
 }
+
 const styles = StyleSheet.create({
   overlay: {
-    position: 'absolute', // Changed from 'relative' to 'absolute'
+    position: 'absolute',
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   background: {
     position: 'absolute',
@@ -211,15 +168,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 10,
   },
-  resizerText: {
-    fontSize: 20,
+  resizerIcon: {
+    width: 80,
+    height: 3,
+    borderRadius: 3,
   },
   scrollView: {
     padding: 20,
-  },
-  closeButton: {
-    alignSelf: 'flex-end',
-    fontSize: 24,
   },
   title: {
     fontSize: 18,
@@ -229,6 +184,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
+    gap: 2,
     justifyContent: 'flex-start',
   },
   tabButton: {
@@ -237,7 +193,6 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomWidth: 2,
-    borderColor: '#007BFF',
   },
   tafseerContent: {
     marginTop: 20,

@@ -1,39 +1,33 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import ReactNativeRecoilPersist from 'react-native-recoil-persist';
 import { atom, AtomEffect } from 'recoil';
-import { recoilPersist } from 'recoil-persist';
 
 import { TafseerTabs } from '@/types';
-
-// TODO: use recoil-persist
-const { persistAtom } = recoilPersist({
-  key: 'open-mushaf', // Key for storage
-  storage: AsyncStorage,
-});
 
 export const bottomMenuState = atom<boolean>({
   key: 'BottomMenuState',
   default: true,
-  effects: [persistAtom],
+  effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
 export const popupHeight = atom<number>({
   key: 'PopupHeight',
   default: 320,
-  effects: [persistAtom],
+  effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
 export const tafseerTab = atom<TafseerTabs>({
   key: 'TafseerTab',
   default: 'katheer',
-  effects: [persistAtom],
+  effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
+// Create a timer effect for Recoil state
 const timerEffect: (duration_ms: number) => AtomEffect<any> =
   (duration_ms: number) =>
   ({ setSelf, onSet }) => {
     let timerId: NodeJS.Timeout;
     const setTimer = () => {
-      setTimeout(() => {
+      timerId = setTimeout(() => {
         setSelf(false);
       }, duration_ms);
     };
@@ -47,6 +41,7 @@ const timerEffect: (duration_ms: number) => AtomEffect<any> =
     };
   };
 
+// Define a top menu state atom with a timer effect
 export const topMenuState = atom<boolean>({
   key: 'TopMenuState',
   default: false,
