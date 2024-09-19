@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import WebView from 'react-native-webview';
+import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
 
 import { popupHeight, tafseerTab } from '@/recoil/atoms';
@@ -85,7 +85,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
 
     return (
       <ThemedView style={styles.tafseerContent}>
-        <WebView originWhitelist={['*']} source={{ html: tafseerText }} />
+        <HTMLView value={tafseerText} stylesheet={styles.tafseerText} />
       </ThemedView>
     );
   };
@@ -242,4 +242,5 @@ const styles = StyleSheet.create({
   tafseerContent: {
     marginTop: 20,
   },
+  tafseerText: {},
 });
