@@ -51,7 +51,6 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   const [popupHeightValue, setPopupHeight] =
     useRecoilState<number>(popupHeight);
   const [opacity, setOpacity] = useState(1);
-
   const [isResizing, setIsResizing] = useState(false);
   const [selectedTabValue, setSelectedTab] =
     useRecoilState<TafseerTabs>(tafseerTab);
@@ -80,9 +79,9 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
     [isResizing, setPopupHeight],
   );
 
-  // Handle gesture state change
   const handleGestureStateChange = useCallback(
     (event: PanGestureHandlerStateChangeEvent) => {
+      console.log('Gesture state:', event.nativeEvent.state);
       if (event.nativeEvent.state === State.BEGAN) {
         setOpacity(0.8);
         setIsResizing(true);
@@ -90,11 +89,12 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
         event.nativeEvent.state === State.END ||
         event.nativeEvent.state === State.CANCELLED
       ) {
-        setOpacity(1);
+        console.log('Gesture ended or cancelled');
+        setOpacity(1); // Reset opacity to 1 after resizing is complete
         setIsResizing(false);
       }
     },
-    [setIsResizing],
+    [],
   );
 
   const renderTafseerContent = (tafseer: TafseerAya[] | null): JSX.Element => {
@@ -211,6 +211,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     shadowOffset: { width: 0, height: 2 },
     elevation: 5,
+    height: 'auto',
   },
   resizer: {
     alignSelf: 'center',
