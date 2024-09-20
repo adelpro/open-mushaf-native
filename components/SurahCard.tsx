@@ -46,7 +46,6 @@ export default function SurahCard({ surah }: Props) {
         <Image
           source={require('../assets/images/background-list-left.png')}
           style={styles.image}
-          contentFit="fill"
         />
       </ThemedView>
     </Pressable>
