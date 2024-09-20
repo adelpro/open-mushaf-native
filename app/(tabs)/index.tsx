@@ -56,7 +56,6 @@ export default function HomeScreen() {
     customPageWidth: 0,
     customPageHeight: 0,
   });
-
   const router = useRouter();
   const colorScheme = useColorScheme();
   const tint = Colors[colorScheme ?? 'light'].tint;
@@ -163,6 +162,6 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#f5f1eb',
   },
 });
