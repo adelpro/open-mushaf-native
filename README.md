@@ -1,50 +1,69 @@
-# Welcome to your Expo app 👋
+# Welcome to Open-Mushaf Native
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+![GitHub Stars](https://img.shields.io/github/stars/adelpro/open-mushaf-native?style=social)
+![Forks](https://img.shields.io/github/forks/adelpro/open-mushaf-native?style=social)
+[![Twitter Follow](https://img.shields.io/twitter/follow/adelpro?style=social)](https://twitter.com/adelpro)
 
-## Get started
+![Version](https://img.shields.io/github/package-json/v/adelpro/open-mushaf-native?style=for-the-badge)
+![Contributors](https://img.shields.io/github/contributors/adelpro/open-mushaf-native?style=for-the-badge)
+![npm](https://img.shields.io/badge/npm-v20%2B-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff)
+![Expo](https://img.shields.io/badge/Expo-1B1F23?logo=expo&logoColor=fff&style=flat)
+![React Native](https://img.shields.io/badge/React%20Native-20232A?logo=react&logoColor=61DAFB)
 
-1. Install dependencies
+## About
+
+**Open-Mushaf Native** is a modern and minimalist Quran Mushaf application built with **React Native** and **Expo**, designed for seamless, immersive reading and interaction on mobile platforms. It focuses on performance, offline functionality, and accessibility, providing a rich user experience with gesture-based navigation, dynamic content loading, and localized caching for Quranic images and Tafseer data.
+
+### Key Features
+
+- **Swipeable Navigation**: Navigate the Quran Mushaf by swiping left or right.
+- **Offline Access**: Preload and cache Quran pages and Tafseer data for complete offline functionality.
+- **Dynamic Tafseer Popups**: Smoothly resize Tafseer popups with gesture control.
+- **Optimized Image Loading**: Efficient loading of large Quran pages using `expo-image` for better memory management.
+- **Recoil State Management**: Smooth state management for all app interactions.
+- **Cross-Platform Support**: Built with Expo for easy deployment on Android and web platforms.
+
+## Screenshots
+
+![Mushaf Page Mobile](/public/screenshots/mushaf-page-mobile.png)
+
+![Tafseer Popup](/public/screenshots/tafseer-popup-mobile.png)
+
+![Sura Index Mobile](/public/screenshots/sura-index-mobile.png)
+
+![Sura Index Desktop](/public/screenshots/sura-index-desktop.png)
+
+## Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/adelpro/open-mushaf-native.git
+   ```
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd open-mushaf-native
+   ```
+
+3. Install dependencies:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+4. Start the app:
 
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+## Contributing
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Contributions are welcome to Open-Mushaf Native! Please see the [contribution guidelines(https://github.com/adelpro/open-mushaf-native/blob/main/CONTRIBUTING.md)] for more information.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## License
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/adelpro/open-mushaf-native/blob/main/LICENSE) file for more details.

@@ -18,10 +18,15 @@ export default function ChapterList() {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    alignSelf: 'center',
+    display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+    justifyContent: 'flex-start',
+    padding: 5,
     width: '100%',
+    height: '100%',
+    maxWidth: 430,
+    rowGap: 10,
+    paddingHorizontal: 10,
   },
 });

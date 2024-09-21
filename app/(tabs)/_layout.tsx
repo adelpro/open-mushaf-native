@@ -22,14 +22,12 @@ export default function TabLayout() {
           display: menuStateValue ? 'flex' : 'none',
           justifyContent: 'center',
           height: 60,
+          margin: 5,
         },
         tabBarLabelStyle: {
           fontFamily: 'Amiri_400Regular',
-          paddingTop: 5,
         },
-        tabBarIconStyle: {
-          paddingTop: 5,
-        },
+        tabBarIconStyle: {},
         headerShown: false,
       })}
     >

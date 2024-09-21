@@ -1,26 +1,20 @@
 import { useState } from 'react';
-import { Pressable, SafeAreaView } from 'react-native';
-
-import { useSetRecoilState } from 'recoil';
+import { SafeAreaView, ScrollView } from 'react-native';
 
 import ChapterList from '@/components/ChapterList';
 import SurahList from '@/components/SurahList';
-import TopMenu from '@/components/TopMenu';
 import TopTabs from '@/components/TopTabs';
-import { topMenuState } from '@/recoil/atoms';
 import { ListTabs } from '@/types';
 
 export default function ListsScreen() {
-  const setShowTopMenu = useSetRecoilState(topMenuState);
   const [activeTab, setActiveTab] = useState<ListTabs>('surahs');
   return (
-    <SafeAreaView>
-      <TopMenu />
+    <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
       <TopTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-      <Pressable onPress={() => setShowTopMenu(true)}>
+      <ScrollView>
         {activeTab === 'juzs' && <ChapterList />}
         {activeTab === 'surahs' && <SurahList />}
-      </Pressable>
+      </ScrollView>
     </SafeAreaView>
   );
 }

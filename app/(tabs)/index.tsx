@@ -152,7 +152,8 @@ const styles = StyleSheet.create({
     flex: 1,
     maxWidth: 430,
     paddingHorizontal: 5,
-    backgroundColor: '#f5f1eb',
+    //backgroundColor: '#f5f1eb',
+    backgroundColor: '#F5F5DC',
   },
   content: {
     flex: 1,

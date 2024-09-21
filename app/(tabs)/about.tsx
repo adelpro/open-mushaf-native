@@ -14,7 +14,7 @@ export default function AboutScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <Pressable style={styles.container} onPress={() => setShowTopMenu(true)}>
+      <Pressable onPress={() => setShowTopMenu(true)}>
         <TopMenu />
         <ThemedView style={styles.mainContent}>
           <ThemedText type="title" style={styles.title}>
@@ -72,7 +72,7 @@ export default function AboutScreen() {
           </ThemedView>
           <ThemedText style={styles.copyright}>
             © {new Date().getFullYear()} Open-Mushaf. جميع الحقوق محفوظة.
-          </ThemedText>{' '}
+          </ThemedText>
           <ThemedText style={styles.versionText}>الإصدار: {version}</ThemedText>
         </ThemedView>
       </Pressable>
@@ -85,11 +85,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
   },
   mainContent: {
-    width: '100%',
     maxWidth: 600,
+    paddingHorizontal: 22,
     alignSelf: 'center',
   },
   title: {

@@ -55,12 +55,11 @@ export default function SurahCard({ surah }: Props) {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    height: 110,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
     borderRadius: 5,
     padding: 1,
-    marginHorizontal: 16,
-    marginVertical: 8,
+    borderColor: '#e0e0e0',
     backgroundColor: '#ffffff',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -81,8 +80,9 @@ const styles = StyleSheet.create({
   number: {
     fontWeight: '600',
     fontSize: 22,
-    color: '#333',
-    paddingHorizontal: 8,
+    fontStyle: 'italic',
+    color: '#808080',
+    padding: 5,
     textAlign: 'center',
     minWidth: 40,
     marginLeft: 10,
@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     lineHeight: 24,
+    padding: 10,
   },
   englishName: {
     color: '#808080',
@@ -97,6 +98,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     lineHeight: 12,
     marginTop: 5,
+    padding: 5,
   },
   imageContianer: {
     width: '30%',
