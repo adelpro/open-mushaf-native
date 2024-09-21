@@ -150,7 +150,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     flex: 1,
-    maxWidth: 400,
+    maxWidth: 430,
+    paddingHorizontal: 5,
+    backgroundColor: '#f5f1eb',
   },
   content: {
     flex: 1,
