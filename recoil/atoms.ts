@@ -9,6 +9,12 @@ export const bottomMenuState = atom<boolean>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
+export const currentSavedPage = atom<number>({
+  key: 'CurrentSavedPage',
+  default: 1,
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+
 export const popupHeight = atom<number>({
   key: 'PopupHeight',
   default: 320,
