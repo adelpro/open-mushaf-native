@@ -5,7 +5,8 @@
         "buildType": "apk",
         "distribution": "internal",
         "releaseChannel": "preview",
-        "resourceClass": "large"
+        "resourceClass": "large",
+        "image": "latest"
       },
       "channel": "preview"
     },
@@ -13,13 +14,14 @@
       "android": {
         "buildType": "app-bundle",
         "releaseChannel": "production",
-        "resourceClass": "large"
+        "resourceClass": "large",
+        "image": "latest"
       },
       "channel": "production",
       "autoIncrement": true
     }
   },
   "cli": {
-    "appVersionSource": "local"
+    "appVersionSource": "remote"
   }
 }
