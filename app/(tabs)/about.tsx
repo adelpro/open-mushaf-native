@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet } from 'react-native';
 
+import { Href } from 'expo-router';
 import { useSetRecoilState } from 'recoil';
 
 import { ExternalLink } from '@/components/ExternalLink';
@@ -11,6 +12,34 @@ import { topMenuState } from '@/recoil/atoms';
 
 export default function AboutScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
+  const sourcesList = [
+    {
+      text: 'صفحات المصحف من ',
+      link: 'https://qurancomplex.gov.sa/techquran/dev/',
+      label: 'مجمع الملك فهد لطباعة المصحف الشريف',
+    },
+    {
+      text: 'قاعدة البيانات (JSON) من ',
+      link: 'https://github.com/Zizwar/mushaf-mauri',
+      label: 'Mushaf-mauri',
+    },
+    {
+      text: 'بيانات التفاسير من ',
+      link: 'https://quran.ksu.edu.sa/ayat',
+      label: 'آيات',
+    },
+    {
+      text: 'الأيقونة من ',
+      link: 'https://www.svgrepo.com/',
+      label: 'SVGRepo',
+    },
+  ];
+  const featuresList = [
+    'الوصول إلى المصحف دون اتصال بالإنترنت.',
+    'خيارات متعددة للتفسير.',
+    'تنقل سلس بين السور والأجزاء.',
+    'صور عالية الجودة من مجمع الملك فهد لطباعة المصحف الشريف.',
+  ];
 
   return (
     <ThemedView style={styles.container}>
@@ -21,33 +50,12 @@ export default function AboutScreen() {
             المصادر
           </ThemedText>
           <ThemedView style={styles.listContainer}>
-            {[
-              {
-                text: 'صفحات المصحف من ',
-                link: 'https://qurancomplex.gov.sa/techquran/dev/',
-                label: 'مجمع الملك فهد لطباعة المصحف الشريف',
-              },
-              {
-                text: 'قاعدة البيانات (JSON) من ',
-                link: 'https://github.com/Zizwar/mushaf-mauri',
-                label: 'Mushaf-mauri',
-              },
-              {
-                text: 'بيانات التفاسير من ',
-                link: 'https://quran.ksu.edu.sa/ayat',
-                label: 'آيات',
-              },
-              {
-                text: 'الأيقونة من ',
-                link: 'https://www.svgrepo.com/',
-                label: 'SVGRepo',
-              },
-            ].map(({ text, link, label }, index) => (
+            {sourcesList.map(({ text, link, label }, index) => (
               <ThemedView style={styles.listItem} key={index}>
                 <ThemedText style={styles.bullet}>•</ThemedText>
                 <ThemedText style={styles.listText}>
                   {text}
-                  <ExternalLink href={link} style={styles.link}>
+                  <ExternalLink href={link as Href<string>} style={styles.link}>
                     {label}
                   </ExternalLink>
                 </ThemedText>
@@ -58,12 +66,7 @@ export default function AboutScreen() {
             الميزات
           </ThemedText>
           <ThemedView style={styles.listContainer}>
-            {[
-              'الوصول إلى المصحف دون اتصال بالإنترنت.',
-              'خيارات متعددة للتفسير.',
-              'تنقل سلس بين السور والأجزاء.',
-              'صور عالية الجودة من مجمع الملك فهد لطباعة المصحف الشريف.',
-            ].map((feature, index) => (
+            {featuresList.map((feature, index) => (
               <ThemedView style={styles.listItem} key={index}>
                 <ThemedText style={styles.bullet}>•</ThemedText>
                 <ThemedText style={styles.listText}>{feature}</ThemedText>
