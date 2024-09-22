@@ -37,9 +37,9 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build Android app
-        run: eas build --platform android --profile preview --local --output ${{ github.workspace }}/app-release.apk
+        run: eas build --platform android --profile preview --local --output ${{ github.workspace }}/app--preview-release.apk
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: app-release
           path: ${{ github.workspace }}/app-preview-release.apk
