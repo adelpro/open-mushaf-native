@@ -5,7 +5,7 @@
         "buildType": "apk",
         "distribution": "internal",
         "releaseChannel": "preview",
-        "resourceClass": "c1-medium",
+        "resourceClass": "medium",
         "image": "latest"
       },
       "channel": "preview"
@@ -14,7 +14,7 @@
       "android": {
         "buildType": "app-bundle",
         "releaseChannel": "production",
-        "resourceClass": "c1-medium",
+        "resourceClass": "medium",
         "image": "latest"
       },
       "channel": "production",
