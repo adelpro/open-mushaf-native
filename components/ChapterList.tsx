@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     padding: 5,
     width: '100%',
     height: '100%',
-    maxWidth: 430,
+    //maxWidth: 430,
     rowGap: 10,
     paddingHorizontal: 10,
   },
