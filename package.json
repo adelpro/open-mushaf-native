@@ -56,7 +56,8 @@
     "react-native-screens": "3.31.1",
     "react-native-web": "~0.19.10",
     "recoil": "^0.7.7",
-    "expo-insights": "~0.7.0"
+    "expo-insights": "~0.7.0",
+    "expo-updates": "~0.25.25"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

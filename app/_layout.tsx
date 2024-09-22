@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { I18nManager } from 'react-native';
 
 import {
   Amiri_400Regular,
@@ -14,6 +15,7 @@ import {
 } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+//import * as Updates from 'expo-updates';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ReactNativeRecoilPersist, {
   ReactNativeRecoilPersistGate,
@@ -34,6 +36,14 @@ export default function RootLayout() {
     Amiri_400Regular_Italic,
     Amiri_700Bold_Italic,
   });
+
+  useEffect(() => {
+    // Force RTL layout and reload the app if not already in RTL
+    if (!I18nManager.isRTL) {
+      I18nManager.forceRTL(true);
+      //Updates.reloadAsync();
+    }
+  }, []);
 
   useEffect(() => {
     if (loaded) {

@@ -103,9 +103,11 @@ export default function HomeScreen() {
       }
     }
   };
+
   if (error) {
     return <ThemedText>{error.message}</ThemedText>;
   }
+
   return (
     <GestureHandlerRootView>
       <SafeAreaView style={styles.container}>
