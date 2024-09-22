@@ -20,7 +20,8 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "lint:fix": "eslint . --fix",
-    "build:preview:android": "eas build -p android --profile preview",
+    "build:preview:android": "eas build -p android --profile preview --release-channel preview",
+    "update:preview:android": "eas update -p android --channel preview",
     "prepare": "husky"
   },
   "jest": {
