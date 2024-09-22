@@ -4,7 +4,6 @@
       "android": {
         "buildType": "apk",
         "distribution": "internal",
-        "releaseChannel": "preview",
         "resourceClass": "medium",
         "image": "latest"
       },
@@ -13,7 +12,6 @@
     "production": {
       "android": {
         "buildType": "app-bundle",
-        "releaseChannel": "production",
         "resourceClass": "medium",
         "image": "latest"
       },

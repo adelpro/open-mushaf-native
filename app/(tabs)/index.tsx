@@ -156,9 +156,9 @@ const styles = StyleSheet.create({
     height: '100%',
     flex: 1,
     maxWidth: 430,
-    paddingHorizontal: 5,
+    paddingVertical: 10,
     //backgroundColor: '#f5f1eb',
-    backgroundColor: '#F5F5DC',
+    backgroundColor: '#Frgb(29, 28, 26)',
   },
   content: {
     flex: 1,
