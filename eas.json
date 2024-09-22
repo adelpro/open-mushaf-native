@@ -4,14 +4,16 @@
       "android": {
         "buildType": "apk",
         "distribution": "internal",
-        "releaseChannel": "preview"
+        "releaseChannel": "preview",
+        "resourceClass": "large"
       },
       "channel": "preview"
     },
     "production": {
       "android": {
         "buildType": "app-bundle",
-        "releaseChannel": "production"
+        "releaseChannel": "production",
+        "resourceClass": "large"
       },
       "channel": "production",
       "autoIncrement": true
