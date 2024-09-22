@@ -5,13 +5,15 @@
         "buildType": "apk",
         "distribution": "internal",
         "releaseChannel": "preview"
-      }
+      },
+     "channel": "preview"
     },
     "production": {
       "android": {
         "buildType": "app-bundle",
         "releaseChannel": "production"
       },
+      "channel": "production"
       "autoIncrement": true
     }
   },
