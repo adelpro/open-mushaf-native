@@ -7,7 +7,8 @@
         "resourceClass": "medium",
         "image": "latest"
       },
-      "channel": "preview"
+      "channel": "preview",
+      "autoIncrement": true
     },
     "production": {
       "android": {
