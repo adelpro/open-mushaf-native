@@ -3,7 +3,7 @@ name: Android App APK Build
 on:
   push:
     branches:
-      - preview
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
