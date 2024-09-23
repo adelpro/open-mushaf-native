@@ -2,14 +2,12 @@
   "expo": {
     "name": "open-mushaf-native",
     "slug": "open-mushaf-native",
-    "version": "1",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "assetBundlePatterns": [
-      "./assets/**/*"
-    ],
+    "assetBundlePatterns": ["./assets/**/*"],
     "splash": {
       "image": "./assets/images/splash.png",
       "contentFill": "contain",
@@ -30,11 +28,7 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      "expo-font",
-      "expo-secure-store"
-    ],
+    "plugins": ["expo-router", "expo-font", "expo-secure-store"],
     "experiments": {
       "typedRoutes": true
     },

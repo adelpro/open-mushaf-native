@@ -7,8 +7,7 @@
         "resourceClass": "medium",
         "image": "latest"
       },
-      "channel": "preview",
-      "autoIncrement": true
+      "channel": "preview"
     },
     "production": {
       "android": {
@@ -16,11 +15,10 @@
         "resourceClass": "medium",
         "image": "latest"
       },
-      "channel": "production",
-      "autoIncrement": true
+      "channel": "production"
     }
   },
   "cli": {
-    "appVersionSource": "remote"
+    "appVersionSource": "local"
   }
 }
