@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { Image } from 'expo-image';
@@ -61,11 +61,15 @@ export default function HomeScreen() {
   const tint = Colors[colorScheme ?? 'light'].tint;
   const [currentSavedPageValue, setCurrentSavedPage] =
     useRecoilState(currentSavedPage);
+  const [currentPage, setCurrentPage] = useState(currentSavedPageValue);
 
   const { page: pageParam } = useLocalSearchParams();
 
   const defaultNumberOfPages = specs.defaultNumberOfPages;
-  const currentPage = getCurrentPage(pageParam) ?? currentSavedPageValue;
+  useEffect(() => {
+    const page = getCurrentPage(pageParam) ?? currentSavedPageValue;
+    setCurrentPage(page);
+  }, [pageParam, currentSavedPageValue]);
 
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
