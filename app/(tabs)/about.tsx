@@ -13,6 +13,7 @@ import { topMenuState } from '@/recoil/atoms';
 export default function AboutScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
   const appVersion = Application.nativeApplicationVersion || 'Unknown';
+  const buildVersion = Application.nativeBuildVersion || 'Unknown';
   const sourcesList = [
     {
       text: 'صفحات المصحف من ',
@@ -78,7 +79,7 @@ export default function AboutScreen() {
             © {new Date().getFullYear()} Open-Mushaf. جميع الحقوق محفوظة.
           </ThemedText>
           <ThemedText style={styles.versionText}>
-            الإصدار: {appVersion}
+            الإصدار: {`${appVersion} (${buildVersion})`}
           </ThemedText>
         </ThemedView>
       </Pressable>
