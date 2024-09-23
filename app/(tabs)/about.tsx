@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet } from 'react-native';
 
-import Constants from 'expo-constants';
+import * as Application from 'expo-application';
 import { Href } from 'expo-router';
 import { useSetRecoilState } from 'recoil';
 
@@ -12,7 +12,7 @@ import { topMenuState } from '@/recoil/atoms';
 
 export default function AboutScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
-  const appVersion = Constants.EmbeddedManifest.version || '1.0.0';
+  const appVersion = Application.nativeApplicationVersion;
   const sourcesList = [
     {
       text: 'صفحات المصحف من ',
