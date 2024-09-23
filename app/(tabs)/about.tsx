@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet } from 'react-native';
 
+import Constants from 'expo-constants';
 import { Href } from 'expo-router';
 import { useSetRecoilState } from 'recoil';
 
@@ -7,11 +8,11 @@ import { ExternalLink } from '@/components/ExternalLink';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
-import { version } from '@/package.json'; // Importing version from package.json
 import { topMenuState } from '@/recoil/atoms';
 
 export default function AboutScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
+  const appVersion = Constants.EmbeddedManifest.version || '1.0.0';
   const sourcesList = [
     {
       text: 'صفحات المصحف من ',
@@ -76,7 +77,9 @@ export default function AboutScreen() {
           <ThemedText style={styles.copyright}>
             © {new Date().getFullYear()} Open-Mushaf. جميع الحقوق محفوظة.
           </ThemedText>
-          <ThemedText style={styles.versionText}>الإصدار: {version}</ThemedText>
+          <ThemedText style={styles.versionText}>
+            الإصدار: {appVersion}
+          </ThemedText>
         </ThemedView>
       </Pressable>
     </ThemedView>
