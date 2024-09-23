@@ -23,3 +23,6 @@ expo-env.d.ts
 
 #ubuntu subsystem
 ~/**/*
+
+# Custom build output
+builds/**/*
