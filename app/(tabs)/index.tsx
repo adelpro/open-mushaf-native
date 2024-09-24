@@ -126,7 +126,7 @@ export default function HomeScreen() {
               {assets ? (
                 <Image
                   style={styles.image}
-                  source={assets[currentPage - 1].uri}
+                  source={{ uri: assets[currentPage - 1].uri }}
                   placeholder={{ blurhash }}
                   contentFit="fill"
                   transition={1000}
