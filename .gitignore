@@ -26,3 +26,4 @@ expo-env.d.ts
 
 # Custom build output
 builds/**/*
+android/**/*
