@@ -1,4 +1,4 @@
-name: Android App APK Build
+name: Android App APK Build (main branch)
 
 on:
   push:
