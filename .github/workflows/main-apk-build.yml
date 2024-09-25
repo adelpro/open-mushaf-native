@@ -43,3 +43,8 @@ jobs:
         with:
           name: app-release
           path: ${{ github.workspace }}/app-production-release.apk
+      - name: Download APK artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: app-release
+          path: builds
