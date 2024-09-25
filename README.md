@@ -26,13 +26,13 @@
 
 ## Screenshots
 
-![Mushaf Page Mobile](/public/screenshots/mushaf-page-mobile.png)
+![Mushaf Page](/assets/screenshots/mushaf-page.png)
 
-![Tafseer Popup](/public/screenshots/tafseer-popup-mobile.png)
+![Tafseer Popup](/assets/screenshots/tafseer-popup.png)
 
-![Sura Index Mobile](/public/screenshots/sura-index-mobile.png)
+![Sura Index](/assets/screenshots/sura-index.png)
 
-![Sura Index Desktop](/public/screenshots/sura-index-desktop.png)
+![Juz Index](/assets/screenshots/juz-index.png)
 
 ## Installation
 
