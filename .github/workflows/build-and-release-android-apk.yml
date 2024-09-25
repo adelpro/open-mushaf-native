@@ -1,0 +1,81 @@
+name: Android APK Build & Release (Tag or Manual Trigger)
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on tag push that starts with 'v'
+  workflow_dispatch: # Allow manual trigger for testing
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repo with full history so tags are available
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history so tags are available
+
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 18.x
+          cache: 'npm'
+
+      # Setup JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Setup Android SDK
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      # Setup Expo
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      # Install dependencies
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      # Build Android APK
+      - name: Build Android app
+        run: |
+          eas build --platform android \
+            --profile production \
+            --local --non-interactive \
+            --clear-cache \
+            --output ${{ github.workspace }}/app-production-release.apk
+
+      # Upload the APK as an artifact (optional, but useful for debugging or future downloads)
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: ${{ github.workspace }}/app-production-release.apk
+
+      # Create or update the GitHub release and attach the APK (only for tag pushes)
+      - name: Create Release and Upload APK
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          RELEASE_NAME="Release $TAG_NAME"
+
+          # Check if release exists; if not, create it
+          if ! gh release view $TAG_NAME > /dev/null 2>&1; then
+            gh release create "$TAG_NAME" app-production-release.apk \
+              --title "$RELEASE_NAME" \
+              --notes "APK for version $TAG_NAME"
+          else
+            gh release upload "$TAG_NAME" app-production-release.apk --clobber
