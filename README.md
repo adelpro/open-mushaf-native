@@ -62,7 +62,7 @@
 
 ## Contributing
 
-Contributions are welcome to Open-Mushaf Native! Please see the [contribution guidelines(https://github.com/adelpro/open-mushaf-native/blob/main/CONTRIBUTING.md)] for more information.
+Contributions are welcome to Open-Mushaf Native! Please see the [contribution guidelines](https://github.com/adelpro/open-mushaf-native/blob/main/CONTRIBUTING.md) for more information.
 
 ## License
 
