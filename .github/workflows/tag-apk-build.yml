@@ -44,14 +44,10 @@ jobs:
         with:
           name: app-release
           path: ${{ github.workspace }}/app-production-release.apk
-      - name: Download APK artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: app-release
-          path: builds
+
       - name: Attach APK to tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
-          gh release upload $TAG_NAME app-release.apk --clobber
+          gh release upload $TAG_NAME app-production-release.apk --clobber

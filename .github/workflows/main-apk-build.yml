@@ -38,6 +38,8 @@ jobs:
 
       - name: Build Android app
         run: eas build --platform android --profile production --local --output ${{ github.workspace }}/app-production-release.apk
+      - name: Create builds folder
+        run: mkdir -p builds
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
