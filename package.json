@@ -21,6 +21,7 @@
     "lint": "expo lint",
     "lint:fix": "eslint . --fix",
     "build:preview:android": "eas build -p android --profile preview",
+    "build:production:android": "eas build -p android --profile production",
     "build:local:preview:android": "eas build -p android --profile preview --local --output builds/android/",
     "update:preview:android": "eas update -p android --channel preview",
     "prepare": "husky"
