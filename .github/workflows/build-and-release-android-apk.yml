@@ -1,41 +1,55 @@
-name: Android APK Build & Release (Tag or Manual Trigger)
+name: Build & Publish Release APK (Release tag)
 
 on:
   push:
     tags:
-      - 'v*' # Trigger on tag push that starts with 'v'
-  workflow_dispatch: # Allow manual trigger for testing
+      - 'v*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout the repo with full history so tags are available
-      - name: Checkout repository
+      - name: Setup repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Fetch all history so tags are available
 
-      # Setup Node.js
-      - name: Setup Node.js
+      - name: Setup node
         uses: actions/setup-node@v4.0.2
         with:
           node-version: 18.x
-          cache: 'npm'
+          cache: 'yarn'
 
-      # Setup JDK 17
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache yarn dependencies
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # Setup Android SDK
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      # Setup Expo
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Setup Expo
         uses: expo/expo-github-action@v8
         with:
@@ -43,39 +57,17 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      # Install dependencies
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      # Build Android APK
       - name: Build Android app
-        run: |
-          eas build --platform android \
-            --profile production \
-            --local --non-interactive \
-            --clear-cache \
-            --output ${{ github.workspace }}/app-production-release.apk
+        run: eas build --platform android --profile production --local --non-interactive --clear-cache --output app-production-release.apk
 
-      # Upload the APK as an artifact (optional, but useful for debugging or future downloads)
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release
-          path: ${{ github.workspace }}/app-production-release.apk
-
-      # Create or update the GitHub release and attach the APK (only for tag pushes)
-      - name: Create Release and Upload APK
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Create Release and Upload Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG_NAME=${GITHUB_REF#refs/tags/}
-          RELEASE_NAME="Release $TAG_NAME"
-
-          # Check if release exists; if not, create it
-          if ! gh release view $TAG_NAME > /dev/null 2>&1; then
-            gh release create "$TAG_NAME" app-production-release.apk \
-              --title "$RELEASE_NAME" \
-              --notes "APK for version $TAG_NAME"
-          else
-            gh release upload "$TAG_NAME" app-production-release.apk --clobber
+          gh release create ${{ github.ref_name }} \
+            --title "Release ${{ github.ref_name }}" \
+            --notes "Release notes for ${{ github.ref_name }}" \
+            app-production-release.apk
