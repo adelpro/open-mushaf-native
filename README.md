@@ -4,8 +4,6 @@
 ![Forks](https://img.shields.io/github/forks/adelpro/open-mushaf-native?style=social)
 [![Twitter Follow](https://img.shields.io/twitter/follow/adelpro?style=social)](https://twitter.com/adelpro)
 
-![Version](https://img.shields.io/github/package-json/v/adelpro/open-mushaf-native?style=for-the-badge)
-![Contributors](https://img.shields.io/github/contributors/adelpro/open-mushaf-native?style=for-the-badge)
 ![npm](https://img.shields.io/badge/npm-v20%2B-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff)
 ![Expo](https://img.shields.io/badge/Expo-1B1F23?logo=expo&logoColor=fff&style=flat)
@@ -23,6 +21,10 @@
 - **Optimized Image Loading**: Efficient loading of large Quran pages using `expo-image` for better memory management.
 - **Recoil State Management**: Smooth state management for all app interactions.
 - **Cross-Platform Support**: Built with Expo for easy deployment on Android and web platforms.
+
+## Demo
+
+[![Video Title](https://img.youtube.com/vi/eprA89A8U68/0.jpg)](https://www.youtube.com/watch?v=eprA89A8U68)
 
 ## Screenshots
 
