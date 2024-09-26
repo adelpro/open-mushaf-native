@@ -1,10 +1,14 @@
-name: Android APK Build & Release (Tag or Manual Trigger)
+name: Android APK Build & Release (Tag or Manual Trigger) v2
 
 on:
   push:
     tags:
       - 'v*' # Trigger on tag push that starts with 'v'
   workflow_dispatch: # Allow manual trigger for testing
+
+permissions:
+  contents: write # Grant permissions to create and upload releases
+  issues: write
 
 jobs:
   build:
@@ -40,6 +44,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+            ${{ runner.os }}-gradle-default
 
       - name: Cache EAS build
         uses: actions/cache@v3
@@ -48,6 +53,7 @@ jobs:
           key: ${{ runner.os }}-eas-${{ hashFiles('**/eas.json') }}
           restore-keys: |
             ${{ runner.os }}-eas-
+            ${{ runner.os }}-eas-default
 
       - name: Setup Expo
         uses: expo/expo-github-action@v8
