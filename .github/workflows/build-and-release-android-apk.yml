@@ -82,3 +82,4 @@ jobs:
               --notes "APK for version $TAG_NAME"
           else
             gh release upload "$TAG_NAME" app-production-release.apk --clobber
+          fi
