@@ -74,7 +74,20 @@ export default function AboutScreen() {
                 <ThemedText style={styles.listText}>{feature}</ThemedText>
               </ThemedView>
             ))}
+            <ThemedView style={styles.listItem}>
+              <ThemedText style={styles.bullet}>•</ThemedText>
+              <ThemedText style={styles.listText}>
+                البرنامج مفتوح المصدر:&nbsp;
+                <ExternalLink
+                  href="https://github.com/adelpro/open-mushaf-native"
+                  style={styles.link}
+                >
+                  open-mushaf-native
+                </ExternalLink>
+              </ThemedText>
+            </ThemedView>
           </ThemedView>
+
           <ThemedText style={styles.copyright}>
             © {new Date().getFullYear()} Open-Mushaf. جميع الحقوق محفوظة.
           </ThemedText>
@@ -114,6 +127,7 @@ const styles = StyleSheet.create({
   },
   bullet: {
     marginRight: 10,
+    marginLeft: 5,
     fontWeight: '500',
   },
   listText: {

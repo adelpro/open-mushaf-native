@@ -10,7 +10,7 @@ import { bottomMenuState, topMenuState } from '@/recoil/atoms';
 
 export default function TopMenu() {
   const colorScheme = useColorScheme();
-  const color = Colors[colorScheme ?? 'light'].tint;
+  const color = Colors[colorScheme ?? 'light'].icon;
   const [showBottomMenuState, setBottomMenuState] =
     useRecoilState<boolean>(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] =
@@ -21,7 +21,17 @@ export default function TopMenu() {
   };
 
   return showTopMenuState ? (
-    <ThemedView style={styles.topMenu}>
+    <ThemedView
+      style={[
+        styles.topMenu,
+        {
+          backgroundColor:
+            colorScheme === 'dark'
+              ? 'rgba(255, 255, 255, 0.1)'
+              : 'rgba(0, 0, 0, 0.01)',
+        },
+      ]}
+    >
       <TouchableOpacity
         style={styles.topMenuButton}
         onPress={() => {
@@ -49,7 +59,6 @@ export default function TopMenu() {
 }
 const styles = StyleSheet.create({
   topMenu: {
-    backgroundColor: 'rgba(0, 0, 0, 0.01)',
     marginVertical: 10,
     height: 60,
     borderRadius: 5,
@@ -61,6 +70,9 @@ const styles = StyleSheet.create({
     left: 20,
     right: 20,
     zIndex: 2,
+    alignSelf: 'center',
+    margin: 'auto',
+    maxWidth: 430,
   },
   topMenuButton: {
     marginHorizontal: 10,

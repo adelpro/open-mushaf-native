@@ -96,10 +96,16 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
 
   const renderTafseerContent = (tafseer: TafseerAya[] | null): JSX.Element => {
     const ayaTafseer = tafseer?.find((t) => t.aya === aya && t.sura === surah);
-    const tafseerText = ayaTafseer?.text || 'لا يوجد تفسير.';
+
+    let tafseerText = 'لا يوجد تفسير.';
+    if (!ayaTafseer?.text || ayaTafseer?.text === '<p></p>') {
+      tafseerText = '<p>لا يوجد تفسير.</p>';
+    } else {
+      tafseerText = ayaTafseer?.text;
+    }
 
     return (
-      <ThemedView>
+      <ThemedView style={styles.tafseerContent}>
         <HTMLView
           value={tafseerText}
           stylesheet={{ p: { color: textColor } }}
@@ -158,6 +164,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
                     style={[
                       styles.tabButton,
                       selectedTabValue === tabKey && styles.activeTab,
+                      selectedTabValue === tabKey && { borderColor: tintColor },
                     ]}
                     onPress={() => setSelectedTab(tabKey)}
                   >
@@ -238,5 +245,9 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomWidth: 2,
+  },
+  tafseerContent: {
+    marginBottom: 20,
+    marginTop: 20,
   },
 });
