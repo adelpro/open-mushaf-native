@@ -15,7 +15,7 @@ import {
 } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-//import * as Updates from 'expo-updates';
+import * as Updates from 'expo-updates';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ReactNativeRecoilPersist, {
   ReactNativeRecoilPersistGate,
@@ -38,11 +38,23 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    // Force RTL layout and reload the app if not already in RTL
-    if (!I18nManager.isRTL) {
-      I18nManager.forceRTL(true);
-      //Updates.reloadAsync();
+    async function forceRTL() {
+      if (!I18nManager.isRTL) {
+        I18nManager.forceRTL(true);
+        I18nManager.allowRTL(true);
+
+        if (__DEV__) {
+          console.log(
+            'In development, please reload the app to see the changes',
+          );
+        } else {
+          // Updates.reloadAsync() only available in production
+          await Updates.reloadAsync();
+        }
+      }
     }
+
+    forceRTL();
   }, []);
 
   useEffect(() => {
