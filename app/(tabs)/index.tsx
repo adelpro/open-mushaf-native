@@ -100,14 +100,14 @@ export default function HomeScreen() {
     setDimensions({ customPageWidth: width, customPageHeight: height });
   };
 
-  /*   useEffect(() => {
+  useEffect(() => {
     if (assets) {
       const prevPage = Math.max(1, currentPage - 1);
       const nextPage = Math.min(defaultNumberOfPages, currentPage + 1);
       Image.prefetch(assets[prevPage - 1].uri);
       Image.prefetch(assets[nextPage - 1].uri);
     }
-  }, [currentPage, assets, defaultNumberOfPages]); */
+  }, [currentPage, assets, defaultNumberOfPages]);
 
   const panGesture = Gesture.Pan()
     .onUpdate((e) => {
@@ -116,6 +116,7 @@ export default function HomeScreen() {
     .onEnd(
       useCallback(
         (e) => {
+          'worklet';
           const threshold = 30; // Lower threshold for smoother transitions
           if (e.translationX > threshold) {
             // Swipe Right - Go to the next page
