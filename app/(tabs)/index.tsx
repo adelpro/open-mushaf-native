@@ -2,16 +2,14 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { Image } from 'expo-image';
-import { useKeepAwake } from 'expo-keep-awake';
+import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
+  Gesture,
+  GestureDetector,
   GestureHandlerRootView,
-  PanGestureHandler,
-  PanGestureHandlerStateChangeEvent,
-  State,
 } from 'react-native-gesture-handler';
 import Animated, {
-  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -20,17 +18,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import PageOverlay from '@/components/PageOverlay';
-import { ThemedText } from '@/components/ThemedText';
 import TopMenu from '@/components/TopMenu';
-import { Colors } from '@/constants/Colors';
+import { blurhash, Colors } from '@/constants';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import useImagesArray from '@/hooks/useImagesArray';
 import { currentSavedPage, topMenuState } from '@/recoil/atoms';
 
 import specs from '../../assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json';
-
-const blurhash =
-  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
 const getCurrentPage = (value: string | string[]): number | null => {
   const result = (() => {
@@ -57,7 +51,6 @@ const getCurrentPage = (value: string | string[]): number | null => {
 };
 
 export default function HomeScreen() {
-  useKeepAwake();
   const setShowTopMenu = useSetRecoilState(topMenuState);
   const [dimensions, setDimensions] = useState({
     customPageWidth: 0,
@@ -72,97 +65,86 @@ export default function HomeScreen() {
 
   const { page: pageParam } = useLocalSearchParams();
 
+  const { assets } = useImagesArray();
+
+  const translateX = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: translateX.value }],
+    };
+  });
+
   const defaultNumberOfPages = specs.defaultNumberOfPages;
   useEffect(() => {
     const page = getCurrentPage(pageParam) ?? currentSavedPageValue;
     setCurrentPage(page);
   }, [pageParam, currentSavedPageValue]);
 
-  const translateX = useSharedValue(0);
-  const width = dimensions.customPageWidth;
-  console.log({ width });
-
-  // Animate the swipe effect with shadow, scale, and opacity
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { translateX: translateX.value },
-        {
-          scale: interpolate(
-            translateX.value,
-            [-width, 0, width],
-            [0.95, 1, 0.95],
-          ),
-        },
-        {
-          rotateY: `${interpolate(translateX.value, [-width, 0, width], [-5, 0, 5])}deg`,
-        },
-      ],
-      opacity: interpolate(translateX.value, [-width, 0, width], [0.5, 1, 0.5]),
-      elevation: interpolate(translateX.value, [-width, 0, width], [10, 0, 10]), // Add shadow effect
-    };
-  });
-
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
     setDimensions({ customPageWidth: width, customPageHeight: height });
   };
 
-  const { assets, error } = useImagesArray();
-
-  const handleSwipe = ({ nativeEvent }: PanGestureHandlerStateChangeEvent) => {
-    console.log({ translationXEvent: nativeEvent.translationX });
-    switch (nativeEvent.state) {
-      case State.END: {
-        if (nativeEvent.translationX > 50) {
-          // Swipe Right - Go to the previous page
-          let page = currentPage + 1;
-          if (page > defaultNumberOfPages) {
-            page = defaultNumberOfPages;
-          }
-          setCurrentSavedPage(page);
-
-          router.replace({
-            pathname: '/',
-            params: { page: page.toString() },
-          });
-        } else if (nativeEvent.translationX < -50) {
-          // Swipe Left - Go to the next page
-          let page = currentPage - 1;
-          if (page < 1) {
-            page = 1;
-          }
-          setCurrentSavedPage(page);
-          router.replace({
-            pathname: '/',
-            params: { page: page.toString() },
-          });
-        }
-        // Reset translateX with spring for animation effect
-        console.log({ swipedTransalteX: translateX.value });
-        translateX.value = withSpring(0, {
-          damping: 5, // Increased damping for slower response
-          stiffness: 80, // Reduced stiffness for smoother animation
-          mass: 1,
-        });
-        break;
-      }
-      case State.ACTIVE: {
-        translateX.value = nativeEvent.translationX;
-        console.log(
-          { translationX: translateX.value },
-          nativeEvent.translationX,
-        );
-        break;
-      }
-      default:
-        break;
+  useEffect(() => {
+    if (assets) {
+      const prevPage = Math.max(1, currentPage - 1);
+      const nextPage = Math.min(defaultNumberOfPages, currentPage + 1);
+      Image.prefetch(assets[prevPage - 1].uri);
+      Image.prefetch(assets[nextPage - 1].uri);
     }
-  };
+  }, [currentPage, assets, defaultNumberOfPages]);
 
-  if (error) {
-    return <ThemedText>{error.message}</ThemedText>;
-  }
+  useEffect(() => {
+    // Activate the wake lock immediately
+    activateKeepAwakeAsync('mushaf-screen');
+
+    // Set a timeout to deactivate wake lock after 1 hour (3600 seconds)
+    const timeout = setTimeout(
+      () => {
+        deactivateKeepAwake(); // Release wake lock after 1 hour
+      },
+      10 * 60 * 1000,
+    ); // 10 minutes in milliseconds
+
+    // Cleanup: Deactivate wake lock if the component unmounts earlier
+    return () => {
+      clearTimeout(timeout); // Clear the timer to avoid issues if component unmounts
+      deactivateKeepAwake(); // Ensure wake lock is released
+    };
+  }, []);
+
+  const panGesture = Gesture.Pan()
+    .onUpdate((e) => {
+      translateX.value = e.translationX;
+    })
+    .onEnd((e) => {
+      if (e.translationX > 50) {
+        // Swipe Right - Go to the previous page
+        let page = currentPage + 1;
+        if (page > defaultNumberOfPages) {
+          page = defaultNumberOfPages;
+        }
+
+        setCurrentSavedPage(page);
+        router.replace({
+          pathname: '/',
+          params: { page: page.toString() },
+        });
+      } else if (e.translationX < -50) {
+        // Swipe Left - Go to the next page
+        let page = currentPage - 1;
+        if (page < 1) {
+          page = 1;
+        }
+        setCurrentSavedPage(page);
+        router.replace({
+          pathname: '/',
+          params: { page: page.toString() },
+        });
+      }
+      translateX.value = withSpring(0, { damping: 20, stiffness: 80 });
+    });
 
   return (
     <GestureHandlerRootView>
@@ -170,10 +152,7 @@ export default function HomeScreen() {
         <TopMenu />
 
         <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
-          <PanGestureHandler
-            onHandlerStateChange={handleSwipe}
-            activeOffsetX={[-10, 10]}
-          >
+          <GestureDetector gesture={panGesture}>
             <Animated.View
               style={[styles.imageContainer, animatedStyle]}
               onLayout={handleImageLayout}
@@ -190,7 +169,7 @@ export default function HomeScreen() {
               )}
               <PageOverlay index={currentPage} dimensions={dimensions} />
             </Animated.View>
-          </PanGestureHandler>
+          </GestureDetector>
         </Pressable>
       </SafeAreaView>
     </GestureHandlerRootView>
@@ -216,6 +195,7 @@ const styles = StyleSheet.create({
     maxWidth: 430,
     paddingVertical: 5,
     backgroundColor: '#f5f1eb',
+    overflow: 'hidden',
   },
   content: {
     flex: 1,
