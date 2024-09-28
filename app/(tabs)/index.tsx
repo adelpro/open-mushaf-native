@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { Image } from 'expo-image';
@@ -67,10 +67,25 @@ export default function HomeScreen() {
   const { assets } = useImagesArray();
 
   const translateX = useSharedValue(0);
-
   const animatedStyle = useAnimatedStyle(() => {
+    const rotation = translateX.value / 300; // Subtle rotation
+    const shadowOpacity = Math.abs(translateX.value) / 100; // Dynamic shadow opacity
+    const opacity = Math.max(0.7, 1 - Math.abs(translateX.value) / 200); // Adjust opacity based on swipe distance
+
     return {
-      transform: [{ translateX: translateX.value }],
+      transform: [
+        { translateX: translateX.value },
+        { rotateY: `${rotation}rad` },
+      ],
+      perspective: 800,
+      shadowColor: 'rgba(0, 0, 0, 0.3)', // Shadow color
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      shadowOpacity: shadowOpacity,
+      shadowRadius: 5,
+      opacity: opacity, // Dynamic opacity
     };
   });
 
@@ -85,46 +100,52 @@ export default function HomeScreen() {
     setDimensions({ customPageWidth: width, customPageHeight: height });
   };
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (assets) {
       const prevPage = Math.max(1, currentPage - 1);
       const nextPage = Math.min(defaultNumberOfPages, currentPage + 1);
       Image.prefetch(assets[prevPage - 1].uri);
       Image.prefetch(assets[nextPage - 1].uri);
     }
-  }, [currentPage, assets, defaultNumberOfPages]);
+  }, [currentPage, assets, defaultNumberOfPages]); */
 
   const panGesture = Gesture.Pan()
     .onUpdate((e) => {
-      translateX.value = e.translationX;
+      translateX.value = Math.max(-100, Math.min(100, e.translationX));
     })
-    .onEnd((e) => {
-      if (e.translationX > 50) {
-        // Swipe Right - Go to the previous page
-        let page = currentPage + 1;
-        if (page > defaultNumberOfPages) {
-          page = defaultNumberOfPages;
-        }
-
-        setCurrentSavedPage(page);
-        router.replace({
-          pathname: '/',
-          params: { page: page.toString() },
-        });
-      } else if (e.translationX < -50) {
-        // Swipe Left - Go to the next page
-        let page = currentPage - 1;
-        if (page < 1) {
-          page = 1;
-        }
-        setCurrentSavedPage(page);
-        router.replace({
-          pathname: '/',
-          params: { page: page.toString() },
-        });
-      }
-      translateX.value = withSpring(0, { damping: 20, stiffness: 80 });
-    });
+    .onEnd(
+      useCallback(
+        (e) => {
+          const threshold = 30; // Lower threshold for smoother transitions
+          if (e.translationX > threshold) {
+            // Swipe Right - Go to the next page
+            let page = Math.min(currentPage + 1, defaultNumberOfPages);
+            setCurrentSavedPage(page);
+            router.replace({
+              pathname: '/',
+              params: { page: page.toString() },
+            });
+          } else if (e.translationX < -threshold) {
+            // Swipe Left - Go to the previous page
+            let page = Math.max(currentPage - 1, 1);
+            setCurrentSavedPage(page);
+            router.replace({
+              pathname: '/',
+              params: { page: page.toString() },
+            });
+          }
+          // Smooth return to the original position
+          translateX.value = withSpring(0, { damping: 20, stiffness: 90 }); // Smooth return
+        },
+        [
+          currentPage,
+          defaultNumberOfPages,
+          router,
+          setCurrentSavedPage,
+          translateX,
+        ],
+      ),
+    );
 
   return (
     <GestureHandlerRootView>
