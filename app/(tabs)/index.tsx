@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { Image } from 'expo-image';
+import { useKeepAwake } from 'expo-keep-awake';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
   GestureHandlerRootView,
@@ -9,12 +10,17 @@ import {
   PanGestureHandlerStateChangeEvent,
   State,
 } from 'react-native-gesture-handler';
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import PageOverlay from '@/components/PageOverlay';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -51,6 +57,7 @@ const getCurrentPage = (value: string | string[]): number | null => {
 };
 
 export default function HomeScreen() {
+  useKeepAwake();
   const setShowTopMenu = useSetRecoilState(topMenuState);
   const [dimensions, setDimensions] = useState({
     customPageWidth: 0,
@@ -71,6 +78,31 @@ export default function HomeScreen() {
     setCurrentPage(page);
   }, [pageParam, currentSavedPageValue]);
 
+  const translateX = useSharedValue(0);
+  const width = dimensions.customPageWidth;
+  console.log({ width });
+
+  // Animate the swipe effect with shadow, scale, and opacity
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: translateX.value },
+        {
+          scale: interpolate(
+            translateX.value,
+            [-width, 0, width],
+            [0.95, 1, 0.95],
+          ),
+        },
+        {
+          rotateY: `${interpolate(translateX.value, [-width, 0, width], [-5, 0, 5])}deg`,
+        },
+      ],
+      opacity: interpolate(translateX.value, [-width, 0, width], [0.5, 1, 0.5]),
+      elevation: interpolate(translateX.value, [-width, 0, width], [10, 0, 10]), // Add shadow effect
+    };
+  });
+
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
     setDimensions({ customPageWidth: width, customPageHeight: height });
@@ -78,33 +110,53 @@ export default function HomeScreen() {
 
   const { assets, error } = useImagesArray();
 
-  const handleSwipe = (event: PanGestureHandlerStateChangeEvent) => {
-    const { nativeEvent } = event;
-    if (nativeEvent.state === State.END) {
-      if (nativeEvent.translationX > 50) {
-        // Swipe Right - Go to the previous page
-        let page = currentPage + 1;
-        if (page > defaultNumberOfPages) {
-          page = defaultNumberOfPages;
-        }
-        setCurrentSavedPage(page);
+  const handleSwipe = ({ nativeEvent }: PanGestureHandlerStateChangeEvent) => {
+    console.log({ translationXEvent: nativeEvent.translationX });
+    switch (nativeEvent.state) {
+      case State.END: {
+        if (nativeEvent.translationX > 50) {
+          // Swipe Right - Go to the previous page
+          let page = currentPage + 1;
+          if (page > defaultNumberOfPages) {
+            page = defaultNumberOfPages;
+          }
+          setCurrentSavedPage(page);
 
-        router.replace({
-          pathname: '/',
-          params: { page: page.toString() },
-        });
-      } else if (nativeEvent.translationX < -50) {
-        // Swipe Left - Go to the next page
-        let page = currentPage - 1;
-        if (page < 1) {
-          page = 1;
+          router.replace({
+            pathname: '/',
+            params: { page: page.toString() },
+          });
+        } else if (nativeEvent.translationX < -50) {
+          // Swipe Left - Go to the next page
+          let page = currentPage - 1;
+          if (page < 1) {
+            page = 1;
+          }
+          setCurrentSavedPage(page);
+          router.replace({
+            pathname: '/',
+            params: { page: page.toString() },
+          });
         }
-        setCurrentSavedPage(page);
-        router.replace({
-          pathname: '/',
-          params: { page: page.toString() },
+        // Reset translateX with spring for animation effect
+        console.log({ swipedTransalteX: translateX.value });
+        translateX.value = withSpring(0, {
+          damping: 5, // Increased damping for slower response
+          stiffness: 80, // Reduced stiffness for smoother animation
+          mass: 1,
         });
+        break;
       }
+      case State.ACTIVE: {
+        translateX.value = nativeEvent.translationX;
+        console.log(
+          { translationX: translateX.value },
+          nativeEvent.translationX,
+        );
+        break;
+      }
+      default:
+        break;
     }
   };
 
@@ -118,9 +170,12 @@ export default function HomeScreen() {
         <TopMenu />
 
         <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
-          <PanGestureHandler onHandlerStateChange={handleSwipe}>
-            <ThemedView
-              style={styles.imageContainer}
+          <PanGestureHandler
+            onHandlerStateChange={handleSwipe}
+            activeOffsetX={[-10, 10]}
+          >
+            <Animated.View
+              style={[styles.imageContainer, animatedStyle]}
               onLayout={handleImageLayout}
             >
               {assets ? (
@@ -129,13 +184,12 @@ export default function HomeScreen() {
                   source={{ uri: assets[currentPage - 1].uri }}
                   placeholder={{ blurhash }}
                   contentFit="fill"
-                  transition={1000}
                 />
               ) : (
                 <ActivityIndicator size="large" color={tint} />
               )}
               <PageOverlay index={currentPage} dimensions={dimensions} />
-            </ThemedView>
+            </Animated.View>
           </PanGestureHandler>
         </Pressable>
       </SafeAreaView>
