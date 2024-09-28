@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { Image } from 'expo-image';
-import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
   Gesture,
@@ -94,25 +93,6 @@ export default function HomeScreen() {
       Image.prefetch(assets[nextPage - 1].uri);
     }
   }, [currentPage, assets, defaultNumberOfPages]);
-
-  useEffect(() => {
-    // Activate the wake lock immediately
-    activateKeepAwakeAsync('mushaf-screen');
-
-    // Set a timeout to deactivate wake lock after 1 hour (3600 seconds)
-    const timeout = setTimeout(
-      () => {
-        deactivateKeepAwake(); // Release wake lock after 1 hour
-      },
-      10 * 60 * 1000,
-    ); // 10 minutes in milliseconds
-
-    // Cleanup: Deactivate wake lock if the component unmounts earlier
-    return () => {
-      clearTimeout(timeout); // Clear the timer to avoid issues if component unmounts
-      deactivateKeepAwake(); // Ensure wake lock is released
-    };
-  }, []);
 
   const panGesture = Gesture.Pan()
     .onUpdate((e) => {
