@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 
 import { Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { useRecoilState } from 'recoil';
 
 import { ThemedView } from '@/components/ThemedView';
@@ -49,7 +50,7 @@ export default function TopMenu() {
         style={styles.topMenuButton}
         onPress={() => {
           setShowTopMenuState(false);
-          alert('Search pressed');
+          router.push('/search');
         }}
       >
         <Ionicons name="search" size={40} color={color} />

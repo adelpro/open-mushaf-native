@@ -79,6 +79,13 @@ export default function RootLayout() {
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
+                <Stack.Screen
+                  name="search"
+                  options={{
+                    title: 'بحث', // Arabic for "Search"
+                    //headerTitleAlign: 'center', // Align title to center for a cleaner look
+                  }}
+                />
               </Stack>
             </ThemeProvider>
           </ReactNativeRecoilPersistGate>
