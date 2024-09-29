@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
   Dimensions,
   Pressable,
-  ScrollView,
   StyleSheet,
   useColorScheme,
   View,
@@ -14,17 +13,13 @@ import {
   PanGestureHandlerStateChangeEvent,
   State,
 } from 'react-native-gesture-handler';
-import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
 
 import { Colors } from '@/constants/Colors';
-import { popupHeight, tafseerTab } from '@/recoil/atoms';
-import { TafseerAya, TafseerTabs } from '@/types';
+import { popupHeight } from '@/recoil/atoms';
 
-import { ThemedText } from './ThemedText';
+import Tafseer from './Tafseer';
 import { ThemedView } from './ThemedView';
-import surahs from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
-import tafaseer from '../assets/tafaseer';
 
 type Props = {
   show: boolean;
@@ -33,34 +28,17 @@ type Props = {
   surah: number;
 };
 
-const tabLabels: Record<TafseerTabs, string> = {
-  katheer: 'ابن كثير',
-  maany: 'معاني القرآن',
-  earab: 'إعراب القرآن',
-  baghawy: 'البغوي',
-  muyassar: 'الميسر',
-  qortoby: 'القرطبي',
-  tabary: 'الطبري',
-  saady: 'السعدي',
-  tanweer: 'التحرير و التنوير',
-  waseet: 'الوسيط',
-};
-
 export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
+  const colorScheme = useColorScheme();
+  const tintColor = Colors[colorScheme ?? 'light'].tint;
+  const backgroundColor = Colors[colorScheme ?? 'light'].background;
+
+  const [opacity, setOpacity] = useState(1);
   const [popupHeightValue, setPopupHeight] =
     useRecoilState<number>(popupHeight);
   const [currentPopupHeight, setCurrentPopupHeight] =
     useState<number>(popupHeightValue);
-  const [opacity, setOpacity] = useState(1);
-  const [selectedTabValue, setSelectedTab] =
-    useRecoilState<TafseerTabs>(tafseerTab);
-  const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
-  const [surahName, setSurahName] = useState<string>('');
   const popupRef = useRef<View | null>(null);
-  const colorScheme = useColorScheme();
-  const textColor = Colors[colorScheme ?? 'light'].text;
-  const tintColor = Colors[colorScheme ?? 'light'].tint;
-  const backgroundColor = Colors[colorScheme ?? 'light'].background;
 
   const handleGesture = useCallback(
     (event: PanGestureHandlerGestureEvent) => {
@@ -94,34 +72,6 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
     [currentPopupHeight, setPopupHeight],
   );
 
-  const renderTafseerContent = (tafseer: TafseerAya[] | null): JSX.Element => {
-    const ayaTafseer = tafseer?.find((t) => t.aya === aya && t.sura === surah);
-
-    let tafseerText = 'لا يوجد تفسير.';
-    if (!ayaTafseer?.text || ayaTafseer?.text === '<p></p>') {
-      tafseerText = '<p>لا يوجد تفسير.</p>';
-    } else {
-      tafseerText = ayaTafseer?.text;
-    }
-
-    return (
-      <ThemedView style={styles.tafseerContent}>
-        <HTMLView
-          value={tafseerText}
-          stylesheet={{ p: { color: textColor } }}
-        />
-      </ThemedView>
-    );
-  };
-
-  useEffect(() => {
-    setSurahName(surahs[surah]?.name ?? '');
-  }, [surah]);
-
-  useEffect(() => {
-    setTafseerData(tafaseer[selectedTabValue] as TafseerAya[]);
-  }, [selectedTabValue]);
-
   if (!show) return null;
 
   return (
@@ -146,35 +96,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
             </Pressable>
           </PanGestureHandler>
 
-          <ScrollView
-            contentContainerStyle={[
-              styles.scrollView,
-              { backgroundColor, opacity },
-            ]}
-          >
-            <ThemedText style={styles.title}>
-              {surahName} - الآية {aya}
-            </ThemedText>
-            <ThemedView style={styles.tabs}>
-              {Object.keys(tabLabels).map((key) => {
-                const tabKey = key as TafseerTabs;
-                return (
-                  <Pressable
-                    key={tabKey}
-                    style={[
-                      styles.tabButton,
-                      selectedTabValue === tabKey && styles.activeTab,
-                      selectedTabValue === tabKey && { borderColor: tintColor },
-                    ]}
-                    onPress={() => setSelectedTab(tabKey)}
-                  >
-                    <ThemedText>{tabLabels[tabKey]}</ThemedText>
-                  </Pressable>
-                );
-              })}
-            </ThemedView>
-            {renderTafseerContent(tafseerData)}
-          </ScrollView>
+          <Tafseer opacity={opacity} aya={aya} surah={surah} />
         </Pressable>
       </Pressable>
     </ThemedView>
@@ -224,30 +146,5 @@ const styles = StyleSheet.create({
     height: 3,
     borderRadius: 3,
     alignSelf: 'center',
-  },
-  scrollView: {
-    padding: 20,
-  },
-  title: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  tabs: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: 2,
-    justifyContent: 'flex-start',
-  },
-  tabButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-  },
-  activeTab: {
-    borderBottomWidth: 2,
-  },
-  tafseerContent: {
-    marginBottom: 20,
-    marginTop: 20,
   },
 });

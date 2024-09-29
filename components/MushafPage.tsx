@@ -20,41 +20,26 @@ import { getCurrentPage } from '@/utils';
 import PageOverlay from './PageOverlay';
 
 export default function MushafPage() {
-  const [dimensions, setDimensions] = useState({
-    customPageWidth: 0,
-    customPageHeight: 0,
-  });
+  const colorScheme = useColorScheme();
+  const tint = Colors[colorScheme ?? 'light'].tint;
+
+  const router = useRouter();
   const { page: pageParam } = useLocalSearchParams();
 
   const [currentSavedPageValue, setCurrentSavedPage] =
     useRecoilState(currentSavedPage);
-  const [currentPage, setCurrentPage] = useState(currentSavedPageValue);
-  const colorScheme = useColorScheme();
-  const tint = Colors[colorScheme ?? 'light'].tint;
+  const [currentPage, setCurrentPage] = useState(currentSavedPageValue ?? 1);
+
+  const [dimensions, setDimensions] = useState({
+    customPageWidth: 0,
+    customPageHeight: 0,
+  });
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
     setDimensions({ customPageWidth: width, customPageHeight: height });
   };
-  const { assets } = useImagesArray();
-  const router = useRouter();
+
   const translateX = useSharedValue(0);
-
-  // Prefetch images
-  useEffect(() => {
-    if (assets) {
-      const prevPage = Math.max(1, currentPage - 1);
-      const nextPage = Math.min(defaultNumberOfPages, currentPage + 1);
-      Image.prefetch(assets[prevPage - 1].uri);
-      Image.prefetch(assets[nextPage - 1].uri);
-    }
-  }, [currentPage, assets]);
-
-  // Set current page based on page param
-  useEffect(() => {
-    const page = getCurrentPage(pageParam) ?? currentSavedPageValue;
-    setCurrentPage(page);
-  }, [currentSavedPageValue, pageParam]);
-
   // Animated style using translateX shared value
   const animatedStyle = useAnimatedStyle(() => {
     const rotation = translateX.value / 300; // Subtle rotation
@@ -78,7 +63,27 @@ export default function MushafPage() {
     };
   });
 
-  const setCurrentPageAndNavigate = (page: number) => {
+  const { assets } = useImagesArray();
+  // Prefetch images
+  useEffect(() => {
+    const prefetchImages = () => {
+      if (assets) {
+        const prevPage = Math.max(1, currentPage - 1);
+        const nextPage = Math.min(defaultNumberOfPages, currentPage + 1);
+        Image.prefetch(assets[prevPage - 1].uri);
+        Image.prefetch(assets[nextPage - 1].uri);
+      }
+    };
+    prefetchImages();
+  }, [currentPage, assets]);
+
+  // Set current page based on page param
+  useEffect(() => {
+    const page = getCurrentPage(pageParam) ?? currentSavedPageValue;
+    setCurrentPage(page);
+  }, [currentSavedPageValue, pageParam]);
+
+  const handlePageChange = (page: number) => {
     setCurrentSavedPage(page);
     router.replace({
       pathname: '/',
@@ -86,7 +91,7 @@ export default function MushafPage() {
     });
   };
 
-  const panGesture = Gesture.Pan()
+  const panGestureHandler = Gesture.Pan()
     .onUpdate((e) => {
       translateX.value = Math.max(-100, Math.min(100, e.translationX));
     })
@@ -95,12 +100,12 @@ export default function MushafPage() {
       const threshold = 30; // Lower threshold for smoother transitions
       if (e.translationX > threshold) {
         // Swipe Right - Go to the next page
-        runOnJS(setCurrentPageAndNavigate)(
+        runOnJS(handlePageChange)(
           Math.min(currentPage + 1, defaultNumberOfPages),
         );
       } else if (e.translationX < -threshold) {
         // Swipe Left - Go to the previous page
-        runOnJS(setCurrentPageAndNavigate)(Math.max(currentPage - 1, 1));
+        runOnJS(handlePageChange)(Math.max(currentPage - 1, 1));
       }
 
       // Smooth return to the original position
@@ -108,7 +113,7 @@ export default function MushafPage() {
     });
 
   return (
-    <GestureDetector gesture={panGesture}>
+    <GestureDetector gesture={panGestureHandler}>
       <Animated.View
         style={[styles.imageContainer, animatedStyle]}
         onLayout={handleImageLayout}
