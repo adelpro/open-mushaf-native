@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 export default function MoreLayout() {
   return (
     <Stack
+      initialRouteName="index"
       screenOptions={{
         headerShown: false,
         headerTitleStyle: {
