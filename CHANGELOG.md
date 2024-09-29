@@ -2,11 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.6]
+## [1.0.7]
 
 ### Added
 
-- Support for landscape mode (Thanks to Baha Eddine).
+- Added More tab.
+
+### Fixed
+
+- Refactored Tafseer and Mushaf page code.
+
+## [1.0.6]
 
 ### Fixed
 

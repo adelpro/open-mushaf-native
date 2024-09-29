@@ -8,7 +8,6 @@ import {
 import { Tabs } from 'expo-router';
 import { useRecoilValue } from 'recoil';
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { bottomMenuState } from '@/recoil/atoms';
@@ -63,28 +62,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings"
-        options={{
-          title: 'الإعدادات',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'cog' : 'cog-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="about"
-        options={{
-          title: 'حول التطبيق',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? 'alert-circle' : 'alert-circle-outline'}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="more"
+        name="more/index"
         options={{
           title: 'المزيد',
           tabBarIcon: ({ color }) => (
