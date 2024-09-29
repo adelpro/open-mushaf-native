@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 
-import { Colors } from '@/constants/Colors'; // Ensure this import is correct
+import { Colors } from '@/constants/Colors';
 import { ListTabs } from '@/types';
 
 import { ThemedText } from './ThemedText';
@@ -15,7 +15,7 @@ type Props = {
 export default function TopTabs({ activeTab, setActiveTab }: Props) {
   const colorScheme = useColorScheme();
   const currentColor = Colors[colorScheme ?? 'light'].tint;
-  const backgroundColor = Colors[colorScheme ?? 'light'].background; // Background color for active tab
+  const backgroundColor = Colors[colorScheme ?? 'light'].background;
 
   const handleTabPress = (tab: ListTabs) => {
     setActiveTab(tab);
@@ -80,16 +80,15 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 30,
     width: 200,
-    alignItems: 'center', // Center align text within the tab
+    alignItems: 'center',
   },
   tabText: {
     fontSize: 24,
     lineHeight: 32,
-    //color: '#6b7280', // Gray for inactive tabs
+
     fontWeight: '500',
   },
   activeTabText: {
-    //color: '#1f2937', // Darker text for the active tab
     fontWeight: '700',
   },
 });
