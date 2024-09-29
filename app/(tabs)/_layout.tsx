@@ -1,6 +1,10 @@
 import React from 'react';
 
-import { FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  Feather,
+  FontAwesome6,
+  MaterialCommunityIcons,
+} from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { useRecoilValue } from 'recoil';
 
@@ -76,6 +80,15 @@ export default function TabLayout() {
               name={focused ? 'alert-circle' : 'alert-circle-outline'}
               color={color}
             />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="more"
+        options={{
+          title: 'المزيد',
+          tabBarIcon: ({ color }) => (
+            <Feather name="more-horizontal" size={24} color={color} />
           ),
         }}
       />
