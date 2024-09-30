@@ -20,9 +20,14 @@ export default function AboutScreen() {
       label: 'مجمع الملك فهد لطباعة المصحف الشريف',
     },
     {
-      text: 'قاعدة البيانات (JSON) من ',
+      text: 'قاعدة البيانات (JSON)',
       link: 'https://github.com/Zizwar/mushaf-mauri',
-      label: 'Mushaf-mauri',
+      label: 'Zizwar/mushaf-mauri',
+    },
+    {
+      text: 'قاعدة البيانات (JSON)',
+      link: 'https://github.com/forabi/aQuran',
+      label: 'forabi/aQuran',
     },
     {
       text: 'بيانات التفاسير من ',
