@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Added More tab.
-- Added privacy policy (ar and en)
+- Added privacy policy (arabic and english).
 
 ### Fixed
 

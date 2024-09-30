@@ -4,6 +4,8 @@ import { StyleSheet } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
+import { ExternalLink } from './ExternalLink';
+
 export default function PrivacyContentEnglish() {
   return (
     <ThemedView style={styles.container}>
@@ -84,6 +86,14 @@ export default function PrivacyContentEnglish() {
         If you have any questions about this policy, feel free to contact us at:
       </ThemedText>
       <ThemedText style={styles.content}>Email: adelpro@gmail.com</ThemedText>
+      <ExternalLink
+        href={'https://adelpro.github.io/open-mushaf/privacy-policy-ar.html'}
+        style={[styles.listContainer]}
+      >
+        <ThemedText style={[styles.link, styles.englishText]}>
+          Privacy Policy (Link)
+        </ThemedText>
+      </ExternalLink>
     </ThemedView>
   );
 }
@@ -112,5 +122,18 @@ const styles = StyleSheet.create({
   },
   englishText: {
     textAlign: 'left',
+  },
+  link: {
+    color: '#1e90ff',
+    textDecorationLine: 'underline',
+    textAlign: 'center',
+    padding: 20,
+  },
+  listContainer: {
+    marginTop: 40,
+    marginBottom: 10,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

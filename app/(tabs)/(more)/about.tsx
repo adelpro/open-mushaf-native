@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   link: {
-    color: '#1E90FF', // Ensuring good contrast for dark mode
+    color: '#1E90FF',
     textDecorationLine: 'underline',
   },
   versionText: {
