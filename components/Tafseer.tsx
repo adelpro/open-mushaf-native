@@ -61,7 +61,9 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       <ThemedView style={styles.tafseerContent}>
         <HTMLView
           value={tafseerText}
-          stylesheet={{ p: { color: textColor } }}
+          stylesheet={{
+            p: { color: textColor, fontFamily: 'Amiri_400Regular' },
+          }}
         />
       </ThemedView>
     );

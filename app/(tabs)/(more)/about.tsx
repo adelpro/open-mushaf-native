@@ -7,7 +7,6 @@ import { useSetRecoilState } from 'recoil';
 import { ExternalLink } from '@/components/ExternalLink';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import TopMenu from '@/components/TopMenu';
 import { topMenuState } from '@/recoil/atoms';
 
 export default function AboutScreen() {
@@ -46,7 +45,6 @@ export default function AboutScreen() {
   return (
     <ThemedView style={styles.container}>
       <Pressable onPress={() => setShowTopMenu(true)}>
-        <TopMenu />
         <ThemedView style={styles.mainContent}>
           <ThemedText type="title" style={styles.title}>
             المصادر

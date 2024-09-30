@@ -40,26 +40,28 @@ export default function MushafPage() {
   };
 
   const translateX = useSharedValue(0);
-  // Animated style using translateX shared value
   const animatedStyle = useAnimatedStyle(() => {
-    const rotation = translateX.value / 300; // Subtle rotation
-    const shadowOpacity = Math.abs(translateX.value) / 100; // Dynamic shadow opacity
-    const opacity = Math.max(0.7, 1 - Math.abs(translateX.value) / 200); // Adjust opacity based on swipe distance
+    const maxTranslateX = 20;
+    const clampedTranslateX = Math.max(
+      -maxTranslateX,
+      Math.min(translateX.value, maxTranslateX),
+    );
+
+    // Dynamic shadow and opacity adjustments
+    const shadowOpacity = Math.abs(clampedTranslateX) / maxTranslateX;
+    const opacity = Math.max(
+      0.85,
+      1 - Math.abs(clampedTranslateX) / maxTranslateX,
+    );
 
     return {
-      transform: [
-        { translateX: translateX.value },
-        { rotateY: `${rotation}rad` },
-      ],
-      perspective: 800,
-      shadowColor: 'rgba(0, 0, 0, 0.3)', // Shadow color
-      shadowOffset: {
-        width: 0,
-        height: 3,
-      },
-      shadowOpacity: shadowOpacity,
-      shadowRadius: 5,
-      opacity: opacity, // Dynamic opacity
+      transform: [{ translateX: clampedTranslateX }],
+      perspective: 1000, // Slightly increased for better depth perception
+      shadowColor: 'rgba(0, 0, 0, 0.2)', // Softer shadow color for minimalist effect
+      shadowOffset: { width: 0, height: 3 },
+      shadowOpacity: shadowOpacity * 0.5, // Reduce shadow intensity for subtlety
+      shadowRadius: 8, // Increase shadow blur for realism
+      opacity: opacity,
     };
   });
 

@@ -1,7 +1,7 @@
 {
   "name": "open-mushaf-native",
   "main": "expo-router/entry",
-  "version": "1",
+  "version": "v1",
   "author": "Adel Benyahia <adelpro@gmail.com>",
   "repository": "https://github.com/adelpro/open-mushaf-native.git",
   "lint-staged": {

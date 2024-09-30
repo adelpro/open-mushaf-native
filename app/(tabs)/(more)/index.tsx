@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { router } from 'expo-router';
 
@@ -9,27 +9,24 @@ import { ThemedView } from '@/components/ThemedView';
 const MoreScreen = () => {
   return (
     <ThemedView style={styles.container}>
-      <TouchableOpacity
+      <Pressable
         onPress={() => router.push('/about')}
         style={styles.linkContainer}
-        activeOpacity={0.7}
       >
         <ThemedText style={styles.link}>حول التطبيق</ThemedText>
-      </TouchableOpacity>
-      <TouchableOpacity
+      </Pressable>
+      <Pressable
         onPress={() => router.push('/privacy')}
         style={styles.linkContainer}
-        activeOpacity={0.7}
       >
         <ThemedText style={styles.link}>سياسة الخصوصية</ThemedText>
-      </TouchableOpacity>
-      <TouchableOpacity
+      </Pressable>
+      <Pressable
         onPress={() => router.push('/settings')}
         style={styles.linkContainer}
-        activeOpacity={0.7}
       >
         <ThemedText style={styles.link}>الإعدادات</ThemedText>
-      </TouchableOpacity>
+      </Pressable>
     </ThemedView>
   );
 };
@@ -46,13 +43,14 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     width: '100%',
     paddingVertical: 15,
-    backgroundColor: '#FFFFFF',
+
     borderRadius: 10,
     elevation: 2, // For subtle shadow
     alignItems: 'center',
   },
   link: {
     fontSize: 22,
+    paddingVertical: 10,
     color: '#1E90FF',
     textAlign: 'center',
     fontWeight: '500',

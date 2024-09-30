@@ -113,11 +113,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    paddingVertical: 20,
   },
   subtitle: {
     fontSize: 20,
     fontWeight: '600',
     marginTop: 20,
+    paddingVertical: 10,
   },
   content: {
     fontSize: 16,
