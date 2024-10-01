@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   link: {
-    color: '#1e90ff',
+    color: '#1E90FF',
     textDecorationLine: 'underline',
     textAlign: 'center',
     padding: 20,

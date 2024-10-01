@@ -70,7 +70,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
   };
 
   useEffect(() => {
-    setSurahName(surahs[surah]?.name ?? '');
+    setSurahName(surahs[surah - 1]?.name ?? '');
   }, [surah]);
 
   useEffect(() => {

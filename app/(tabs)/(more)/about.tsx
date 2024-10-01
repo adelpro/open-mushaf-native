@@ -11,8 +11,8 @@ import { topMenuState } from '@/recoil/atoms';
 
 export default function AboutScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
-  const appVersion = Application.nativeApplicationVersion || 'Unknown';
-  const buildVersion = Application.nativeBuildVersion || 'Unknown';
+  const appVersion = Application.nativeApplicationVersion ?? 'Unknown';
+  const buildVersion = Application.nativeBuildVersion ?? 'Unknown';
   const sourcesList = [
     {
       text: 'صفحات المصحف من ',

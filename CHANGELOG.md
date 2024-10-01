@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Added Search Quran.
+- Added Search Quran page.
 
 ## [1.0.7]
 

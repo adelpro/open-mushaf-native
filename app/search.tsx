@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   FlatList,
+  Pressable,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -10,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
+import TafseerPopup from '@/components/TafseerPopup';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import useDebounce from '@/hooks/useDebounce';
@@ -19,10 +21,11 @@ export default function Search() {
   const quranText: QuranText[] = quranJson as QuranText[];
   const [query, setQuery] = useState('');
   const [filteredResults, setFilteredResults] = useState<QuranText[]>([]);
-
+  const [show, setShow] = useState(false);
   const handleSearch = useDebounce((text: string) => {
     setQuery(text);
   }, 300);
+  const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
 
   useEffect(() => {
     if (!quranText || quranText.length === 0) return;
@@ -38,20 +41,27 @@ export default function Search() {
     setFilteredResults(filtered);
   }, [query, quranText]);
 
-  const handlePress = (page: number) => {
-    router.replace({
-      pathname: '/',
-      params: { page },
-    });
+  const handlePress = (aya: QuranText) => {
+    setSelectedAya({ aya: aya.aya_id, surah: aya.sura_id });
+    setShow(true);
   };
 
   const renderItem = ({ item }: { item: QuranText }) => (
-    <TouchableOpacity onPress={() => handlePress(item.page_id)}>
+    <TouchableOpacity onPress={() => handlePress(item)}>
       <ThemedView style={styles.item}>
         <ThemedText type="default">{item.uthmani}</ThemedText>
-        <ThemedText type="default">
-          {`سورة: ${item.sura_name} - الآية: ${item.aya_id}`}
-        </ThemedText>
+        <Pressable
+          onPress={() => {
+            router.replace({
+              pathname: '/',
+              params: { page: item.page_id.toString() },
+            });
+          }}
+        >
+          <ThemedText type="link">
+            {`سورة: ${item.sura_name} - الآية: ${item.aya_id}`}
+          </ThemedText>
+        </Pressable>
       </ThemedView>
     </TouchableOpacity>
   );
@@ -78,6 +88,12 @@ export default function Search() {
         ListEmptyComponent={
           query ? <ThemedText type="default">لا توجد نتائج</ThemedText> : null
         }
+      />
+      <TafseerPopup
+        show={show}
+        setShow={setShow}
+        aya={selectedAya.aya}
+        surah={selectedAya.surah}
       />
     </ThemedView>
   );
