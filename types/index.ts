@@ -4,6 +4,8 @@ export * from './aya';
 
 export * from './surah';
 
+export * from './quranText';
+
 export * from './listTabs';
 
 export * from './tafseerTabs';
