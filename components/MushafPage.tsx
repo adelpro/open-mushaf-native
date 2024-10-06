@@ -4,13 +4,6 @@ import { ActivityIndicator, StyleSheet, useColorScheme } from 'react-native';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import {
-  brightness,
-  ColorMatrix,
-  concatColorMatrices,
-  contrast,
-  invert,
-} from 'react-native-image-filter-kit';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -29,12 +22,6 @@ import PageOverlay from './PageOverlay';
 export default function MushafPage() {
   const colorScheme = useColorScheme();
   const tint = Colors[colorScheme ?? 'light'].tint;
-  const colorMatrix = concatColorMatrices([
-    invert(),
-    brightness(isDarkMode ? 0.8 : 1.2),
-    contrast(isDarkMode ? 1.2 : 0.8),
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0],
-  ]);
 
   const router = useRouter();
   const { page: pageParam } = useLocalSearchParams();
@@ -140,18 +127,15 @@ export default function MushafPage() {
         onLayout={handleImageLayout}
       >
         {assets ? (
-          <ColorMatrix
-            matrix={colorMatrix}
-            preserveAspectRatio="contain"
-            resizeMode="contain"
-          >
-            <Image
-              style={[styles.image]}
-              source={{ uri: assets[currentPage - 1].uri }}
-              placeholder={{ blurhash }}
-              contentFit="fill"
-            />
-          </ColorMatrix>
+          <Image
+            style={[styles.image]}
+            source={{ uri: assets[currentPage - 1].uri }}
+            placeholder={{ blurhash }}
+            contentFit="fill"
+            tintColor={
+              colorScheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : undefined
+            }
+          />
         ) : (
           <ActivityIndicator size="large" color={tint} />
         )}
