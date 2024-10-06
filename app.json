@@ -2,7 +2,7 @@
   "expo": {
     "name": "open-mushaf-native",
     "slug": "open-mushaf-native",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",

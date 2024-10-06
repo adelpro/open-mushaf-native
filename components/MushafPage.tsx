@@ -4,6 +4,13 @@ import { ActivityIndicator, StyleSheet, useColorScheme } from 'react-native';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  brightness,
+  ColorMatrix,
+  concatColorMatrices,
+  contrast,
+  invert,
+} from 'react-native-image-filter-kit';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -22,6 +29,12 @@ import PageOverlay from './PageOverlay';
 export default function MushafPage() {
   const colorScheme = useColorScheme();
   const tint = Colors[colorScheme ?? 'light'].tint;
+  const colorMatrix = concatColorMatrices([
+    invert(),
+    brightness(isDarkMode ? 0.8 : 1.2),
+    contrast(isDarkMode ? 1.2 : 0.8),
+    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0],
+  ]);
 
   const router = useRouter();
   const { page: pageParam } = useLocalSearchParams();
@@ -117,16 +130,28 @@ export default function MushafPage() {
   return (
     <GestureDetector gesture={panGestureHandler}>
       <Animated.View
-        style={[styles.imageContainer, animatedStyle]}
+        style={[
+          styles.imageContainer,
+          animatedStyle,
+          colorScheme === 'dark'
+            ? { backgroundColor: '#808080' }
+            : { backgroundColor: '#f5f1eb' },
+        ]}
         onLayout={handleImageLayout}
       >
         {assets ? (
-          <Image
-            style={styles.image}
-            source={{ uri: assets[currentPage - 1].uri }}
-            placeholder={{ blurhash }}
-            contentFit="fill"
-          />
+          <ColorMatrix
+            matrix={colorMatrix}
+            preserveAspectRatio="contain"
+            resizeMode="contain"
+          >
+            <Image
+              style={[styles.image]}
+              source={{ uri: assets[currentPage - 1].uri }}
+              placeholder={{ blurhash }}
+              contentFit="fill"
+            />
+          </ColorMatrix>
         ) : (
           <ActivityIndicator size="large" color={tint} />
         )}
@@ -147,12 +172,10 @@ const styles = StyleSheet.create({
     flex: 1,
     maxWidth: 430,
     paddingVertical: 5,
-    backgroundColor: '#f5f1eb',
     overflow: 'hidden',
   },
   image: {
     flex: 1,
     width: '100%',
-    backgroundColor: '#f5f1eb',
   },
 });
