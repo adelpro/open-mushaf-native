@@ -59,7 +59,7 @@ export default function AboutScreen() {
               <ThemedView style={styles.listItem} key={index}>
                 <ThemedText style={styles.bullet}>•</ThemedText>
                 <ThemedText style={styles.listText}>
-                  {text}
+                  {text}&nbsp;
                   <ExternalLink href={link as Href<string>} style={styles.link}>
                     {label}
                   </ExternalLink>
