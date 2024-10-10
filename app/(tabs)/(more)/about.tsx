@@ -41,8 +41,8 @@ export default function AboutScreen() {
     },
     {
       text: 'صوت تغيير الصفحة',
-      link: 'https://pixabay.com/users/oxidvideos-37598254/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=178322',
-      label: 'Alex from Pixabay',
+      link: 'https://pixabay.com',
+      label: 'Pixabay',
     },
   ];
   const featuresList = [

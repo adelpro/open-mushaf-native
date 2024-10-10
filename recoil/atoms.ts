@@ -27,6 +27,12 @@ export const tafseerTab = atom<TafseerTabs>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
+export const flipSound = atom<boolean>({
+  key: 'FlipSound',
+  default: false,
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+
 // Create a timer effect for Recoil state
 const timerEffect: (duration_ms: number) => AtomEffect<any> =
   (duration_ms: number) =>
