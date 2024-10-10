@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, useColorScheme } from 'react-native';
 
+import { Audio } from 'expo-av';
 import { Image } from 'expo-image';
 import { activateKeepAwakeAsync } from 'expo-keep-awake';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -21,6 +22,7 @@ import { getCurrentPage } from '@/utils';
 import PageOverlay from './PageOverlay';
 
 export default function MushafPage() {
+  const sound = useRef<Audio.Sound | null>(null);
   const colorScheme = useColorScheme();
   const tint = Colors[colorScheme ?? 'light'].tint;
 
@@ -86,12 +88,17 @@ export default function MushafPage() {
     setCurrentPage(page);
   }, [currentSavedPageValue, pageParam]);
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = async (page: number) => {
     setCurrentSavedPage(page);
     router.replace({
       pathname: '/',
       params: { page: page.toString() },
     });
+
+    // Play page flipsound
+    if (sound.current) {
+      await sound.current.replayAsync(); // Play sound
+    }
   };
 
   const panGestureHandler = Gesture.Pan()
@@ -122,6 +129,24 @@ export default function MushafPage() {
       await activateKeepAwakeAsync();
     };
     enableKeepAwake();
+  }, []);
+
+  useEffect(() => {
+    const loadSound = async () => {
+      const { sound: soundObject } = await Audio.Sound.createAsync(
+        require('@/assets/sounds/page-flip-sound.mp3'), // Replace with your sound file
+      );
+      sound.current = soundObject;
+    };
+
+    loadSound();
+
+    return () => {
+      if (sound.current) {
+        sound.current.unloadAsync();
+        sound.current = null;
+      }
+    };
   }, []);
   return (
     <GestureDetector gesture={panGestureHandler}>
