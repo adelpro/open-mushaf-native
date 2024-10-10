@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, useColorScheme } from 'react-native';
 
 import { Image } from 'expo-image';
+import { activateKeepAwakeAsync } from 'expo-keep-awake';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -114,6 +115,14 @@ export default function MushafPage() {
       translateX.value = withSpring(0, { damping: 20, stiffness: 90 }); // Smooth return
     });
 
+  // Keep the screen awake when reading mushaf
+  useEffect(() => {
+    if (document.visibilityState === 'hidden') return;
+    const enableKeepAwake = async () => {
+      await activateKeepAwakeAsync();
+    };
+    enableKeepAwake();
+  }, []);
   return (
     <GestureDetector gesture={panGestureHandler}>
       <Animated.View
