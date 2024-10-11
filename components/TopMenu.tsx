@@ -47,15 +47,7 @@ export default function TopMenu() {
         )}
       </TouchableOpacity>
       <ThemedView style={styles.leftIconsContainer}>
-        <TouchableOpacity
-          style={styles.icon}
-          onPress={() => {
-            setShowTopMenuState(false);
-            router.push('/search');
-          }}
-        >
-          <Ionicons name="search" size={30} color={textColor} />
-        </TouchableOpacity>
+        {' '}
         <TouchableOpacity
           style={styles.icon}
           onPress={() => {
@@ -68,6 +60,15 @@ export default function TopMenu() {
             size={30}
             color={textColor}
           />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.icon}
+          onPress={() => {
+            setShowTopMenuState(false);
+            router.push('/search');
+          }}
+        >
+          <Ionicons name="search" size={30} color={textColor} />
         </TouchableOpacity>
       </ThemedView>
     </ThemedView>
