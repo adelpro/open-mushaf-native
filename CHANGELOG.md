@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.8]
+## [1.0.9]
+
+### Added
+
+- Page flip sound.
+- Add KeepAwake feature.
+
+### Fixed
+
+- Fixed search functionality.
+- Fixed mushaf page dark mode issues.
 
 ### Added
 
