@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.10]
+
+### Added
+
+- Added mushaf navigation page.
+
 ## [1.0.9]
 
 ### Added
