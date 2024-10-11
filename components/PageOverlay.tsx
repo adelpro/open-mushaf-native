@@ -14,8 +14,6 @@ type Props = {
 };
 
 export default function PageOverlay({ index, dimensions }: Props) {
-  // TODO add show tafseer
-
   const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
   const [show, setShow] = useState<boolean>(false);
   const setShowTopMenu = useSetRecoilState(topMenuState);
