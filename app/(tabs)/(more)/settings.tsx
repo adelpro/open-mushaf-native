@@ -1,5 +1,6 @@
-import { I18nManager, StyleSheet, Switch } from 'react-native';
+import { StyleSheet } from 'react-native';
 
+import Checkbox from 'expo-checkbox';
 import { useRecoilState } from 'recoil';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -11,23 +12,17 @@ export default function SettingsScreen() {
 
   const toggleSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
-
-    console.log('RTL Mode: ' + I18nManager.isRTL);
   };
 
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.mainContent}>
         <ThemedView style={styles.listItem}>
-          <Switch
+          <Checkbox
             value={isFlipSoundEnabled}
             onValueChange={toggleSwitch}
-            trackColor={{ false: '#767577', true: '#81b0ff' }}
-            thumbColor={isFlipSoundEnabled ? '#f4f3f4' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            style={styles.switch}
+            style={styles.checkbox}
           />
-
           <ThemedText style={styles.listItemText}>صوت قلب الصفحة</ThemedText>
         </ThemedView>
       </ThemedView>
@@ -38,12 +33,10 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     width: '100%',
+    padding: 10,
   },
   mainContent: {
-    maxWidth: 600,
     width: '100%',
     paddingHorizontal: 22,
     paddingLeft: 16,
@@ -51,16 +44,16 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   listItem: {
-    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+    flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+    width: '100%',
   },
   listItemText: {
     fontSize: 16,
     marginRight: 10,
   },
-
-  switch: {
-    //transform: [{ scaleX: 1 }],
+  checkbox: {
+    marginRight: 10,
   },
 });

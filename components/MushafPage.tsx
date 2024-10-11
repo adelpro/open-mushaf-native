@@ -12,17 +12,18 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { blurhash, Colors, defaultNumberOfPages } from '@/constants';
 import useImagesArray from '@/hooks/useImagesArray';
-import { currentSavedPage } from '@/recoil/atoms';
+import { currentSavedPage, flipSound } from '@/recoil/atoms';
 import { getCurrentPage } from '@/utils';
 
 import PageOverlay from './PageOverlay';
 
 export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
+  const isFlipSoundEnabled = useRecoilValue(flipSound);
   const colorScheme = useColorScheme();
   const tint = Colors[colorScheme ?? 'light'].tint;
 
@@ -132,6 +133,9 @@ export default function MushafPage() {
   }, []);
 
   useEffect(() => {
+    if (!isFlipSoundEnabled) {
+      return;
+    }
     const loadSound = async () => {
       const { sound: soundObject } = await Audio.Sound.createAsync(
         require('@/assets/sounds/page-flip-sound.mp3'), // Replace with your sound file
@@ -147,7 +151,7 @@ export default function MushafPage() {
         sound.current = null;
       }
     };
-  }, []);
+  }, [isFlipSoundEnabled]);
   return (
     <GestureDetector gesture={panGestureHandler}>
       <Animated.View

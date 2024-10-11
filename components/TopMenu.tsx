@@ -6,12 +6,12 @@ import { router } from 'expo-router';
 import { useRecoilState } from 'recoil';
 
 import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors';
+import { useColors } from '@/hooks/useColors';
 import { bottomMenuState, topMenuState } from '@/recoil/atoms';
 
 export default function TopMenu() {
   const colorScheme = useColorScheme();
-  const color = Colors[colorScheme ?? 'light'].icon;
+  const { textColor } = useColors();
   const [showBottomMenuState, setBottomMenuState] =
     useRecoilState<boolean>(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] =
@@ -28,8 +28,8 @@ export default function TopMenu() {
         {
           backgroundColor:
             colorScheme === 'dark'
-              ? 'rgba(255, 255, 255, 0.1)'
-              : 'rgba(0, 0, 0, 0.01)',
+              ? 'rgba(255, 255, 255, 0.2)'
+              : 'rgba(0, 0, 0, 0.1)',
         },
       ]}
     >
@@ -41,9 +41,9 @@ export default function TopMenu() {
         }}
       >
         {showBottomMenuState ? (
-          <SimpleLineIcons name="size-fullscreen" size={40} color={color} />
+          <SimpleLineIcons name="size-fullscreen" size={25} color={textColor} />
         ) : (
-          <MaterialIcons name="fullscreen-exit" size={40} color={color} />
+          <MaterialIcons name="fullscreen-exit" size={25} color={textColor} />
         )}
       </TouchableOpacity>
       <TouchableOpacity
@@ -53,7 +53,7 @@ export default function TopMenu() {
           router.push('/search');
         }}
       >
-        <Ionicons name="search" size={40} color={color} />
+        <Ionicons name="search" size={25} color={textColor} />
       </TouchableOpacity>
     </ThemedView>
   ) : null;
