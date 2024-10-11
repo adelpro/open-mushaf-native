@@ -86,6 +86,13 @@ export default function RootLayout() {
                     //headerTitleAlign: 'center', // Align title to center for a cleaner look
                   }}
                 />
+                <Stack.Screen
+                  name="navigation"
+                  options={{
+                    title: 'تنقل', // Arabic for "Search"
+                    //headerTitleAlign: 'center', // Align title to center for a cleaner look
+                  }}
+                />
               </Stack>
             </ThemeProvider>
           </ReactNativeRecoilPersistGate>

@@ -14,22 +14,19 @@ All notable changes to this project will be documented in this file.
 
 - Page flip sound.
 - Add KeepAwake feature.
+- Added Search Quran page.
 
 ### Fixed
 
 - Fixed search functionality.
 - Fixed mushaf page dark mode issues.
 
-### Added
-
-- Added Search Quran page.
-
 ## [1.0.7]
 
 ### Added
 
 - Added More tab.
-- Added privacy policy (arabic and english).
+- Added privacy policy (Arabic and English).
 
 ### Fixed
 
@@ -39,9 +36,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Minnor UI issues with dark mode in Top Menu and Tafseer popup.
+- Minor UI issues with dark mode in Top Menu and Tafseer popup.
 - Fixed "لا يوجد تفسير" UI issues in Tafseer popup.
-- Fixed Froce reload for RTL mode at app startup.
+- Fixed Force reload for RTL mode at app startup.
 
 ## [1.0.5]
 
