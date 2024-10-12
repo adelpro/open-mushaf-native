@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Set up JDK 17
+      - name: Set up JDK 22
         uses: actions/setup-java@v4
         with:
           java-version: '22'
@@ -35,6 +35,7 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Cache Gradle packages
+        id: cache-gradle
         uses: actions/cache@v3
         with:
           path: |
@@ -45,7 +46,16 @@ jobs:
             ${{ runner.os }}-gradle-
             ${{ runner.os }}-gradle-default
 
+      - name: Check Gradle cache status
+        run: |
+          if [[ "${{ steps.cache-gradle.outputs.cache-hit }}" == 'true' ]]; then
+            echo "✅ Gradle cache hit!";
+          else
+            echo "❌ Gradle cache miss. Dependencies will be installed.";
+          fi
+
       - name: Cache EAS build
+        id: cache-eas
         uses: actions/cache@v3
         with:
           path: ~/.eas-cli
@@ -53,6 +63,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-eas-
             ${{ runner.os }}-eas-default
+
+      - name: Check EAS cache status
+        run: |
+          if [[ "${{ steps.cache-eas.outputs.cache-hit }}" == 'true' ]]; then
+            echo "✅ EAS cache hit!";
+          else
+            echo "❌ EAS cache miss. EAS will be set up.";
+          fi
 
       - name: Setup Expo
         uses: expo/expo-github-action@v8
