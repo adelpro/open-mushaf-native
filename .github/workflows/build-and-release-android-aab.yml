@@ -65,9 +65,9 @@ jobs:
       - name: Build Android app
         run: |
           npx eas-cli build --platform android \
-            --profile production:apk \
+            --profile production:aab \
             --local --non-interactive \
-            --output app-production-release.apk
+            --output app-production-release.aab
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4

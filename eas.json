@@ -9,7 +9,16 @@
       },
       "channel": "preview"
     },
-    "production": {
+    "production:apk": {
+      "android": {
+        "buildType": "apk",
+        "resourceClass": "medium",
+        "image": "latest"
+      },
+      "channel": "production",
+      "autoIncrement": true
+    },
+    "production:aab": {
       "android": {
         "buildType": "app-bundle",
         "resourceClass": "medium",
