@@ -5,19 +5,21 @@ import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
 import { useRecoilValue } from 'recoil';
 
+import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
 import surahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { defaultNumberOfPages } from '@/constants';
 import { currentSavedPage } from '@/recoil/atoms';
+import { QuranText } from '@/types';
 
 export default function Navigation() {
   const router = useRouter();
   const pages = Array.from({ length: defaultNumberOfPages }, (_, i) => i + 1);
   const currentSavedPageValue = useRecoilValue(currentSavedPage);
 
-  const [currentSurah, setCurrentSurah] = useState<number>();
-  const [currentAyaNumber, setCurrentAyaNumber] = useState<number>();
+  const [currentSurah, setCurrentSurah] = useState<number>(1);
+  const [currentAyaNumber, setCurrentAyaNumber] = useState<number>(1);
   const [numberOfAyahs, setNumberOfAyahs] = useState<number[]>([]);
 
   // Get the current surah from the current page
@@ -53,6 +55,25 @@ export default function Navigation() {
     );
   };
 
+  const handleAyaChange = (ayaNumber: number) => {
+    setCurrentAyaNumber(ayaNumber);
+    const quranText: QuranText[] = quranJson as QuranText[];
+    const filteredAya = quranText.find((aya) => {
+      return (
+        aya.sura_id === Number(currentSurah) && aya.aya_id === Number(ayaNumber)
+      );
+    });
+
+    console.log({ filteredAya, currentSurah, ayaNumber });
+
+    if (filteredAya) {
+      router.push({
+        pathname: '/',
+        params: { page: filteredAya.page_id.toString() },
+      });
+    }
+  };
+
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.navigationContainer}>
@@ -74,7 +95,7 @@ export default function Navigation() {
       </ThemedView>
 
       <ThemedView style={styles.navigationContainer}>
-        <ThemedText>الانتقال إلى السورة:</ThemedText>
+        <ThemedText>الانتقال إلى الآية:</ThemedText>
         <Picker
           style={styles.picker}
           selectedValue={currentSurah}
@@ -89,14 +110,16 @@ export default function Navigation() {
           ))}
         </Picker>
 
-        <ThemedText>الآية:</ThemedText>
+        <ThemedText>-</ThemedText>
         <Picker
           style={styles.picker}
           selectedValue={currentAyaNumber}
-          onValueChange={(itemValue) => setCurrentAyaNumber(itemValue)}
+          onValueChange={(aya) => {
+            handleAyaChange(aya);
+          }}
         >
-          {numberOfAyahs.map((ayah) => (
-            <Picker.Item key={ayah} label={ayah.toString()} value={ayah} />
+          {numberOfAyahs.map((aya) => (
+            <Picker.Item key={aya} label={aya.toString()} value={aya} />
           ))}
         </Picker>
       </ThemedView>
