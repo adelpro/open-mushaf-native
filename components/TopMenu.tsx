@@ -47,7 +47,6 @@ export default function TopMenu() {
         )}
       </TouchableOpacity>
       <ThemedView style={styles.leftIconsContainer}>
-        {' '}
         <TouchableOpacity
           style={styles.icon}
           onPress={() => {
