@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
+import { Feather } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
 import { useRecoilState } from 'recoil';
@@ -23,7 +24,6 @@ export default function Navigation() {
   const [currentAyaNumber, setCurrentAyaNumber] = useState<number>(1);
   const [numberOfAyahs, setNumberOfAyahs] = useState<number[]>([]);
 
-  // Get the current surah from the current page
   useEffect(() => {
     if (!currentSavedPageValue) {
       return;
@@ -33,12 +33,12 @@ export default function Navigation() {
       const startingPage = surah.startingPage;
       const nextSurahStartingPage =
         surahs[index + 1]?.startingPage || defaultNumberOfPages + 1;
-
       return (
         currentSavedPageValue >= startingPage &&
         currentSavedPageValue < nextSurahStartingPage
       );
     });
+
     if (surah) {
       setCurrentSurah(surah.number);
       setNumberOfAyahs(
@@ -54,7 +54,7 @@ export default function Navigation() {
     });
 
     if (aya) {
-      setCurrentAyaNumber(aya.aya_id);
+      setCurrentAyaNumber(aya.aya_id - 1);
     }
   }, [currentSavedPageValue, quranText, setCurrentSavedPage]);
 
@@ -85,8 +85,16 @@ export default function Navigation() {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedView style={styles.navigationContainer}>
-        <ThemedText>الانتقال إلى الصفحة:</ThemedText>
+      <ThemedView style={styles.navigationSection}>
+        <View style={styles.labelContainer}>
+          <Feather
+            name="file-text"
+            size={24}
+            color="black"
+            style={styles.icon}
+          />
+          <ThemedText style={styles.label}>الانتقال إلى الصفحة:</ThemedText>
+        </View>
         <Picker
           style={styles.picker}
           selectedValue={currentSavedPageValue}
@@ -104,32 +112,41 @@ export default function Navigation() {
         </Picker>
       </ThemedView>
 
-      <ThemedView style={styles.navigationContainer}>
-        <ThemedText>الانتقال إلى الآية:</ThemedText>
-        <Picker
-          style={styles.picker}
-          selectedValue={currentSurah}
-          onValueChange={handleSurahChange}
-        >
-          {surahs.map((surah) => (
-            <Picker.Item
-              key={surah.number}
-              label={surah.name}
-              value={surah.number}
-            />
-          ))}
-        </Picker>
-
-        <ThemedText>-</ThemedText>
-        <Picker
-          style={styles.picker}
-          selectedValue={currentAyaNumber}
-          onValueChange={handleAyaChange}
-        >
-          {numberOfAyahs.map((aya) => (
-            <Picker.Item key={aya} label={aya.toString()} value={aya} />
-          ))}
-        </Picker>
+      <ThemedView style={styles.navigationSection}>
+        <View style={styles.labelContainer}>
+          <Feather
+            name="book-open"
+            size={24}
+            color="black"
+            style={styles.icon}
+          />
+          <ThemedText style={styles.label}>الانتقال إلى الآية:</ThemedText>
+        </View>
+        <ThemedView style={styles.pickerContainer}>
+          <Picker
+            style={[styles.picker, styles.surahPicker]}
+            selectedValue={currentSurah}
+            onValueChange={handleSurahChange}
+          >
+            {surahs.map((surah) => (
+              <Picker.Item
+                key={surah.number}
+                label={surah.name}
+                value={surah.number}
+              />
+            ))}
+          </Picker>
+          <ThemedText style={styles.separator}>-</ThemedText>
+          <Picker
+            style={[styles.picker, styles.ayaPicker]}
+            selectedValue={currentAyaNumber}
+            onValueChange={handleAyaChange}
+          >
+            {numberOfAyahs.map((aya) => (
+              <Picker.Item key={aya} label={aya.toString()} value={aya} />
+            ))}
+          </Picker>
+        </ThemedView>
       </ThemedView>
     </ThemedView>
   );
@@ -139,20 +156,56 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  navigationContainer: {
-    marginVertical: 10,
+  navigationSection: {
+    marginVertical: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    borderRadius: 10,
+    padding: 15,
+    width: '100%',
+    maxWidth: 640,
+  },
+  labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: 400,
+    marginBottom: 10,
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'right',
+  },
+  icon: {
+    marginLeft: 10,
+  },
+  pickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
   },
   picker: {
+    flex: 1,
+    height: 50,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+    borderRadius: 5,
     padding: 10,
-    fontSize: 16,
+    fontSize: 22,
+  },
+
+  surahPicker: {
+    marginLeft: 10,
+  },
+  ayaPicker: {
+    marginRight: 10,
+  },
+  separator: {
+    fontSize: 20,
+    fontWeight: 'bold',
     marginHorizontal: 10,
   },
 });

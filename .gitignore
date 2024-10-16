@@ -21,9 +21,6 @@ expo-env.d.ts
 
 .env*
 
-#ubuntu subsystem
-~/**/*
-
 # Custom build output
 builds/**/*
 android/**/*
