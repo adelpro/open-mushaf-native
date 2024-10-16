@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.adelpro.openmushafnative"
+      "package": "com.adelpro.openmushafnative",
+      "jsEngine": "hermes"
     },
     "web": {
       "bundler": "metro",
