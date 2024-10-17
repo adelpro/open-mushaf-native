@@ -144,7 +144,7 @@ export default function MushafPage() {
     }
     const loadSound = async () => {
       const { sound: soundObject } = await Audio.Sound.createAsync(
-        require('@/assets/sounds/page-flip-sound.mp3'), // Replace with your sound file
+        require('@/assets/sounds/page-flip-sound.mp3'),
       );
       sound.current = soundObject;
     };
@@ -183,7 +183,7 @@ export default function MushafPage() {
         ) : (
           <ActivityIndicator size="large" color={tint} />
         )}
-        {/* <PageOverlay index={currentPage} dimensions={dimensions} /> */}
+        <PageOverlay index={currentPage} dimensions={dimensions} />
       </Animated.View>
     </GestureDetector>
   );

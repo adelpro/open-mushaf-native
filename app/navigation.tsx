@@ -96,7 +96,7 @@ export default function Navigation() {
           <ThemedText style={styles.label}>الانتقال إلى الصفحة:</ThemedText>
         </View>
         <Picker
-          style={styles.picker}
+          style={styles.pickerContainer}
           selectedValue={currentSavedPageValue}
           onValueChange={(itemValue) => {
             setCurrentSavedPage(Number(itemValue));
@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: 'transparent',
+    paddingVertical: 5,
   },
   picker: {
     flex: 1,
@@ -199,9 +200,11 @@ const styles = StyleSheet.create({
 
   surahPicker: {
     marginLeft: 10,
+    textAlign: 'center',
   },
   ayaPicker: {
     marginRight: 10,
+    textAlign: 'center',
   },
   separator: {
     fontSize: 20,

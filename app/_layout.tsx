@@ -82,15 +82,13 @@ export default function RootLayout() {
                 <Stack.Screen
                   name="search"
                   options={{
-                    title: 'بحث', // Arabic for "Search"
-                    //headerTitleAlign: 'center', // Align title to center for a cleaner look
+                    title: 'بحث',
                   }}
                 />
                 <Stack.Screen
                   name="navigation"
                   options={{
-                    title: 'تنقل', // Arabic for "Search"
-                    //headerTitleAlign: 'center', // Align title to center for a cleaner look
+                    title: 'تنقل',
                   }}
                 />
               </Stack>
