@@ -102,12 +102,12 @@ export default function Search() {
           query ? <ThemedText type="default">لا توجد نتائج</ThemedText> : null
         }
       />
-      <TafseerPopup
+      {/* <TafseerPopup
         show={show}
         setShow={setShow}
         aya={selectedAya.aya}
         surah={selectedAya.surah}
-      />
+      /> */}
     </ThemedView>
   );
 }

@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, StyleSheet, useColorScheme } from 'react-native';
+import {
+  ActivityIndicator,
+  Platform,
+  StyleSheet,
+  useColorScheme,
+} from 'react-native';
 
 import { Audio } from 'expo-av';
 import { Image } from 'expo-image';
@@ -125,6 +130,7 @@ export default function MushafPage() {
 
   // Keep the screen awake when reading mushaf
   useEffect(() => {
+    if (Platform.OS !== 'web') return;
     if (document.visibilityState === 'hidden') return;
     const enableKeepAwake = async () => {
       await activateKeepAwakeAsync();
@@ -177,7 +183,7 @@ export default function MushafPage() {
         ) : (
           <ActivityIndicator size="large" color={tint} />
         )}
-        <PageOverlay index={currentPage} dimensions={dimensions} />
+        {/* <PageOverlay index={currentPage} dimensions={dimensions} /> */}
       </Animated.View>
     </GestureDetector>
   );
