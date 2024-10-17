@@ -1,19 +1,31 @@
-// components/Tafseer.tsx
-
-import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, useColorScheme } from 'react-native';
+import { useEffect, useState } from 'react';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  useColorScheme,
+} from 'react-native';
 
 import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
 
-//import surahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
+import baghawyJSON from '@/assets/tafaseer/baghawy.json';
+import earabJSON from '@/assets/tafaseer/earab.json';
+import katheerJSON from '@/assets/tafaseer/katheer.json';
+import maanyJSON from '@/assets/tafaseer/maany.json';
+import muyassarJSON from '@/assets/tafaseer/muyassar.json';
+import qortobyJSON from '@/assets/tafaseer/qortoby.json';
+import saadyJSON from '@/assets/tafaseer/saady.json';
+import tabaryJSON from '@/assets/tafaseer/tabary.json';
+import tanweerJSON from '@/assets/tafaseer/tanweer.json';
+import waseetJSON from '@/assets/tafaseer/waseet.json';
 import { Colors } from '@/constants';
 import { tafseerTab } from '@/recoil/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
-//import { loadTafseerChunk } from '@/utils';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
+import surahs from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
 
 const tabLabels: Record<TafseerTabs, string> = {
   katheer: 'ابن كثير',
@@ -33,57 +45,27 @@ type Props = {
   surah: number;
   opacity: number;
 };
-
 export default function Tafseer({ aya, surah, opacity }: Props) {
   const colorScheme = useColorScheme();
   const tintColor = Colors[colorScheme ?? 'light'].tint;
   const textColor = Colors[colorScheme ?? 'light'].text;
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
+
   const [surahName, setSurahName] = useState<string>('');
   const [selectedTabValue, setSelectedTab] =
     useRecoilState<TafseerTabs>(tafseerTab);
-  const [tafseerData, setTafseerData] = useState<TafseerAya | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
 
-  const loadTafseerData = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      console.log(
-        `Loading tafseer for surah ${surah} and aya ${aya} with tab ${selectedTabValue}`,
-      );
-      const data = null;
-      setTafseerData(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(`خطأ في تحميل التفسير : ${error?.message}`);
-      } else {
-        setError('خطأ في تحميل التفسير');
-      }
-      setTafseerData(null);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [selectedTabValue, surah, aya]);
+  const renderTafseerContent = (tafseer: TafseerAya[] | null): JSX.Element => {
+    const ayaTafseer = tafseer?.find((t) => t.aya === aya && t.sura === surah);
 
-  useEffect(() => {
-    setSurahName('ff');
-    loadTafseerData();
-  }, [surah, aya, selectedTabValue, loadTafseerData]);
-
-  const renderTafseerContent = (): JSX.Element => {
-    if (isLoading) {
-      return <ThemedText>جاري التحميل...</ThemedText>;
-    }
-
-    if (error) {
-      return <ThemedText>{error}</ThemedText>;
-    }
-    console.log('tafseerData', tafseerData);
     let tafseerText = 'لا يوجد تفسير.';
-    if (tafseerData?.text && tafseerData?.text !== '<p></p>') {
-      tafseerText = tafseerData.text;
+    if (!ayaTafseer?.text || ayaTafseer?.text === '<p></p>') {
+      tafseerText = '<p>لا يوجد تفسير.</p>';
+    } else {
+      tafseerText = ayaTafseer?.text;
     }
+
     return (
       <ThemedView style={styles.tafseerContent}>
         <HTMLView
@@ -96,37 +78,73 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
     );
   };
 
+  useEffect(() => {
+    setSurahName(surahs[surah - 1]?.name ?? '');
+  }, [surah]);
+
+  useEffect(() => {
+    switch (selectedTabValue) {
+      case 'baghawy':
+        setTafseerData(baghawyJSON as TafseerAya[]);
+        break;
+      case 'earab':
+        setTafseerData(earabJSON as TafseerAya[]);
+        break;
+      case 'katheer':
+        setTafseerData(katheerJSON as TafseerAya[]);
+        break;
+      case 'maany':
+        setTafseerData(maanyJSON as TafseerAya[]);
+        break;
+      case 'muyassar':
+        setTafseerData(muyassarJSON as TafseerAya[]);
+        break;
+      case 'qortoby':
+        setTafseerData(qortobyJSON as TafseerAya[]);
+        break;
+      case 'saady':
+        setTafseerData(saadyJSON as TafseerAya[]);
+        break;
+      case 'tabary':
+        setTafseerData(tabaryJSON as TafseerAya[]);
+        break;
+      case 'tanweer':
+        setTafseerData(tanweerJSON as TafseerAya[]);
+        break;
+      case 'waseet':
+        setTafseerData(waseetJSON as TafseerAya[]);
+        break;
+      default:
+        setTafseerData(katheerJSON as TafseerAya[]);
+    }
+  }, [selectedTabValue]);
   return (
-    <FlatList
-      ListHeaderComponent={() => (
-        <>
-          <ThemedText style={styles.title}>
-            {surahName} - الآية {aya}
-          </ThemedText>
-          <ThemedView style={styles.tabs}>
-            {Object.keys(tabLabels).map((key) => {
-              const tabKey = key as TafseerTabs;
-              return (
-                <Pressable
-                  key={tabKey}
-                  style={[
-                    styles.tabButton,
-                    selectedTabValue === tabKey && styles.activeTab,
-                    selectedTabValue === tabKey && { borderColor: tintColor },
-                  ]}
-                  onPress={() => setSelectedTab(tabKey)}
-                >
-                  <ThemedText>{tabLabels[tabKey]}</ThemedText>
-                </Pressable>
-              );
-            })}
-          </ThemedView>
-        </>
-      )}
-      data={[{ key: 'tafseer' }]}
-      renderItem={renderTafseerContent}
+    <ScrollView
       contentContainerStyle={[styles.scrollView, { backgroundColor, opacity }]}
-    />
+    >
+      <ThemedText style={styles.title}>
+        {surahName} - الآية {aya}
+      </ThemedText>
+      <ThemedView style={styles.tabs}>
+        {Object.keys(tabLabels).map((key) => {
+          const tabKey = key as TafseerTabs;
+          return (
+            <Pressable
+              key={tabKey}
+              style={[
+                styles.tabButton,
+                selectedTabValue === tabKey && styles.activeTab,
+                selectedTabValue === tabKey && { borderColor: tintColor },
+              ]}
+              onPress={() => setSelectedTab(tabKey)}
+            >
+              <ThemedText>{tabLabels[tabKey]}</ThemedText>
+            </Pressable>
+          );
+        })}
+      </ThemedView>
+      {renderTafseerContent(tafseerData)}
+    </ScrollView>
   );
 }
 
