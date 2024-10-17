@@ -6,7 +6,6 @@ import muyassar from './muyassar.json';
 import qortoby from './qortoby.json';
 import saady from './saady.json';
 import tabary from './tabary.json';
-import tafheem from './tafheem.json';
 import tanweer from './tanweer.json';
 import waseet from './waseet.json';
 const tafaseer = {
@@ -18,7 +17,6 @@ const tafaseer = {
   qortoby,
   saady,
   tabary,
-  tafheem,
   tanweer,
   waseet,
 };
