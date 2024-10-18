@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.12]
+
+### Updated
+
+- Update tafaseer json files
+
+### Fixed
+
+- Fixed Tafseer load error on android
+
 ## [1.0.10]
 
 ### Added

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -9,16 +10,6 @@ import {
 import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
 
-import baghawyJSON from '@/assets/tafaseer/baghawy.json';
-import earabJSON from '@/assets/tafaseer/earab.json';
-import katheerJSON from '@/assets/tafaseer/katheer.json';
-import maanyJSON from '@/assets/tafaseer/maany.json';
-import muyassarJSON from '@/assets/tafaseer/muyassar.json';
-import qortobyJSON from '@/assets/tafaseer/qortoby.json';
-import saadyJSON from '@/assets/tafaseer/saady.json';
-import tabaryJSON from '@/assets/tafaseer/tabary.json';
-import tanweerJSON from '@/assets/tafaseer/tanweer.json';
-import waseetJSON from '@/assets/tafaseer/waseet.json';
 import { Colors } from '@/constants';
 import { tafseerTab } from '@/recoil/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
@@ -65,7 +56,6 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
     } else {
       tafseerText = ayaTafseer?.text;
     }
-
     return (
       <ThemedView style={styles.tafseerContent}>
         <HTMLView
@@ -83,40 +73,52 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
   }, [surah]);
 
   useEffect(() => {
-    switch (selectedTabValue) {
-      case 'baghawy':
-        setTafseerData(baghawyJSON as TafseerAya[]);
-        break;
-      case 'earab':
-        setTafseerData(earabJSON as TafseerAya[]);
-        break;
-      case 'katheer':
-        setTafseerData(katheerJSON as TafseerAya[]);
-        break;
-      case 'maany':
-        setTafseerData(maanyJSON as TafseerAya[]);
-        break;
-      case 'muyassar':
-        setTafseerData(muyassarJSON as TafseerAya[]);
-        break;
-      case 'qortoby':
-        setTafseerData(qortobyJSON as TafseerAya[]);
-        break;
-      case 'saady':
-        setTafseerData(saadyJSON as TafseerAya[]);
-        break;
-      case 'tabary':
-        setTafseerData(tabaryJSON as TafseerAya[]);
-        break;
-      case 'tanweer':
-        setTafseerData(tanweerJSON as TafseerAya[]);
-        break;
-      case 'waseet':
-        setTafseerData(waseetJSON as TafseerAya[]);
-        break;
-      default:
-        setTafseerData(katheerJSON as TafseerAya[]);
+    async function loadTafseerData() {
+      let tafseerJSON;
+      try {
+        switch (selectedTabValue) {
+          case 'baghawy':
+            tafseerJSON = await import('@/assets/tafaseer/baghawy.json');
+            break;
+          case 'earab':
+            tafseerJSON = await import('@/assets/tafaseer/earab.json');
+            break;
+          case 'katheer':
+            tafseerJSON = await import('@/assets/tafaseer/katheer.json');
+            break;
+          case 'maany':
+            tafseerJSON = await import('@/assets/tafaseer/maany.json');
+            break;
+          case 'muyassar':
+            tafseerJSON = await import('@/assets/tafaseer/muyassar.json');
+            break;
+          case 'qortoby':
+            tafseerJSON = await import('@/assets/tafaseer/qortoby.json');
+            break;
+          case 'saady':
+            tafseerJSON = await import('@/assets/tafaseer/saady.json');
+            break;
+          case 'tabary':
+            tafseerJSON = await import('@/assets/tafaseer/tabary.json');
+            break;
+          case 'tanweer':
+            tafseerJSON = await import('@/assets/tafaseer/tanweer.json');
+            break;
+          case 'waseet':
+            tafseerJSON = await import('@/assets/tafaseer/waseet.json');
+            break;
+          default:
+            tafseerJSON = await import('@/assets/tafaseer/katheer.json');
+        }
+        setTafseerData(
+          (tafseerJSON.default as TafseerAya[]) ||
+            (tafseerJSON as TafseerAya[]),
+        );
+      } catch {
+        setTafseerData(null);
+      }
     }
+    loadTafseerData();
   }, [selectedTabValue]);
   return (
     <ScrollView
@@ -143,7 +145,11 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
           );
         })}
       </ThemedView>
-      {renderTafseerContent(tafseerData)}
+      {tafseerData ? (
+        renderTafseerContent(tafseerData)
+      ) : (
+        <ActivityIndicator size="large" color={tintColor} />
+      )}
     </ScrollView>
   );
 }
