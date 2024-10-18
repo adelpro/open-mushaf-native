@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ### Updated
 
 - Update tafaseer json files
+- Update navigation screen UI
+
+### Added
+
+- Changed JS engine to 'hermes'
 
 ### Fixed
 
