@@ -2,20 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.13]
+
+### Fixed
+
+- Updated Tafseer JSON loading (now files are saved to memory on the first load and then reloaded from memory on every
+  new request).
+- Updated Tafseer JSON loading (each Tafseer JSON file is loaded individually, one by one).
+- Mushaf page images are loaded individually, one by one; only the required page is loaded, which dramatically reduces
+  memory usage.
+
 ## [1.0.12]
 
 ### Updated
 
-- Update tafaseer json files
-- Update navigation screen UI
+- Updated Tafaseer JSON files.
+- Updated navigation screen UI.I
 
 ### Added
 
-- Changed JS engine to 'hermes'
+- Changed the JavaScript engine to 'Hermes'.
 
 ### Fixed
 
-- Fixed Tafseer load error on android
+- Fixed Tafseer loading error on Android.
 
 ## [1.0.10]
 
@@ -34,14 +44,14 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed search functionality.
-- Fixed mushaf page dark mode issues.
+- Fixed Mushaf page dark mode issues.
 
 ## [1.0.7]
 
 ### Added
 
 - Added More tab.
-- Added privacy policy (Arabic and English).
+- Added privacy policy (in Arabic and English).
 
 ### Fixed
 
@@ -51,9 +61,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Minor UI issues with dark mode in Top Menu and Tafseer popup.
-- Fixed "لا يوجد تفسير" UI issues in Tafseer popup.
-- Fixed Force reload for RTL mode at app startup.
+- Minor UI issues with dark mode in the Top Menu and Tafseer popup.
+- Fixed "لا يوجد تفسير" UI issues in the Tafseer popup.
+- Fixed forced reload for RTL mode at app startup.
 
 ## [1.0.5]
 

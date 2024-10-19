@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
@@ -9,7 +9,7 @@ import {
 import { Audio } from 'expo-av';
 import { Image } from 'expo-image';
 import { activateKeepAwakeAsync } from 'expo-keep-awake';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -17,14 +17,15 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 import { blurhash, Colors, defaultNumberOfPages } from '@/constants';
+import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagesArray from '@/hooks/useImagesArray';
-import { currentSavedPage, flipSound } from '@/recoil/atoms';
-import { getCurrentPage } from '@/utils';
+import { flipSound } from '@/recoil/atoms';
 
 import PageOverlay from './PageOverlay';
+import { ThemedText } from './ThemedText';
 
 export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
@@ -33,11 +34,8 @@ export default function MushafPage() {
   const tint = Colors[colorScheme ?? 'light'].tint;
 
   const router = useRouter();
-  const { page: pageParam } = useLocalSearchParams();
 
-  const [currentSavedPageValue, setCurrentSavedPage] =
-    useRecoilState(currentSavedPage);
-  const [currentPage, setCurrentPage] = useState(currentSavedPageValue ?? 1);
+  const { currentPage, setCurrentPage } = useCurrentPage();
 
   const [dimensions, setDimensions] = useState({
     customPageWidth: 0,
@@ -74,28 +72,10 @@ export default function MushafPage() {
     };
   });
 
-  const { assets } = useImagesArray();
-  // Prefetch images
-  useEffect(() => {
-    const prefetchImages = () => {
-      if (assets) {
-        const prevPage = Math.max(1, currentPage - 1);
-        const nextPage = Math.min(defaultNumberOfPages, currentPage + 1);
-        Image.prefetch(assets[prevPage - 1].uri);
-        Image.prefetch(assets[nextPage - 1].uri);
-      }
-    };
-    prefetchImages();
-  }, [currentPage, assets]);
-
-  // Set current page based on page param
-  useEffect(() => {
-    const page = getCurrentPage(pageParam) ?? currentSavedPageValue;
-    setCurrentPage(page);
-  }, [currentSavedPageValue, pageParam]);
+  const { assets, error: assetsError } = useImagesArray();
 
   const handlePageChange = async (page: number) => {
-    setCurrentSavedPage(page);
+    setCurrentPage(page);
     router.replace({
       pathname: '/',
       params: { page: page.toString() },
@@ -158,6 +138,10 @@ export default function MushafPage() {
       }
     };
   }, [isFlipSoundEnabled]);
+
+  if (assetsError) {
+    return <ThemedText>خطا: {assetsError}</ThemedText>;
+  }
   return (
     <GestureDetector gesture={panGestureHandler}>
       <Animated.View
@@ -170,19 +154,17 @@ export default function MushafPage() {
         ]}
         onLayout={handleImageLayout}
       >
-        {assets ? (
+        <Suspense fallback={<ActivityIndicator size="large" color={tint} />}>
           <Image
             style={[styles.image]}
-            source={{ uri: assets[currentPage - 1].uri }}
+            source={{ uri: assets?.[0]?.uri }}
             placeholder={{ blurhash }}
             contentFit="fill"
             tintColor={
               colorScheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : undefined
             }
           />
-        ) : (
-          <ActivityIndicator size="large" color={tint} />
-        )}
+        </Suspense>
         <PageOverlay index={currentPage} dimensions={dimensions} />
       </Animated.View>
     </GestureDetector>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -72,54 +72,54 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
     setSurahName(surahs[surah - 1]?.name ?? '');
   }, [surah]);
 
-  useEffect(() => {
-    async function loadTafseerData() {
-      let tafseerJSON;
-      try {
-        switch (selectedTabValue) {
-          case 'baghawy':
-            tafseerJSON = await import('@/assets/tafaseer/baghawy.json');
-            break;
-          case 'earab':
-            tafseerJSON = await import('@/assets/tafaseer/earab.json');
-            break;
-          case 'katheer':
-            tafseerJSON = await import('@/assets/tafaseer/katheer.json');
-            break;
-          case 'maany':
-            tafseerJSON = await import('@/assets/tafaseer/maany.json');
-            break;
-          case 'muyassar':
-            tafseerJSON = await import('@/assets/tafaseer/muyassar.json');
-            break;
-          case 'qortoby':
-            tafseerJSON = await import('@/assets/tafaseer/qortoby.json');
-            break;
-          case 'saady':
-            tafseerJSON = await import('@/assets/tafaseer/saady.json');
-            break;
-          case 'tabary':
-            tafseerJSON = await import('@/assets/tafaseer/tabary.json');
-            break;
-          case 'tanweer':
-            tafseerJSON = await import('@/assets/tafaseer/tanweer.json');
-            break;
-          case 'waseet':
-            tafseerJSON = await import('@/assets/tafaseer/waseet.json');
-            break;
-          default:
-            tafseerJSON = await import('@/assets/tafaseer/katheer.json');
-        }
-        setTafseerData(
-          (tafseerJSON.default as TafseerAya[]) ||
-            (tafseerJSON as TafseerAya[]),
-        );
-      } catch {
-        setTafseerData(null);
+  const loadTafseerData = useCallback(async () => {
+    let tafseerJSON;
+    try {
+      switch (selectedTabValue) {
+        case 'baghawy':
+          tafseerJSON = await import('@/assets/tafaseer/baghawy.json');
+          break;
+        case 'earab':
+          tafseerJSON = await import('@/assets/tafaseer/earab.json');
+          break;
+        case 'katheer':
+          tafseerJSON = await import('@/assets/tafaseer/katheer.json');
+          break;
+        case 'maany':
+          tafseerJSON = await import('@/assets/tafaseer/maany.json');
+          break;
+        case 'muyassar':
+          tafseerJSON = await import('@/assets/tafaseer/muyassar.json');
+          break;
+        case 'qortoby':
+          tafseerJSON = await import('@/assets/tafaseer/qortoby.json');
+          break;
+        case 'saady':
+          tafseerJSON = await import('@/assets/tafaseer/saady.json');
+          break;
+        case 'tabary':
+          tafseerJSON = await import('@/assets/tafaseer/tabary.json');
+          break;
+        case 'tanweer':
+          tafseerJSON = await import('@/assets/tafaseer/tanweer.json');
+          break;
+        case 'waseet':
+          tafseerJSON = await import('@/assets/tafaseer/waseet.json');
+          break;
+        default:
+          tafseerJSON = await import('@/assets/tafaseer/katheer.json');
       }
+      setTafseerData(
+        (tafseerJSON.default as TafseerAya[]) || (tafseerJSON as TafseerAya[]),
+      );
+    } catch {
+      setTafseerData(null);
     }
-    loadTafseerData();
   }, [selectedTabValue]);
+
+  useEffect(() => {
+    loadTafseerData();
+  }, [loadTafseerData]);
   return (
     <ScrollView
       contentContainerStyle={[styles.scrollView, { backgroundColor, opacity }]}
