@@ -12,16 +12,16 @@ export default function MoreLayout() {
       }}
     >
       <Stack.Screen
-        name="about"
-        options={{ headerShown: true, title: 'حول' }}
-      />
-      <Stack.Screen
         name="privacy"
         options={{ headerShown: true, title: 'الخصوصية' }}
       />
       <Stack.Screen
         name="settings"
         options={{ headerShown: true, title: 'الاعدادات' }}
+      />
+      <Stack.Screen
+        name="about"
+        options={{ headerShown: true, title: 'حول' }}
       />
     </Stack>
   );
