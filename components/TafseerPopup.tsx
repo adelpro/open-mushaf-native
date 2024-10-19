@@ -1,5 +1,6 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { Suspense, useCallback, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   Pressable,
   StyleSheet,
@@ -96,7 +97,11 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
             </Pressable>
           </PanGestureHandler>
 
-          <Tafseer opacity={opacity} aya={aya} surah={surah} />
+          <Suspense
+            fallback={<ActivityIndicator size={'large'} color={tintColor} />}
+          >
+            <Tafseer opacity={opacity} aya={aya} surah={surah} />
+          </Suspense>
         </Pressable>
       </Pressable>
     </ThemedView>
