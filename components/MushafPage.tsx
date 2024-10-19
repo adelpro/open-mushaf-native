@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
@@ -75,7 +75,8 @@ export default function MushafPage() {
   });
 
   const { assets } = useImagesArray();
-  // Prefetch images
+
+  /*   // Prefetch images
   useEffect(() => {
     const prefetchImages = () => {
       if (assets) {
@@ -86,7 +87,7 @@ export default function MushafPage() {
       }
     };
     prefetchImages();
-  }, [currentPage, assets]);
+  }, [currentPage, assets]); */
 
   // Set current page based on page param
   useEffect(() => {
@@ -95,7 +96,10 @@ export default function MushafPage() {
   }, [currentSavedPageValue, pageParam]);
 
   const handlePageChange = async (page: number) => {
+    console.log('handlePageChange', page);
     setCurrentSavedPage(page);
+    setCurrentPage(page);
+
     router.replace({
       pathname: '/',
       params: { page: page.toString() },
@@ -170,19 +174,20 @@ export default function MushafPage() {
         ]}
         onLayout={handleImageLayout}
       >
-        {assets ? (
+        <Suspense fallback={<ActivityIndicator size="large" color={tint} />}>
           <Image
             style={[styles.image]}
-            source={{ uri: assets[currentPage - 1].uri }}
+            source={{ uri: assets?.[0]?.uri }}
+            /*             source={{
+              uri: imagesMap[currentPage - 1],
+            }} */
             placeholder={{ blurhash }}
             contentFit="fill"
             tintColor={
               colorScheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : undefined
             }
           />
-        ) : (
-          <ActivityIndicator size="large" color={tint} />
-        )}
+        </Suspense>
         <PageOverlay index={currentPage} dimensions={dimensions} />
       </Animated.View>
     </GestureDetector>
