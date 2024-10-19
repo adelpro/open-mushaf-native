@@ -20,7 +20,7 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "lint:fix": "eslint . --fix",
-    "doctor": "npx expo doctor",
+    "doctor": "npx expo-doctor",
     "build:preview:android": "eas build -p android --profile preview",
     "build:production:android": "eas build -p android --profile production",
     "build:local:preview:android": "eas build -p android --profile preview --local --output builds/android/",
