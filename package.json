@@ -25,6 +25,7 @@
     "build:production:android": "eas build -p android --profile production",
     "build:local:preview:android": "eas build -p android --profile preview --local --output builds/android/",
     "update:preview:android": "eas update -p android --channel preview",
+    "submit:preview:android": "eas submit -p android --profile preview",
     "prepare": "husky"
   },
   "jest": {

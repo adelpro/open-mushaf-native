@@ -1,4 +1,7 @@
 {
+  "cli": {
+    "appVersionSource": "remote"
+  },
   "build": {
     "preview": {
       "android": {
@@ -19,7 +22,11 @@
       "autoIncrement": true
     }
   },
-  "cli": {
-    "appVersionSource": "remote"
+  "submit": {
+    "preview": {
+      "android": {
+        "track": "internal"
+      }
+    }
   }
 }
