@@ -1,6 +1,6 @@
 //FIXME: effect infinit loop
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
@@ -87,7 +87,7 @@ export default function Navigation() {
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.navigationSection}>
-        <View style={styles.labelContainer}>
+        <ThemedView style={styles.labelContainer}>
           <Feather
             name="file-text"
             size={24}
@@ -95,7 +95,7 @@ export default function Navigation() {
             style={styles.icon}
           />
           <ThemedText style={styles.label}>الانتقال إلى الصفحة:</ThemedText>
-        </View>
+        </ThemedView>
         <Picker
           style={styles.pickerContainer}
           selectedValue={currentSavedPageValue}
@@ -114,7 +114,7 @@ export default function Navigation() {
       </ThemedView>
 
       <ThemedView style={styles.navigationSection}>
-        <View style={styles.labelContainer}>
+        <ThemedView style={styles.labelContainer}>
           <Feather
             name="book-open"
             size={24}
@@ -122,7 +122,7 @@ export default function Navigation() {
             style={styles.icon}
           />
           <ThemedText style={styles.label}>الانتقال إلى الآية:</ThemedText>
-        </View>
+        </ThemedView>
         <ThemedView style={styles.pickerContainer}>
           <Picker
             style={[styles.picker, styles.surahPicker]}
