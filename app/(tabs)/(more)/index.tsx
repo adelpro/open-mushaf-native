@@ -11,12 +11,9 @@ export default function MoreScreen() {
   const { tintColor } = useColors();
   return (
     <ThemedView style={styles.container}>
-      <Pressable
-        onPress={() => router.push('/about')}
-        style={[styles.button, { shadowColor: tintColor }]}
-      >
+      <Pressable onPress={() => router.push('/settings')} style={styles.button}>
         <ThemedText type="title" style={styles.buttonText}>
-          حول التطبيق
+          الإعدادات
         </ThemedText>
       </Pressable>
       <Pressable onPress={() => router.push('/privacy')} style={styles.button}>
@@ -24,9 +21,12 @@ export default function MoreScreen() {
           سياسة الخصوصية
         </ThemedText>
       </Pressable>
-      <Pressable onPress={() => router.push('/settings')} style={styles.button}>
+      <Pressable
+        onPress={() => router.push('/about')}
+        style={[styles.button, { shadowColor: tintColor }]}
+      >
         <ThemedText type="title" style={styles.buttonText}>
-          الإعدادات
+          حول التطبيق
         </ThemedText>
       </Pressable>
     </ThemedView>
