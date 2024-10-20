@@ -22,58 +22,76 @@ export default function TopMenu() {
   };
 
   return showTopMenuState ? (
-    <ThemedView
-      style={[
-        styles.topMenu,
-        {
-          backgroundColor:
-            colorScheme === 'dark'
-              ? 'rgba(255, 255, 255, 0.2)'
-              : 'rgba(0, 0, 0, 0.1)',
-        },
-      ]}
-    >
-      <TouchableOpacity
-        style={styles.icon}
-        onPress={() => {
-          setShowTopMenuState(false);
-          toggleMenu();
-        }}
+    <ThemedView style={styles.container}>
+      <ThemedView
+        style={[
+          styles.topMenu,
+          {
+            backgroundColor:
+              colorScheme === 'dark'
+                ? 'rgba(255, 255, 255, 0.2)'
+                : 'rgba(0, 0, 0, 0.1)',
+          },
+        ]}
       >
-        {showBottomMenuState ? (
-          <SimpleLineIcons name="size-fullscreen" size={30} color={textColor} />
-        ) : (
-          <MaterialIcons name="fullscreen-exit" size={30} color={textColor} />
-        )}
-      </TouchableOpacity>
-      <ThemedView style={styles.leftIconsContainer}>
         <TouchableOpacity
           style={styles.icon}
           onPress={() => {
             setShowTopMenuState(false);
-            router.push('/navigation');
+            toggleMenu();
           }}
         >
-          <Ionicons
-            name="navigate-circle-outline"
-            size={30}
-            color={textColor}
-          />
+          {showBottomMenuState ? (
+            <SimpleLineIcons
+              name="size-fullscreen"
+              size={30}
+              color={textColor}
+            />
+          ) : (
+            <MaterialIcons name="fullscreen-exit" size={30} color={textColor} />
+          )}
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.icon}
-          onPress={() => {
-            setShowTopMenuState(false);
-            router.push('/search');
-          }}
-        >
-          <Ionicons name="search" size={30} color={textColor} />
-        </TouchableOpacity>
+        <ThemedView style={styles.leftIconsContainer}>
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => {
+              setShowTopMenuState(false);
+              router.push('/navigation');
+            }}
+          >
+            <Ionicons
+              name="navigate-circle-outline"
+              size={30}
+              color={textColor}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => {
+              setShowTopMenuState(false);
+              router.push('/search');
+            }}
+          >
+            <Ionicons name="search" size={30} color={textColor} />
+          </TouchableOpacity>
+        </ThemedView>
       </ThemedView>
     </ThemedView>
   ) : null;
 }
 const styles = StyleSheet.create({
+  container: {
+    zIndex: 2,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    position: 'absolute',
+    top: 50,
+    left: 0,
+    right: 0,
+    backgroundColor: 'transparent',
+  },
   topMenu: {
     marginVertical: 10,
     paddingHorizontal: 10,
@@ -82,14 +100,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    right: 20,
-    zIndex: 2,
-    alignSelf: 'center',
-    margin: 'auto',
-    maxWidth: 430,
+    position: 'relative',
+    width: '100%',
+    maxWidth: 640,
   },
   icon: {
     marginHorizontal: 3,

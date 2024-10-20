@@ -1,3 +1,4 @@
+//FIXME: effect infinit loop
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -56,7 +57,7 @@ export default function Navigation() {
     if (aya) {
       setCurrentAyaNumber(aya.aya_id - 1);
     }
-  }, [currentSavedPageValue, quranText, setCurrentSavedPage]);
+  }, [currentSavedPageValue, quranText]);
 
   const handleSurahChange = (surahNumber: number) => {
     setCurrentSurah(surahNumber);
