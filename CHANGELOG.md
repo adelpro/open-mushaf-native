@@ -2,12 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.14]
+
 ## [1.0.13]
 
 ### Fixed
 
-- Updated Tafseer JSON loading (now files are saved to memory on the first load and then reloaded from memory on every
-  new request).
 - Updated Tafseer JSON loading (each Tafseer JSON file is loaded individually, one by one).
 - Mushaf page images are loaded individually, one by one; only the required page is loaded, which dramatically reduces
   memory usage.
