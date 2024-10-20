@@ -10,18 +10,14 @@ import { Audio } from 'expo-av';
 import { Image } from 'expo-image';
 import { activateKeepAwakeAsync } from 'expo-keep-awake';
 import { useRouter } from 'expo-router';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, {
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import { GestureDetector } from 'react-native-gesture-handler';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useRecoilValue } from 'recoil';
 
 import { blurhash, Colors, defaultNumberOfPages } from '@/constants';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagesArray from '@/hooks/useImagesArray';
+import { usePanGestureHandler } from '@/hooks/usePanGestureHandler'; // Import the custom hook
 import { flipSound } from '@/recoil/atoms';
 
 import PageOverlay from './PageOverlay';
@@ -32,21 +28,38 @@ export default function MushafPage() {
   const isFlipSoundEnabled = useRecoilValue(flipSound);
   const colorScheme = useColorScheme();
   const tint = Colors[colorScheme ?? 'light'].tint;
-
   const router = useRouter();
-
   const { currentPage, setCurrentPage } = useCurrentPage();
 
   const [dimensions, setDimensions] = useState({
     customPageWidth: 0,
     customPageHeight: 0,
   });
+
+  const { assets, error: assetsError } = useImagesArray();
+
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
     setDimensions({ customPageWidth: width, customPageHeight: height });
   };
 
-  const translateX = useSharedValue(0);
+  const handlePageChange = async (page: number) => {
+    setCurrentPage(page);
+    router.replace({ pathname: '/', params: { page: page.toString() } });
+
+    // Play page flip sound
+    if (sound.current) {
+      await sound.current.replayAsync();
+    }
+  };
+
+  // Use the custom pan gesture handler hook
+  const { translateX, panGestureHandler } = usePanGestureHandler(
+    currentPage,
+    handlePageChange,
+    defaultNumberOfPages,
+  );
+
   const animatedStyle = useAnimatedStyle(() => {
     const maxTranslateX = 20;
     const clampedTranslateX = Math.max(
@@ -54,7 +67,6 @@ export default function MushafPage() {
       Math.min(translateX.value, maxTranslateX),
     );
 
-    // Dynamic shadow and opacity adjustments
     const shadowOpacity = Math.abs(clampedTranslateX) / maxTranslateX;
     const opacity = Math.max(
       0.85,
@@ -63,55 +75,15 @@ export default function MushafPage() {
 
     return {
       transform: [{ translateX: clampedTranslateX }],
-      perspective: 1000, // Slightly increased for better depth perception
-      shadowColor: 'rgba(0, 0, 0, 0.2)', // Softer shadow color for minimalist effect
-      shadowOffset: { width: 0, height: 3 },
-      shadowOpacity: shadowOpacity * 0.5, // Reduce shadow intensity for subtlety
-      shadowRadius: 8, // Increase shadow blur for realism
+      shadowOpacity: shadowOpacity * 0.5,
       opacity: opacity,
     };
   });
 
-  const { assets, error: assetsError } = useImagesArray();
-
-  const handlePageChange = async (page: number) => {
-    setCurrentPage(page);
-    router.replace({
-      pathname: '/',
-      params: { page: page.toString() },
-    });
-
-    // Play page flipsound
-    if (sound.current) {
-      await sound.current.replayAsync(); // Play sound
-    }
-  };
-
-  const panGestureHandler = Gesture.Pan()
-    .onUpdate((e) => {
-      translateX.value = Math.max(-100, Math.min(100, e.translationX));
-    })
-    .onEnd((e) => {
-      'worklet'; // Ensuring this block runs on the UI thread
-      const threshold = 30; // Lower threshold for smoother transitions
-      if (e.translationX > threshold) {
-        // Swipe Right - Go to the next page
-        runOnJS(handlePageChange)(
-          Math.min(currentPage + 1, defaultNumberOfPages),
-        );
-      } else if (e.translationX < -threshold) {
-        // Swipe Left - Go to the previous page
-        runOnJS(handlePageChange)(Math.max(currentPage - 1, 1));
-      }
-
-      // Smooth return to the original position
-      translateX.value = withSpring(0, { damping: 20, stiffness: 90 }); // Smooth return
-    });
-
-  // Keep the screen awake when reading mushaf
   useEffect(() => {
     if (Platform.OS !== 'web') return;
     if (document.visibilityState === 'hidden') return;
+
     const enableKeepAwake = async () => {
       await activateKeepAwakeAsync();
     };
@@ -119,9 +91,8 @@ export default function MushafPage() {
   }, []);
 
   useEffect(() => {
-    if (!isFlipSoundEnabled) {
-      return;
-    }
+    if (!isFlipSoundEnabled) return;
+
     const loadSound = async () => {
       const { sound: soundObject } = await Audio.Sound.createAsync(
         require('@/assets/sounds/page-flip-sound.mp3'),
@@ -142,6 +113,7 @@ export default function MushafPage() {
   if (assetsError) {
     return <ThemedText>خطا: {assetsError}</ThemedText>;
   }
+
   return (
     <GestureDetector gesture={panGestureHandler}>
       <Animated.View
@@ -160,9 +132,6 @@ export default function MushafPage() {
             source={{ uri: assets?.[0]?.uri }}
             placeholder={{ blurhash }}
             contentFit="fill"
-            tintColor={
-              colorScheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : undefined
-            }
           />
         </Suspense>
         <PageOverlay index={currentPage} dimensions={dimensions} />
