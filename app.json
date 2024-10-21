@@ -19,7 +19,8 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "enableProguardInReleaseBuilds": false
       },
       "package": "com.adelpro.openmushafnative",
       "jsEngine": "hermes"
