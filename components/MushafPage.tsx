@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
@@ -43,22 +43,18 @@ export default function MushafPage() {
     setDimensions({ customPageWidth: width, customPageHeight: height });
   };
 
-  const handlePageChange = useCallback(
-    async (page: number) => {
-      if (page === currentPage) return;
-      setCurrentPage(page);
-      router.replace({
-        pathname: '/',
-        params: { page: page.toString() },
-      });
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    router.replace({
+      pathname: '/',
+      params: { page: page.toString() },
+    });
 
-      // Play page flip sound
-      if (isFlipSoundEnabled && sound.current) {
-        await sound.current.replayAsync();
-      }
-    },
-    [currentPage, isFlipSoundEnabled, router, setCurrentPage],
-  );
+    // Play page flip sound
+    if (isFlipSoundEnabled && sound.current) {
+      sound.current.replayAsync();
+    }
+  };
 
   // Use the custom pan gesture handler hook
   const { translateX, panGestureHandler } = usePanGestureHandler(
