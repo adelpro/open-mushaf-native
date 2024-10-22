@@ -14,10 +14,11 @@ import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useRecoilValue } from 'recoil';
 
-import { blurhash, Colors, defaultNumberOfPages } from '@/constants';
+import { blurhash, defaultNumberOfPages } from '@/constants';
+import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagesArray from '@/hooks/useImagesArray';
-import { usePanGestureHandler } from '@/hooks/usePanGestureHandler'; // Import the custom hook
+import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import { flipSound } from '@/recoil/atoms';
 
 import PageOverlay from './PageOverlay';
@@ -27,9 +28,11 @@ export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
   const isFlipSoundEnabled = useRecoilValue(flipSound);
   const colorScheme = useColorScheme();
-  const tint = Colors[colorScheme ?? 'light'].tint;
+  const { tintColor } = useColors();
   const router = useRouter();
   const { currentPage, setCurrentPage } = useCurrentPage();
+
+  console.log('currentPage: ', currentPage);
 
   const [dimensions, setDimensions] = useState({
     customPageWidth: 0,
@@ -129,7 +132,9 @@ export default function MushafPage() {
         ]}
         onLayout={handleImageLayout}
       >
-        <Suspense fallback={<ActivityIndicator size="large" color={tint} />}>
+        <Suspense
+          fallback={<ActivityIndicator size="large" color={tintColor} />}
+        >
           {assets[0]?.uri && (
             <Image
               style={[styles.image]}

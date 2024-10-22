@@ -8,9 +8,9 @@ import useCurrentPage from './useCurrentPage';
 
 export default function useImagesArray() {
   const { currentPage } = useCurrentPage();
-  const [assets, setAssets] = useState<Asset[]>([]); // State to hold loaded assets
-  const [error, setError] = useState<string | null>(null); // State to hold any loading errors
-  const requiredAssets = imagesMap[currentPage]; // Get the required assets for the current page
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const requiredAssets = imagesMap[currentPage ?? 1];
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -26,15 +26,21 @@ export default function useImagesArray() {
             assetArray.map((asset) => Asset.loadAsync(asset)),
           );
 
-          setAssets(loadedAssets.flat());
+          return loadedAssets.flat();
         }
-      } catch {
-        setError('Error loading assets');
-      }
+      } catch {}
     };
 
-    loadAssets();
-  }, [currentPage, requiredAssets]); // Dependency array includes currentPage and requiredAssets
+    loadAssets()
+      .then((result) => {
+        if (result) {
+          setAssets(result);
+          setError(null);
+        }
+        setError('No assets found');
+      })
+      .catch((error) => setError(error?.message));
+  }, [currentPage, requiredAssets]);
 
   return { assets, error };
 }
