@@ -1,14 +1,16 @@
-import { StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import Checkbox from 'expo-checkbox';
 import { useRecoilState } from 'recoil';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useColors } from '@/hooks/useColors';
 import { flipSound } from '@/recoil/atoms';
 
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
+  const { textColor } = useColors();
 
   const toggleSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
@@ -16,16 +18,19 @@ export default function SettingsScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedView style={styles.mainContent}>
-        <ThemedView style={styles.listItem}>
-          <Checkbox
-            value={isFlipSoundEnabled}
-            onValueChange={toggleSwitch}
-            style={styles.checkbox}
-          />
-          <ThemedText style={styles.listItemText}>صوت قلب الصفحة</ThemedText>
-        </ThemedView>
-      </ThemedView>
+      <Pressable
+        style={[styles.settingsSection, { borderColor: textColor }]}
+        onPress={toggleSwitch}
+      >
+        <Checkbox
+          value={isFlipSoundEnabled}
+          style={styles.checkbox}
+          onValueChange={toggleSwitch}
+        />
+        <ThemedText type="defaultSemiBold" style={styles.itemText}>
+          صوت قلب الصفحة
+        </ThemedText>
+      </Pressable>
     </ThemedView>
   );
 }
@@ -33,27 +38,37 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
-    padding: 10,
+    padding: 20,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
-  mainContent: {
+  settingsSection: {
     width: '100%',
-    paddingHorizontal: 22,
-    paddingLeft: 16,
+    maxWidth: 640,
     marginBottom: 20,
     alignSelf: 'center',
-  },
-  listItem: {
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
-    width: '100%',
-  },
-  listItemText: {
-    fontSize: 16,
-    marginRight: 10,
+    justifyContent: 'space-between',
   },
   checkbox: {
-    marginRight: 10,
+    borderColor: '#4CAF50',
+    borderWidth: 2,
+    borderRadius: 5,
+  },
+  itemText: {
+    fontFamily: 'Amiri_400Regular',
+    fontSize: 24,
+    paddingVertical: 10,
+    textAlignVertical: 'center',
   },
 });
