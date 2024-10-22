@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { useLocalSearchParams } from 'expo-router';
 import { useRecoilState } from 'recoil';
@@ -9,33 +9,43 @@ export default function useCurrentPage() {
   const { page: pageParam } = useLocalSearchParams();
   const [currentSavedPageValue, setCurrentSavedPageValue] =
     useRecoilState(currentSavedPage);
-  const [currentPage, setCurrentPage] = useState<number>(
-    currentSavedPageValue ?? 1,
+  const isInitialMount = useRef(true);
+
+  const setNewCurrentPage = useCallback(
+    (page: number) => {
+      console.log(
+        'setCurrentPage: page:',
+        page,
+        'pageParam:',
+        pageParam,
+        'currentSavedPageValue:',
+        currentSavedPageValue,
+      ); // Only update if the new page is different and valid
+
+      if (page !== currentSavedPageValue && page > 0) {
+        setCurrentSavedPageValue(page);
+      }
+    },
+    [currentSavedPageValue, pageParam, setCurrentSavedPageValue],
   );
 
   useEffect(() => {
-    let page = currentSavedPageValue ?? 1;
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    } // Parse pageParam
 
-    if (typeof pageParam === 'string' && !isNaN(parseInt(pageParam))) {
-      page = parseInt(pageParam);
-    } else if (Array.isArray(pageParam) && pageParam.length > 0) {
-      const parsedPage = parseInt(pageParam[0]);
-      if (!isNaN(parsedPage)) {
-        page = parsedPage;
-      }
+    const parsedPage = Array.isArray(pageParam)
+      ? parseInt(pageParam[0])
+      : parseInt(pageParam);
+
+    if (!isNaN(parsedPage)) {
+      setNewCurrentPage(parsedPage);
     }
-    setCurrentPage(page);
+  }, [pageParam, setNewCurrentPage]);
 
-    if (page !== currentSavedPageValue) {
-      setCurrentSavedPageValue(page);
-    }
-  }, [currentSavedPageValue, pageParam, setCurrentSavedPageValue]);
-
-  // Will Save the current page to local storage and to the current state
-  const setNewCurrentPage = (page: number) => {
-    setCurrentPage(page);
-    setCurrentSavedPageValue(page);
+  return {
+    currentPage: currentSavedPageValue || 1,
+    setCurrentPage: setNewCurrentPage,
   };
-
-  return { currentPage, setCurrentPage: setNewCurrentPage };
 }

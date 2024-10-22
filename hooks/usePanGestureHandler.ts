@@ -13,14 +13,17 @@ export const usePanGestureHandler = (
       translateX.value = Math.max(-100, Math.min(100, e.translationX));
     })
     .onEnd((e) => {
-      'worklet'; // Ensuring this block runs on the UI thread
-      const threshold = 30;
-      if (e.translationX > threshold) {
-        // Swipe Right - Go to the next page
-        runOnJS(onPageChange)(Math.min(currentPage + 1, maxPages));
-      } else if (e.translationX < -threshold) {
-        // Swipe Left - Go to the previous page
-        runOnJS(onPageChange)(Math.max(currentPage - 1, 1));
+      const threshold = 100;
+      const targetPage =
+        e.translationX > threshold
+          ? Math.min(currentPage + 1, maxPages) // Swipe Right
+          : e.translationX < -threshold
+            ? Math.max(currentPage - 1, 1) // Swipe Left
+            : currentPage; // No page change
+
+      // Only change the page if it differs from the current one
+      if (targetPage !== currentPage) {
+        runOnJS(onPageChange)(targetPage);
       }
 
       translateX.value = withSpring(0, { damping: 20, stiffness: 90 }); // Smooth return

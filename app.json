@@ -19,18 +19,23 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff",
-        "enableProguardInReleaseBuilds": false
+        "backgroundColor": "#ffffff"
       },
-      "package": "com.adelpro.openmushafnative",
-      "jsEngine": "hermes"
+      "enableProguardInReleaseBuilds": false,
+      "jsEngine": "hermes",
+      "package": "com.adelpro.openmushafnative"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-font", "expo-secure-store"],
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-secure-store",
+      "expo-updates"
+    ],
     "experiments": {
       "typedRoutes": true
     },

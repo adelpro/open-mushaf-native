@@ -5,64 +5,63 @@ import { StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
-import { useRecoilState } from 'recoil';
 
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
 import surahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { defaultNumberOfPages } from '@/constants';
-import { currentSavedPage } from '@/recoil/atoms';
+import useCurrentPage from '@/hooks/useCurrentPage';
 import { QuranText } from '@/types';
 
 export default function Navigation() {
   const router = useRouter();
   const pages = Array.from({ length: defaultNumberOfPages }, (_, i) => i + 1);
-  const [currentSavedPageValue, setCurrentSavedPage] =
-    useRecoilState(currentSavedPage);
+  const { currentPage, setCurrentPage } = useCurrentPage();
   const quranText: QuranText[] = quranJson as QuranText[];
   const [currentSurah, setCurrentSurah] = useState<number>(1);
   const [currentAyaNumber, setCurrentAyaNumber] = useState<number>(1);
-  const [numberOfAyahs, setNumberOfAyahs] = useState<number[]>([]);
+  const [numberOfAyas, setNumberOfAyas] = useState<number[]>([]);
 
   useEffect(() => {
-    if (!currentSavedPageValue) {
-      return;
-    }
-
     const surah = surahs.find((surah, index) => {
       const startingPage = surah.startingPage;
       const nextSurahStartingPage =
         surahs[index + 1]?.startingPage || defaultNumberOfPages + 1;
-      return (
-        currentSavedPageValue >= startingPage &&
-        currentSavedPageValue < nextSurahStartingPage
-      );
+      return currentPage >= startingPage && currentPage < nextSurahStartingPage;
     });
 
-    if (surah) {
-      setCurrentSurah(surah.number);
-      setNumberOfAyahs(
-        Array.from({ length: surah.numberOfAyahs }, (_, i) => i + 1),
-      );
-    }
+    if (!surah) return;
+
+    setCurrentSurah(surah.number);
+
+    const newNumberOfAyas = Array.from(
+      { length: surah.numberOfAyahs },
+      (_, i) => i + 1,
+    );
+    setNumberOfAyas(newNumberOfAyas);
 
     const aya = quranText.find((aya) => {
-      if (!surah) return false;
-      return (
-        aya.sura_id === surah?.number && aya.page_id === currentSavedPageValue
-      );
+      return aya.sura_id === surah?.number && aya.page_id === currentPage;
     });
 
     if (aya) {
       setCurrentAyaNumber(aya.aya_id - 1);
     }
-  }, [currentSavedPageValue, quranText]);
+  }, [currentPage, quranText]);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    router.push({
+      pathname: '/',
+      params: { page: pageNumber.toString() },
+    });
+  };
 
   const handleSurahChange = (surahNumber: number) => {
     setCurrentSurah(surahNumber);
     const selectedSurah = surahs[surahNumber - 1];
-    setNumberOfAyahs(
+    setNumberOfAyas(
       Array.from({ length: selectedSurah.numberOfAyahs }, (_, i) => i + 1),
     );
     setCurrentAyaNumber(1);
@@ -76,7 +75,7 @@ export default function Navigation() {
       );
     });
     if (filteredAya) {
-      setCurrentSavedPage(filteredAya.page_id);
+      setCurrentPage(filteredAya.page_id);
       router.push({
         pathname: '/',
         params: { page: filteredAya.page_id.toString() },
@@ -98,13 +97,9 @@ export default function Navigation() {
         </ThemedView>
         <Picker
           style={styles.pickerContainer}
-          selectedValue={currentSavedPageValue}
-          onValueChange={(itemValue) => {
-            setCurrentSavedPage(Number(itemValue));
-            router.push({
-              pathname: '/',
-              params: { page: itemValue.toString() },
-            });
+          selectedValue={currentPage}
+          onValueChange={(item) => {
+            handlePageChange(item);
           }}
         >
           {pages.map((page) => (
@@ -127,7 +122,9 @@ export default function Navigation() {
           <Picker
             style={[styles.picker, styles.surahPicker]}
             selectedValue={currentSurah}
-            onValueChange={handleSurahChange}
+            onValueChange={(item) => {
+              handleSurahChange(item);
+            }}
           >
             {surahs.map((surah) => (
               <Picker.Item
@@ -141,9 +138,11 @@ export default function Navigation() {
           <Picker
             style={[styles.picker, styles.ayaPicker]}
             selectedValue={currentAyaNumber}
-            onValueChange={handleAyaChange}
+            onValueChange={(item) => {
+              handleAyaChange(item);
+            }}
           >
-            {numberOfAyahs.map((aya) => (
+            {numberOfAyas.map((aya) => (
               <Picker.Item key={aya} label={aya.toString()} value={aya} />
             ))}
           </Picker>
