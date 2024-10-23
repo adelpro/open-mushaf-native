@@ -23,6 +23,7 @@ import { flipSound } from '@/recoil/atoms';
 
 import PageOverlay from './PageOverlay';
 import { ThemedText } from './ThemedText';
+import { ThemedView } from './ThemedView';
 
 export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
@@ -36,7 +37,11 @@ export default function MushafPage() {
     customPageHeight: 0,
   });
 
-  const { assets, error: assetsError } = useImagesArray();
+  const {
+    isLoading: assetsLoading,
+    assets,
+    error: assetsError,
+  } = useImagesArray();
 
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
@@ -114,7 +119,19 @@ export default function MushafPage() {
   }, [isFlipSoundEnabled]);
 
   if (assetsError) {
-    return <ThemedText>خطا: {assetsError}</ThemedText>;
+    return (
+      <ThemedView style={styles.errorContainer}>
+        <ThemedText>خطأ في تحميل الصفحة: {assetsError}</ThemedText>
+      </ThemedView>
+    );
+  }
+
+  if (assetsLoading) {
+    return (
+      <ThemedView style={styles.loadingContainer}>
+        <ThemedText>جاري تحميل الصفحة...</ThemedText>
+      </ThemedView>
+    );
   }
 
   return (
@@ -161,5 +178,16 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     width: '100%',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

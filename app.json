@@ -21,9 +21,17 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "enableProguardInReleaseBuilds": false,
+      "package": "com.adelpro.openmushafnative",
+      "enableProguardInReleaseBuilds": true,
       "jsEngine": "hermes",
-      "package": "com.adelpro.openmushafnative"
+      "permissions": [],
+      "softwareKeyboardLayoutMode": "pan",
+      "buildProperties": {
+        "android": {
+          "enableShrinkResourcesInReleaseBuilds": true,
+          "enableR8": true
+        }
+      }
     },
     "web": {
       "bundler": "metro",

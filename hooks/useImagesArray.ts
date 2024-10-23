@@ -9,12 +9,15 @@ import useCurrentPage from './useCurrentPage';
 export default function useImagesArray() {
   const { currentPage } = useCurrentPage();
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const requiredAssets = imagesMap[currentPage ?? 1];
 
   useEffect(() => {
     const loadAssets = async () => {
+      setIsLoading(true);
       try {
+        setError(null);
         if (requiredAssets) {
           // Ensure requiredAssets is an array
           const assetArray = Array.isArray(requiredAssets)
@@ -30,6 +33,8 @@ export default function useImagesArray() {
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -45,5 +50,5 @@ export default function useImagesArray() {
       .catch((error) => setError(error?.message));
   }, [currentPage, requiredAssets]);
 
-  return { assets, error };
+  return { isLoading, assets, error };
 }
