@@ -28,7 +28,9 @@ export default function useImagesArray() {
 
           return loadedAssets.flat();
         }
-      } catch {}
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     loadAssets()
@@ -36,8 +38,9 @@ export default function useImagesArray() {
         if (result) {
           setAssets(result);
           setError(null);
+        } else {
+          setError('No assets found');
         }
-        setError('No assets found');
       })
       .catch((error) => setError(error?.message));
   }, [currentPage, requiredAssets]);

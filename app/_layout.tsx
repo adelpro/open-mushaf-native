@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { I18nManager } from 'react-native';
+import { DevSettings, I18nManager, InteractionManager } from 'react-native';
 
 import {
   Amiri_400Regular,
@@ -39,23 +39,25 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    async function forceRTL() {
+    async function applyRTL() {
       if (!I18nManager.isRTL) {
-        I18nManager.forceRTL(true);
         I18nManager.allowRTL(true);
+        I18nManager.forceRTL(true);
 
-        if (__DEV__) {
-          console.log(
-            'In development, please reload the app to see the changes',
-          );
-        } else {
-          // Updates.reloadAsync() only available in production
-          await Updates.reloadAsync();
-        }
+        // Wait for interactions to settle before triggering a reload
+        InteractionManager.runAfterInteractions(async () => {
+          if (__DEV__) {
+            console.log('RTL enabled, reloading app in development mode');
+            DevSettings.reload(); // Force reload in development
+          } else {
+            console.log('Reloading app for RTL in production');
+            await Updates.reloadAsync(); // Reload in production
+          }
+        });
       }
     }
 
-    forceRTL();
+    applyRTL();
   }, []);
 
   useEffect(() => {

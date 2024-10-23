@@ -31,9 +31,6 @@ export default function MushafPage() {
   const { tintColor } = useColors();
   const router = useRouter();
   const { currentPage, setCurrentPage } = useCurrentPage();
-
-  console.log('currentPage: ', currentPage);
-
   const [dimensions, setDimensions] = useState({
     customPageWidth: 0,
     customPageHeight: 0,
@@ -135,14 +132,12 @@ export default function MushafPage() {
         <Suspense
           fallback={<ActivityIndicator size="large" color={tintColor} />}
         >
-          {assets[0]?.uri && (
-            <Image
-              style={[styles.image]}
-              source={{ uri: assets?.[0]?.uri }}
-              placeholder={{ blurhash }}
-              contentFit="fill"
-            />
-          )}
+          <Image
+            style={[styles.image]}
+            source={{ uri: assets?.[0]?.uri }}
+            placeholder={{ blurhash }}
+            contentFit="fill"
+          />
         </Suspense>
         <PageOverlay index={currentPage} dimensions={dimensions} />
       </Animated.View>
