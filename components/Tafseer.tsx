@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   tabs: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     alignItems: 'center',
     flexWrap: 'wrap',
     gap: 2,

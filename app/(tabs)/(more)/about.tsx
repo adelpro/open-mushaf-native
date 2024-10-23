@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import * as Application from 'expo-application';
 import { Href } from 'expo-router';
@@ -13,6 +13,10 @@ export default function AboutScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
   const appVersion = Application.nativeApplicationVersion ?? 'Unknown';
   const buildVersion = Application.nativeBuildVersion ?? 'Unknown';
+  const isRTLAndroid = I18nManager.isRTL;
+  console.info(
+    `App Version: ${appVersion} (${buildVersion}) - RTL: ${isRTLAndroid}`,
+  );
   const sourcesList = [
     {
       text: 'صفحات المصحف من ',
@@ -129,8 +133,8 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
   },
   listItem: {
-    flexDirection: 'row',
     marginBottom: 10,
+    flexDirection: 'row-reverse',
   },
   bullet: {
     marginRight: 10,

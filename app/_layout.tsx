@@ -46,7 +46,8 @@ export default function RootLayout() {
 
         InteractionManager.runAfterInteractions(async () => {
           if (__DEV__) {
-            DevSettings.reload();
+            console.info('Reloading app to apply RTL');
+            // await DevSettings.reload();
           } else {
             await Updates.reloadAsync();
           }

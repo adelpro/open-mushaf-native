@@ -24,6 +24,7 @@ export default function TabLayout() {
         tabBarStyle: {
           display: menuStateValue ? 'flex' : 'none',
           justifyContent: 'center',
+          flexDirection: 'column-reverse',
           height: 60,
           margin: 5,
         },

@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     maxWidth: 640,
   },
   labelContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     alignItems: 'center',
     justifyContent: 'flex-start',
     marginBottom: 10,
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   pickerContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: 'transparent',

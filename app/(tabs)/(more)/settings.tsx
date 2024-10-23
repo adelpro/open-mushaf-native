@@ -22,14 +22,14 @@ export default function SettingsScreen() {
         style={[styles.settingsSection, { borderColor: textColor }]}
         onPress={toggleSwitch}
       >
+        <ThemedText type="defaultSemiBold" style={styles.itemText}>
+          صوت قلب الصفحة
+        </ThemedText>
         <Checkbox
           value={isFlipSoundEnabled}
           style={styles.checkbox}
           onValueChange={toggleSwitch}
         />
-        <ThemedText type="defaultSemiBold" style={styles.itemText}>
-          صوت قلب الصفحة
-        </ThemedText>
       </Pressable>
     </ThemedView>
   );
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 5,
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     alignItems: 'center',
     justifyContent: 'space-between',
   },

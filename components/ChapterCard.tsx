@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     borderColor: '#e0e0e0',
     backgroundColor: '#ffffff',
     elevation: 3,
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   content: {
     display: 'flex',
     alignItems: 'center',
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     height: 100,
   },
   number: {
