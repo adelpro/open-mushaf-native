@@ -62,6 +62,9 @@
       "checkAutomatically": "ON_LOAD",
       "fallbackToCacheTimeout": 0
     },
+    "runtimeVersion": {
+      "policy": "nativeVersion"
+    },
     "owner": "adelpro"
   }
 }
