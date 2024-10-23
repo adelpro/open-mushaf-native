@@ -24,16 +24,9 @@
       },
       "package": "com.adelpro.openmushafnative",
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative",
-      "enableProguardInReleaseBuilds": true,
       "jsEngine": "hermes",
       "permissions": [],
-      "softwareKeyboardLayoutMode": "pan",
-      "buildProperties": {
-        "android": {
-          "enableShrinkResourcesInReleaseBuilds": true,
-          "enableR8": true
-        }
-      }
+      "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
       "bundler": "metro",
