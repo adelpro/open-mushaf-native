@@ -26,7 +26,7 @@
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative",
       "enableProguardInReleaseBuilds": true,
       "jsEngine": "hermes",
-      "permissions": ["Aw"],
+      "permissions": [],
       "softwareKeyboardLayoutMode": "pan",
       "buildProperties": {
         "android": {

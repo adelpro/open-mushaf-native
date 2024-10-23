@@ -128,8 +128,15 @@ export default function MushafPage() {
 
   if (assetsLoading) {
     return (
-      <ThemedView style={styles.loadingContainer}>
-        <ThemedText>جاري تحميل الصفحة...</ThemedText>
+      <ThemedView
+        style={[
+          styles.loadingContainer,
+          colorScheme === 'dark'
+            ? { backgroundColor: '#808080' }
+            : { backgroundColor: '#f5f1eb' },
+        ]}
+      >
+        <ActivityIndicator size="large" color={tintColor} />
       </ThemedView>
     );
   }
@@ -149,12 +156,14 @@ export default function MushafPage() {
         <Suspense
           fallback={<ActivityIndicator size="large" color={tintColor} />}
         >
-          <Image
-            style={[styles.image]}
-            source={{ uri: assets?.[0]?.uri }}
-            placeholder={{ blurhash }}
-            contentFit="fill"
-          />
+          {assets?.[0]?.uri ? (
+            <Image
+              style={[styles.image]}
+              source={{ uri: assets?.[0]?.uri }}
+              //placeholder={{ blurhash }}
+              contentFit="fill"
+            />
+          ) : null}
         </Suspense>
         <PageOverlay index={currentPage} dimensions={dimensions} />
       </Animated.View>
@@ -181,12 +190,14 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     flex: 1,
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
   loadingContainer: {
     flex: 1,
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
