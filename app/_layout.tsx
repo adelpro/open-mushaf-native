@@ -44,14 +44,11 @@ export default function RootLayout() {
         I18nManager.allowRTL(true);
         I18nManager.forceRTL(true);
 
-        // Wait for interactions to settle before triggering a reload
         InteractionManager.runAfterInteractions(async () => {
           if (__DEV__) {
-            console.log('RTL enabled, reloading app in development mode');
-            DevSettings.reload(); // Force reload in development
+            DevSettings.reload();
           } else {
-            console.log('Reloading app for RTL in production');
-            await Updates.reloadAsync(); // Reload in production
+            await Updates.reloadAsync();
           }
         });
       }
