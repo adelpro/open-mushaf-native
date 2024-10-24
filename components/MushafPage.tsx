@@ -37,11 +37,11 @@ export default function MushafPage() {
     customPageHeight: 0,
   });
 
-  const {
+  /*   const {
     isLoading: assetsLoading,
     assets,
     error: assetsError,
-  } = useImagesArray();
+  } = useImagesArray(); */
 
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
@@ -118,7 +118,7 @@ export default function MushafPage() {
     };
   }, [isFlipSoundEnabled]);
 
-  if (assetsError) {
+  /*   if (assetsError) {
     return (
       <ThemedView style={styles.errorContainer}>
         <ThemedText>خطأ في تحميل الصفحة: {assetsError}</ThemedText>
@@ -139,7 +139,7 @@ export default function MushafPage() {
         <ActivityIndicator size="large" color={tintColor} />
       </ThemedView>
     );
-  }
+  } */
 
   return (
     <GestureDetector gesture={panGestureHandler}>
@@ -153,7 +153,7 @@ export default function MushafPage() {
         ]}
         onLayout={handleImageLayout}
       >
-        <Suspense
+        {/*         <Suspense
           fallback={<ActivityIndicator size="large" color={tintColor} />}
         >
           {assets?.[0]?.uri ? (
@@ -164,7 +164,7 @@ export default function MushafPage() {
               contentFit="fill"
             />
           ) : null}
-        </Suspense>
+        </Suspense> */}
         <PageOverlay index={currentPage} dimensions={dimensions} />
       </Animated.View>
     </GestureDetector>
