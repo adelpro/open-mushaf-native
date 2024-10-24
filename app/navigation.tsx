@@ -10,6 +10,7 @@ import surahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.js
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { defaultNumberOfPages } from '@/constants';
+import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import { QuranText } from '@/types';
 
@@ -21,6 +22,8 @@ export default function Navigation() {
   const [currentSurah, setCurrentSurah] = useState<number>(1);
   const [currentAyaNumber, setCurrentAyaNumber] = useState<number>(1);
   const [numberOfAyas, setNumberOfAyas] = useState<number[]>([]);
+
+  const { iconColor, textColor } = useColors();
 
   useEffect(() => {
     const surah = surahs.find((surah, index) => {
@@ -89,20 +92,25 @@ export default function Navigation() {
           <Feather
             name="file-text"
             size={24}
-            color="black"
+            color={iconColor}
             style={styles.icon}
           />
           <ThemedText style={styles.label}>الانتقال إلى الصفحة:</ThemedText>
         </ThemedView>
         <Picker
-          style={styles.pickerContainer}
+          style={[styles.pickerContainer, { color: textColor }]}
           selectedValue={currentPage}
           onValueChange={(item) => {
             handlePageChange(item);
           }}
         >
           {pages.map((page) => (
-            <Picker.Item key={page} label={page.toString()} value={page} />
+            <Picker.Item
+              key={page}
+              label={page.toString()}
+              value={page}
+              style={[styles.pickerItem, { color: textColor }]}
+            />
           ))}
         </Picker>
       </ThemedView>
@@ -112,14 +120,14 @@ export default function Navigation() {
           <Feather
             name="book-open"
             size={24}
-            color="black"
+            color={iconColor}
             style={styles.icon}
           />
           <ThemedText style={styles.label}>الانتقال إلى الآية:</ThemedText>
         </ThemedView>
         <ThemedView style={styles.pickerContainer}>
           <Picker
-            style={[styles.picker, styles.surahPicker]}
+            style={[styles.picker, styles.surahPicker, { color: textColor }]}
             selectedValue={currentSurah}
             onValueChange={(item) => {
               handleSurahChange(item);
@@ -130,19 +138,25 @@ export default function Navigation() {
                 key={surah.number}
                 label={surah.name}
                 value={surah.number}
+                style={[styles.pickerItem, { color: textColor }]}
               />
             ))}
           </Picker>
           <ThemedText style={styles.separator}>-</ThemedText>
           <Picker
-            style={[styles.picker, styles.ayaPicker]}
+            style={[styles.picker, styles.ayaPicker, { color: textColor }]}
             selectedValue={currentAyaNumber}
             onValueChange={(item) => {
               handleAyaChange(item);
             }}
           >
             {numberOfAyas.map((aya) => (
-              <Picker.Item key={aya} label={aya.toString()} value={aya} />
+              <Picker.Item
+                key={aya}
+                label={aya.toString()}
+                value={aya}
+                style={[styles.pickerItem, { color: textColor }]}
+              />
             ))}
           </Picker>
         </ThemedView>
@@ -197,17 +211,23 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
 
+  pickerItem: {
+    textAlign: 'center',
+  },
+
   surahPicker: {
     marginLeft: 10,
     textAlign: 'center',
+    width: '50%',
   },
   ayaPicker: {
     marginRight: 10,
-    textAlign: 'center',
+    width: '30%',
   },
   separator: {
     fontSize: 20,
     fontWeight: 'bold',
     marginHorizontal: 10,
+    width: '10%',
   },
 });

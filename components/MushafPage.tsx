@@ -165,7 +165,7 @@ export default function MushafPage() {
             />
           ) : null}
         </Suspense> */}
-        <PageOverlay index={currentPage} dimensions={dimensions} />
+        {/*  <PageOverlay index={currentPage} dimensions={dimensions} /> */}
       </Animated.View>
     </GestureDetector>
   );
