@@ -148,7 +148,7 @@ export default function MushafPage() {
           styles.imageContainer,
           animatedStyle,
           colorScheme === 'dark'
-            ? { backgroundColor: '#808080' }
+            ? { backgroundColor: '#d5d4d2' }
             : { backgroundColor: '#f5f1eb' },
         ]}
         onLayout={handleImageLayout}
