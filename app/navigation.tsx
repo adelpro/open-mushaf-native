@@ -103,14 +103,10 @@ export default function Navigation() {
           onValueChange={(item) => {
             handlePageChange(item);
           }}
+          dropdownIconColor={iconColor}
         >
           {pages.map((page) => (
-            <Picker.Item
-              key={page}
-              label={page.toString()}
-              value={page}
-              style={[styles.pickerItem, { color: textColor }]}
-            />
+            <Picker.Item key={page} label={page.toString()} value={page} />
           ))}
         </Picker>
       </ThemedView>
@@ -132,13 +128,13 @@ export default function Navigation() {
             onValueChange={(item) => {
               handleSurahChange(item);
             }}
+            dropdownIconColor={iconColor}
           >
             {surahs.map((surah) => (
               <Picker.Item
                 key={surah.number}
                 label={surah.name}
                 value={surah.number}
-                style={[styles.pickerItem, { color: textColor }]}
               />
             ))}
           </Picker>
@@ -149,14 +145,10 @@ export default function Navigation() {
             onValueChange={(item) => {
               handleAyaChange(item);
             }}
+            dropdownIconColor={iconColor}
           >
             {numberOfAyas.map((aya) => (
-              <Picker.Item
-                key={aya}
-                label={aya.toString()}
-                value={aya}
-                style={[styles.pickerItem, { color: textColor }]}
-              />
+              <Picker.Item key={aya} label={aya.toString()} value={aya} />
             ))}
           </Picker>
         </ThemedView>
@@ -176,7 +168,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: 'rgba(0, 0, 0, 0.05)',
     borderRadius: 10,
-    padding: 15,
+    padding: 5,
     width: '100%',
     maxWidth: 640,
   },
@@ -198,8 +190,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'transparent',
-    paddingVertical: 5,
+    paddingVertical: 1,
+    textAlign: 'center',
   },
   picker: {
     flex: 1,
@@ -210,24 +202,17 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 22,
   },
-
-  pickerItem: {
-    textAlign: 'center',
-  },
-
   surahPicker: {
     marginLeft: 10,
-    textAlign: 'center',
-    width: '50%',
+    minWidth: 80,
   },
   ayaPicker: {
     marginRight: 10,
-    width: '30%',
   },
   separator: {
     fontSize: 20,
     fontWeight: 'bold',
     marginHorizontal: 10,
-    width: '10%',
+    width: 30,
   },
 });
