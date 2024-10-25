@@ -57,9 +57,10 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       tafseerText = ayaTafseer?.text;
     }
     return (
-      <ThemedView style={styles.tafseerContent}>
+      <ThemedView style={[styles.tafseerContent, { opacity, backgroundColor }]}>
         <HTMLView
           value={tafseerText}
+          style={{ opacity, backgroundColor }}
           stylesheet={{
             p: {
               color: textColor,
@@ -144,7 +145,9 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
               ]}
               onPress={() => setSelectedTab(tabKey)}
             >
-              <ThemedText style={{ color: tintColor }}>
+              <ThemedText
+                style={{ color: tintColor, opacity, backgroundColor }}
+              >
                 {tabLabels[tabKey]}
               </ThemedText>
             </Pressable>
@@ -153,7 +156,12 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       </ThemedView>
 
       {tafseerData ? (
-        <ScrollView contentContainerStyle={styles.scrollView}>
+        <ScrollView
+          contentContainerStyle={[
+            styles.scrollView,
+            { opacity, backgroundColor },
+          ]}
+        >
           {renderTafseerContent(tafseerData)}
         </ScrollView>
       ) : (
@@ -175,7 +183,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   tabs: {
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
     gap: 2,

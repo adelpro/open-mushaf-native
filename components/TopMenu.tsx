@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 5,
     justifyContent: 'space-between',
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     alignItems: 'center',
     position: 'relative',
     width: '100%',
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     padding: 3,
   },
   leftIconsContainer: {
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     backgroundColor: 'transparent',
     margin: 0,
     padding: 0,

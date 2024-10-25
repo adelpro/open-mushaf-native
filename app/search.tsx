@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   searchContainer: {
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     alignItems: 'center',
     borderColor: '#ddd',
     borderWidth: 1,

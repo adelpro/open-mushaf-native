@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   tabContainer: {
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 20,
   },

@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   },
   listItem: {
     marginBottom: 10,
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
   },
   bullet: {
     marginRight: 10,
