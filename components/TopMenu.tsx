@@ -11,7 +11,7 @@ import { bottomMenuState, topMenuState } from '@/recoil/atoms';
 
 export default function TopMenu() {
   const colorScheme = useColorScheme();
-  const { textColor } = useColors();
+  const { iconColor } = useColors();
   const [showBottomMenuState, setBottomMenuState] =
     useRecoilState<boolean>(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] =
@@ -45,10 +45,10 @@ export default function TopMenu() {
             <SimpleLineIcons
               name="size-fullscreen"
               size={30}
-              color={textColor}
+              color={iconColor}
             />
           ) : (
-            <MaterialIcons name="fullscreen-exit" size={30} color={textColor} />
+            <MaterialIcons name="fullscreen-exit" size={30} color={iconColor} />
           )}
         </TouchableOpacity>
         <ThemedView style={styles.leftIconsContainer}>
@@ -62,7 +62,7 @@ export default function TopMenu() {
             <Ionicons
               name="navigate-circle-outline"
               size={30}
-              color={textColor}
+              color={iconColor}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -72,7 +72,7 @@ export default function TopMenu() {
               router.push('/search');
             }}
           >
-            <Ionicons name="search" size={30} color={textColor} />
+            <Ionicons name="search" size={30} color={iconColor} />
           </TouchableOpacity>
         </ThemedView>
       </ThemedView>

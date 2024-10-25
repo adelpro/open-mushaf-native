@@ -4,13 +4,12 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  useColorScheme,
 } from 'react-native';
 
 import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
 
-import { Colors } from '@/constants';
+import { useColors } from '@/hooks/useColors';
 import { tafseerTab } from '@/recoil/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
 
@@ -37,10 +36,7 @@ type Props = {
   opacity: number;
 };
 export default function Tafseer({ aya, surah, opacity }: Props) {
-  const colorScheme = useColorScheme();
-  const tintColor = Colors[colorScheme ?? 'light'].tint;
-  const textColor = Colors[colorScheme ?? 'light'].text;
-  const backgroundColor = Colors[colorScheme ?? 'light'].background;
+  const { tintColor, textColor } = useColors();
 
   const [surahName, setSurahName] = useState<string>('');
   const [selectedTabValue, setSelectedTab] =
