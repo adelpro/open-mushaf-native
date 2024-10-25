@@ -43,6 +43,8 @@ export default function MushafPage() {
     error: assetsError,
   } = useImagesArray(); */
 
+  const { assets } = useImagesArray();
+
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
     setDimensions({ customPageWidth: width, customPageHeight: height });
@@ -153,18 +155,11 @@ export default function MushafPage() {
         ]}
         onLayout={handleImageLayout}
       >
-        {/*         <Suspense
+        <Suspense
           fallback={<ActivityIndicator size="large" color={tintColor} />}
         >
-          {assets?.[0]?.uri ? (
-            <Image
-              style={[styles.image]}
-              source={{ uri: assets?.[0]?.uri }}
-              //placeholder={{ blurhash }}
-              contentFit="fill"
-            />
-          ) : null}
-        </Suspense> */}
+          {assets?.[0]?.uri ? null : null}
+        </Suspense>
         <PageOverlay index={currentPage} dimensions={dimensions} />
       </Animated.View>
     </GestureDetector>

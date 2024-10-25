@@ -57,16 +57,17 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       tafseerText = ayaTafseer?.text;
     }
     return (
-      <ThemedView style={[styles.tafseerContent, { opacity, backgroundColor }]}>
+      <ThemedView
+        style={[styles.tafseerContent, { backgroundColor: 'transparent' }]}
+      >
         <HTMLView
           value={tafseerText}
-          style={{ opacity, backgroundColor }}
+          style={{ backgroundColor: 'transparent' }}
           stylesheet={{
             p: {
               color: textColor,
               fontFamily: 'Amiri_400Regular',
-              backgroundColor,
-              opacity,
+              backgroundColor: 'transparent',
             },
           }}
         />
@@ -127,11 +128,11 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
     loadTafseerData();
   }, [loadTafseerData]);
   return (
-    <ThemedView style={[styles.container, { backgroundColor, opacity }]}>
-      <ThemedText style={[styles.title, { backgroundColor, opacity }]}>
+    <ThemedView style={[styles.container, { opacity }]}>
+      <ThemedText style={[styles.title, { backgroundColor: 'transparent' }]}>
         {surahName} - الآية {aya}
       </ThemedText>
-      <ThemedView style={[styles.tabs, { backgroundColor, opacity }]}>
+      <ThemedView style={[styles.tabs, { backgroundColor: 'transparent' }]}>
         {Object.keys(tabLabels).map((key) => {
           const tabKey = key as TafseerTabs;
           return (
@@ -140,13 +141,15 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
               style={[
                 styles.tabButton,
                 selectedTabValue === tabKey && styles.activeTab,
-                selectedTabValue === tabKey && { borderColor: tintColor },
-                { backgroundColor, opacity },
+                selectedTabValue === tabKey && {
+                  borderColor: tintColor,
+                },
+                { backgroundColor: 'transparent' },
               ]}
               onPress={() => setSelectedTab(tabKey)}
             >
               <ThemedText
-                style={{ color: tintColor, opacity, backgroundColor }}
+                style={{ color: tintColor, backgroundColor: 'transparent' }}
               >
                 {tabLabels[tabKey]}
               </ThemedText>
@@ -159,7 +162,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
         <ScrollView
           contentContainerStyle={[
             styles.scrollView,
-            { opacity, backgroundColor },
+            { backgroundColor: 'transparent' },
           ]}
         >
           {renderTafseerContent(tafseerData)}
@@ -181,6 +184,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     marginBottom: 10,
+    padding: 8,
   },
   tabs: {
     flexDirection: 'row',

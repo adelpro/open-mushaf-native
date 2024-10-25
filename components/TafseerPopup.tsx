@@ -76,7 +76,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   if (!show) return null;
 
   return (
-    <ThemedView style={styles.overlay}>
+    <ThemedView style={[styles.overlay]}>
       <Pressable style={styles.background} onPress={() => setShow(false)}>
         <Pressable
           ref={popupRef}
@@ -90,7 +90,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
             onGestureEvent={handleGesture}
             onHandlerStateChange={handleGestureStateChange}
           >
-            <Pressable style={styles.resizer}>
+            <Pressable style={[styles.resizer, {}]}>
               <ThemedView
                 style={[styles.resizerIcon, { backgroundColor: tintColor }]}
               />
@@ -131,7 +131,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     width: '100%',
-    backgroundColor: '#fff',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     elevation: 5,
