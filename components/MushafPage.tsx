@@ -38,7 +38,6 @@ export default function MushafPage() {
   });
 
   /*   const {
-    isLoading: assetsLoading,
     assets,
     error: assetsError,
   } = useImagesArray(); */
@@ -128,6 +127,7 @@ export default function MushafPage() {
     );
   }
 
+
   if (assetsLoading) {
     return (
       <ThemedView
@@ -141,8 +141,7 @@ export default function MushafPage() {
         <ActivityIndicator size="large" color={tintColor} />
       </ThemedView>
     );
-  } */
-
+  }*/
   return (
     <GestureDetector gesture={panGestureHandler}>
       <Animated.View
