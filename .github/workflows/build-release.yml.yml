@@ -1,4 +1,4 @@
-name: Android APK & AAB Build & Release
+name: Android APK & AAB Build & Release v3
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write # Grant permissions to create and upload releases
+  issues: write
 
 jobs:
   build:
