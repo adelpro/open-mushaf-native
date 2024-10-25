@@ -22,7 +22,6 @@ import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import { flipSound } from '@/recoil/atoms';
 
 import PageOverlay from './PageOverlay';
-import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
 export default function MushafPage() {
@@ -32,16 +31,13 @@ export default function MushafPage() {
   const { tintColor } = useColors();
   const router = useRouter();
   const { currentPage, setCurrentPage } = useCurrentPage();
+  console.info(`Current page: ${currentPage}`);
   const [dimensions, setDimensions] = useState({
     customPageWidth: 0,
     customPageHeight: 0,
   });
 
-  const {
-    assets,
-    isLoading: assetsIsLoading,
-    error: assetsError,
-  } = useImagesArray();
+  const { assets } = useImagesArray();
 
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
@@ -118,29 +114,6 @@ export default function MushafPage() {
     };
   }, [isFlipSoundEnabled]);
 
-  if (assetsError) {
-    return (
-      <ThemedView style={styles.errorContainer}>
-        <ThemedText>خطأ في تحميل الصفحة: {assetsError}</ThemedText>
-      </ThemedView>
-    );
-  }
-
-  if (assetsIsLoading) {
-    return (
-      <ThemedView
-        style={[
-          styles.loadingContainer,
-          colorScheme === 'dark'
-            ? { backgroundColor: '#808080' }
-            : { backgroundColor: '#f5f1eb' },
-        ]}
-      >
-        <ActivityIndicator size="large" color={tintColor} />
-      </ThemedView>
-    );
-  }
-
   if (!assets) {
     console.log('No assets found');
     return (
@@ -168,16 +141,15 @@ export default function MushafPage() {
         ]}
         onLayout={handleImageLayout}
       >
-        {assets?.[0]?.uri ? (
+        {assets ? (
           <Image
-            style={[styles.image]}
-            source={{
-              uri: assets[0].uri,
-            }}
+            style={styles.image}
+            source={{ uri: assets[currentPage - 1].uri }}
             contentFit="fill"
           />
-        ) : null}
-
+        ) : (
+          <ActivityIndicator size="large" color={tintColor} />
+        )}
         <PageOverlay index={currentPage} dimensions={dimensions} />
       </Animated.View>
     </GestureDetector>
