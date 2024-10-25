@@ -22,7 +22,6 @@ import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import { flipSound } from '@/recoil/atoms';
 
 import PageOverlay from './PageOverlay';
-import { ThemedView } from './ThemedView';
 
 export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
@@ -114,21 +113,6 @@ export default function MushafPage() {
     };
   }, [isFlipSoundEnabled]);
 
-  if (!assets) {
-    console.log('No assets found');
-    return (
-      <ThemedView
-        style={[
-          styles.loadingContainer,
-          colorScheme === 'dark'
-            ? { backgroundColor: '#808080' }
-            : { backgroundColor: '#f5f1eb' },
-        ]}
-      >
-        <ActivityIndicator size="large" color={tintColor} />
-      </ThemedView>
-    );
-  }
   return (
     <GestureDetector gesture={panGestureHandler}>
       <Animated.View
