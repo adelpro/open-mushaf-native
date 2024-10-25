@@ -1,4 +1,4 @@
-name: Android APK & AAB Build & Release v3
+name: Android Build & Release v3
 
 on:
   push:

@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
@@ -14,7 +14,7 @@ import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useRecoilValue } from 'recoil';
 
-import { blurhash, defaultNumberOfPages } from '@/constants';
+import { defaultNumberOfPages } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagesArray from '@/hooks/useImagesArray';
@@ -37,12 +37,11 @@ export default function MushafPage() {
     customPageHeight: 0,
   });
 
-  /*   const {
+  const {
     assets,
+    isLoading: assetsIsLoading,
     error: assetsError,
-  } = useImagesArray(); */
-
-  const { assets } = useImagesArray();
+  } = useImagesArray();
 
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
@@ -119,7 +118,7 @@ export default function MushafPage() {
     };
   }, [isFlipSoundEnabled]);
 
-  /*   if (assetsError) {
+  if (assetsError) {
     return (
       <ThemedView style={styles.errorContainer}>
         <ThemedText>خطأ في تحميل الصفحة: {assetsError}</ThemedText>
@@ -127,8 +126,7 @@ export default function MushafPage() {
     );
   }
 
-
-  if (assetsLoading) {
+  if (assetsIsLoading) {
     return (
       <ThemedView
         style={[
@@ -141,7 +139,23 @@ export default function MushafPage() {
         <ActivityIndicator size="large" color={tintColor} />
       </ThemedView>
     );
-  }*/
+  }
+
+  if (!assets) {
+    console.log('No assets found');
+    return (
+      <ThemedView
+        style={[
+          styles.loadingContainer,
+          colorScheme === 'dark'
+            ? { backgroundColor: '#808080' }
+            : { backgroundColor: '#f5f1eb' },
+        ]}
+      >
+        <ActivityIndicator size="large" color={tintColor} />
+      </ThemedView>
+    );
+  }
   return (
     <GestureDetector gesture={panGestureHandler}>
       <Animated.View
@@ -154,18 +168,16 @@ export default function MushafPage() {
         ]}
         onLayout={handleImageLayout}
       >
-        <Suspense
-          fallback={<ActivityIndicator size="large" color={tintColor} />}
-        >
-          {assets?.[0]?.uri ? (
-            <Image
-              style={[styles.image]}
-              source={{ uri: assets?.[0]?.uri }}
-              //placeholder={{ blurhash }}
-              contentFit="fill"
-            />
-          ) : null}
-        </Suspense>
+        {assets?.[0]?.uri ? (
+          <Image
+            style={[styles.image]}
+            source={{
+              uri: assets[0].uri,
+            }}
+            contentFit="fill"
+          />
+        ) : null}
+
         <PageOverlay index={currentPage} dimensions={dimensions} />
       </Animated.View>
     </GestureDetector>

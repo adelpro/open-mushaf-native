@@ -10,7 +10,7 @@ import { flipSound } from '@/recoil/atoms';
 
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
-  const { textColor } = useColors();
+  const { textColor, backgroundColor } = useColors();
 
   const toggleSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
@@ -19,7 +19,10 @@ export default function SettingsScreen() {
   return (
     <ThemedView style={styles.container}>
       <Pressable
-        style={[styles.settingsSection, { borderColor: textColor }]}
+        style={[
+          styles.settingsSection,
+          { borderColor: textColor, backgroundColor },
+        ]}
         onPress={toggleSwitch}
       >
         <ThemedText type="defaultSemiBold" style={styles.itemText}>
@@ -49,13 +52,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingVertical: 30,
     paddingHorizontal: 20,
-    borderRadius: 10,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
+    borderRadius: 5,
+    borderColor: '#e0e0e0',
+    elevation: 3,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -66,8 +65,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   itemText: {
-    fontFamily: 'Amiri_400Regular',
-    fontSize: 24,
+    fontSize: 22,
+    fontFamily: 'Amiri_700Bold',
     paddingVertical: 10,
     textAlignVertical: 'center',
   },
