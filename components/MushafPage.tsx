@@ -157,7 +157,14 @@ export default function MushafPage() {
         <Suspense
           fallback={<ActivityIndicator size="large" color={tintColor} />}
         >
-          {assets?.[0]?.uri ? null : null}
+          {assets?.[0]?.uri ? (
+            <Image
+              style={[styles.image]}
+              source={{ uri: assets?.[0]?.uri }}
+              //placeholder={{ blurhash }}
+              contentFit="fill"
+            />
+          ) : null}
         </Suspense>
         <PageOverlay index={currentPage} dimensions={dimensions} />
       </Animated.View>
