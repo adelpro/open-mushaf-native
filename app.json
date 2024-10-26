@@ -9,10 +9,9 @@
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
+      "contentFill": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.adelpro.openmushafnative"
@@ -23,26 +22,16 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.adelpro.openmushafnative",
-      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative",
-      "jsEngine": "hermes",
-      "permissions": [],
-      "softwareKeyboardLayoutMode": "pan"
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      "expo-font",
-      "expo-av",
-      "expo-secure-store",
-      "expo-updates"
-    ],
+    "plugins": ["expo-router", "expo-font", "expo-av", "expo-secure-store"],
     "experiments": {
-      "typedRoutes": true,
-      "tsconfigPaths": true
+      "typedRoutes": true
     },
     "extra": {
       "eas": {
