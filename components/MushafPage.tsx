@@ -147,11 +147,14 @@ export default function MushafPage() {
         onLayout={handleImageLayout}
       >
         {asset ? (
-          <Image
-            style={styles.image}
-            source={{ uri: asset[0].uri }}
-            contentFit="fill"
-          />
+          <ThemedView>
+            <ThemedText>{JSON.stringify(asset)}</ThemedText>
+            <Image
+              style={styles.image}
+              source={{ uri: asset[0].uri }}
+              contentFit="fill"
+            />
+          </ThemedView>
         ) : (
           <ActivityIndicator size="large" color={tintColor} />
         )}
