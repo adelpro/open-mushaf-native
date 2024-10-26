@@ -6,6 +6,7 @@ import {
   useColorScheme,
 } from 'react-native';
 
+import { Asset } from 'expo-asset';
 import { Audio } from 'expo-av';
 import { Image } from 'expo-image';
 import { activateKeepAwakeAsync } from 'expo-keep-awake';
@@ -22,6 +23,7 @@ import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import { flipSound } from '@/recoil/atoms';
 
 import PageOverlay from './PageOverlay';
+import { ThemedView } from './ThemedView';
 
 export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
@@ -30,13 +32,13 @@ export default function MushafPage() {
   const { tintColor } = useColors();
   const router = useRouter();
   const { currentPage, setCurrentPage } = useCurrentPage();
-  console.info(`Current page: ${currentPage}`);
+  const [asset, setAsset] = useState<Asset | null>(null);
   const [dimensions, setDimensions] = useState({
     customPageWidth: 0,
     customPageHeight: 0,
   });
 
-  const { assets } = useImagesArray();
+  const { getAsset } = useImagesArray();
 
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
@@ -113,6 +115,22 @@ export default function MushafPage() {
     };
   }, [isFlipSoundEnabled]);
 
+  useEffect(() => {
+    const getAssetForPage = async (page: number) => {
+      const asset = await getAsset(page);
+      setAsset(asset);
+    };
+    getAssetForPage(currentPage);
+  }, [currentPage, getAsset]);
+
+  if (!asset) {
+    return (
+      <ThemedView style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={tintColor} />
+      </ThemedView>
+    );
+  }
+
   return (
     <GestureDetector gesture={panGestureHandler}>
       <Animated.View
@@ -125,10 +143,10 @@ export default function MushafPage() {
         ]}
         onLayout={handleImageLayout}
       >
-        {assets ? (
+        {asset ? (
           <Image
             style={styles.image}
-            source={{ uri: assets[currentPage - 1].uri }}
+            source={{ uri: asset.uri }}
             contentFit="fill"
           />
         ) : (
@@ -160,6 +178,7 @@ const styles = StyleSheet.create({
   errorContainer: {
     flex: 1,
     width: '100%',
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
