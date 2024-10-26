@@ -39,8 +39,8 @@ export default function MushafPage() {
 
   const {
     asset,
-    error: assetError,
     isLoading: assetIsLoading,
+    error: assetError,
   } = useImagesArray();
 
   const handleImageLayout = (event: any) => {
@@ -118,6 +118,22 @@ export default function MushafPage() {
     };
   }, [isFlipSoundEnabled]);
 
+  if (assetError) {
+    return (
+      <ThemedView style={styles.errorContainer}>
+        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${assetError}`}</ThemedText>
+      </ThemedView>
+    );
+  }
+
+  if (assetIsLoading) {
+    return (
+      <ThemedView style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={tintColor} />
+      </ThemedView>
+    );
+  }
+
   return (
     <GestureDetector gesture={panGestureHandler}>
       <Animated.View
@@ -130,18 +146,10 @@ export default function MushafPage() {
         ]}
         onLayout={handleImageLayout}
       >
-        <ThemedView style={styles.errorContainer}>
-          <ThemedText>{assetError}</ThemedText>
-        </ThemedView>
-        <ThemedView style={styles.loadingContainer}>
-          <ThemedText>
-            {assetIsLoading ? 'Loading...' : 'Loading Complete'}
-          </ThemedText>
-        </ThemedView>
         {asset ? (
           <Image
             style={styles.image}
-            source={{ uri: asset.uri }}
+            source={{ uri: asset[0].uri }}
             contentFit="fill"
           />
         ) : (
@@ -171,7 +179,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   errorContainer: {
-    //flex: 1,
+    flex: 1,
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
@@ -179,7 +187,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   loadingContainer: {
-    //flex: 1,
+    flex: 1,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',

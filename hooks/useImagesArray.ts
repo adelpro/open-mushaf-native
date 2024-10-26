@@ -7,7 +7,7 @@ import useCurrentPage from '@/hooks/useCurrentPage';
 
 export default function useImagesArray() {
   const [error, setError] = useState<string | null>(null);
-  const [asset, setAsset] = useState<Asset | null>(null);
+  const [asset, setAsset] = useState<Asset[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { currentPage } = useCurrentPage();
 
@@ -16,11 +16,14 @@ export default function useImagesArray() {
       setError(null);
       setIsLoading(true);
       try {
-        const loadedAsset = imagesMap[page]();
+        const image = imagesMap[page];
+
+        const loadedAsset = await Asset.loadAsync(image);
         if (!loadedAsset) {
           setError(`الصفحة ${page} غير موجودة`);
           return null;
         }
+        console.log({ loadedAsset });
         return setAsset(loadedAsset);
       } catch (error) {
         if (error instanceof Error) {
