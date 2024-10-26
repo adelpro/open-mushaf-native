@@ -6,7 +6,6 @@ import {
   useColorScheme,
 } from 'react-native';
 
-import { Asset } from 'expo-asset';
 import { Audio } from 'expo-av';
 import { Image } from 'expo-image';
 import { activateKeepAwakeAsync } from 'expo-keep-awake';
@@ -23,6 +22,7 @@ import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import { flipSound } from '@/recoil/atoms';
 
 import PageOverlay from './PageOverlay';
+import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
 export default function MushafPage() {
@@ -32,13 +32,16 @@ export default function MushafPage() {
   const { tintColor } = useColors();
   const router = useRouter();
   const { currentPage, setCurrentPage } = useCurrentPage();
-  const [asset, setAsset] = useState<Asset | null>(null);
   const [dimensions, setDimensions] = useState({
     customPageWidth: 0,
     customPageHeight: 0,
   });
 
-  const { getAsset } = useImagesArray();
+  const {
+    asset,
+    error: assetError,
+    isLoading: assetIsLoading,
+  } = useImagesArray();
 
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
@@ -115,22 +118,6 @@ export default function MushafPage() {
     };
   }, [isFlipSoundEnabled]);
 
-  useEffect(() => {
-    const getAssetForPage = async (page: number) => {
-      const asset = await getAsset(page);
-      setAsset(asset);
-    };
-    getAssetForPage(currentPage);
-  }, [currentPage, getAsset]);
-
-  if (!asset) {
-    return (
-      <ThemedView style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={tintColor} />
-      </ThemedView>
-    );
-  }
-
   return (
     <GestureDetector gesture={panGestureHandler}>
       <Animated.View
@@ -143,6 +130,14 @@ export default function MushafPage() {
         ]}
         onLayout={handleImageLayout}
       >
+        <ThemedView style={styles.errorContainer}>
+          <ThemedText>{assetError}</ThemedText>
+        </ThemedView>
+        <ThemedView style={styles.loadingContainer}>
+          <ThemedText>
+            {assetIsLoading ? 'Loading...' : 'Loading Complete'}
+          </ThemedText>
+        </ThemedView>
         {asset ? (
           <Image
             style={styles.image}
@@ -176,7 +171,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   errorContainer: {
-    flex: 1,
+    //flex: 1,
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
@@ -184,7 +179,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   loadingContainer: {
-    flex: 1,
+    //flex: 1,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
