@@ -1,4 +1,4 @@
-name: Android Build & Release v3
+name: Android Build & Release (Tag or Manual Trigger) v3
 
 on:
   push:
