@@ -155,12 +155,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       </ThemedView>
 
       {tafseerData ? (
-        <ScrollView
-          contentContainerStyle={[
-            styles.scrollView,
-            { backgroundColor: 'transparent' },
-          ]}
-        >
+        <ScrollView contentContainerStyle={styles.scrollView}>
           {renderTafseerContent(tafseerData)}
         </ScrollView>
       ) : (
@@ -175,7 +170,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
+    flex: 1,
     padding: 20,
+    backgroundColor: 'transparent',
   },
   title: {
     fontSize: 18,

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.15]
 
+### Updated
+
+- Updated Sura and Juz lists UI.
+
+### Fixed
+
+- Fixed assets loading error on Android.
+
 ## [1.0.14]
 
 ### Fixed
