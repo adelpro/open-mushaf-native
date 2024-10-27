@@ -42,26 +42,21 @@ export default function MushafPage() {
     isLoading: assetIsLoading,
     error: assetError,
   } = useImagesArray();
-
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
     setDimensions({ customPageWidth: width, customPageHeight: height });
   };
 
   const handlePageChange = (page: number) => {
+    if (page === currentPage) return;
     setCurrentPage(page);
-    router.replace({
-      pathname: '/',
-      params: { page: page.toString() },
-    });
+    router.replace({ pathname: '/', params: { page: page.toString() } });
 
-    // Play page flip sound
     if (isFlipSoundEnabled && sound.current) {
       sound.current.replayAsync();
     }
   };
 
-  // Use the custom pan gesture handler hook
   const { translateX, panGestureHandler } = usePanGestureHandler(
     currentPage,
     handlePageChange,
@@ -74,8 +69,10 @@ export default function MushafPage() {
       -maxTranslateX,
       Math.min(translateX.value, maxTranslateX),
     );
-
-    const shadowOpacity = Math.abs(clampedTranslateX) / maxTranslateX;
+    const shadowOpacity = Math.min(
+      0.5,
+      Math.abs(clampedTranslateX) / maxTranslateX,
+    );
     const opacity = Math.max(
       0.85,
       1 - Math.abs(clampedTranslateX) / maxTranslateX,
@@ -83,19 +80,20 @@ export default function MushafPage() {
 
     return {
       transform: [{ translateX: clampedTranslateX }],
-      shadowOpacity: shadowOpacity * 0.5,
-      opacity: opacity,
+      shadowOpacity,
+      opacity,
     };
   });
 
   useEffect(() => {
-    if (Platform.OS !== 'web') return;
-    if (document.visibilityState === 'hidden') return;
-
-    const enableKeepAwake = async () => {
-      await activateKeepAwakeAsync();
-    };
-    enableKeepAwake();
+    if (Platform.OS === 'web') {
+      const enableKeepAwake = async () => {
+        if (document.visibilityState === 'visible') {
+          await activateKeepAwakeAsync();
+        }
+      };
+      enableKeepAwake();
+    }
   }, []);
 
   useEffect(() => {
@@ -111,16 +109,20 @@ export default function MushafPage() {
     loadSound();
 
     return () => {
-      if (sound.current) {
-        sound.current.unloadAsync();
-        sound.current = null;
-      }
+      sound.current?.unloadAsync().then(() => (sound.current = null));
     };
   }, [isFlipSoundEnabled]);
 
   if (assetError) {
     return (
-      <ThemedView style={styles.errorContainer}>
+      <ThemedView
+        style={[
+          styles.errorContainer,
+          colorScheme === 'dark'
+            ? { backgroundColor: '#d5d4d2' }
+            : { backgroundColor: '#f5f1eb' },
+        ]}
+      >
         <ThemedText type="defaultSemiBold">{`حدث خطأ: ${assetError}`}</ThemedText>
       </ThemedView>
     );
@@ -128,7 +130,14 @@ export default function MushafPage() {
 
   if (assetIsLoading) {
     return (
-      <ThemedView style={styles.loadingContainer}>
+      <ThemedView
+        style={[
+          styles.loadingContainer,
+          colorScheme === 'dark'
+            ? { backgroundColor: '#d5d4d2' }
+            : { backgroundColor: '#f5f1eb' },
+        ]}
+      >
         <ActivityIndicator size="large" color={tintColor} />
       </ThemedView>
     );
@@ -146,15 +155,12 @@ export default function MushafPage() {
         ]}
         onLayout={handleImageLayout}
       >
-        {asset ? (
-          <ThemedView>
-            <ThemedText>{JSON.stringify(asset)}</ThemedText>
-            <Image
-              style={styles.image}
-              source={{ uri: asset[0].uri }}
-              contentFit="fill"
-            />
-          </ThemedView>
+        {asset?.localUri ? (
+          <Image
+            style={styles.image}
+            source={{ uri: asset?.localUri }}
+            contentFit="fill"
+          />
         ) : (
           <ActivityIndicator size="large" color={tintColor} />
         )}

@@ -7,37 +7,36 @@ import useCurrentPage from '@/hooks/useCurrentPage';
 
 export default function useImagesArray() {
   const [error, setError] = useState<string | null>(null);
-  const [asset, setAsset] = useState<Asset[] | null>(null);
+  const [asset, setAsset] = useState<Asset | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { currentPage } = useCurrentPage();
+  const { currentPage: page } = useCurrentPage();
 
   useEffect(() => {
-    const getAsset = async (page: number) => {
-      setError(null);
+    const loadAsset = async () => {
       setIsLoading(true);
       try {
         const image = imagesMap[page];
+        if (!image) throw new Error(`الصفحة ${page} غير موجودة`);
 
-        const loadedAsset = await Asset.loadAsync(image);
-        if (!loadedAsset) {
-          setError(`الصفحة ${page} غير موجودة`);
-          return null;
+        const assetToLoad = Asset.fromModule(image);
+        if (!assetToLoad.downloaded) {
+          await assetToLoad.downloadAsync();
         }
-        console.log({ loadedAsset });
-        return setAsset(loadedAsset);
+
+        setAsset(assetToLoad);
       } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError(`الصفحة ${page} غير موجودة`);
-        }
-        return null;
+        setError(
+          error instanceof Error ? error.message : `الصفحة ${page} غير موجودة`,
+        );
+        setAsset(null);
       } finally {
         setIsLoading(false);
       }
     };
-    getAsset(currentPage);
-  }, [currentPage]);
+
+    const timeout = setTimeout(() => loadAsset(), 300);
+    return () => clearTimeout(timeout);
+  }, [page]);
 
   return { asset, isLoading, error };
 }
