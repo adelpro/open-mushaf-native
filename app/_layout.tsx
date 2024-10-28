@@ -16,7 +16,7 @@ import {
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Updates from 'expo-updates';
-import { ErrorBoundary } from 'react-error-boundary';
+//import { ErrorBoundary } from 'react-error-boundary';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ReactNativeRecoilPersist, {
   ReactNativeRecoilPersistGate,
@@ -24,7 +24,7 @@ import ReactNativeRecoilPersist, {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 
-import ErrorRender from '@/components/ErrorRender';
+//import ErrorRender from '@/components/ErrorRender';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
