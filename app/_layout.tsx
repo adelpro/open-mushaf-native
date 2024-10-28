@@ -71,41 +71,38 @@ export default function RootLayout() {
   }
 
   return (
-    <ErrorBoundary
-      fallbackRender={(error) => <ErrorRender error={error} />}
+    /*     <ErrorBoundary
+      FallbackComponent={ErrorRender}
       onError={(error, info) => console.log({ error, info })}
-    >
-      <RecoilRoot>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <SafeAreaProvider>
-            <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
-              <ThemeProvider
-                value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-              >
-                <Stack>
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen name="+not-found" />
-                  <Stack.Screen
-                    name="search"
-                    options={{
-                      title: 'بحث',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="navigation"
-                    options={{
-                      title: 'تنقل',
-                    }}
-                  />
-                </Stack>
-              </ThemeProvider>
-            </ReactNativeRecoilPersistGate>
-          </SafeAreaProvider>
-        </GestureHandlerRootView>
-      </RecoilRoot>
-    </ErrorBoundary>
+    > */
+    <RecoilRoot>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
+            <ThemeProvider
+              value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+            >
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+                <Stack.Screen
+                  name="search"
+                  options={{
+                    title: 'بحث',
+                  }}
+                />
+                <Stack.Screen
+                  name="navigation"
+                  options={{
+                    title: 'تنقل',
+                  }}
+                />
+              </Stack>
+            </ThemeProvider>
+          </ReactNativeRecoilPersistGate>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </RecoilRoot>
+    /*  </ErrorBoundary> */
   );
 }
