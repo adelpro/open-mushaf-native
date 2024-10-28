@@ -16,6 +16,7 @@ import {
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Updates from 'expo-updates';
+import { ErrorBoundary } from 'react-error-boundary';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ReactNativeRecoilPersist, {
   ReactNativeRecoilPersistGate,
@@ -23,6 +24,7 @@ import ReactNativeRecoilPersist, {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 
+import ErrorRender from '@/components/ErrorRender';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -69,33 +71,41 @@ export default function RootLayout() {
   }
 
   return (
-    <RecoilRoot>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaProvider>
-          <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
-            <ThemeProvider
-              value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-            >
-              <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="+not-found" />
-                <Stack.Screen
-                  name="search"
-                  options={{
-                    title: 'بحث',
-                  }}
-                />
-                <Stack.Screen
-                  name="navigation"
-                  options={{
-                    title: 'تنقل',
-                  }}
-                />
-              </Stack>
-            </ThemeProvider>
-          </ReactNativeRecoilPersistGate>
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
-    </RecoilRoot>
+    <ErrorBoundary
+      fallbackRender={(error) => <ErrorRender error={error} />}
+      onError={(error, info) => console.log({ error, info })}
+    >
+      <RecoilRoot>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <SafeAreaProvider>
+            <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
+              <ThemeProvider
+                value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+              >
+                <Stack>
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen name="+not-found" />
+                  <Stack.Screen
+                    name="search"
+                    options={{
+                      title: 'بحث',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="navigation"
+                    options={{
+                      title: 'تنقل',
+                    }}
+                  />
+                </Stack>
+              </ThemeProvider>
+            </ReactNativeRecoilPersistGate>
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </RecoilRoot>
+    </ErrorBoundary>
   );
 }

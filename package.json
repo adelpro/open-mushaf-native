@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "expo start",
-    "start:prod": "expo start --no-dev",
+    "start:prod": "expo start --no-dev --minify",
     "start:clear": "expo start --reset-cache",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -58,6 +58,7 @@
     "expo-web-browser": "~13.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-error-boundary": "^4.1.2",
     "react-native": "0.74.5",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-htmlview": "^0.17.0",

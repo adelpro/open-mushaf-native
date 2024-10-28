@@ -2,7 +2,7 @@
   "expo": {
     "name": "Mushaf",
     "slug": "open-mushaf-native",
-    "version": "1.0.15",
+    "version": "1.0.16",
     "orientation": "default",
     "assetBundlePatterns": ["**/*"],
     "icon": "./assets/images/icon.png",
@@ -21,7 +21,6 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff",
-        "jsEngine": "hermes",
         "softwareKeyboardLayoutMode": "pan"
       },
       "package": "com.adelpro.openmushafnative",
