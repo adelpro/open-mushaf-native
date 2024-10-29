@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Asset } from 'expo-asset';
 
@@ -10,10 +10,13 @@ export default function useImagesArray() {
   const [asset, setAsset] = useState<Asset | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { currentPage: page } = useCurrentPage();
+  const isMounted = useRef(true);
 
   useEffect(() => {
+    isMounted.current = true;
+    setIsLoading(true);
+
     const loadAsset = async () => {
-      setIsLoading(true);
       try {
         const image = imagesMap[page];
         if (!image) throw new Error(`الصفحة ${page} غير موجودة`);
@@ -22,20 +25,27 @@ export default function useImagesArray() {
         if (!assetToLoad.downloaded) {
           await assetToLoad.downloadAsync();
         }
-
-        setAsset(assetToLoad);
+        if (isMounted.current) {
+          setAsset(assetToLoad); // Only set asset if mounted
+        }
       } catch (error) {
-        setError(
-          error instanceof Error ? error.message : `الصفحة ${page} غير موجودة`,
-        );
-        setAsset(null);
+        if (isMounted.current) {
+          setError(
+            error instanceof Error
+              ? error.message
+              : `الصفحة ${page} غير موجودة`,
+          );
+          setAsset(null);
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted.current) setIsLoading(false);
       }
     };
 
-    const timeout = setTimeout(() => loadAsset(), 300);
-    return () => clearTimeout(timeout);
+    loadAsset();
+    return () => {
+      isMounted.current = false; // Mark as unmounted
+    };
   }, [page]);
 
   return { asset, isLoading, error };
