@@ -25,6 +25,7 @@ import useImagesArray from '@/hooks/useImagesArray';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import { flipSound } from '@/recoil/atoms';
 
+import HizbOverlay from './HizbOverlay';
 import PageOverlay from './PageOverlay';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -187,6 +188,7 @@ export default function MushafPage() {
           <ActivityIndicator size="large" color={tintColor} />
         )}
         <PageOverlay index={currentPage} dimensions={dimensions} />
+        <HizbOverlay index={currentPage} dimensions={dimensions} />
       </Animated.View>
     </GestureDetector>
   );

@@ -1,8 +1,7 @@
-import { Aya, Hizb, Page } from '@/types';
+import { Aya, Page } from '@/types';
 import { getDimensionCoeff } from '@/utils';
 
 import ayas from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/aya.json';
-import hizbJson from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/Hizb.json';
 import specs from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json';
 
 const usePageOverlay = ({
@@ -25,21 +24,6 @@ const usePageOverlay = ({
     defaultFirstPagesWidth,
     defaultFirstPagesMarginY,
   } = specs;
-
-  const isLastAyainHizb = ({
-    aya,
-    surah,
-  }: {
-    aya: number;
-    surah: number;
-  }): boolean => {
-    const hizbArray: Hizb[] = hizbJson as Hizb[];
-    const hizb = hizbArray.find(
-      (hizb) => hizb.last_verse_key === `${surah}:${aya}`,
-    );
-
-    return !!hizb;
-  };
 
   const heightCoeff = getDimensionCoeff({
     defaultDimension: defaultPageHeight,
@@ -76,7 +60,6 @@ const usePageOverlay = ({
       width: number;
       aya: number;
       surah: number;
-      isLastAyainHizb: boolean;
     }[] = [];
 
     if (!page) {
@@ -101,7 +84,6 @@ const usePageOverlay = ({
         width: pageWidth + marginY - Y,
         aya: aya[1],
         surah: aya[0],
-        isLastAyainHizb: isLastAyainHizb({ aya: aya[1], surah: aya[0] }),
       });
 
       // Drawing overlay for aya line (last part after the aya marker in the same line)
@@ -113,7 +95,6 @@ const usePageOverlay = ({
           width: Y - marginY * 2,
           aya: aya[1] + 1,
           surah: aya[0],
-          isLastAyainHizb: false,
         });
       }
 
@@ -134,7 +115,6 @@ const usePageOverlay = ({
               width: pageWidth - marginY,
               aya: aya[1],
               surah: aya[0],
-              isLastAyainHizb: false,
             });
           }
         }
