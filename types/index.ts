@@ -13,3 +13,5 @@ export * from './tafseerTabs';
 export * from './tafseerAya';
 
 export * from './specs';
+
+export * from './hizb';

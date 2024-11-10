@@ -1,7 +1,8 @@
-import { Aya, Page } from '@/types';
+import { Aya, Hizb, Page } from '@/types';
 import { getDimensionCoeff } from '@/utils';
 
 import ayas from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/aya.json';
+import hizbJson from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/Hizb.json';
 import specs from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json';
 
 const usePageOverlay = ({
@@ -24,6 +25,14 @@ const usePageOverlay = ({
     defaultFirstPagesWidth,
     defaultFirstPagesMarginY,
   } = specs;
+
+  const isLastAyainHizb = ({ aya, surah }: { aya: number; surah: number }) => {
+    const hizb: Hizb[] = hizbJson as Hizb[];
+    const lastAyainHizb = hizb[index].last_verse_key.split(':')[0];
+    return (
+      lastAyainHizb === surah.toString() && lastAyainHizb === aya.toString()
+    );
+  };
 
   const heightCoeff = getDimensionCoeff({
     defaultDimension: defaultPageHeight,
