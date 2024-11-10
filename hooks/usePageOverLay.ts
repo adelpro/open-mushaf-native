@@ -26,12 +26,19 @@ const usePageOverlay = ({
     defaultFirstPagesMarginY,
   } = specs;
 
-  const isLastAyainHizb = ({ aya, surah }: { aya: number; surah: number }) => {
-    const hizb: Hizb[] = hizbJson as Hizb[];
-    const lastAyainHizb = hizb[index].last_verse_key.split(':')[0];
-    return (
-      lastAyainHizb === surah.toString() && lastAyainHizb === aya.toString()
+  const isLastAyainHizb = ({
+    aya,
+    surah,
+  }: {
+    aya: number;
+    surah: number;
+  }): boolean => {
+    const hizbArray: Hizb[] = hizbJson as Hizb[];
+    const hizb = hizbArray.find(
+      (hizb) => hizb.last_verse_key === `${surah}:${aya}`,
     );
+
+    return !!hizb;
   };
 
   const heightCoeff = getDimensionCoeff({
@@ -69,6 +76,7 @@ const usePageOverlay = ({
       width: number;
       aya: number;
       surah: number;
+      isLastAyainHizb: boolean;
     }[] = [];
 
     if (!page) {
@@ -93,6 +101,7 @@ const usePageOverlay = ({
         width: pageWidth + marginY - Y,
         aya: aya[1],
         surah: aya[0],
+        isLastAyainHizb: isLastAyainHizb({ aya: aya[1], surah: aya[0] }),
       });
 
       // Drawing overlay for aya line (last part after the aya marker in the same line)
@@ -104,6 +113,7 @@ const usePageOverlay = ({
           width: Y - marginY * 2,
           aya: aya[1] + 1,
           surah: aya[0],
+          isLastAyainHizb: false,
         });
       }
 
@@ -124,6 +134,7 @@ const usePageOverlay = ({
               width: pageWidth - marginY,
               aya: aya[1],
               surah: aya[0],
+              isLastAyainHizb: false,
             });
           }
         }
