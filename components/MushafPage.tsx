@@ -8,7 +8,11 @@ import {
 
 import { Audio } from 'expo-av';
 import { Image } from 'expo-image';
-import { activateKeepAwakeAsync } from 'expo-keep-awake';
+import {
+  activateKeepAwakeAsync,
+  deactivateKeepAwake,
+  isAvailableAsync,
+} from 'expo-keep-awake';
 import { useRouter } from 'expo-router';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
@@ -86,17 +90,6 @@ export default function MushafPage() {
   });
 
   useEffect(() => {
-    if (Platform.OS === 'web') {
-      const enableKeepAwake = async () => {
-        if (document.visibilityState === 'visible') {
-          await activateKeepAwakeAsync();
-        }
-      };
-      enableKeepAwake();
-    }
-  }, []);
-
-  useEffect(() => {
     if (!isFlipSoundEnabled) return;
 
     const loadSound = async () => {
@@ -112,6 +105,35 @@ export default function MushafPage() {
       sound.current?.unloadAsync().then(() => (sound.current = null));
     };
   }, [isFlipSoundEnabled]);
+
+  useEffect(() => {
+    const tag = 'MushafPage';
+    console.info('useKeepAwake  effect', tag);
+    const enableKeepAwake = async () => {
+      const isAvailable = await isAvailableAsync();
+
+      console.log('isAvailable', isAvailable);
+      console.log('Platform.OS', Platform.OS);
+      if (Platform.OS === 'web' || !isAvailable) return;
+
+      console.info('useKeepAwake', tag);
+      await activateKeepAwakeAsync(tag);
+    };
+
+    enableKeepAwake();
+
+    // Cleanup on unmount
+    return () => {
+      const disableKeepAwake = async () => {
+        const isAvailable = await isAvailableAsync();
+        if (Platform.OS !== 'web' && isAvailable) {
+          console.info('useKeepAwake cleanup', tag);
+          deactivateKeepAwake(tag);
+        }
+      };
+      disableKeepAwake();
+    };
+  }, []);
 
   if (assetError) {
     return (

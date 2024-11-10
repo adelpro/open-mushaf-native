@@ -13,7 +13,6 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <TopMenu />
-
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
         <MushafPage />
       </Pressable>
