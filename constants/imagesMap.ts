@@ -604,5 +604,3 @@ export const imagesMap: Record<number, number> = {
   603: require('../assets/mushaf-data/mushaf-elmadina-warsh-azrak/603.png'),
   604: require('../assets/mushaf-data/mushaf-elmadina-warsh-azrak/604.png'),
 };
-
-export default imagesMap;

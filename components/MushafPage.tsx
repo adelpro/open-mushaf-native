@@ -113,8 +113,6 @@ export default function MushafPage() {
     const enableKeepAwake = async () => {
       const isAvailable = await isAvailableAsync();
 
-      console.log('isAvailable', isAvailable);
-      console.log('Platform.OS', Platform.OS);
       if (Platform.OS === 'web' || !isAvailable) return;
 
       console.info('useKeepAwake', tag);

@@ -4,7 +4,10 @@ import { Aya, Hizb, Page } from '@/types';
 
 export default function useHizbOverlay(index: number) {
   const coordinates = ayas.coordinates as Page[];
-  const page: Aya[] = coordinates[index - 1];
+
+  const page: Aya[] = coordinates[index];
+
+  console.log('page', page);
   const hizbArray: Hizb[] = hizbJson as Hizb[];
 
   const ayaMarker = page.find((aya) => {

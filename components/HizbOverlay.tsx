@@ -16,7 +16,6 @@ export default function HizbOverlay({
   dimensions: { customPageWidth: number; customPageHeight: number };
 }) {
   const { ayaMarker } = useHizbOverlay(index);
-  console.log('ayaMarker', ayaMarker);
   const { customPageHeight, customPageWidth } = dimensions;
 
   const { defaultPageHeight } = specs;
@@ -26,22 +25,28 @@ export default function HizbOverlay({
     customDimension: customPageHeight,
   });
 
-  const top: number = ayaMarker ? ayaMarker[3] * heightCoeff : 0;
-  const left = customPageWidth - 50;
+  const top: number = ayaMarker ? ayaMarker[3] * heightCoeff + 20 : 0;
+  const left = customPageWidth - 40;
 
-  console.log('top', top, 'left', left);
   return ayaMarker ? (
-    <ThemedView
-      style={[styles.ayaMarker, { top, left, height: 50, width: 50 }]}
-    >
-      <Image source={'@/assets/images/marker.webp'} />
+    <ThemedView style={[styles.hizbMarker, { top, left }]}>
+      <Image
+        source={require('../assets/images/hizb-marker.png')}
+        style={styles.hizbImage}
+      />
     </ThemedView>
   ) : null;
 }
 
 const styles = StyleSheet.create({
-  ayaMarker: {
+  hizbMarker: {
     position: 'absolute',
     zIndex: 10,
+    height: 30,
+    width: 30,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+  hizbImage: { width: 30, height: 30, resizeMode: 'contain' },
 });
