@@ -23,7 +23,7 @@
     }
   },
   "submit": {
-    "preview": {
+    "internal": {
       "android": {
         "track": "internal"
       }
