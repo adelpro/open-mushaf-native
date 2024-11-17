@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { DevSettings, I18nManager, InteractionManager } from 'react-native';
+import { I18nManager, InteractionManager } from 'react-native';
 
 import {
   Amiri_400Regular,
@@ -16,7 +16,6 @@ import {
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Updates from 'expo-updates';
-//import { ErrorBoundary } from 'react-error-boundary';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ReactNativeRecoilPersist, {
   ReactNativeRecoilPersistGate,
@@ -24,7 +23,6 @@ import ReactNativeRecoilPersist, {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 
-//import ErrorRender from '@/components/ErrorRender';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -49,7 +47,6 @@ export default function RootLayout() {
         InteractionManager.runAfterInteractions(async () => {
           if (__DEV__) {
             console.info('Reloading app to apply RTL');
-            //DevSettings.reload();
           } else {
             await Updates.reloadAsync();
           }
@@ -71,10 +68,6 @@ export default function RootLayout() {
   }
 
   return (
-    /*     <ErrorBoundary
-      FallbackComponent={ErrorRender}
-      onError={(error, info) => console.log({ error, info })}
-    > */
     <RecoilRoot>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
@@ -103,6 +96,5 @@ export default function RootLayout() {
         </SafeAreaProvider>
       </GestureHandlerRootView>
     </RecoilRoot>
-    /*  </ErrorBoundary> */
   );
 }

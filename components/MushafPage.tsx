@@ -108,13 +108,9 @@ export default function MushafPage() {
 
   useEffect(() => {
     const tag = 'MushafPage';
-    console.info('useKeepAwake  effect', tag);
     const enableKeepAwake = async () => {
       const isAvailable = await isAvailableAsync();
-
       if (Platform.OS === 'web' || !isAvailable) return;
-
-      console.info('useKeepAwake', tag);
       await activateKeepAwakeAsync(tag);
     };
 
