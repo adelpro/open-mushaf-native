@@ -1,7 +1,6 @@
 import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import * as Application from 'expo-application';
-import { Href } from 'expo-router';
 import { useSetRecoilState } from 'recoil';
 
 import { ExternalLink } from '@/components/ExternalLink';
@@ -69,7 +68,7 @@ export default function AboutScreen() {
                 <ThemedText style={styles.bullet}>•</ThemedText>
                 <ThemedText style={styles.listText}>
                   {text}&nbsp;
-                  <ExternalLink href={link as Href<string>} style={styles.link}>
+                  <ExternalLink href={link} style={styles.link}>
                     {label}
                   </ExternalLink>
                 </ThemedText>

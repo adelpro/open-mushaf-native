@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '90%',
+    maxWidth: 640,
     borderRadius: 5,
     backgroundColor: '#4A90E2',
     shadowOffset: { width: 0, height: 5 },
