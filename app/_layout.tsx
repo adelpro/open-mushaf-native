@@ -28,6 +28,9 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+// Add fade animation to splash screen
+SplashScreen.setOptions({ fade: true, duration: 1000 });
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
