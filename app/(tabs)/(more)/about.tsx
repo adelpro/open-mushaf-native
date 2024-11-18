@@ -2,6 +2,7 @@ import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import * as Application from 'expo-application';
 import { Href } from 'expo-router';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useSetRecoilState } from 'recoil';
 
 import { ExternalLink } from '@/components/ExternalLink';
@@ -59,7 +60,7 @@ export default function AboutScreen() {
   return (
     <ThemedView style={styles.container}>
       <Pressable onPress={() => setShowTopMenu(true)}>
-        <ThemedView style={styles.mainContent}>
+        <ScrollView style={styles.mainContent}>
           <ThemedView style={styles.listContainer}>
             <ThemedText style={styles.listText}>
               مصحف المدينة المنورة برواية ورش مع تفسير القرآن الكريم وخاصية
@@ -112,7 +113,7 @@ export default function AboutScreen() {
           <ThemedText style={styles.versionText}>
             الإصدار: {`${appVersion} (${buildVersion})`}
           </ThemedText>
-        </ThemedView>
+        </ScrollView>
       </Pressable>
     </ThemedView>
   );
@@ -126,6 +127,7 @@ const styles = StyleSheet.create({
   },
   mainContent: {
     maxWidth: 600,
+    marginTop: 60,
     paddingHorizontal: 22,
     alignSelf: 'center',
   },
