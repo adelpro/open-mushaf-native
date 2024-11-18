@@ -1,6 +1,7 @@
 import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import * as Application from 'expo-application';
+import { Href } from 'expo-router';
 import { useSetRecoilState } from 'recoil';
 
 import { ExternalLink } from '@/components/ExternalLink';
@@ -16,7 +17,7 @@ export default function AboutScreen() {
   console.info(
     `App Version: ${appVersion} (${buildVersion}) - RTL: ${isRTLAndroid}`,
   );
-  const sourcesList = [
+  const sourcesList: { text: string; link: Href; label: string }[] = [
     {
       text: 'صفحات المصحف من ',
       link: 'https://qurancomplex.gov.sa/techquran/dev/',
@@ -59,6 +60,12 @@ export default function AboutScreen() {
     <ThemedView style={styles.container}>
       <Pressable onPress={() => setShowTopMenu(true)}>
         <ThemedView style={styles.mainContent}>
+          <ThemedView style={styles.listContainer}>
+            <ThemedText style={styles.listText}>
+              مصحف المدينة المنورة برواية ورش مع تفسير القرآن الكريم وخاصية
+              البحث.
+            </ThemedText>
+          </ThemedView>
           <ThemedText type="title" style={styles.title}>
             المصادر
           </ThemedText>

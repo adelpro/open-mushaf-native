@@ -53,9 +53,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       tafseerText = ayaTafseer?.text;
     }
     return (
-      <ThemedView
-        style={[styles.tafseerContent, { backgroundColor: 'transparent' }]}
-      >
+      <ThemedView style={{ backgroundColor: 'transparent', flex: 1 }}>
         <HTMLView
           value={tafseerText}
           style={{ backgroundColor: 'transparent' }}
@@ -155,7 +153,11 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       </ThemedView>
 
       {tafseerData ? (
-        <ScrollView contentContainerStyle={styles.scrollView}>
+        <ScrollView
+          contentContainerStyle={styles.scrollView}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
           {renderTafseerContent(tafseerData)}
         </ScrollView>
       ) : (
@@ -172,6 +174,7 @@ const styles = StyleSheet.create({
   scrollView: {
     padding: 20,
     backgroundColor: 'transparent',
+    flex: 1,
   },
   title: {
     fontSize: 18,

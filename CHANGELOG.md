@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0]
+
+### Updated
+
+- Updated Mushaf pages to use the new images from the new madina mushaf - warsh.
+
+### Fixed
+
+- Fixed keep awake functionality.
+
 ## [1.0.16]
 
 ### Fixed
