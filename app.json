@@ -10,8 +10,13 @@
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
-      "contentFill": "contain",
-      "backgroundColor": "#ffffff"
+      "reseizeMode": "cover",
+      "backgroundColor": "#ffffff",
+      "dark": {
+        "image": "./assets/images/splash-dark.png",
+        "resizeMode": "cover",
+        "backgroundColor": "#7f7f7f"
+      }
     },
     "ios": {
       "supportsTablet": true,
@@ -24,6 +29,7 @@
       },
       "softwareKeyboardLayoutMode": "pan",
       "jsEngine": "hermes",
+      "newArchEnabled": true,
       "package": "com.adelpro.openmushafnative",
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative"
     },

@@ -46,9 +46,7 @@ const styles = StyleSheet.create({
     maxWidth: 640,
     borderRadius: 5,
     backgroundColor: '#4A90E2',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
+    boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.2)',
     elevation: 5,
   },
   buttonText: {
