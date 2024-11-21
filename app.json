@@ -10,17 +10,18 @@
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
-      "reseizeMode": "cover",
+      "reseizeMode": "contain",
       "backgroundColor": "#ffffff",
       "dark": {
         "image": "./assets/images/splash-dark.png",
-        "resizeMode": "cover",
+        "reseizeMode": "contain",
         "backgroundColor": "#7f7f7f"
       }
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.adelpro.openmushafnative"
+      "bundleIdentifier": "com.adelpro.openmushafnative",
+      "enableDangerousExperimentalLeanBuilds": true
     },
     "android": {
       "adaptiveIcon": {
@@ -28,6 +29,7 @@
         "backgroundColor": "#ffffff"
       },
       "softwareKeyboardLayoutMode": "pan",
+      "enableDangerousExperimentalLeanBuilds": true,
       "jsEngine": "hermes",
       "newArchEnabled": true,
       "package": "com.adelpro.openmushafnative",
@@ -38,7 +40,21 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-font", "expo-av", "expo-secure-store"],
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourceslnReleaseBuilds": true
+          }
+        }
+      ],
+      "expo-router",
+      "expo-font",
+      "expo-av",
+      "expo-secure-store"
+    ],
     "experiments": {
       "typedRoutes": true
     },
