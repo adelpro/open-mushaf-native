@@ -10,18 +10,17 @@
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
-      "reseizeMode": "contain",
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff",
       "dark": {
         "image": "./assets/images/splash-dark.png",
-        "reseizeMode": "contain",
+        "resizeMode": "contain",
         "backgroundColor": "#7f7f7f"
       }
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.adelpro.openmushafnative",
-      "enableDangerousExperimentalLeanBuilds": true
+      "bundleIdentifier": "com.adelpro.openmushafnative"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,9 +28,7 @@
         "backgroundColor": "#ffffff"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "enableDangerousExperimentalLeanBuilds": true,
       "jsEngine": "hermes",
-      "newArchEnabled": true,
       "package": "com.adelpro.openmushafnative",
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative"
     },
