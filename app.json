@@ -8,26 +8,28 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff",
       "dark": {
         "image": "./assets/images/splash-dark.png",
-        "resizeMode": "contain",
+        "resizeMode": "cover",
         "backgroundColor": "#7f7f7f"
       }
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.adelpro.openmushafnative"
+      "bundleIdentifier": "com.adelpro.openmushafnative",
+      "requireFullScreen": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "softwareKeyboardLayoutMode": "pan",
+      "softwareKeyboardLayoutMode": "resize",
       "jsEngine": "hermes",
       "package": "com.adelpro.openmushafnative",
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative"
@@ -43,7 +45,7 @@
         {
           "android": {
             "enableProguardInReleaseBuilds": true,
-            "enableShrinkResourceslnReleaseBuilds": true
+            "enableShrinkResourcesInReleaseBuilds": true
           }
         }
       ],
@@ -53,7 +55,8 @@
       "expo-secure-store"
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "reactCompiler": true
     },
     "extra": {
       "eas": {
@@ -64,7 +67,7 @@
       "url": "https://u.expo.dev/2360a464-857f-4685-8c0f-be166a166847",
       "enabled": true,
       "checkAutomatically": "ON_LOAD",
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 3000
     },
     "runtimeVersion": {
       "policy": "fingerprint"

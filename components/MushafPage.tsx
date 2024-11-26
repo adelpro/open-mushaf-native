@@ -165,14 +165,22 @@ export default function MushafPage() {
           styles.imageContainer,
           animatedStyle,
           colorScheme === 'dark'
-            ? { backgroundColor: '#d5d4d2' }
+            ? { backgroundColor: '#181818' }
             : { backgroundColor: '#f5f1eb' },
         ]}
         onLayout={handleImageLayout}
       >
         {asset?.localUri ? (
           <Image
-            style={styles.image}
+            style={[
+              styles.image,
+              colorScheme === 'dark' && { opacity: 0.5 },
+              /*  ? {
+                    filter:
+                      'brightness(0.3) saturate(0.7) hue-rotate(90deg) contrast(1.2)',
+                  }
+                : {}, // Apply filter only in dark mode */
+            ]}
             source={{ uri: asset?.localUri }}
             contentFit="fill"
           />
@@ -201,6 +209,7 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     width: '100%',
+    // filter: 'brightness(0.3) saturate(0.7) hue-rotate(90deg) contrast(1.2)',
   },
   errorContainer: {
     flex: 1,
