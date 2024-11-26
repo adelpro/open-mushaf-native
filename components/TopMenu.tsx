@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -10,8 +10,7 @@ import { useColors } from '@/hooks/useColors';
 import { bottomMenuState, topMenuState } from '@/recoil/atoms';
 
 export default function TopMenu() {
-  const colorScheme = useColorScheme();
-  const { iconColor } = useColors();
+  const iconColor = '#0a7ea4';
   const [showBottomMenuState, setBottomMenuState] =
     useRecoilState<boolean>(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] =
@@ -26,12 +25,12 @@ export default function TopMenu() {
       <ThemedView
         style={[
           styles.topMenu,
-          {
+          /*  {
             backgroundColor:
               colorScheme === 'dark'
                 ? 'rgba(255, 255, 255, 0.2)'
                 : 'rgba(0, 0, 0, 0.1)',
-          },
+          }, */
         ]}
       >
         <TouchableOpacity
@@ -44,11 +43,11 @@ export default function TopMenu() {
           {showBottomMenuState ? (
             <SimpleLineIcons
               name="size-fullscreen"
-              size={30}
+              size={45}
               color={iconColor}
             />
           ) : (
-            <MaterialIcons name="fullscreen-exit" size={30} color={iconColor} />
+            <MaterialIcons name="fullscreen-exit" size={45} color={iconColor} />
           )}
         </TouchableOpacity>
         <ThemedView style={styles.leftIconsContainer}>
@@ -61,7 +60,7 @@ export default function TopMenu() {
           >
             <Ionicons
               name="navigate-circle-outline"
-              size={30}
+              size={45}
               color={iconColor}
             />
           </TouchableOpacity>
@@ -72,7 +71,7 @@ export default function TopMenu() {
               router.push('/search');
             }}
           >
-            <Ionicons name="search" size={30} color={iconColor} />
+            <Ionicons name="search" size={45} color={iconColor} />
           </TouchableOpacity>
         </ThemedView>
       </ThemedView>
@@ -93,9 +92,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   topMenu: {
-    marginVertical: 10,
-    paddingHorizontal: 10,
-    height: 60,
+    paddingHorizontal: 30,
+    height: 0,
     borderRadius: 5,
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -103,6 +101,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '100%',
     maxWidth: 640,
+    backgroundColor: 'transparent',
   },
   icon: {
     marginHorizontal: 3,
