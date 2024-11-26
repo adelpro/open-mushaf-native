@@ -134,7 +134,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     elevation: 5,
-    height: 'auto',
   },
   resizer: {
     alignSelf: 'center',

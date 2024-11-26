@@ -121,7 +121,6 @@ export default function MushafPage() {
       const disableKeepAwake = async () => {
         const isAvailable = await isAvailableAsync();
         if (Platform.OS !== 'web' && isAvailable) {
-          console.info('useKeepAwake cleanup', tag);
           deactivateKeepAwake(tag);
         }
       };
