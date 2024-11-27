@@ -10,7 +10,7 @@ import { useColors } from '@/hooks/useColors';
 import { bottomMenuState, topMenuState } from '@/recoil/atoms';
 
 export default function TopMenu() {
-  const { iconColor } = useColors();
+  const { tintColor } = useColors();
   const [showBottomMenuState, setBottomMenuState] =
     useRecoilState<boolean>(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] =
@@ -34,10 +34,10 @@ export default function TopMenu() {
             <SimpleLineIcons
               name="size-fullscreen"
               size={40}
-              color={iconColor}
+              color={tintColor}
             />
           ) : (
-            <MaterialIcons name="fullscreen-exit" size={40} color={iconColor} />
+            <MaterialIcons name="fullscreen-exit" size={40} color={tintColor} />
           )}
         </TouchableOpacity>
         <ThemedView style={styles.leftIconsContainer}>
@@ -51,7 +51,7 @@ export default function TopMenu() {
             <Ionicons
               name="navigate-circle-outline"
               size={40}
-              color={iconColor}
+              color={tintColor}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -61,7 +61,7 @@ export default function TopMenu() {
               router.push('/search');
             }}
           >
-            <Ionicons name="search" size={40} color={iconColor} />
+            <Ionicons name="search" size={40} color={tintColor} />
           </TouchableOpacity>
         </ThemedView>
       </ThemedView>
@@ -73,13 +73,11 @@ const styles = StyleSheet.create({
     zIndex: 2,
     display: 'flex',
     marginHorizontal: 'auto',
-    padding: 3,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     position: 'absolute',
     top: 1,
-    margin: 2,
     left: 0,
     right: 0,
     backgroundColor: 'transparent',
@@ -87,7 +85,6 @@ const styles = StyleSheet.create({
   topMenu: {
     height: 60,
     borderRadius: 5,
-    paddingHorizontal: 5,
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
@@ -97,7 +94,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   icon: {
-    padding: 5,
+    padding: 10,
   },
   leftIconsContainer: {
     flexDirection: 'row',
