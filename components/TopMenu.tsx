@@ -10,7 +10,7 @@ import { useColors } from '@/hooks/useColors';
 import { bottomMenuState, topMenuState } from '@/recoil/atoms';
 
 export default function TopMenu() {
-  const iconColor = '#0a7ea4';
+  const { iconColor } = useColors();
   const [showBottomMenuState, setBottomMenuState] =
     useRecoilState<boolean>(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] =
@@ -22,17 +22,7 @@ export default function TopMenu() {
 
   return showTopMenuState ? (
     <ThemedView style={styles.container}>
-      <ThemedView
-        style={[
-          styles.topMenu,
-          /*  {
-            backgroundColor:
-              colorScheme === 'dark'
-                ? 'rgba(255, 255, 255, 0.2)'
-                : 'rgba(0, 0, 0, 0.1)',
-          }, */
-        ]}
-      >
+      <ThemedView style={[styles.topMenu]}>
         <TouchableOpacity
           style={styles.icon}
           onPress={() => {
@@ -43,11 +33,11 @@ export default function TopMenu() {
           {showBottomMenuState ? (
             <SimpleLineIcons
               name="size-fullscreen"
-              size={45}
+              size={40}
               color={iconColor}
             />
           ) : (
-            <MaterialIcons name="fullscreen-exit" size={45} color={iconColor} />
+            <MaterialIcons name="fullscreen-exit" size={40} color={iconColor} />
           )}
         </TouchableOpacity>
         <ThemedView style={styles.leftIconsContainer}>
@@ -60,7 +50,7 @@ export default function TopMenu() {
           >
             <Ionicons
               name="navigate-circle-outline"
-              size={45}
+              size={40}
               color={iconColor}
             />
           </TouchableOpacity>
@@ -71,7 +61,7 @@ export default function TopMenu() {
               router.push('/search');
             }}
           >
-            <Ionicons name="search" size={45} color={iconColor} />
+            <Ionicons name="search" size={40} color={iconColor} />
           </TouchableOpacity>
         </ThemedView>
       </ThemedView>
@@ -82,30 +72,32 @@ const styles = StyleSheet.create({
   container: {
     zIndex: 2,
     display: 'flex',
+    marginHorizontal: 'auto',
+    padding: 3,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     position: 'absolute',
-    top: 50,
+    top: 1,
+    margin: 2,
     left: 0,
     right: 0,
     backgroundColor: 'transparent',
   },
   topMenu: {
-    paddingHorizontal: 30,
-    height: 0,
+    height: 60,
     borderRadius: 5,
+    paddingHorizontal: 5,
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
     position: 'relative',
     width: '100%',
     maxWidth: 640,
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   icon: {
-    marginHorizontal: 3,
-    padding: 3,
+    padding: 5,
   },
   leftIconsContainer: {
     flexDirection: 'row',
