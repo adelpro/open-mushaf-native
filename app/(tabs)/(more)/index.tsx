@@ -21,6 +21,11 @@ export default function MoreScreen() {
           سياسة الخصوصية
         </ThemedText>
       </Pressable>
+      <Pressable onPress={() => router.push('/contact')} style={styles.button}>
+        <ThemedText type="title" style={styles.buttonText}>
+          تواصل معنا
+        </ThemedText>
+      </Pressable>
       <Pressable
         onPress={() => router.push('/about')}
         style={[styles.button, { shadowColor: tintColor }]}

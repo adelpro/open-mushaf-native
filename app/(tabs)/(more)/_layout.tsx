@@ -20,6 +20,10 @@ export default function MoreLayout() {
         options={{ headerShown: true, title: 'الاعدادات' }}
       />
       <Stack.Screen
+        name="contact"
+        options={{ headerShown: true, title: 'تواصل معنا' }}
+      />
+      <Stack.Screen
         name="about"
         options={{ headerShown: true, title: 'حول' }}
       />
