@@ -23,7 +23,7 @@ import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagesArray from '@/hooks/useImagesArray';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
-import { flipSound } from '@/recoil/atoms';
+import { flipSound, mushafContrast } from '@/recoil/atoms';
 
 import PageOverlay from './PageOverlay';
 import { ThemedText } from './ThemedText';
@@ -32,6 +32,8 @@ import { ThemedView } from './ThemedView';
 export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
   const isFlipSoundEnabled = useRecoilValue(flipSound);
+  const mushafContrastValue = useRecoilValue(mushafContrast);
+
   const colorScheme = useColorScheme();
   const { tintColor } = useColors();
   const router = useRouter();
@@ -174,7 +176,7 @@ export default function MushafPage() {
           <Image
             style={[
               styles.image,
-              colorScheme === 'dark' && { opacity: 0.5 },
+              colorScheme === 'dark' && { opacity: mushafContrastValue },
               /*  ? {
                     filter:
                       'brightness(0.3) saturate(0.7) hue-rotate(90deg) contrast(1.2)',

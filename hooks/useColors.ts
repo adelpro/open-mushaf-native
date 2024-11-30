@@ -10,6 +10,7 @@ export const useColors = () => {
   const textColor = Colors[colorScheme ?? 'light'].text;
   const iconColor = Colors[colorScheme ?? 'light'].icon;
   const primaryColor = Colors[colorScheme ?? 'light'].primary;
+  const primaryLightColor = Colors[colorScheme ?? 'light'].primaryLight;
   const secondaryColor = Colors[colorScheme ?? 'light'].secondary;
 
   return {
@@ -18,6 +19,7 @@ export const useColors = () => {
     textColor,
     iconColor,
     primaryColor,
+    primaryLightColor,
     secondaryColor,
   };
 };

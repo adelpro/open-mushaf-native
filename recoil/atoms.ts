@@ -33,6 +33,12 @@ export const flipSound = atom<boolean>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
+export const mushafContrast = atom<number>({
+  key: 'MushafContrast',
+  default: 0.5,
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+
 // Create a timer effect for Recoil state
 const timerEffect: (duration_ms: number) => AtomEffect<any> =
   (duration_ms: number) =>
