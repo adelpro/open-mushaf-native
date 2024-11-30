@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Updated
 
-- Add Contact us screen.
+- Add Contact-us screen.
 - Add Toasts.
 
 ## [2.1.0]

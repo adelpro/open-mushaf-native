@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet } from 'react-native';
 
-import Checkbox from 'expo-checkbox';
+import Toggle from 'react-native-toggle-input';
 import { useRecoilState } from 'recoil';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -10,7 +10,7 @@ import { flipSound } from '@/recoil/atoms';
 
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
-  const { textColor, backgroundColor } = useColors();
+  const { textColor, backgroundColor, primaryColor } = useColors();
 
   const toggleSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
@@ -28,10 +28,14 @@ export default function SettingsScreen() {
         <ThemedText type="defaultSemiBold" style={styles.itemText}>
           صوت قلب الصفحة
         </ThemedText>
-        <Checkbox
-          value={isFlipSoundEnabled}
-          style={styles.checkbox}
-          onValueChange={toggleSwitch}
+        <Toggle
+          color={primaryColor}
+          size={30}
+          circleColor={primaryColor}
+          toggle={isFlipSoundEnabled}
+          setToggle={toggleSwitch}
+          aria-checked={isFlipSoundEnabled}
+          aria-label="صوت قلب الصفحة"
         />
       </Pressable>
     </ThemedView>

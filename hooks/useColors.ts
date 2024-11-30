@@ -9,11 +9,15 @@ export const useColors = () => {
   const tintColor = Colors[colorScheme ?? 'light'].tint;
   const textColor = Colors[colorScheme ?? 'light'].text;
   const iconColor = Colors[colorScheme ?? 'light'].icon;
+  const primaryColor = Colors[colorScheme ?? 'light'].primary;
+  const secondaryColor = Colors[colorScheme ?? 'light'].secondary;
 
   return {
     backgroundColor,
     tintColor,
     textColor,
     iconColor,
+    primaryColor,
+    secondaryColor,
   };
 };

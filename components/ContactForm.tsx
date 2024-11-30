@@ -11,7 +11,7 @@ import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
 export default function ContactForm() {
-  const { textColor } = useColors();
+  const { textColor, primaryColor, secondaryColor } = useColors();
   const { toastConfig } = useToastConfig();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -140,7 +140,12 @@ export default function ContactForm() {
       />
 
       <TouchableOpacity
-        style={[styles.button, isLoading && styles.disabledButton]}
+        style={[
+          styles.button,
+          { backgroundColor: primaryColor },
+          isLoading && styles.disabledButton,
+          isLoading && { backgroundColor: secondaryColor },
+        ]}
         onPress={handleSubmit}
         // disabled={!isFormValid() || isLoading}
       >
@@ -200,7 +205,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#007BFF',
     paddingVertical: 10,
     borderRadius: 4,
     margin: 10,

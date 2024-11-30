@@ -7815,6 +7815,11 @@ react-native-toast-message@^2.2.1:
   resolved "https://registry.yarnpkg.com/react-native-toast-message/-/react-native-toast-message-2.2.1.tgz#f395321e9bc818ce63274c38a3d294ed997a4a27"
   integrity sha512-iXFMnlxPcgKKs4bZOIl06W16m6KXMh/bAYpWLyVXlISSCdcL2+FX5WPpRP3TGQeM/u9q+j5ex48DDY+72en+Sw==
 
+react-native-toggle-input@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/react-native-toggle-input/-/react-native-toggle-input-1.0.12.tgz#ae5a7c4c5516d5ef477a80bdf36f4b01498734c1"
+  integrity sha512-pqywtDnGkrxnQivGh92O2ymkkIeSXmiWFJn77U9xjTSvh8b83fjcW+DoDiOFnxFtv0sB9EZBLBtnBN/ITRnkjA==
+
 react-native-web@~0.19.10:
   version "0.19.13"
   resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.19.13.tgz#2d84849bf0251ec0e3a8072fda7f9a7c29375331"

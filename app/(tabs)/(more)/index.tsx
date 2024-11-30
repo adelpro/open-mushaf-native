@@ -8,27 +8,36 @@ import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 
 export default function MoreScreen() {
-  const { tintColor } = useColors();
+  const { primaryColor } = useColors();
   return (
     <ThemedView style={styles.container}>
-      <Pressable onPress={() => router.push('/settings')} style={styles.button}>
+      <Pressable
+        onPress={() => router.push('/settings')}
+        style={[styles.button, { backgroundColor: primaryColor }]}
+      >
         <ThemedText type="title" style={styles.buttonText}>
           الإعدادات
         </ThemedText>
       </Pressable>
-      <Pressable onPress={() => router.push('/privacy')} style={styles.button}>
+      <Pressable
+        onPress={() => router.push('/privacy')}
+        style={[styles.button, { backgroundColor: primaryColor }]}
+      >
         <ThemedText type="title" style={styles.buttonText}>
           سياسة الخصوصية
         </ThemedText>
       </Pressable>
-      <Pressable onPress={() => router.push('/contact')} style={styles.button}>
+      <Pressable
+        onPress={() => router.push('/contact')}
+        style={[styles.button, { backgroundColor: primaryColor }]}
+      >
         <ThemedText type="title" style={styles.buttonText}>
           تواصل معنا
         </ThemedText>
       </Pressable>
       <Pressable
         onPress={() => router.push('/about')}
-        style={[styles.button, { shadowColor: tintColor }]}
+        style={[styles.button, { backgroundColor: primaryColor }]}
       >
         <ThemedText type="title" style={styles.buttonText}>
           حول التطبيق
@@ -50,7 +59,6 @@ const styles = StyleSheet.create({
     width: '90%',
     maxWidth: 640,
     borderRadius: 5,
-    backgroundColor: '#4A90E2',
     boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.2)',
     elevation: 5,
   },
