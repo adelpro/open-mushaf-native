@@ -20,6 +20,8 @@ expo-env.d.ts
 # @end expo-cli
 
 .env*
+# But don't ignore .env.example
+!.env.example
 
 # Custom build output
 builds/**/*

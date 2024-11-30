@@ -2,6 +2,7 @@ import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import * as Application from 'expo-application';
 import { Href } from 'expo-router';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useSetRecoilState } from 'recoil';
 
 import { ExternalLink } from '@/components/ExternalLink';
@@ -58,58 +59,56 @@ export default function AboutScreen() {
   ];
 
   return (
-    <ThemedView style={styles.container}>
-      <Pressable onPress={() => setShowTopMenu(true)}>
-        <ThemedView style={styles.mainContent}>
-          <ThemedText type="title" style={styles.title}>
-            المصادر
-          </ThemedText>
-          <ThemedView style={styles.listContainer}>
-            {sourcesList.map(({ text, link, label }, index) => (
-              <ThemedView style={styles.listItem} key={index}>
-                <ThemedText style={styles.bullet}>•</ThemedText>
-                <ThemedText style={styles.listText}>
-                  {text}&nbsp;
-                  <ExternalLink href={link} style={styles.link}>
-                    {label}
-                  </ExternalLink>
-                </ThemedText>
-              </ThemedView>
-            ))}
-          </ThemedView>
-          <ThemedText type="title" style={styles.title}>
-            الميزات
-          </ThemedText>
-          <ThemedView style={styles.listContainer}>
-            {featuresList.map((feature, index) => (
-              <ThemedView style={styles.listItem} key={index}>
-                <ThemedText style={styles.bullet}>•</ThemedText>
-                <ThemedText style={styles.listText}>{feature}</ThemedText>
-              </ThemedView>
-            ))}
-            <ThemedView style={styles.listItem}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <ThemedView style={styles.mainContent}>
+        <ThemedText type="title" style={styles.title}>
+          المصادر
+        </ThemedText>
+        <ThemedView style={styles.listContainer}>
+          {sourcesList.map(({ text, link, label }, index) => (
+            <ThemedView style={styles.listItem} key={index}>
               <ThemedText style={styles.bullet}>•</ThemedText>
               <ThemedText style={styles.listText}>
-                البرنامج مفتوح المصدر:&nbsp;
-                <ExternalLink
-                  href="https://github.com/adelpro/open-mushaf-native"
-                  style={styles.link}
-                >
-                  open-mushaf-native
+                {text}&nbsp;
+                <ExternalLink href={link} style={styles.link}>
+                  {label}
                 </ExternalLink>
               </ThemedText>
             </ThemedView>
-          </ThemedView>
-
-          <ThemedText style={styles.copyright}>
-            © {new Date().getFullYear()} Open-Mushaf. جميع الحقوق محفوظة.
-          </ThemedText>
-          <ThemedText style={styles.versionText}>
-            الإصدار: {`${appVersion} (${buildVersion})`}
-          </ThemedText>
+          ))}
         </ThemedView>
-      </Pressable>
-    </ThemedView>
+        <ThemedText type="title" style={styles.title}>
+          الميزات
+        </ThemedText>
+        <ThemedView style={styles.listContainer}>
+          {featuresList.map((feature, index) => (
+            <ThemedView style={styles.listItem} key={index}>
+              <ThemedText style={styles.bullet}>•</ThemedText>
+              <ThemedText style={styles.listText}>{feature}</ThemedText>
+            </ThemedView>
+          ))}
+          <ThemedView style={styles.listItem}>
+            <ThemedText style={styles.bullet}>•</ThemedText>
+            <ThemedText style={styles.listText}>
+              البرنامج مفتوح المصدر:&nbsp;
+              <ExternalLink
+                href="https://github.com/adelpro/open-mushaf-native"
+                style={styles.link}
+              >
+                open-mushaf-native
+              </ExternalLink>
+            </ThemedText>
+          </ThemedView>
+        </ThemedView>
+
+        <ThemedText style={styles.copyright}>
+          © {new Date().getFullYear()} Open-Mushaf. جميع الحقوق محفوظة.
+        </ThemedText>
+        <ThemedText style={styles.versionText}>
+          الإصدار: {`${appVersion} (${buildVersion})`}
+        </ThemedText>
+      </ThemedView>
+    </ScrollView>
   );
 }
 
@@ -120,6 +119,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mainContent: {
+    flex: 1,
+    height: '100%',
     maxWidth: 600,
     marginTop: 60,
     paddingHorizontal: 22,

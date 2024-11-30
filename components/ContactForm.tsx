@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 
+import { FontAwesome } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 
 import { useColors } from '@/hooks/useColors';
 import useToastConfig from '@/hooks/useToastConfig';
 
+import { ThemedButton } from './ThemedButton';
 import { ThemedTextInput } from './ThemedInput';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -148,30 +150,26 @@ export default function ContactForm() {
         aria-labelledby="message"
       />
 
-      <TouchableOpacity
+      <ThemedButton
         style={[
-          styles.button,
-          { backgroundColor: primaryColor },
           isLoading && styles.disabledButton,
           isLoading && { backgroundColor: secondaryColor },
         ]}
+        variant="primary"
         onPress={handleSubmit}
       >
         {isLoading ? (
-          <>
-            <ActivityIndicator
-              size="small"
-              color="#fff"
-              style={{ margin: 10 }}
-            />
-            <ThemedText style={styles.buttonText}>جاري الإرسال</ThemedText>
-          </>
+          <View style={styles.buttonContent}>
+            <Text>جاري الإرسال</Text>
+            <ActivityIndicator size="small" color="#fff" />
+          </View>
         ) : (
-          <>
-            <ThemedText style={styles.buttonText}>إرسال</ThemedText>
-          </>
+          <View style={styles.buttonContent}>
+            <FontAwesome name="send-o" size={24} />
+            <Text>إرسال</Text>
+          </View>
         )}
-      </TouchableOpacity>
+      </ThemedButton>
       <Toast config={toastConfig} />
     </ThemedView>
   );
@@ -205,22 +203,16 @@ const styles = StyleSheet.create({
     height: 100,
     textAlignVertical: 'top',
   },
-  button: {
+  buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    gap: 10,
     paddingVertical: 10,
     borderRadius: 4,
     margin: 10,
-    width: '100%',
-    maxWidth: 640,
-    fontFamily: 'Amiri_400Regular',
   },
   disabledButton: {
     backgroundColor: '#999',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
   },
 });

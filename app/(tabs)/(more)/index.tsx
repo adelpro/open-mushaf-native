@@ -1,8 +1,9 @@
 import React from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 
 import { router } from 'expo-router';
 
+import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
@@ -11,38 +12,34 @@ export default function MoreScreen() {
   const { primaryColor } = useColors();
   return (
     <ThemedView style={styles.container}>
-      <Pressable
+      <ThemedButton
         onPress={() => router.push('/settings')}
-        style={[styles.button, { backgroundColor: primaryColor }]}
+        style={[styles.button]}
+        variant="primary"
       >
-        <ThemedText type="title" style={styles.buttonText}>
-          الإعدادات
-        </ThemedText>
-      </Pressable>
-      <Pressable
+        <Text style={styles.buttonText}>الإعدادات</Text>
+      </ThemedButton>
+      <ThemedButton
         onPress={() => router.push('/privacy')}
-        style={[styles.button, { backgroundColor: primaryColor }]}
+        style={[styles.button]}
+        variant="primary"
       >
-        <ThemedText type="title" style={styles.buttonText}>
-          سياسة الخصوصية
-        </ThemedText>
-      </Pressable>
-      <Pressable
+        <Text style={styles.buttonText}>سياسة الخصوصية</Text>
+      </ThemedButton>
+      <ThemedButton
         onPress={() => router.push('/contact')}
-        style={[styles.button, { backgroundColor: primaryColor }]}
+        style={[styles.button]}
+        variant="primary"
       >
-        <ThemedText type="title" style={styles.buttonText}>
-          تواصل معنا
-        </ThemedText>
-      </Pressable>
-      <Pressable
+        <Text style={styles.buttonText}>تواصل معنا</Text>
+      </ThemedButton>
+      <ThemedButton
         onPress={() => router.push('/about')}
-        style={[styles.button, { backgroundColor: primaryColor }]}
+        style={[styles.button]}
+        variant="primary"
       >
-        <ThemedText type="title" style={styles.buttonText}>
-          حول التطبيق
-        </ThemedText>
-      </Pressable>
+        <Text style={styles.buttonText}>حول التطبيق</Text>
+      </ThemedButton>
     </ThemedView>
   );
 }
@@ -63,7 +60,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   buttonText: {
-    color: '#FFFFFF',
+    //color: '#FFFFFF',
     textAlign: 'center',
     fontSize: 18,
     fontWeight: '600',

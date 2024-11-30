@@ -60,7 +60,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
         contentContainerStyle={styles.tafseerContent}
         nestedScrollEnabled
       >
-        <ThemedView style={{ flex: 1 }}>
+        <ThemedView style={{ flex: 1, height: '100%' }}>
           <HTMLView
             value={tafseerText}
             style={{
