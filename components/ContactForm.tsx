@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { ActivityIndicator, TextInput } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
 import Toast from 'react-native-toast-message';
 
 import { useColors } from '@/hooks/useColors';
 import useToastConfig from '@/hooks/useToastConfig';
 
+import { ThemedTextInput } from './ThemedInput';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
@@ -110,33 +111,41 @@ export default function ContactForm() {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedText style={styles.label}>الإسم</ThemedText>
-      <TextInput
-        style={[styles.input, { color: textColor }]}
+      <ThemedText id="name" style={styles.label}>
+        الإسم
+      </ThemedText>
+      <ThemedTextInput
+        style={[styles.input]}
         value={formData.name}
         onChangeText={(text) => handleChange('name', text)}
         placeholder="الإسم"
-        placeholderTextColor="#999"
+        aria-labelledby="name"
       />
 
-      <ThemedText style={styles.label}>البريد الالكتروني</ThemedText>
-      <TextInput
-        style={[styles.input, { color: textColor }]}
+      <ThemedText id="email" style={styles.label}>
+        البريد الالكتروني
+      </ThemedText>
+      <ThemedTextInput
+        style={[styles.input]}
         value={formData.email}
         onChangeText={(text) => handleChange('email', text)}
         placeholder="your.email@example.com"
-        placeholderTextColor="#999"
+        placeholderTextColor={secondaryColor}
         keyboardType="email-address"
+        aria-labelledby="email"
       />
 
-      <ThemedText style={styles.label}>الرسالة</ThemedText>
-      <TextInput
+      <ThemedText id="message" style={styles.label}>
+        الرسالة
+      </ThemedText>
+      <ThemedTextInput
         style={[styles.input, styles.messageInput, { color: textColor }]}
         value={formData.message}
         onChangeText={(text) => handleChange('message', text)}
         placeholder="أكتب الرسالة هنا..."
-        placeholderTextColor="#999"
+        placeholderTextColor={secondaryColor}
         multiline
+        aria-labelledby="message"
       />
 
       <TouchableOpacity
@@ -147,7 +156,6 @@ export default function ContactForm() {
           isLoading && { backgroundColor: secondaryColor },
         ]}
         onPress={handleSubmit}
-        // disabled={!isFormValid() || isLoading}
       >
         {isLoading ? (
           <>
@@ -187,12 +195,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
     padding: 10,
     marginBottom: 15,
-    fontFamily: 'Amiri_400Regular',
     width: '100%',
     marginHorizontal: 10,
     textAlign: 'right',
