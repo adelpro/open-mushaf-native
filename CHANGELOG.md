@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Add Contact-us screen.
 - Add Toasts.
+- Add a design system for the UI.
 
 ## [2.1.0]
 

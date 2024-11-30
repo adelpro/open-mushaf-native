@@ -27,8 +27,7 @@ export function ThemedButton({
   children,
   ...rest
 }: ThemedButtonProps) {
-  const { primaryColor, secondaryColor, backgroundColor, textColor } =
-    useColors();
+  const { primaryColor, secondaryColor } = useColors();
   const [isPressed, setIsPressed] = useState<boolean>(false);
 
   const getVariantStyles = () => {
@@ -105,10 +104,12 @@ const styles = StyleSheet.create({
     maxWidth: 640,
     alignItems: 'center',
     justifyContent: 'center',
+    boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.2)',
+    elevation: 5,
   },
   text: {
     fontFamily: 'Amiri_400Regular',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   center: {

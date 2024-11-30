@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 
 import { FontAwesome } from '@expo/vector-icons';
@@ -14,7 +14,7 @@ import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
 export default function ContactForm() {
-  const { textColor, primaryColor, secondaryColor } = useColors();
+  const { textColor, secondaryColor } = useColors();
   const { toastConfig } = useToastConfig();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -159,15 +159,15 @@ export default function ContactForm() {
         onPress={handleSubmit}
       >
         {isLoading ? (
-          <View style={styles.buttonContent}>
-            <Text>جاري الإرسال</Text>
+          <Text>
+            جاري الإرسال&nbsp;&nbsp;
             <ActivityIndicator size="small" color="#fff" />
-          </View>
+          </Text>
         ) : (
-          <View style={styles.buttonContent}>
+          <Text>
+            إرسال&nbsp;&nbsp;
             <FontAwesome name="send-o" size={24} />
-            <Text>إرسال</Text>
-          </View>
+          </Text>
         )}
       </ThemedButton>
       <Toast config={toastConfig} />
@@ -204,13 +204,11 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   buttonContent: {
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
     gap: 10,
-    paddingVertical: 10,
-    borderRadius: 4,
-    margin: 10,
   },
   disabledButton: {
     backgroundColor: '#999',

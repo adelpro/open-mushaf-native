@@ -1,17 +1,14 @@
-import { I18nManager, Pressable, StyleSheet } from 'react-native';
+import { I18nManager, StyleSheet } from 'react-native';
 
 import * as Application from 'expo-application';
 import { Href } from 'expo-router';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useSetRecoilState } from 'recoil';
 
 import { ExternalLink } from '@/components/ExternalLink';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { topMenuState } from '@/recoil/atoms';
 
 export default function AboutScreen() {
-  const setShowTopMenu = useSetRecoilState(topMenuState);
   const appVersion = Application.nativeApplicationVersion ?? 'Unknown';
   const buildVersion = Application.nativeBuildVersion ?? 'Unknown';
   const isRTLAndroid = I18nManager.isRTL;
@@ -122,17 +119,16 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     maxWidth: 600,
-    marginTop: 60,
     paddingHorizontal: 22,
     alignSelf: 'center',
   },
   title: {
     fontSize: 20,
     fontWeight: '600',
-    marginBottom: 12,
+    marginVertical: 5,
   },
   listContainer: {
-    marginBottom: 20,
+    marginBottom: 5,
     paddingLeft: 16,
   },
   listItem: {
