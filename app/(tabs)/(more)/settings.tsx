@@ -1,5 +1,4 @@
-import { useCallback, useState } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import Slider from '@react-native-community/slider';
 import Toggle from 'react-native-toggle-input';
@@ -18,31 +17,9 @@ export default function SettingsScreen() {
   const [mushafContrastValue, setMushafContrastValue] =
     useRecoilState(mushafContrast);
 
-  const [tooltipOpacity] = useState(new Animated.Value(0));
-  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
-
   const toggleSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
   };
-
-  const showTooltip = useCallback(() => {
-    setIsTooltipVisible(true);
-    Animated.timing(tooltipOpacity, {
-      toValue: 1,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
-  }, [tooltipOpacity]);
-
-  const hideTooltip = useCallback(() => {
-    Animated.timing(tooltipOpacity, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start(() => {
-      setIsTooltipVisible(false);
-    });
-  }, [tooltipOpacity]);
 
   return (
     <ThemedView style={styles.container}>
@@ -102,29 +79,10 @@ export default function SettingsScreen() {
             onValueChange={(value) => {
               setMushafContrastValue(value);
             }}
-            onSlidingStart={showTooltip}
-            onSlidingComplete={hideTooltip}
             minimumTrackTintColor={primaryLightColor}
             maximumTrackTintColor="#d3d3d3"
             thumbTintColor={primaryColor}
           />
-
-          {isTooltipVisible && (
-            <Animated.View
-              style={[
-                styles.tooltip,
-                {
-                  left: `${mushafContrastValue * 100}%`,
-                  opacity: tooltipOpacity,
-                  backgroundColor: primaryColor,
-                },
-              ]}
-            >
-              <Text style={styles.tooltipText}>
-                {`${Number(mushafContrastValue * 100).toFixed(0)}%`}
-              </Text>
-            </Animated.View>
-          )}
         </View>
       </ThemedView>
     </ThemedView>
@@ -178,23 +136,5 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 50,
     marginVertical: 10,
-  },
-  tooltip: {
-    position: 'absolute',
-    bottom: 60,
-    transform: [{ translateX: -25 }],
-    width: 50,
-    paddingVertical: 5,
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.2)',
-    elevation: 5,
-  },
-  tooltipText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
 });
