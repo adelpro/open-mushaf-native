@@ -3,7 +3,6 @@ import {
   FlatList,
   Pressable,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
 } from 'react-native';
 
@@ -12,6 +11,7 @@ import { router } from 'expo-router';
 
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
 import TafseerPopup from '@/components/TafseerPopup';
+import { ThemedTextInput } from '@/components/ThemedInput';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
@@ -24,7 +24,7 @@ export default function Search() {
   const [inputText, setInputText] = useState('');
   const [filteredResults, setFilteredResults] = useState<QuranText[]>([]);
   const [show, setShow] = useState(false);
-  const { iconColor, textColor, tintColor } = useColors();
+  const { iconColor, tintColor } = useColors();
   const handleSearch = useDebounce((text: string) => {
     setQuery(text);
   }, 200);
@@ -75,15 +75,15 @@ export default function Search() {
     <ThemedView style={styles.container}>
       {/* Search Input */}
       <ThemedView style={styles.searchContainer}>
-        <TextInput
-          style={[styles.searchInput, { color: textColor }]}
+        <ThemedTextInput
+          variant="outlined"
+          style={[styles.searchInput]}
           placeholder="البحث..."
           onChangeText={(text) => {
             setInputText(text);
             handleSearch(text);
           }}
           value={inputText}
-          placeholderTextColor="#999"
         />
         <Ionicons
           name="search"
