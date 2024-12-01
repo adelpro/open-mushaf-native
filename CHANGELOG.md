@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Add Contact-us screen.
 - Add Toasts.
 - Add a design system for the UI.
+- Add slider in settings to change Mushaf contrast.
 
 ## [2.1.0]
 

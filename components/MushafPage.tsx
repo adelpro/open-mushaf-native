@@ -176,12 +176,8 @@ export default function MushafPage() {
           <Image
             style={[
               styles.image,
+              { width: '100%' },
               colorScheme === 'dark' && { opacity: mushafContrastValue },
-              /*  ? {
-                    filter:
-                      'brightness(0.3) saturate(0.7) hue-rotate(90deg) contrast(1.2)',
-                  }
-                : {}, // Apply filter only in dark mode */
             ]}
             source={{ uri: asset?.localUri }}
             contentFit="fill"
@@ -210,8 +206,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    width: '100%',
-    // filter: 'brightness(0.3) saturate(0.7) hue-rotate(90deg) contrast(1.2)',
+    //width: '100%',
   },
   errorContainer: {
     flex: 1,
