@@ -72,9 +72,9 @@ export default function SettingsScreen() {
         <View style={styles.sliderContainer}>
           <Slider
             style={[styles.slider, { transform: [{ scaleX: -1 }] }]}
-            minimumValue={0}
+            minimumValue={0.3}
             maximumValue={1}
-            step={0.01}
+            step={0.1}
             value={mushafContrastValue}
             onValueChange={(value) => {
               setMushafContrastValue(value);
