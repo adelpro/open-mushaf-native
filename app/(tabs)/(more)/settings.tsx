@@ -4,6 +4,7 @@ import Slider from '@react-native-community/slider';
 import Toggle from 'react-native-toggle-input';
 import { useRecoilState } from 'recoil';
 
+import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
@@ -22,7 +23,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedSafeAreaView style={styles.container}>
       <Pressable
         style={[
           styles.settingsSection,
@@ -85,7 +86,7 @@ export default function SettingsScreen() {
           />
         </View>
       </ThemedView>
-    </ThemedView>
+    </ThemedSafeAreaView>
   );
 }
 

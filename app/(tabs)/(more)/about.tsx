@@ -2,9 +2,9 @@ import { I18nManager, StyleSheet } from 'react-native';
 
 import * as Application from 'expo-application';
 import { Href } from 'expo-router';
-import { ScrollView } from 'react-native-gesture-handler';
 
 import { ExternalLink } from '@/components/ExternalLink';
+import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
@@ -56,7 +56,7 @@ export default function AboutScreen() {
   ];
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ThemedSafeAreaView style={styles.container}>
       <ThemedView style={styles.mainContent}>
         <ThemedText type="title" style={styles.title}>
           المصادر
@@ -105,7 +105,7 @@ export default function AboutScreen() {
           الإصدار: {`${appVersion} (${buildVersion})`}
         </ThemedText>
       </ThemedView>
-    </ScrollView>
+    </ThemedSafeAreaView>
   );
 }
 

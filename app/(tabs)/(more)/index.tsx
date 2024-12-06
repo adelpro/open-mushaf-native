@@ -4,11 +4,11 @@ import { StyleSheet, Text } from 'react-native';
 import { router } from 'expo-router';
 
 import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedView } from '@/components/ThemedView';
+import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 
 export default function MoreScreen() {
   return (
-    <ThemedView style={styles.container}>
+    <ThemedSafeAreaView style={styles.container}>
       <ThemedButton onPress={() => router.push('/settings')} variant="primary">
         <Text>الإعدادات</Text>
       </ThemedButton>
@@ -21,7 +21,7 @@ export default function MoreScreen() {
       <ThemedButton onPress={() => router.push('/about')} variant="primary">
         <Text>حول التطبيق</Text>
       </ThemedButton>
-    </ThemedView>
+    </ThemedSafeAreaView>
   );
 }
 

@@ -9,9 +9,9 @@ import {
 
 import PrivacyContentArabic from '@/components/PrivacyContentArabic';
 import PrivacyContentEnglish from '@/components/PrivacyContentEnglish';
+import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors'; // Ensure this import is correct
+import { Colors } from '@/constants/Colors';
 
 export default function PrivacyScreen() {
   const [selectedTab, setSelectedTab] = useState('arabic'); // Default to Arabic
@@ -20,7 +20,7 @@ export default function PrivacyScreen() {
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedSafeAreaView style={styles.container}>
       {/* Tab Selection */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
@@ -72,7 +72,7 @@ export default function PrivacyScreen() {
           <PrivacyContentEnglish />
         )}
       </ScrollView>
-    </ThemedView>
+    </ThemedSafeAreaView>
   );
 }
 

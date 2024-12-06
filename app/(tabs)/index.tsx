@@ -1,9 +1,9 @@
 import { Pressable, StyleSheet } from 'react-native';
 
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSetRecoilState } from 'recoil';
 
 import MushafPage from '@/components/MushafPage';
+import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import TopMenu from '@/components/TopMenu';
 import { topMenuState } from '@/recoil/atoms';
 
@@ -11,12 +11,12 @@ export default function HomeScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <ThemedSafeAreaView style={styles.container}>
       <TopMenu />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
         <MushafPage />
       </Pressable>
-    </SafeAreaView>
+    </ThemedSafeAreaView>
   );
 }
 

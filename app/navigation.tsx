@@ -7,6 +7,7 @@ import { useRouter } from 'expo-router';
 
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
 import surahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
+import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { defaultNumberOfPages } from '@/constants';
@@ -86,7 +87,7 @@ export default function Navigation() {
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedSafeAreaView style={styles.container}>
       <ThemedView style={styles.navigationSection}>
         <ThemedView style={styles.labelContainer}>
           <Feather
@@ -153,7 +154,7 @@ export default function Navigation() {
           </Picker>
         </ThemedView>
       </ThemedView>
-    </ThemedView>
+    </ThemedSafeAreaView>
   );
 }
 

@@ -12,6 +12,7 @@ import { router } from 'expo-router';
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
 import TafseerPopup from '@/components/TafseerPopup';
 import { ThemedTextInput } from '@/components/ThemedInput';
+import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
@@ -72,7 +73,7 @@ export default function Search() {
   );
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedSafeAreaView style={styles.container}>
       {/* Search Input */}
       <ThemedView style={styles.searchContainer}>
         <ThemedTextInput
@@ -108,7 +109,7 @@ export default function Search() {
         aya={selectedAya.aya}
         surah={selectedAya.surah}
       />
-    </ThemedView>
+    </ThemedSafeAreaView>
   );
 }
 
