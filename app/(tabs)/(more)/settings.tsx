@@ -25,10 +25,6 @@ export default function SettingsScreen() {
   return (
     <ThemedSafeAreaView style={styles.container}>
       <Pressable
-        accessible
-        accessibilityRole="button"
-        accessibilityLabel="صوت قلب الصفحة"
-        accessibilityState={{ selected: isFlipSoundEnabled }}
         style={[
           styles.settingsSection,
           { borderColor: textColor, backgroundColor },
@@ -55,8 +51,6 @@ export default function SettingsScreen() {
         ]}
       >
         <ThemedView
-          accessible
-          accessibilityLabel="تحكم في السطوع"
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -78,14 +72,6 @@ export default function SettingsScreen() {
 
         <ThemedView style={styles.sliderContainer}>
           <Slider
-            accessible
-            accessibilityRole="adjustable"
-            accessibilityLabel="تحكم في قيمة السطوع"
-            accessibilityValue={{
-              min: 0.3,
-              max: 1,
-              now: mushafContrastValue,
-            }}
             style={[styles.slider, { transform: [{ scaleX: -1 }] }]}
             minimumValue={0.3}
             maximumValue={1}
