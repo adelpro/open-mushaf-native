@@ -15,7 +15,7 @@ type Props = {
 
 export default function ChapterCard({ chapter }: Props) {
   const router = useRouter();
-  const { backgroundColor } = useColors();
+  const { backgroundColor, textColor } = useColors();
 
   const handlePress = () => {
     router.replace({
@@ -30,8 +30,12 @@ export default function ChapterCard({ chapter }: Props) {
       style={[styles.container, { backgroundColor }]}
     >
       <ThemedView style={styles.content}>
-        <ThemedText style={styles.number}>{chapter.number}</ThemedText>
-        <ThemedText style={styles.name}>{chapter.name}</ThemedText>
+        <ThemedText style={[styles.number, { color: textColor }]}>
+          {chapter.number}
+        </ThemedText>
+        <ThemedText style={[styles.name, { color: textColor }]}>
+          {chapter.name}
+        </ThemedText>
       </ThemedView>
     </Pressable>
   );
@@ -62,7 +66,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'Amiri_700Bold',
     fontStyle: 'italic',
-    color: '#808080',
     padding: 10,
     textAlign: 'center',
     minWidth: 40,
@@ -71,7 +74,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontFamily: 'Amiri_700Bold',
-    color: '#808080',
     lineHeight: 22,
     padding: 10,
   },

@@ -16,7 +16,7 @@ type Props = {
 export default function SurahCard({ surah }: Props) {
   const router = useRouter();
 
-  const { backgroundColor } = useColors();
+  const { backgroundColor, textColor } = useColors();
 
   const handlePress = () => {
     router.replace({
@@ -31,8 +31,12 @@ export default function SurahCard({ surah }: Props) {
       style={[styles.container, { backgroundColor }]}
     >
       <ThemedView style={styles.content}>
-        <ThemedText style={styles.number}>{surah.number}</ThemedText>
-        <ThemedText style={styles.name}>{surah.name}</ThemedText>
+        <ThemedText style={[styles.number, { color: textColor }]}>
+          {surah.number}
+        </ThemedText>
+        <ThemedText style={[styles.name, { color: textColor }]}>
+          {surah.name}
+        </ThemedText>
       </ThemedView>
     </Pressable>
   );
@@ -63,7 +67,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'Amiri_700Bold',
     fontStyle: 'italic',
-    color: '#808080',
     padding: 10,
     textAlign: 'center',
     minWidth: 40,
@@ -72,7 +75,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontFamily: 'Amiri_700Bold',
-    color: '#808080',
     lineHeight: 24,
     padding: 10,
   },

@@ -1,7 +1,6 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import { Colors } from '@/constants/Colors';
+import { useColors } from '@/hooks/useColors';
 import { ListTabs } from '@/types';
 
 import { ThemedText } from './ThemedText';
@@ -13,9 +12,7 @@ type Props = {
 };
 
 export default function TopTabs({ activeTab, setActiveTab }: Props) {
-  const colorScheme = useColorScheme();
-  const currentColor = Colors[colorScheme ?? 'light'].tint;
-  const backgroundColor = Colors[colorScheme ?? 'light'].background;
+  const { backgroundColor, textColor } = useColors();
 
   const handleTabPress = (tab: ListTabs) => {
     setActiveTab(tab);
@@ -30,7 +27,7 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
           activeTab === 'surahs' && {
             backgroundColor: backgroundColor,
             borderBottomWidth: 2,
-            borderBottomColor: currentColor,
+            borderBottomColor: textColor,
           },
         ]}
       >
@@ -38,7 +35,7 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
           style={[
             styles.tabText,
             activeTab === 'surahs' && styles.activeTabText,
-            activeTab === 'surahs' && { color: currentColor },
+            activeTab === 'surahs' && { color: textColor },
           ]}
         >
           السور
@@ -52,7 +49,7 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
           activeTab === 'juzs' && {
             backgroundColor: backgroundColor,
             borderBottomWidth: 2,
-            borderBottomColor: currentColor,
+            borderBottomColor: textColor,
           },
         ]}
       >
@@ -60,7 +57,7 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
           style={[
             styles.tabText,
             activeTab === 'juzs' && styles.activeTabText,
-            activeTab === 'juzs' && { color: currentColor },
+            activeTab === 'juzs' && { color: textColor },
           ]}
         >
           الأجزاء
