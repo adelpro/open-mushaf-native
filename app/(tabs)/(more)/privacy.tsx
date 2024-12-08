@@ -81,13 +81,12 @@ export default function PrivacyScreen() {
         )}
       </ScrollView>
 
-      {/* Add descriptive link */}
       <TouchableOpacity
         style={styles.link}
         onPress={() => console.log('Privacy policy link clicked')}
         accessibilityRole="link"
-        accessibilityLabel="Privacy policy details link"
-        accessibilityHint="Opens the full privacy policy in a new screen."
+        accessibilityLabel="عرض تفاصيل سياسة الخصوصية"
+        accessibilityHint="ينقلك إلى صفحة تحتوي على تفاصيل سياسة الخصوصية كاملة"
       >
         <ThemedText style={styles.linkText}>
           سياسة الخصوصية - عرض التفاصيل
@@ -123,6 +122,8 @@ const styles = StyleSheet.create({
   link: {
     marginTop: 20,
     alignItems: 'center',
+    height: 48,
+    justifyContent: 'center',
   },
   linkText: {
     fontSize: 16,

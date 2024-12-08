@@ -12,7 +12,6 @@ import { flipSound, mushafContrast } from '@/recoil/atoms';
 
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
-
   const { textColor, backgroundColor, primaryColor, primaryLightColor } =
     useColors();
   const [mushafContrastValue, setMushafContrastValue] =
@@ -30,20 +29,27 @@ export default function SettingsScreen() {
           { borderColor: textColor, backgroundColor },
         ]}
         onPress={toggleSwitch}
+        accessibilityRole="button"
+        accessibilityLabel="تفعيل صوت قلب الصفحة"
+        accessibilityHint="اضغط لتفعيل أو تعطيل صوت قلب الصفحة"
+        accessibilityState={{ selected: isFlipSoundEnabled }}
       >
         <ThemedText type="defaultSemiBold" style={styles.itemText}>
           صوت قلب الصفحة
         </ThemedText>
         <Toggle
           color={primaryColor}
-          size={30}
+          size={40} // Increased the size for better touch target
           circleColor={primaryColor}
           toggle={isFlipSoundEnabled}
           setToggle={toggleSwitch}
           aria-checked={isFlipSoundEnabled}
           aria-label="صوت قلب الصفحة"
+          accessibilityLabel="تبديل صوت قلب الصفحة"
+          accessibilityState={{ checked: isFlipSoundEnabled }}
         />
       </Pressable>
+
       <ThemedView
         style={[
           styles.settingsSection,
@@ -83,6 +89,14 @@ export default function SettingsScreen() {
             minimumTrackTintColor={primaryLightColor}
             maximumTrackTintColor="#d3d3d3"
             thumbTintColor={primaryColor}
+            accessibilityLabel="تعديل السطوع في الوضع الليلي"
+            accessibilityValue={{
+              min: 30,
+              max: 100,
+              now: mushafContrastValue * 100,
+            }}
+            accessibilityHint="استخدم السحب لضبط السطوع في الوضع الليلي"
+            accessibilityLiveRegion="polite"
           />
         </ThemedView>
       </ThemedView>
@@ -102,7 +116,7 @@ const styles = StyleSheet.create({
     maxWidth: 640,
     marginBottom: 20,
     alignSelf: 'center',
-    paddingVertical: 30,
+    paddingVertical: 16,
     paddingHorizontal: 20,
     borderRadius: 5,
     borderColor: '#e0e0e0',
@@ -110,11 +124,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  checkbox: {
-    borderColor: '#4CAF50',
-    borderWidth: 2,
-    borderRadius: 5,
   },
   itemText: {
     fontSize: 22,
@@ -135,7 +144,7 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: '100%',
-    height: 50,
+    height: 60,
     marginVertical: 10,
   },
 });
