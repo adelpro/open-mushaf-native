@@ -1,2 +1,3 @@
 # Run commitlint to validate commit messages
+
 npx commitlint --edit "$1"

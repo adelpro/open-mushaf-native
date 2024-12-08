@@ -19,15 +19,19 @@ export default function useToastConfig() {
             borderLeftWidth: 6,
             backgroundColor: isDarkMode ? '#1f2937' : '#f0fdf4', // Dark: Slate, Light: Light Green
             borderRadius: 8,
+            margin: 10,
+            height: '100%',
           }}
           contentContainerStyle={{
-            paddingHorizontal: 15,
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            margin: 5,
             display: 'flex',
             justifyContent: 'flex-start',
+            alignItems: 'center',
           }}
           text1Style={{
-            fontSize: 15,
-            fontWeight: '400',
+            fontSize: 17,
             color: isDarkMode ? '#d1fae5' : '#155724', // Text color adjusts to theme
           }}
         />
@@ -42,11 +46,16 @@ export default function useToastConfig() {
             borderLeftWidth: 6,
             backgroundColor: isDarkMode ? '#1f2937' : '#f8d7da', // Dark: Slate, Light: Light Red
             borderRadius: 8,
+            margin: 10,
+            height: '100%',
           }}
           contentContainerStyle={{
-            paddingHorizontal: 15,
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            margin: 5,
             display: 'flex',
             justifyContent: 'flex-start',
+            alignItems: 'center',
           }}
           text1Style={{
             fontSize: 17,

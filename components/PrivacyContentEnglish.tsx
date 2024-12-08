@@ -126,8 +126,8 @@ const styles = StyleSheet.create({
   link: {
     color: '#1e90ff',
     textDecorationLine: 'underline',
-    textAlign: 'center',
-    padding: 20,
+    textAlign: 'right',
+    width: '100%',
   },
   listContainer: {
     marginTop: 40,

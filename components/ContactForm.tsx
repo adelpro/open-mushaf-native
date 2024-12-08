@@ -97,7 +97,7 @@ export default function ContactForm() {
 
       Toast.show({
         type: 'success',
-        text1: 'تم إرسال الرسالة بنجاح!',
+        text1: 'تم الإرسال بنجاح!',
       });
     } catch {
       Toast.show({

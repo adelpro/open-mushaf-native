@@ -143,8 +143,8 @@ const styles = StyleSheet.create({
   link: {
     color: '#1E90FF',
     textDecorationLine: 'underline',
-    textAlign: 'center',
-    padding: 20,
+    textAlign: 'left',
+    width: '100%',
   },
   listContainer: {
     marginTop: 40,

@@ -9,6 +9,8 @@ import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import { bottomMenuState, topMenuState } from '@/recoil/atoms';
 
+import { ThemedSafeAreaView } from './ThemedSafeAreaView';
+
 export default function TopMenu() {
   const { tintColor } = useColors();
   const [showBottomMenuState, setBottomMenuState] =
@@ -21,7 +23,7 @@ export default function TopMenu() {
   };
 
   return showTopMenuState ? (
-    <ThemedView style={styles.container}>
+    <ThemedSafeAreaView style={styles.container}>
       <ThemedView style={[styles.topMenu]}>
         <TouchableOpacity
           style={styles.icon}
@@ -65,7 +67,7 @@ export default function TopMenu() {
           </TouchableOpacity>
         </ThemedView>
       </ThemedView>
-    </ThemedView>
+    </ThemedSafeAreaView>
   ) : null;
 }
 const styles = StyleSheet.create({

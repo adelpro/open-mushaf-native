@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [2.2.1]
 
-### Fixed
+### Updated
 
-- Fixed multiple accessibility issues.
+- Add accessibility for the app.
 
 ## [2.2.0]
 
