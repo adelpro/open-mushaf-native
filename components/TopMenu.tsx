@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRecoilState } from 'recoil';
 
 import { ThemedView } from '@/components/ThemedView';
@@ -13,6 +14,7 @@ import { ThemedSafeAreaView } from './ThemedSafeAreaView';
 
 export default function TopMenu() {
   const { tintColor } = useColors();
+  const insets = useSafeAreaInsets();
   const [showBottomMenuState, setBottomMenuState] =
     useRecoilState<boolean>(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] =
@@ -23,7 +25,7 @@ export default function TopMenu() {
   };
 
   return showTopMenuState ? (
-    <ThemedSafeAreaView style={styles.container}>
+    <ThemedSafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView style={[styles.topMenu]}>
         <TouchableOpacity
           style={styles.icon}

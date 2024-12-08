@@ -1,4 +1,4 @@
-import { I18nManager, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import * as Application from 'expo-application';
 import { Href } from 'expo-router';
@@ -11,10 +11,7 @@ import { ThemedView } from '@/components/ThemedView';
 export default function AboutScreen() {
   const appVersion = Application.nativeApplicationVersion ?? 'Unknown';
   const buildVersion = Application.nativeBuildVersion ?? 'Unknown';
-  const isRTLAndroid = I18nManager.isRTL;
-  console.info(
-    `App Version: ${appVersion} (${buildVersion}) - RTL: ${isRTLAndroid}`,
-  );
+  console.info(`App Version: ${appVersion} (${buildVersion})`);
 
   const sourcesList: { text: string; link: Href; label: string }[] = [
     {
