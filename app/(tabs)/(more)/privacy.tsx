@@ -4,13 +4,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   useColorScheme,
-  View,
 } from 'react-native';
 
 import PrivacyContentArabic from '@/components/PrivacyContentArabic';
 import PrivacyContentEnglish from '@/components/PrivacyContentEnglish';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 
 export default function PrivacyScreen() {
@@ -22,7 +22,7 @@ export default function PrivacyScreen() {
   return (
     <ThemedSafeAreaView style={styles.container}>
       {/* Tab Selection */}
-      <View style={styles.tabContainer}>
+      <ThemedView style={styles.tabContainer}>
         <TouchableOpacity
           style={[
             styles.tab,
@@ -71,7 +71,7 @@ export default function PrivacyScreen() {
             English
           </ThemedText>
         </TouchableOpacity>
-      </View>
+      </ThemedView>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {selectedTab === 'arabic' ? (

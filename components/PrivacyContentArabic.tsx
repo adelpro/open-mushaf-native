@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
   },
   arabicText: {
     textAlign: 'right',
+    writingDirection: 'rtl',
   },
   link: {
     color: '#1E90FF',

@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
   },
   englishText: {
     textAlign: 'left',
+    writingDirection: 'ltr',
   },
   link: {
     color: '#1e90ff',
