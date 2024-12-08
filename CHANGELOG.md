@@ -10,6 +10,11 @@ All notable changes to this project will be documented in this file.
 - Add Toasts.
 - Add a design system for the UI.
 - Add slider in settings to change Mushaf contrast.
+- Updated ScreenShots to match v2
+
+### Fixed
+
+- Fixed SafeAreaView dark mode.
 
 ## [2.1.0]
 
