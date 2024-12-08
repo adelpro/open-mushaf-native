@@ -121,8 +121,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   englishText: {
-    textAlign: 'left',
-    writingDirection: 'ltr',
+    /*     textAlign: 'left',
+    writingDirection: 'ltr', */
   },
   link: {
     color: '#1e90ff',

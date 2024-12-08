@@ -28,8 +28,8 @@ export default function PrivacyContentArabicNew() {
         ما المعلومات التي نجمعها؟
       </ThemedText>
       <ThemedText style={[styles.content, styles.arabicText]}>
-        Open Mushaf لا تجمع أي معلومات شخصية أو أي بيانات أخرى من المستخدمين.
-        يعمل التطبيق بالكامل في وضع عدم الاتصال، ولا يتم نقل أي بيانات من جهازك.
+        لا تجمع أي معلومات شخصية أو أي بيانات أخرى من المستخدمين. يعمل التطبيق
+        بالكامل في وضع عدم الاتصال، ولا يتم نقل أي بيانات من جهازك.
       </ThemedText>
 
       <ThemedText style={[styles.subtitle, styles.arabicText]}>
@@ -138,8 +138,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   arabicText: {
-    textAlign: 'right',
-    writingDirection: 'rtl',
+    /*  textAlign: 'right',
+    writingDirection: 'rtl', */
   },
   link: {
     color: '#1E90FF',
