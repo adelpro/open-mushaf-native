@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import Slider from '@react-native-community/slider';
 import Toggle from 'react-native-toggle-input';
@@ -25,6 +25,10 @@ export default function SettingsScreen() {
   return (
     <ThemedSafeAreaView style={styles.container}>
       <Pressable
+        accessible
+        accessibilityRole="button"
+        accessibilityLabel="صوت قلب الصفحة"
+        accessibilityState={{ selected: isFlipSoundEnabled }}
         style={[
           styles.settingsSection,
           { borderColor: textColor, backgroundColor },
@@ -51,6 +55,8 @@ export default function SettingsScreen() {
         ]}
       >
         <ThemedView
+          accessible
+          accessibilityLabel="تحكم في السطوع"
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -70,8 +76,16 @@ export default function SettingsScreen() {
           </ThemedText>
         </ThemedView>
 
-        <View style={styles.sliderContainer}>
+        <ThemedView style={styles.sliderContainer}>
           <Slider
+            accessible
+            accessibilityRole="adjustable"
+            accessibilityLabel="تحكم في قيمة السطوع"
+            accessibilityValue={{
+              min: 0.3,
+              max: 1,
+              now: mushafContrastValue,
+            }}
             style={[styles.slider, { transform: [{ scaleX: -1 }] }]}
             minimumValue={0.3}
             maximumValue={1}
@@ -84,7 +98,7 @@ export default function SettingsScreen() {
             maximumTrackTintColor="#d3d3d3"
             thumbTintColor={primaryColor}
           />
-        </View>
+        </ThemedView>
       </ThemedView>
     </ThemedSafeAreaView>
   );

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.1]
+
+### Fixed
+
+- Fixed multiple accessibility issues.
+
 ## [2.2.0]
 
 ### Updated

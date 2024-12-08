@@ -35,6 +35,7 @@ type Props = {
   surah: number;
   opacity: number;
 };
+
 export default function Tafseer({ aya, surah, opacity }: Props) {
   const { tintColor, textColor } = useColors();
 
@@ -134,6 +135,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
   useEffect(() => {
     loadTafseerData();
   }, [loadTafseerData]);
+
   return (
     <ThemedView style={[styles.container, { opacity }]}>
       <ThemedText style={[styles.title, { backgroundColor: 'transparent' }]}>
@@ -154,6 +156,9 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
                 { backgroundColor: 'transparent' },
               ]}
               onPress={() => setSelectedTab(tabKey)}
+              // Add unique accessibility label
+              accessibilityLabel={`${tabLabels[tabKey]} for Surah ${surahName}, Aya ${aya}`}
+              accessibilityHint={`Tap to see the tafseer for Surah ${surahName}, Aya ${aya} from ${tabLabels[tabKey]}`}
             >
               <ThemedText
                 style={{ color: tintColor, backgroundColor: 'transparent' }}

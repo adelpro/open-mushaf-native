@@ -76,7 +76,10 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   if (!show) return null;
 
   return (
-    <ThemedView style={[styles.overlay]}>
+    <ThemedView
+      style={[styles.overlay]}
+      accessibilityLabel={`تفسير الآية ${aya}`}
+    >
       <Pressable style={styles.background} onPress={() => setShow(false)}>
         <Pressable
           ref={popupRef}

@@ -15,6 +15,7 @@ export default function AboutScreen() {
   console.info(
     `App Version: ${appVersion} (${buildVersion}) - RTL: ${isRTLAndroid}`,
   );
+
   const sourcesList: { text: string; link: Href; label: string }[] = [
     {
       text: 'صفحات المصحف من ',
@@ -47,6 +48,7 @@ export default function AboutScreen() {
       label: 'Pixabay',
     },
   ];
+
   const featuresList = [
     'برواية ورش',
     'الوصول إلى المصحف دون اتصال بالإنترنت.',
@@ -58,32 +60,52 @@ export default function AboutScreen() {
   return (
     <ThemedSafeAreaView style={styles.container}>
       <ThemedView style={styles.mainContent}>
-        <ThemedText type="title" style={styles.title}>
+        <ThemedText
+          type="title"
+          style={styles.title}
+          accessible={true}
+          accessibilityLabel="المصادر"
+        >
           المصادر
         </ThemedText>
+
         <ThemedView style={styles.listContainer}>
           {sourcesList.map(({ text, link, label }, index) => (
-            <ThemedView style={styles.listItem} key={index}>
+            <ThemedView style={styles.listItem} key={index} accessible={true}>
               <ThemedText style={styles.bullet}>•</ThemedText>
               <ThemedText style={styles.listText}>
                 {text}&nbsp;
-                <ExternalLink href={link} style={styles.link}>
+                <ExternalLink
+                  href={link}
+                  style={styles.link}
+                  accessible={true}
+                  accessibilityLabel={label}
+                  accessibilityHint={`فتح الرابط إلى ${label}`}
+                >
                   {label}
                 </ExternalLink>
               </ThemedText>
             </ThemedView>
           ))}
         </ThemedView>
-        <ThemedText type="title" style={styles.title}>
+
+        <ThemedText
+          type="title"
+          style={styles.title}
+          accessible={true}
+          accessibilityLabel="الميزات"
+        >
           الميزات
         </ThemedText>
+
         <ThemedView style={styles.listContainer}>
           {featuresList.map((feature, index) => (
-            <ThemedView style={styles.listItem} key={index}>
+            <ThemedView style={styles.listItem} key={index} accessible={true}>
               <ThemedText style={styles.bullet}>•</ThemedText>
               <ThemedText style={styles.listText}>{feature}</ThemedText>
             </ThemedView>
           ))}
+
           <ThemedView style={styles.listItem}>
             <ThemedText style={styles.bullet}>•</ThemedText>
             <ThemedText style={styles.listText}>
@@ -91,6 +113,9 @@ export default function AboutScreen() {
               <ExternalLink
                 href="https://github.com/adelpro/open-mushaf-native"
                 style={styles.link}
+                accessible={true}
+                accessibilityLabel="Open Mushaf Native repository"
+                accessibilityHint="فتح الرابط إلى مستودع Open Mushaf Native"
               >
                 open-mushaf-native
               </ExternalLink>
@@ -98,10 +123,15 @@ export default function AboutScreen() {
           </ThemedView>
         </ThemedView>
 
-        <ThemedText style={styles.copyright}>
+        <ThemedText style={styles.copyright} accessible={true}>
           © {new Date().getFullYear()} Open-Mushaf. جميع الحقوق محفوظة.
         </ThemedText>
-        <ThemedText style={styles.versionText}>
+
+        <ThemedText
+          style={styles.versionText}
+          accessible={true}
+          accessibilityLabel={`إصدار التطبيق: ${appVersion} (${buildVersion})`}
+        >
           الإصدار: {`${appVersion} (${buildVersion})`}
         </ThemedText>
       </ThemedView>

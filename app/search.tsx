@@ -51,12 +51,19 @@ export default function Search() {
   };
 
   const renderItem = ({ item }: { item: QuranText }) => (
-    <TouchableOpacity onPress={() => handlePress(item)}>
+    <TouchableOpacity
+      accessibilityRole="button"
+      accessibilityLabel={`فتح تفسير للآية ${item.aya_id} من سورة ${item.sura_name}`}
+      accessibilityHint="سيظهر نافذة تحتوي على تفسير الآية"
+      onPress={() => handlePress(item)}
+    >
       <ThemedView style={[styles.item, { borderBottomColor: tintColor }]}>
         <ThemedText type="default" style={styles.uthmani}>
           {item.uthmani}
         </ThemedText>
         <Pressable
+          accessibilityRole="link"
+          accessibilityLabel={`انتقال إلى الصفحة ${item.page_id}`}
           onPress={() => {
             router.replace({
               pathname: '/',
@@ -85,6 +92,9 @@ export default function Search() {
             handleSearch(text);
           }}
           value={inputText}
+          accessibilityRole="search"
+          accessibilityLabel="حقل البحث عن الآيات"
+          accessibilityHint="أدخل نصًا للبحث عن الآيات"
         />
         <Ionicons
           name="search"
@@ -102,6 +112,8 @@ export default function Search() {
         ListEmptyComponent={
           query ? <ThemedText type="default">لا توجد نتائج</ThemedText> : null
         }
+        accessibilityRole="list"
+        accessibilityLabel="نتائج البحث"
       />
       <TafseerPopup
         show={show}

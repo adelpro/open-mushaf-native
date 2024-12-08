@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text } from 'react-native';
 
 import { FontAwesome } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
@@ -122,6 +121,8 @@ export default function ContactForm() {
         onChangeText={(text) => handleChange('name', text)}
         placeholder="الإسم"
         aria-labelledby="name"
+        accessibilityLabel="Name input"
+        accessibilityHint="Please enter your full name."
       />
 
       <ThemedText id="email" style={styles.label}>
@@ -135,6 +136,8 @@ export default function ContactForm() {
         placeholderTextColor={secondaryColor}
         keyboardType="email-address"
         aria-labelledby="email"
+        accessibilityLabel="Email input"
+        accessibilityHint="Please enter a valid email address."
       />
 
       <ThemedText id="message" style={styles.label}>
@@ -148,6 +151,8 @@ export default function ContactForm() {
         placeholderTextColor={secondaryColor}
         multiline
         aria-labelledby="message"
+        accessibilityLabel="Message input"
+        accessibilityHint="Please type your message here."
       />
 
       <ThemedButton
@@ -157,6 +162,9 @@ export default function ContactForm() {
         ]}
         variant="primary"
         onPress={handleSubmit}
+        accessibilityLabel={isLoading ? 'Sending message' : 'Submit the form'}
+        accessibilityRole="button"
+        accessibilityState={{ disabled: isLoading }}
       >
         {isLoading ? (
           <Text>

@@ -95,8 +95,15 @@ export default function Navigation() {
             size={24}
             color={iconColor}
             style={styles.icon}
+            accessibilityLabel="Page selection icon"
           />
-          <ThemedText style={styles.label}>الانتقال إلى الصفحة:</ThemedText>
+          <ThemedText
+            style={styles.label}
+            accessibilityLabel="Navigate to a page"
+            accessibilityRole="header"
+          >
+            الانتقال إلى الصفحة:
+          </ThemedText>
         </ThemedView>
         <Picker
           style={[styles.pickerContainer, { color: textColor }]}
@@ -105,6 +112,9 @@ export default function Navigation() {
             handlePageChange(item);
           }}
           dropdownIconColor={iconColor}
+          accessibilityLabel="Select page"
+          accessibilityHint="Choose a page number to navigate to"
+          accessibilityRole="combobox"
         >
           {pages.map((page) => (
             <Picker.Item key={page} label={page.toString()} value={page} />
@@ -119,8 +129,15 @@ export default function Navigation() {
             size={24}
             color={iconColor}
             style={styles.icon}
+            accessibilityLabel="Surah selection icon"
           />
-          <ThemedText style={styles.label}>الانتقال إلى الآية:</ThemedText>
+          <ThemedText
+            style={styles.label}
+            accessibilityLabel="Navigate to Surah and Aya"
+            accessibilityRole="header"
+          >
+            الانتقال إلى الآية:
+          </ThemedText>
         </ThemedView>
         <ThemedView style={styles.pickerContainer}>
           <Picker
@@ -130,6 +147,9 @@ export default function Navigation() {
               handleSurahChange(item);
             }}
             dropdownIconColor={iconColor}
+            accessibilityLabel="Select Surah"
+            accessibilityHint="Choose a Surah from the list"
+            accessibilityRole="combobox"
           >
             {surahs.map((surah) => (
               <Picker.Item
@@ -139,7 +159,12 @@ export default function Navigation() {
               />
             ))}
           </Picker>
-          <ThemedText style={styles.separator}>-</ThemedText>
+          <ThemedText
+            style={styles.separator}
+            accessibilityLabel="Separator between Surah and Aya"
+          >
+            -
+          </ThemedText>
           <Picker
             style={[styles.picker, styles.ayaPicker, { color: textColor }]}
             selectedValue={currentAyaNumber}
@@ -147,6 +172,9 @@ export default function Navigation() {
               handleAyaChange(item);
             }}
             dropdownIconColor={iconColor}
+            accessibilityLabel="Select Aya"
+            accessibilityHint="Choose an Aya from the Surah"
+            accessibilityRole="combobox"
           >
             {numberOfAyas.map((aya) => (
               <Picker.Item key={aya} label={aya.toString()} value={aya} />
