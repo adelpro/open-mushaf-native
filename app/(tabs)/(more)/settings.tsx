@@ -89,14 +89,14 @@ export default function SettingsScreen() {
             minimumTrackTintColor={primaryLightColor}
             maximumTrackTintColor="#d3d3d3"
             thumbTintColor={primaryColor}
-            accessibilityLabel="تعديل السطوع في الوضع الليلي"
+            /*             accessibilityLabel="تعديل السطوع في الوضع الليلي"
             accessibilityValue={{
               min: 30,
               max: 100,
               now: mushafContrastValue * 100,
             }}
             accessibilityHint="استخدم السحب لضبط السطوع في الوضع الليلي"
-            accessibilityLiveRegion="polite"
+            accessibilityLiveRegion="polite" */
           />
         </ThemedView>
       </ThemedView>
