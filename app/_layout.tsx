@@ -15,6 +15,7 @@ import {
 } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ReactNativeRecoilPersist, {
@@ -74,6 +75,7 @@ export default function RootLayout() {
     <RecoilRoot>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
+          <StatusBar style="auto" />
           <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
             <ThemeProvider
               value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
