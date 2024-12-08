@@ -121,8 +121,6 @@ export default function ContactForm() {
         onChangeText={(text) => handleChange('name', text)}
         placeholder="الإسم"
         aria-labelledby="name"
-        accessibilityLabel="Name input"
-        accessibilityHint="Please enter your full name."
       />
 
       <ThemedText id="email" style={styles.label}>
@@ -136,8 +134,6 @@ export default function ContactForm() {
         placeholderTextColor={secondaryColor}
         keyboardType="email-address"
         aria-labelledby="email"
-        accessibilityLabel="Email input"
-        accessibilityHint="Please enter a valid email address."
       />
 
       <ThemedText id="message" style={styles.label}>
@@ -151,8 +147,6 @@ export default function ContactForm() {
         placeholderTextColor={secondaryColor}
         multiline
         aria-labelledby="message"
-        accessibilityLabel="Message input"
-        accessibilityHint="Please type your message here."
       />
 
       <ThemedButton

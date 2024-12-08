@@ -93,8 +93,6 @@ export default function Search() {
           }}
           value={inputText}
           accessibilityRole="search"
-          accessibilityLabel="حقل البحث عن الآيات"
-          accessibilityHint="أدخل نصًا للبحث عن الآيات"
         />
         <Ionicons
           name="search"

@@ -156,8 +156,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
                 { backgroundColor: 'transparent' },
               ]}
               onPress={() => setSelectedTab(tabKey)}
-              // Add unique accessibility label
-              accessibilityLabel={`${tabLabels[tabKey]} for Surah ${surahName}, Aya ${aya}`}
+              accessibilityLabel={`${tabLabels[tabKey]} tab for Surah ${surahName}, Aya ${aya}`}
               accessibilityHint={`Tap to see the tafseer for Surah ${surahName}, Aya ${aya} from ${tabLabels[tabKey]}`}
             >
               <ThemedText

@@ -80,6 +80,19 @@ export default function PrivacyScreen() {
           <PrivacyContentEnglish />
         )}
       </ScrollView>
+
+      {/* Add descriptive link */}
+      <TouchableOpacity
+        style={styles.link}
+        onPress={() => console.log('Privacy policy link clicked')}
+        accessibilityRole="link"
+        accessibilityLabel="Privacy policy details link"
+        accessibilityHint="Opens the full privacy policy in a new screen."
+      >
+        <ThemedText style={styles.linkText}>
+          سياسة الخصوصية - عرض التفاصيل
+        </ThemedText>
+      </TouchableOpacity>
     </ThemedSafeAreaView>
   );
 }
@@ -106,5 +119,14 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 40,
+  },
+  link: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  linkText: {
+    fontSize: 16,
+    color: Colors.light.tint,
+    textDecorationLine: 'underline',
   },
 });
