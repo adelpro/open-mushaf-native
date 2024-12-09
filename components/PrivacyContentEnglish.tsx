@@ -106,7 +106,7 @@ export default function PrivacyContentEnglish() {
       </ThemedText>
       <ExternalLink
         href={'https://adelpro.github.io/open-mushaf/privacy-policy-ar.html'}
-        style={[styles.listContainer]}
+        style={[styles.linkContainer]}
       >
         <ThemedText style={[styles.link, styles.englishText]}>
           Privacy Policy (Link)
@@ -140,7 +140,6 @@ const styles = StyleSheet.create({
   },
   englishText: {
     textAlign: 'left',
-    writingDirection: 'ltr',
   },
   link: {
     color: '#1e90ff',
@@ -148,7 +147,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     width: '100%',
   },
-  listContainer: {
+  linkContainer: {
     marginTop: 40,
     marginBottom: 10,
     display: 'flex',

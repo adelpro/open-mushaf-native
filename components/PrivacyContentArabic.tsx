@@ -104,7 +104,7 @@ export default function PrivacyContentArabicNew() {
 
       <ExternalLink
         href={'https://adelpro.github.io/open-mushaf/privacy-policy-ar.html'}
-        style={[styles.listContainer]}
+        style={[styles.linkContainer]}
       >
         <ThemedText style={[styles.link, styles.arabicText]}>
           سياسة الخصوصية (الرابط)
@@ -125,7 +125,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     paddingVertical: 20,
-    backgroundColor: 'red',
   },
   subtitle: {
     fontSize: 20,
@@ -140,15 +139,14 @@ const styles = StyleSheet.create({
   },
   arabicText: {
     textAlign: 'right',
-    writingDirection: 'rtl',
   },
   link: {
     color: '#1E90FF',
     textDecorationLine: 'underline',
-    textAlign: 'left',
+    textAlign: 'right',
     width: '100%',
   },
-  listContainer: {
+  linkContainer: {
     marginTop: 40,
     marginBottom: 10,
     display: 'flex',
