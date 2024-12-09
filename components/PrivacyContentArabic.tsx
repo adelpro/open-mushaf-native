@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   arabicText: {
-    textAlign: 'right',
+    /* textAlign: 'right', */
   },
   link: {
     color: '#1E90FF',

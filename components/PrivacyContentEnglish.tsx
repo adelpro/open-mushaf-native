@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   englishText: {
-    textAlign: 'left',
+    /* textAlign: 'left', */
   },
   link: {
     color: '#1e90ff',
