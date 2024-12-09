@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    display: 'flex',
     alignItems: 'flex-end',
   },
 
@@ -132,6 +133,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600',
     marginTop: 20,
+    paddingVertical: 10,
   },
   content: {
     fontSize: 16,
