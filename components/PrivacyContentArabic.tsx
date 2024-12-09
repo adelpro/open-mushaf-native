@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   link: {
     color: '#1E90FF',
     textDecorationLine: 'underline',
-    textAlign: 'right',
+    /* textAlign: 'right', */
     width: '100%',
   },
   linkContainer: {
