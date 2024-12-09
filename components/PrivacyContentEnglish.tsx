@@ -101,8 +101,9 @@ export default function PrivacyContentEnglish() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     padding: 20,
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
   },
 
   title: {
