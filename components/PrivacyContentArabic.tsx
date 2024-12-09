@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     paddingVertical: 20,
+    backgroundColor: 'red',
   },
   subtitle: {
     fontSize: 20,
@@ -138,8 +139,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   arabicText: {
-    /*  textAlign: 'right',
-    writingDirection: 'rtl', */
+    textAlign: 'right',
+    writingDirection: 'rtl',
   },
   link: {
     color: '#1E90FF',
