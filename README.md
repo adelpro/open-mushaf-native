@@ -9,6 +9,7 @@
 ![Expo](https://img.shields.io/badge/Expo-1B1F23?logo=expo&logoColor=fff&style=flat)
 ![React Native](https://img.shields.io/badge/React%20Native-20232A?logo=react&logoColor=61DAFB)
 ![Supports Android, iOS, web, macOS and Windows](https://img.shields.io/badge/platforms-android%20%7C%20ios%20%7C%20web%20%7C%20macos%20%7C%20windows-lightgrey.svg)
+![Hits](https://hits.sh/github.com/<your-username>/<your-repo>.svg?label=Visitors&color=blue&style=flat-square)
 
 ## About
 
