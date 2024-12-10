@@ -15,15 +15,21 @@ import {
 } from 'expo-keep-awake';
 import { useRouter } from 'expo-router';
 import { GestureDetector } from 'react-native-gesture-handler';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import Animated, {
+  SlideInDown,
+  SlideOutUp,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 import { useRecoilValue } from 'recoil';
 
+import hizbJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.json';
 import { defaultNumberOfPages } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagesArray from '@/hooks/useImagesArray';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import { flipSound, mushafContrast } from '@/recoil/atoms';
+import { Hizb } from '@/types';
 
 import PageOverlay from './PageOverlay';
 import { ThemedText } from './ThemedText';
@@ -33,6 +39,8 @@ export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
   const isFlipSoundEnabled = useRecoilValue(flipSound);
   const mushafContrastValue = useRecoilValue(mushafContrast);
+  const hizbData = hizbJson as Hizb[];
+  const [currentHizb, setCurrentHizb] = useState<number | null>(null);
 
   const colorScheme = useColorScheme();
   const { tintColor } = useColors();
@@ -130,6 +138,16 @@ export default function MushafPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const hizb = hizbData.find((hizb) => hizb.startingPage === currentPage);
+    if (hizb && hizb.number !== 1) {
+      setCurrentHizb(hizb.number);
+      return;
+    }
+
+    setCurrentHizb(null);
+  }, [currentPage, hizbData]);
+
   if (assetError) {
     return (
       <ThemedView
@@ -173,15 +191,28 @@ export default function MushafPage() {
         onLayout={handleImageLayout}
       >
         {asset?.localUri ? (
-          <Image
-            style={[
-              styles.image,
-              { width: '100%' },
-              colorScheme === 'dark' && { opacity: mushafContrastValue },
-            ]}
-            source={{ uri: asset?.localUri }}
-            contentFit="fill"
-          />
+          <>
+            <Image
+              style={[
+                styles.image,
+                { width: '100%' },
+                colorScheme === 'dark' && { opacity: mushafContrastValue },
+              ]}
+              source={{ uri: asset?.localUri }}
+              contentFit="fill"
+            />
+            {currentHizb ? (
+              <Animated.View
+                entering={SlideInDown}
+                exiting={SlideOutUp}
+                style={styles.notification}
+              >
+                <ThemedText style={styles.notificationText}>
+                  حزب - {currentHizb}
+                </ThemedText>
+              </Animated.View>
+            ) : null}
+          </>
         ) : (
           <ActivityIndicator size="large" color={tintColor} />
         )}
@@ -221,5 +252,20 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  notification: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    padding: 15,
+    backgroundColor: '#6200ea',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  notificationText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
