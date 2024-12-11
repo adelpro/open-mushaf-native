@@ -1,10 +1,10 @@
 import { Pressable, StyleSheet } from 'react-native';
 
 import Slider from '@react-native-community/slider';
-import SegmentedControl from 'react-native-segmented-control-2';
 import Toggle from 'react-native-toggle-input';
 import { useRecoilState } from 'recoil';
 
+import SegmentedControl from '@/components/SegmentControl';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -13,7 +13,7 @@ import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
 
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
-  const options = ['disabled', 'hizb', 'Juz'];
+  const options = ['تعطيل', 'حزب', 'جزء'];
 
   const [HizbNotificationValue, setHizbNotificationValue] =
     useRecoilState<number>(hizbNotification);
@@ -116,31 +116,23 @@ export default function SettingsScreen() {
           style={{
             display: 'flex',
             flexDirection: 'row',
-            //justifyContent: 'flex-start',
             alignItems: 'center',
             width: '100%',
           }}
         >
           <ThemedText type="defaultSemiBold" style={styles.itemText}>
-            التنبيهات
+            تفعيل التنبيهات
           </ThemedText>
         </ThemedView>
         <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
           <SegmentedControl
-            tabs={options}
-            initialIndex={HizbNotificationValue}
-            onChange={(index: number) =>
+            options={options}
+            initialSelectedIndex={HizbNotificationValue}
+            activeColor={primaryColor}
+            textColor={primaryColor}
+            onSelectionChange={(index: number) =>
               handleHizbNotificationValueChange(index)
             }
-            style={{
-              marginTop: 32,
-              backgroundColor: '#ffe0e0',
-              borderColor: 'black',
-              justifyContent: 'flex-end',
-            }}
-            tabStyle={{ backgroundColor: 'blue' }}
-            activeTabColor="#ff2929"
-            activeTextColor="#fff"
           />
         </Pressable>
       </ThemedView>
@@ -200,6 +192,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     padding: 5,
     borderRadius: 5,
-    //transform: [{ scaleX: -1 }],
   },
 });

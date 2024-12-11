@@ -24,7 +24,7 @@ import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagesArray from '@/hooks/useImagesArray';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
-import { flipSound, mushafContrast } from '@/recoil/atoms';
+import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
 import { Hizb } from '@/types';
 
 import PageOverlay from './PageOverlay';
@@ -36,8 +36,10 @@ export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
   const isFlipSoundEnabled = useRecoilValue(flipSound);
   const mushafContrastValue = useRecoilValue(mushafContrast);
+  const HizbNotificationValue = useRecoilValue(hizbNotification);
   const hizbData = hizbJson as Hizb[];
   const [currentHizb, setCurrentHizb] = useState<number | null>(null);
+  const [showNotification, setShowNotification] = useState(false);
 
   const colorScheme = useColorScheme();
   const { tintColor } = useColors();
@@ -112,6 +114,35 @@ export default function MushafPage() {
       sound.current?.unloadAsync().then(() => (sound.current = null));
     };
   }, [isFlipSoundEnabled]);
+
+  useEffect(() => {
+    if (!currentHizb) {
+      setShowNotification(false);
+      return;
+    }
+
+    if (HizbNotificationValue === 0) {
+      setShowNotification(false);
+      return;
+    }
+
+    if (HizbNotificationValue === 1) {
+      setShowNotification(true);
+      return;
+    }
+
+    if (HizbNotificationValue === 2) {
+      if (currentHizb % 2 === 0) {
+        setShowNotification(true);
+      } else {
+        setShowNotification(false);
+      }
+      return;
+    }
+
+    // Default case: hide notification
+    setShowNotification(false);
+  }, [currentHizb, HizbNotificationValue]);
 
   useEffect(() => {
     const tag = 'MushafPage';
@@ -199,7 +230,7 @@ export default function MushafPage() {
               contentFit="fill"
             />
             <TopNotification
-              show={!!currentHizb}
+              show={showNotification}
               text={`الحزب - ${currentHizb?.toString()}`}
             />
           </>
