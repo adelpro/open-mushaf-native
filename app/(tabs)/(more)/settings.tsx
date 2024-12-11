@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet } from 'react-native';
 
 import Slider from '@react-native-community/slider';
-import SegmentedControl from '@react-native-segmented-control/segmented-control';
+import SegmentedControl from 'react-native-segmented-control-2';
 import Toggle from 'react-native-toggle-input';
 import { useRecoilState } from 'recoil';
 
@@ -10,12 +10,6 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
-
-type SegmentedControlEvent = {
-  nativeEvent: {
-    selectedSegmentIndex: number;
-  };
-};
 
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
@@ -122,7 +116,7 @@ export default function SettingsScreen() {
           style={{
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'flex-start',
+            //justifyContent: 'flex-start',
             alignItems: 'center',
             width: '100%',
           }}
@@ -131,25 +125,22 @@ export default function SettingsScreen() {
             التنبيهات
           </ThemedText>
         </ThemedView>
-        <Pressable
-          style={[{ width: '100%', borderColor: textColor, backgroundColor }]}
-          accessibilityRole="radiogroup"
-        >
+        <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
           <SegmentedControl
-            values={options}
-            selectedIndex={HizbNotificationValue}
-            onChange={(event: SegmentedControlEvent) =>
-              handleHizbNotificationValueChange(
-                event.nativeEvent.selectedSegmentIndex,
-              )
+            tabs={options}
+            initialIndex={HizbNotificationValue}
+            onChange={(index: number) =>
+              handleHizbNotificationValueChange(index)
             }
-            style={[
-              styles.segmentedControl,
-              { borderRadius: 5, marginVertical: 8 },
-            ]}
-            tabStyle={styles.segmentedControlTab}
-            accessibilityLabel="تغيير حالة التنبيهات"
-            accessibilityHint="اضغط لاختيار حالة التنبيهات"
+            style={{
+              marginTop: 32,
+              backgroundColor: '#ffe0e0',
+              borderColor: 'black',
+              justifyContent: 'flex-end',
+            }}
+            tabStyle={{ backgroundColor: 'blue' }}
+            activeTabColor="#ff2929"
+            activeTextColor="#fff"
           />
         </Pressable>
       </ThemedView>
@@ -203,9 +194,12 @@ const styles = StyleSheet.create({
   segmentedControl: {
     width: '100%',
     maxWidth: 640,
+    marginVertical: 8,
   },
   segmentedControlTab: {
-    backgroundColor: 'red',
-    height: 40,
+    backgroundColor: 'transparent',
+    padding: 5,
+    borderRadius: 5,
+    //transform: [{ scaleX: -1 }],
   },
 });
