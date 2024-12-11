@@ -200,7 +200,7 @@ export default function MushafPage() {
             />
             <TopNotification
               show={!!currentHizb}
-              text={`الحزب: ${currentHizb?.toString()}`}
+              text={`الحزب - ${currentHizb?.toString()}`}
             />
           </>
         ) : (

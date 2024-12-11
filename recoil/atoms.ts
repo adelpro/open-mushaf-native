@@ -39,6 +39,12 @@ export const mushafContrast = atom<number>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
+export const hizbNotification = atom<number>({
+  key: 'HizbNotification',
+  default: 0,
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+
 // Create a timer effect for Recoil state
 const timerEffect: (duration_ms: number) => AtomEffect<any> =
   (duration_ms: number) =>

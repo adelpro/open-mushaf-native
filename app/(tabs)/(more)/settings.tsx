@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet } from 'react-native';
 
 import Slider from '@react-native-community/slider';
+import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import Toggle from 'react-native-toggle-input';
 import { useRecoilState } from 'recoil';
 
@@ -8,10 +9,20 @@ import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
-import { flipSound, mushafContrast } from '@/recoil/atoms';
+import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
+
+type SegmentedControlEvent = {
+  nativeEvent: {
+    selectedSegmentIndex: number;
+  };
+};
 
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
+  const options = ['disabled', 'hizb', 'Juz'];
+
+  const [HizbNotificationValue, setHizbNotificationValue] =
+    useRecoilState<number>(hizbNotification);
   const { textColor, backgroundColor, primaryColor, primaryLightColor } =
     useColors();
   const [mushafContrastValue, setMushafContrastValue] =
@@ -19,6 +30,15 @@ export default function SettingsScreen() {
 
   const toggleSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
+  };
+
+  const handleHizbNotificationValueChange = (value: number) => {
+    if (value === 1 || value === 2) {
+      setHizbNotificationValue(value);
+      return;
+    }
+
+    setHizbNotificationValue(0);
   };
 
   return (
@@ -39,7 +59,7 @@ export default function SettingsScreen() {
         </ThemedText>
         <Toggle
           color={primaryColor}
-          size={40} // Increased the size for better touch target
+          size={40}
           circleColor={primaryColor}
           toggle={isFlipSoundEnabled}
           setToggle={toggleSwitch}
@@ -89,16 +109,49 @@ export default function SettingsScreen() {
             minimumTrackTintColor={primaryLightColor}
             maximumTrackTintColor="#d3d3d3"
             thumbTintColor={primaryColor}
-            /*             accessibilityLabel="تعديل السطوع في الوضع الليلي"
-            accessibilityValue={{
-              min: 30,
-              max: 100,
-              now: mushafContrastValue * 100,
-            }}
-            accessibilityHint="استخدم السحب لضبط السطوع في الوضع الليلي"
-            accessibilityLiveRegion="polite" */
           />
         </ThemedView>
+      </ThemedView>
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          { display: 'flex', flexDirection: 'column' },
+        ]}
+      >
+        <ThemedView
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            width: '100%',
+          }}
+        >
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
+            التنبيهات
+          </ThemedText>
+        </ThemedView>
+        <Pressable
+          style={[{ width: '100%', borderColor: textColor, backgroundColor }]}
+          accessibilityRole="radiogroup"
+        >
+          <SegmentedControl
+            values={options}
+            selectedIndex={HizbNotificationValue}
+            onChange={(event: SegmentedControlEvent) =>
+              handleHizbNotificationValueChange(
+                event.nativeEvent.selectedSegmentIndex,
+              )
+            }
+            style={[
+              styles.segmentedControl,
+              { borderRadius: 5, marginVertical: 8 },
+            ]}
+            tabStyle={styles.segmentedControlTab}
+            accessibilityLabel="تغيير حالة التنبيهات"
+            accessibilityHint="اضغط لاختيار حالة التنبيهات"
+          />
+        </Pressable>
       </ThemedView>
     </ThemedSafeAreaView>
   );
@@ -146,5 +199,13 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     marginVertical: 10,
+  },
+  segmentedControl: {
+    width: '100%',
+    maxWidth: 640,
+  },
+  segmentedControlTab: {
+    backgroundColor: 'red',
+    height: 40,
   },
 });

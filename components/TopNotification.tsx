@@ -29,7 +29,7 @@ export default function TopNotification({ show, text }: Props) {
       exiting={SlideOutUp}
       style={styles.notification}
     >
-      <ThemedText style={styles.notificationText}>text</ThemedText>
+      <ThemedText style={styles.notificationText}>{text}</ThemedText>
     </Animated.View>
   );
 }
@@ -37,22 +37,24 @@ export default function TopNotification({ show, text }: Props) {
 const styles = StyleSheet.create({
   notification: {
     position: 'absolute',
+    justifyContent: 'center',
+    alignSelf: 'center',
     top: 10,
-    maxWidth: 300,
+    maxWidth: 180,
     width: '50%',
     height: 50,
-    padding: 15,
+    padding: 5,
     alignItems: 'center',
     zIndex: 10,
-    borderRadius: 10,
-    backgroundColor: '#F2F2F2',
-    fontFamily: 'Amiri_400Regular',
-    fontSize: 16,
+    borderRadius: 2,
+    backgroundColor: '#333333',
+    opacity: 0.8,
   },
   notificationText: {
     textAlign: 'center',
-    color: '#333333',
+    color: '#F2F2F2',
+    fontFamily: 'Amiri_400Regular',
     fontSize: 16,
-    fontWeight: 'bold',
+    paddingHorizontal: 10,
   },
 });
