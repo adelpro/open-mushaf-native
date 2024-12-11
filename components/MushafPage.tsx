@@ -132,7 +132,7 @@ export default function MushafPage() {
     }
 
     if (HizbNotificationValue === 2) {
-      if (currentHizb % 2 === 0) {
+      if (currentHizb % 2 !== 0) {
         setShowNotification(true);
       } else {
         setShowNotification(false);
@@ -231,7 +231,11 @@ export default function MushafPage() {
             />
             <TopNotification
               show={showNotification}
-              text={`الحزب - ${currentHizb?.toString()}`}
+              text={
+                currentHizb && HizbNotificationValue === 2
+                  ? `الجزء - ${(currentHizb - 1)?.toString()}`
+                  : `الحزب - ${currentHizb?.toString()}`
+              }
             />
           </>
         ) : (

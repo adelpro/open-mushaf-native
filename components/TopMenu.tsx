@@ -1,7 +1,12 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 
-import { Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+  SimpleLineIcons,
+} from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRecoilState } from 'recoil';
@@ -14,7 +19,10 @@ import { ThemedSafeAreaView } from './ThemedSafeAreaView';
 
 export default function TopMenu() {
   const { tintColor } = useColors();
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
   const insets = useSafeAreaInsets();
+
   const [showBottomMenuState, setBottomMenuState] =
     useRecoilState<boolean>(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] =
@@ -25,8 +33,22 @@ export default function TopMenu() {
   };
 
   return showTopMenuState ? (
-    <ThemedSafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
-      <ThemedView style={[styles.topMenu]}>
+    <ThemedSafeAreaView
+      style={[
+        styles.container,
+        {
+          paddingTop: insets.top,
+        },
+      ]}
+    >
+      <ThemedView
+        style={[
+          styles.topMenu,
+          isDarkMode
+            ? { backgroundColor: 'rgba(0, 0, 0, 0.5)' }
+            : { backgroundColor: 'rgba(255, 255, 255, 0.5)' },
+        ]}
+      >
         <TouchableOpacity
           style={styles.icon}
           onPress={() => {
@@ -35,8 +57,8 @@ export default function TopMenu() {
           }}
         >
           {showBottomMenuState ? (
-            <SimpleLineIcons
-              name="size-fullscreen"
+            <MaterialCommunityIcons
+              name="fit-to-screen-outline"
               size={40}
               color={tintColor}
             />
@@ -95,7 +117,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '100%',
     maxWidth: 640,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   icon: {
     padding: 10,
