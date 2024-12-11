@@ -15,11 +15,7 @@ import {
 } from 'expo-keep-awake';
 import { useRouter } from 'expo-router';
 import { GestureDetector } from 'react-native-gesture-handler';
-import Animated, {
-  SlideInDown,
-  SlideOutUp,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useRecoilValue } from 'recoil';
 
 import hizbJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.json';
@@ -34,6 +30,7 @@ import { Hizb } from '@/types';
 import PageOverlay from './PageOverlay';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
+import TopNotification from './TopNotification';
 
 export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
@@ -201,17 +198,10 @@ export default function MushafPage() {
               source={{ uri: asset?.localUri }}
               contentFit="fill"
             />
-            {currentHizb ? (
-              <Animated.View
-                entering={SlideInDown}
-                exiting={SlideOutUp}
-                style={styles.notification}
-              >
-                <ThemedText style={styles.notificationText}>
-                  حزب - {currentHizb}
-                </ThemedText>
-              </Animated.View>
-            ) : null}
+            <TopNotification
+              show={!!currentHizb}
+              text={`الحزب: ${currentHizb?.toString()}`}
+            />
           </>
         ) : (
           <ActivityIndicator size="large" color={tintColor} />
@@ -252,20 +242,5 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  notification: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    padding: 15,
-    backgroundColor: '#6200ea',
-    alignItems: 'center',
-    zIndex: 10,
-  },
-  notificationText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
