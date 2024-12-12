@@ -1,5 +1,5 @@
 import React from 'react';
-import { I18nManager, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -7,9 +7,8 @@ import { ThemedView } from '@/components/ThemedView';
 import { ExternalLink } from './ExternalLink';
 
 export default function PrivacyContentEnglish() {
-  const isRTL = I18nManager.isRTL;
   return (
-    <ThemedView style={[styles.container, isRTL && styles.containerRTL]}>
+    <ThemedView style={[styles.container]}>
       <ThemedText style={[styles.title]}>Open Mushaf Privacy Policy</ThemedText>
       <ThemedText style={[styles.content]}>
         Effective Date: September 26, 2024
@@ -108,9 +107,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'flex-start',
     width: '100%',
-  },
-  containerRTL: {
-    justifyContent: 'flex-end',
+    maxWidth: 640,
   },
 
   title: {
@@ -118,6 +115,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     width: '100%',
+    textAlign: 'left',
   },
   subtitle: {
     fontSize: 20,
@@ -125,12 +123,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingVertical: 10,
     width: '100%',
+    textAlign: 'left',
   },
   content: {
     fontSize: 16,
     lineHeight: 22,
     marginTop: 10,
     width: '100%',
+    textAlign: 'left',
   },
   link: {
     color: '#1e90ff',
@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     width: '100%',
   },
+
   linkContainer: {
     marginTop: 40,
     marginBottom: 10,

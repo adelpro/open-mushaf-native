@@ -43,8 +43,8 @@ export default function SettingsScreen() {
         style={[
           styles.settingsSection,
           { borderColor: textColor, backgroundColor },
-          isRTL && { flexDirection: 'row' },
-          !isRTL && { flexDirection: 'row-reverse' },
+          isRTL && { flexDirection: 'row-reverse' },
+          !isRTL && { flexDirection: 'row' },
         ]}
         onPress={toggleSwitch}
         accessibilityRole="button"
@@ -53,7 +53,7 @@ export default function SettingsScreen() {
         accessibilityState={{ selected: isFlipSoundEnabled }}
       >
         <ThemedText type="defaultSemiBold" style={styles.itemText}>
-          صوت قلب الصفحة
+          صوت قلب الصفحة:
         </ThemedText>
         <Toggle
           color={primaryColor}
@@ -72,17 +72,15 @@ export default function SettingsScreen() {
         <ThemedView
           style={[
             {
-              display: 'flex',
-              justifyContent: 'flex-start',
               alignItems: 'center',
               width: '100%',
             },
-            isRTL && { flexDirection: 'row' },
-            !isRTL && { flexDirection: 'row-reverse' },
+            isRTL && { flexDirection: 'row-reverse' },
+            !isRTL && { flexDirection: 'row' },
           ]}
         >
           <ThemedText type="defaultSemiBold" style={[styles.itemText]}>
-            قيمة السطوع في الوضع الليلي
+            قيمة السطوع في الوضع الليلي:
           </ThemedText>
           <ThemedText
             type="defaultSemiBold"
@@ -108,12 +106,7 @@ export default function SettingsScreen() {
           />
         </ThemedView>
       </ThemedView>
-      <ThemedView
-        style={[
-          styles.settingsSection,
-          { display: 'flex', flexDirection: 'column' },
-        ]}
-      >
+      <ThemedView style={[styles.settingsSection, { flexDirection: 'column' }]}>
         <ThemedView
           style={[
             {
@@ -122,15 +115,15 @@ export default function SettingsScreen() {
               alignItems: 'center',
               width: '100%',
             },
-            isRTL && { flexDirection: 'row' },
-            !isRTL && { flexDirection: 'row-reverse' },
+            isRTL && { flexDirection: 'row-reverse' },
+            !isRTL && { flexDirection: 'row' },
           ]}
         >
           <ThemedText
             type="defaultSemiBold"
             style={[styles.itemText, { marginBottom: 10 }]}
           >
-            تفعيل التنبيهات
+            تفعيل التنبيهات:
           </ThemedText>
         </ThemedView>
         <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
@@ -156,10 +149,13 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    width: '100%',
+    marginHorizontal: 'auto',
+    marginVertical: 10,
+    maxWidth: 640,
   },
   settingsSection: {
     width: '100%',
-    maxWidth: 640,
     marginBottom: 20,
     alignSelf: 'center',
     paddingVertical: 16,

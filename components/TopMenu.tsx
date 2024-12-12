@@ -5,7 +5,6 @@ import {
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
-  SimpleLineIcons,
 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
