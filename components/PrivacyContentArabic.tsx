@@ -6,10 +6,10 @@ import { ThemedView } from '@/components/ThemedView';
 
 import { ExternalLink } from './ExternalLink';
 
+const isRTL = I18nManager.isRTL;
 export default function PrivacyContentArabicNew() {
-  const isRTL = I18nManager.isRTL;
   return (
-    <ThemedView style={[styles.container, isRTL && styles.containerRTL]}>
+    <ThemedView style={[styles.container]}>
       <ThemedText style={[styles.title, styles.arabicText]}>
         سياسة خصوصية Open Mushaf
       </ThemedText>
@@ -119,10 +119,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'flex-end',
-  },
-  containerRTL: {
     justifyContent: 'flex-start',
+    backgroundColor: isRTL ? 'blue' : 'yellow',
+  },
+  arabicText: {
+    textAlign: isRTL ? 'left' : 'right',
   },
   title: {
     fontSize: 24,
@@ -141,20 +142,15 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     marginTop: 10,
   },
-  arabicText: {
-    /* textAlign: 'right', */
-  },
+
   link: {
     color: '#1E90FF',
     textDecorationLine: 'underline',
-    /* textAlign: 'right', */
-    width: '100%',
   },
   linkContainer: {
     marginTop: 40,
     marginBottom: 10,
-    display: 'flex',
-    justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
   },
 });

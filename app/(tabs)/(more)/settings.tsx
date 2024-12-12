@@ -11,6 +11,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
 
+const isRTL = I18nManager.isRTL;
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
   const options = ['تعطيل', 'حزب', 'جزء'];
@@ -34,17 +35,14 @@ export default function SettingsScreen() {
 
     setHizbNotificationValue(0);
   };
-
-  const isRTL = I18nManager.isRTL;
-
   return (
     <ThemedSafeAreaView style={styles.container}>
       <Pressable
         style={[
           styles.settingsSection,
           { borderColor: textColor, backgroundColor },
-          isRTL && { flexDirection: 'row' },
-          !isRTL && { flexDirection: 'row-reverse' },
+          isRTL && { flexDirection: 'row-reverse' },
+          !isRTL && { flexDirection: 'row' },
         ]}
         onPress={toggleSwitch}
         accessibilityRole="button"
@@ -77,8 +75,8 @@ export default function SettingsScreen() {
               alignItems: 'center',
               width: '100%',
             },
-            isRTL && { flexDirection: 'row' },
-            !isRTL && { flexDirection: 'row-reverse' },
+            isRTL && { flexDirection: 'row-reverse' },
+            !isRTL && { flexDirection: 'row' },
           ]}
         >
           <ThemedText type="defaultSemiBold" style={[styles.itemText]}>
@@ -94,7 +92,7 @@ export default function SettingsScreen() {
 
         <ThemedView style={styles.sliderContainer}>
           <Slider
-            style={[styles.slider, { transform: [{ scaleX: -1 }] }]}
+            style={[styles.slider, !isRTL && { transform: [{ scaleX: -1 }] }]}
             minimumValue={0.3}
             maximumValue={1}
             step={0.1}
@@ -108,22 +106,16 @@ export default function SettingsScreen() {
           />
         </ThemedView>
       </ThemedView>
-      <ThemedView
-        style={[
-          styles.settingsSection,
-          { display: 'flex', flexDirection: 'column' },
-        ]}
-      >
+      <ThemedView style={[styles.settingsSection, { flexDirection: 'column' }]}>
         <ThemedView
           style={[
             {
-              display: 'flex',
               justifyContent: 'flex-start',
               alignItems: 'center',
               width: '100%',
             },
-            isRTL && { flexDirection: 'row' },
-            !isRTL && { flexDirection: 'row-reverse' },
+            isRTL && { flexDirection: 'row-reverse' },
+            !isRTL && { flexDirection: 'row' },
           ]}
         >
           <ThemedText
@@ -156,6 +148,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    backgroundColor: isRTL ? 'blue' : 'yellow',
   },
   settingsSection: {
     width: '100%',

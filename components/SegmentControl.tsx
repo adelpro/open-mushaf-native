@@ -15,6 +15,8 @@ interface SegmentedControlProps {
   activeDisabledColor?: string;
 }
 
+const isRTL = I18nManager.isRTL;
+
 export default function SegmentedControl({
   options,
   onSelectionChange,
@@ -33,9 +35,7 @@ export default function SegmentedControl({
   };
 
   return (
-    <ThemedView
-      style={[styles.container, I18nManager.isRTL && styles.containerRTL]}
-    >
+    <ThemedView style={[styles.container]}>
       {options.map((option, index) => (
         <TouchableOpacity
           key={index}
@@ -46,7 +46,6 @@ export default function SegmentedControl({
               backgroundColor: activeDisabledColor,
             },
             index === options.length - 1 && styles.lastOption,
-            I18nManager.isRTL && styles.optionRTL,
           ]}
           onPress={() => handlePress(index)}
         >
@@ -73,14 +72,11 @@ export default function SegmentedControl({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row-reverse',
+    flexDirection: isRTL ? 'row-reverse' : 'row',
     backgroundColor: '#F8F8F8',
     borderRadius: 8,
     overflow: 'hidden',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-  },
-  containerRTL: {
-    flexDirection: 'row',
   },
   option: {
     flex: 1,
@@ -89,10 +85,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    transform: isRTL ? [{ scaleX: -1 }] : undefined,
   },
-  optionRTL: {
-    transform: [{ scaleX: -1 }],
-  },
+
   lastOption: {
     borderRightWidth: 0,
   },
