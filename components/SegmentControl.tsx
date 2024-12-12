@@ -11,7 +11,8 @@ interface SegmentedControlProps {
   activeColor?: string;
   textColor?: string;
   activeTextColor?: string;
-  disabledColor?: string;
+  disabledTextColor?: string;
+  activeDisabledColor?: string;
 }
 
 export default function SegmentedControl({
@@ -21,7 +22,8 @@ export default function SegmentedControl({
   activeColor = '#007AFF',
   textColor = '#000',
   activeTextColor = '#fff',
-  disabledColor = '#E0E0E0',
+  activeDisabledColor = '#E0E0E0',
+  disabledTextColor = '#999',
 }: SegmentedControlProps) {
   const [selectedIndex, setSelectedIndex] = useState(initialSelectedIndex);
 
@@ -40,7 +42,9 @@ export default function SegmentedControl({
           style={[
             styles.option,
             index === selectedIndex && { backgroundColor: activeColor },
-            index === 0 && { backgroundColor: disabledColor },
+            index === 0 && {
+              backgroundColor: activeDisabledColor,
+            },
             index === options.length - 1 && styles.lastOption,
             I18nManager.isRTL && styles.optionRTL,
           ]}
@@ -54,7 +58,7 @@ export default function SegmentedControl({
                   index === selectedIndex
                     ? activeTextColor
                     : index === 0
-                      ? '#999'
+                      ? disabledTextColor
                       : textColor,
               },
             ]}
@@ -69,18 +73,19 @@ export default function SegmentedControl({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     backgroundColor: '#F8F8F8',
     borderRadius: 8,
     overflow: 'hidden',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
   },
   containerRTL: {
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
   },
   option: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 8,
+    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
@@ -92,7 +97,12 @@ const styles = StyleSheet.create({
     borderRightWidth: 0,
   },
   optionText: {
-    fontSize: 22,
-    fontWeight: '500',
+    fontSize: 20,
+    padding: 8,
+    fontWeight: '400',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    textAlign: 'center',
   },
 });

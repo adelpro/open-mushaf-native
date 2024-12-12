@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { I18nManager, InteractionManager } from 'react-native';
+import { I18nManager, InteractionManager, Platform } from 'react-native';
 
 import {
   Amiri_400Regular,
@@ -52,7 +52,12 @@ export default function RootLayout() {
           if (__DEV__) {
             console.info('Reloading app to apply RTL');
           } else {
-            await Updates.reloadAsync();
+            if (Platform.OS === 'web') {
+              document.documentElement.setAttribute('dir', 'rtl');
+              document.documentElement.setAttribute('lang', 'ar');
+            } else {
+              await Updates.reloadAsync();
+            }
           }
         });
       }

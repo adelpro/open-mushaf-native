@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { I18nManager, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -7,8 +7,9 @@ import { ThemedView } from '@/components/ThemedView';
 import { ExternalLink } from './ExternalLink';
 
 export default function PrivacyContentArabicNew() {
+  const isRTL = I18nManager.isRTL;
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[styles.container, isRTL && styles.containerRTL]}>
       <ThemedText style={[styles.title, styles.arabicText]}>
         سياسة خصوصية Open Mushaf
       </ThemedText>
@@ -118,6 +119,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    justifyContent: 'flex-end',
+  },
+  containerRTL: {
     justifyContent: 'flex-start',
   },
   title: {

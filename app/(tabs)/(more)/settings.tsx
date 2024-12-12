@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import Slider from '@react-native-community/slider';
 import Toggle from 'react-native-toggle-input';
@@ -35,12 +35,16 @@ export default function SettingsScreen() {
     setHizbNotificationValue(0);
   };
 
+  const isRTL = I18nManager.isRTL;
+
   return (
     <ThemedSafeAreaView style={styles.container}>
       <Pressable
         style={[
           styles.settingsSection,
           { borderColor: textColor, backgroundColor },
+          isRTL && { flexDirection: 'row' },
+          !isRTL && { flexDirection: 'row-reverse' },
         ]}
         onPress={toggleSwitch}
         accessibilityRole="button"
@@ -64,20 +68,18 @@ export default function SettingsScreen() {
         />
       </Pressable>
 
-      <ThemedView
-        style={[
-          styles.settingsSection,
-          { display: 'flex', flexDirection: 'column' },
-        ]}
-      >
+      <ThemedView style={[styles.settingsSection, { flexDirection: 'column' }]}>
         <ThemedView
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            width: '100%',
-          }}
+          style={[
+            {
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              width: '100%',
+            },
+            isRTL && { flexDirection: 'row' },
+            !isRTL && { flexDirection: 'row-reverse' },
+          ]}
         >
           <ThemedText type="defaultSemiBold" style={[styles.itemText]}>
             قيمة السطوع في الوضع الليلي
@@ -113,14 +115,21 @@ export default function SettingsScreen() {
         ]}
       >
         <ThemedView
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            width: '100%',
-          }}
+          style={[
+            {
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              width: '100%',
+            },
+            isRTL && { flexDirection: 'row' },
+            !isRTL && { flexDirection: 'row-reverse' },
+          ]}
         >
-          <ThemedText type="defaultSemiBold" style={styles.itemText}>
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, { marginBottom: 10 }]}
+          >
             تفعيل التنبيهات
           </ThemedText>
         </ThemedView>
@@ -130,6 +139,7 @@ export default function SettingsScreen() {
             initialSelectedIndex={HizbNotificationValue}
             activeColor={primaryColor}
             textColor={primaryColor}
+            disabledTextColor={primaryColor}
             onSelectionChange={(index: number) =>
               handleHizbNotificationValueChange(index)
             }
