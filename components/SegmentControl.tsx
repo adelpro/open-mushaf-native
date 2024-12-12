@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     justifyContent: 'center',
     alignItems: 'center',
-    alignContent: 'center',
     textAlign: 'center',
   },
 });

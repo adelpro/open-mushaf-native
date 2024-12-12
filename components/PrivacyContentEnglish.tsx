@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
     color: '#1e90ff',
     textDecorationLine: 'underline',
   },
+
   linkContainer: {
     marginTop: 40,
     marginBottom: 10,

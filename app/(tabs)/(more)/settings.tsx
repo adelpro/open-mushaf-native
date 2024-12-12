@@ -51,7 +51,7 @@ export default function SettingsScreen() {
         accessibilityState={{ selected: isFlipSoundEnabled }}
       >
         <ThemedText type="defaultSemiBold" style={styles.itemText}>
-          صوت قلب الصفحة
+          صوت قلب الصفحة:
         </ThemedText>
         <Toggle
           color={primaryColor}
@@ -70,8 +70,6 @@ export default function SettingsScreen() {
         <ThemedView
           style={[
             {
-              display: 'flex',
-              justifyContent: 'flex-start',
               alignItems: 'center',
               width: '100%',
             },
@@ -80,7 +78,7 @@ export default function SettingsScreen() {
           ]}
         >
           <ThemedText type="defaultSemiBold" style={[styles.itemText]}>
-            قيمة السطوع في الوضع الليلي
+            قيمة السطوع في الوضع الليلي:
           </ThemedText>
           <ThemedText
             type="defaultSemiBold"
@@ -122,7 +120,7 @@ export default function SettingsScreen() {
             type="defaultSemiBold"
             style={[styles.itemText, { marginBottom: 10 }]}
           >
-            تفعيل التنبيهات
+            تفعيل التنبيهات:
           </ThemedText>
         </ThemedView>
         <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
@@ -152,7 +150,6 @@ const styles = StyleSheet.create({
   },
   settingsSection: {
     width: '100%',
-    maxWidth: 640,
     marginBottom: 20,
     alignSelf: 'center',
     paddingVertical: 16,
