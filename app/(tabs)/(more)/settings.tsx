@@ -69,13 +69,12 @@ export default function SettingsScreen() {
           style={[
             {
               alignItems: 'center',
-              width: '100%',
               backgroundColor: 'red',
               gap: 5,
               flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'flex-start',
             },
-            isRTL && { justifyContent: 'flex-end' },
-            !isRTL && { justifyContent: 'flex-start' },
           ]}
         >
           <ThemedText type="defaultSemiBold" style={[styles.itemText]}>
@@ -112,15 +111,12 @@ export default function SettingsScreen() {
               backgroundColor: 'red',
               alignItems: 'center',
               width: '100%',
-              flexDirection: 'row',
             },
-            isRTL && { justifyContent: 'flex-end' },
-            !isRTL && { justifyContent: 'flex-start' },
           ]}
         >
           <ThemedText
             type="defaultSemiBold"
-            style={[styles.itemText, { marginBottom: 10 }]}
+            style={[styles.itemText, { width: '100%' }]}
           >
             تفعيل التنبيهات:
           </ThemedText>
@@ -146,22 +142,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: isRTL ? 'blue' : 'yellow',
+    justifyContent: 'center',
   },
   settingsSection: {
     width: '100%',
-    marginHorizontal: 'auto',
+    maxWidth: 640,
     marginBottom: 20,
+    alignSelf: 'center',
     paddingVertical: 16,
     paddingHorizontal: 20,
     borderRadius: 5,
+    borderColor: '#e0e0e0',
     elevation: 3,
-    flexDirection: isRTL ? 'row-reverse' : 'row',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    maxWidth: 640,
   },
   itemText: {
     fontSize: 22,

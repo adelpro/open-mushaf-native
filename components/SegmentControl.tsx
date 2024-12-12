@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { I18nManager, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -14,8 +14,6 @@ interface SegmentedControlProps {
   disabledTextColor?: string;
   activeDisabledColor?: string;
 }
-
-const isRTL = I18nManager.isRTL;
 
 export default function SegmentedControl({
   options,
@@ -72,8 +70,7 @@ export default function SegmentedControl({
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: isRTL ? 'row-reverse' : 'row',
+    flexDirection: 'row',
     backgroundColor: '#F8F8F8',
     borderRadius: 8,
     overflow: 'hidden',
@@ -86,7 +83,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-    //transform: isRTL ? undefined : [{ scaleX: -1 }],
   },
 
   lastOption: {
