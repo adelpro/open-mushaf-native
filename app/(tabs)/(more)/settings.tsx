@@ -41,8 +41,6 @@ export default function SettingsScreen() {
         style={[
           styles.settingsSection,
           { borderColor: textColor, backgroundColor },
-          isRTL && { flexDirection: 'row-reverse' },
-          !isRTL && { flexDirection: 'row' },
         ]}
         onPress={toggleSwitch}
         accessibilityRole="button"
@@ -72,9 +70,12 @@ export default function SettingsScreen() {
             {
               alignItems: 'center',
               width: '100%',
+              backgroundColor: 'red',
+              gap: 5,
+              flexDirection: 'row',
             },
-            isRTL && { flexDirection: 'row-reverse' },
-            !isRTL && { flexDirection: 'row' },
+            isRTL && { justifyContent: 'flex-end' },
+            !isRTL && { justifyContent: 'flex-start' },
           ]}
         >
           <ThemedText type="defaultSemiBold" style={[styles.itemText]}>
@@ -108,12 +109,13 @@ export default function SettingsScreen() {
         <ThemedView
           style={[
             {
-              justifyContent: 'flex-start',
+              backgroundColor: 'red',
               alignItems: 'center',
               width: '100%',
+              flexDirection: 'row',
             },
-            isRTL && { flexDirection: 'row-reverse' },
-            !isRTL && { flexDirection: 'row' },
+            isRTL && { justifyContent: 'flex-end' },
+            !isRTL && { justifyContent: 'flex-start' },
           ]}
         >
           <ThemedText
@@ -150,16 +152,16 @@ const styles = StyleSheet.create({
   },
   settingsSection: {
     width: '100%',
+    marginHorizontal: 'auto',
     marginBottom: 20,
-    alignSelf: 'center',
     paddingVertical: 16,
     paddingHorizontal: 20,
     borderRadius: 5,
-    borderColor: '#e0e0e0',
     elevation: 3,
-    flexDirection: 'row',
+    flexDirection: isRTL ? 'row-reverse' : 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    maxWidth: 640,
   },
   itemText: {
     fontSize: 22,
@@ -176,7 +178,6 @@ const styles = StyleSheet.create({
   sliderContainer: {
     width: '100%',
     position: 'relative',
-    maxWidth: 640,
   },
   slider: {
     width: '100%',
@@ -185,7 +186,6 @@ const styles = StyleSheet.create({
   },
   segmentedControl: {
     width: '100%',
-    maxWidth: 640,
     marginVertical: 8,
   },
   segmentedControlTab: {

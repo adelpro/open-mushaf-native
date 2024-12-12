@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: 'flex-start',
-    backgroundColor: isRTL ? 'blue' : 'yellow',
+    width: '100%',
   },
 
   englishText: {

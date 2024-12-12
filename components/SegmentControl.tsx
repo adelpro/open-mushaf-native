@@ -72,6 +72,7 @@ export default function SegmentedControl({
 
 const styles = StyleSheet.create({
   container: {
+    display: 'flex',
     flexDirection: isRTL ? 'row-reverse' : 'row',
     backgroundColor: '#F8F8F8',
     borderRadius: 8,
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-    transform: isRTL ? [{ scaleX: -1 }] : undefined,
+    //transform: isRTL ? undefined : [{ scaleX: -1 }],
   },
 
   lastOption: {
