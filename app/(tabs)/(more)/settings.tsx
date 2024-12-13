@@ -69,7 +69,6 @@ export default function SettingsScreen() {
           style={[
             {
               alignItems: 'center',
-              backgroundColor: 'red',
               gap: 5,
               flexDirection: 'row',
               width: '100%',
@@ -108,7 +107,6 @@ export default function SettingsScreen() {
         <ThemedView
           style={[
             {
-              backgroundColor: 'red',
               alignItems: 'center',
               width: '100%',
             },
