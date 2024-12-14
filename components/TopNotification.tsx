@@ -10,16 +10,23 @@ type Props = {
   text: string;
 };
 export default function TopNotification({ show, text }: Props) {
-  const [visible, setVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(true);
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setVisible(false);
-    }, 3000);
+    // When show becomes true, set isVisible to true
+    if (show) {
+      setIsVisible(true);
 
-    return () => clearTimeout(timer);
-  }, []);
+      // Set a timer to hide the notification after 3 seconds
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+      }, 3000);
 
-  if (!visible) return null;
+      // Clear the timer if the component unmounts or show becomes false
+      return () => clearTimeout(timer);
+    }
+  }, [show]);
+
+  if (!isVisible) return null;
 
   if (!show) return null;
 
