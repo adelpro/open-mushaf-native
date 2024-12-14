@@ -141,6 +141,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+    maxWidth: 640,
+    alignSelf: 'center',
+    margin: 2,
   },
   mainContent: {
     flex: 1,

@@ -18,8 +18,7 @@ export default function SettingsScreen() {
 
   const [HizbNotificationValue, setHizbNotificationValue] =
     useRecoilState<number>(hizbNotification);
-  const { textColor, backgroundColor, primaryColor, primaryLightColor } =
-    useColors();
+  const { textColor, primaryColor, primaryLightColor, cardColor } = useColors();
   const [mushafContrastValue, setMushafContrastValue] =
     useRecoilState(mushafContrast);
 
@@ -40,7 +39,7 @@ export default function SettingsScreen() {
       <Pressable
         style={[
           styles.settingsSection,
-          { borderColor: textColor, backgroundColor },
+          { borderColor: textColor, backgroundColor: cardColor },
         ]}
         onPress={toggleSwitch}
         accessibilityRole="button"
@@ -48,7 +47,10 @@ export default function SettingsScreen() {
         accessibilityHint="اضغط لتفعيل أو تعطيل صوت قلب الصفحة"
         accessibilityState={{ selected: isFlipSoundEnabled }}
       >
-        <ThemedText type="defaultSemiBold" style={styles.itemText}>
+        <ThemedText
+          type="defaultSemiBold"
+          style={[styles.itemText, { backgroundColor: cardColor }]}
+        >
           صوت قلب الصفحة:
         </ThemedText>
         <Toggle
@@ -64,7 +66,12 @@ export default function SettingsScreen() {
         />
       </Pressable>
 
-      <ThemedView style={[styles.settingsSection, { flexDirection: 'column' }]}>
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          { flexDirection: 'column', backgroundColor: cardColor },
+        ]}
+      >
         <ThemedView
           style={[
             {
@@ -73,6 +80,7 @@ export default function SettingsScreen() {
               flexDirection: 'row',
               width: '100%',
               justifyContent: 'flex-start',
+              backgroundColor: cardColor,
             },
           ]}
         >
@@ -87,7 +95,9 @@ export default function SettingsScreen() {
           </ThemedText>
         </ThemedView>
 
-        <ThemedView style={styles.sliderContainer}>
+        <ThemedView
+          style={[styles.sliderContainer, { backgroundColor: cardColor }]}
+        >
           <Slider
             style={[styles.slider, !isRTL && { transform: [{ scaleX: -1 }] }]}
             minimumValue={0.3}
@@ -103,12 +113,18 @@ export default function SettingsScreen() {
           />
         </ThemedView>
       </ThemedView>
-      <ThemedView style={[styles.settingsSection, { flexDirection: 'column' }]}>
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          { flexDirection: 'column', backgroundColor: cardColor },
+        ]}
+      >
         <ThemedView
           style={[
             {
               alignItems: 'center',
               width: '100%',
+              backgroundColor: cardColor,
             },
           ]}
         >
@@ -139,29 +155,31 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 15,
+    margin: 2,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    alignSelf: 'center',
+    width: '100%',
+    maxWidth: 640,
   },
   settingsSection: {
     width: '100%',
-    maxWidth: 640,
-    marginBottom: 20,
-    alignSelf: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    borderColor: '#e0e0e0',
+    marginBottom: 15,
+    padding: 12,
+    borderRadius: 8,
     elevation: 3,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   itemText: {
-    fontSize: 22,
+    fontSize: 20,
     fontFamily: 'Amiri_700Bold',
-    paddingVertical: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 5,
     textAlignVertical: 'center',
+    marginBottom: 5,
   },
   sliderValue: {
     fontSize: 22,
@@ -176,11 +194,12 @@ const styles = StyleSheet.create({
   slider: {
     width: '100%',
     height: 60,
-    marginVertical: 10,
+    paddingHorizontal: 5,
   },
   segmentedControl: {
     width: '100%',
     marginVertical: 8,
+    paddingHorizontal: 5,
   },
   segmentedControlTab: {
     backgroundColor: 'transparent',

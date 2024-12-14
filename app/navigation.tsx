@@ -24,7 +24,7 @@ export default function Navigation() {
   const [currentAyaNumber, setCurrentAyaNumber] = useState<number>(1);
   const [numberOfAyas, setNumberOfAyas] = useState<number[]>([]);
 
-  const { iconColor, textColor } = useColors();
+  const { iconColor, cardColor, primaryColor } = useColors();
 
   useEffect(() => {
     const surah = surahs.find((surah, index) => {
@@ -88,13 +88,17 @@ export default function Navigation() {
 
   return (
     <ThemedSafeAreaView style={styles.container}>
-      <ThemedView style={styles.navigationSection}>
-        <ThemedView style={styles.labelContainer}>
+      <ThemedView
+        style={[styles.navigationSection, { backgroundColor: cardColor }]}
+      >
+        <ThemedView
+          style={[styles.labelContainer, { backgroundColor: cardColor }]}
+        >
           <Feather
             name="file-text"
             size={24}
             color={iconColor}
-            style={styles.icon}
+            style={[styles.icon, { color: primaryColor }]}
             accessibilityLabel="Page selection icon"
           />
           <ThemedText
@@ -106,7 +110,7 @@ export default function Navigation() {
           </ThemedText>
         </ThemedView>
         <Picker
-          style={[styles.pickerContainer, { color: textColor }]}
+          style={[styles.pickerContainer, { color: primaryColor }]}
           selectedValue={currentPage}
           onValueChange={(item) => {
             handlePageChange(item);
@@ -122,13 +126,17 @@ export default function Navigation() {
         </Picker>
       </ThemedView>
 
-      <ThemedView style={styles.navigationSection}>
-        <ThemedView style={styles.labelContainer}>
+      <ThemedView
+        style={[styles.navigationSection, { backgroundColor: cardColor }]}
+      >
+        <ThemedView
+          style={[styles.labelContainer, { backgroundColor: cardColor }]}
+        >
           <Feather
             name="book-open"
             size={24}
             color={iconColor}
-            style={styles.icon}
+            style={[styles.icon, { color: primaryColor }]}
             accessibilityLabel="Surah selection icon"
           />
           <ThemedText
@@ -139,9 +147,11 @@ export default function Navigation() {
             الانتقال إلى الآية:
           </ThemedText>
         </ThemedView>
-        <ThemedView style={styles.pickerContainer}>
+        <ThemedView
+          style={[styles.pickerContainer, { backgroundColor: cardColor }]}
+        >
           <Picker
-            style={[styles.picker, styles.surahPicker, { color: textColor }]}
+            style={[styles.picker, styles.surahPicker, { color: primaryColor }]}
             selectedValue={currentSurah}
             onValueChange={(item) => {
               handleSurahChange(item);
@@ -159,14 +169,14 @@ export default function Navigation() {
               />
             ))}
           </Picker>
-          <ThemedText
+          {/*           <ThemedText
             style={styles.separator}
             accessibilityLabel="Separator between Surah and Aya"
           >
             -
-          </ThemedText>
+          </ThemedText> */}
           <Picker
-            style={[styles.picker, styles.ayaPicker, { color: textColor }]}
+            style={[styles.picker, styles.ayaPicker, { color: primaryColor }]}
             selectedValue={currentAyaNumber}
             onValueChange={(item) => {
               handleAyaChange(item);
@@ -189,47 +199,52 @@ export default function Navigation() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    justifyContent: 'center',
+    padding: 15,
+    margin: 2,
     alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignSelf: 'center',
+    width: '100%',
+    maxWidth: 640,
   },
   navigationSection: {
-    marginVertical: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    marginVertical: 15,
     borderRadius: 10,
-    padding: 5,
+    padding: 10,
     width: '100%',
+    elevation: 3,
     maxWidth: 640,
   },
   labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   label: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'right',
   },
   icon: {
-    marginLeft: 10,
+    marginHorizontal: 5,
   },
   pickerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 1,
+    paddingVertical: 5,
     textAlign: 'center',
+    //color: '#1B3444',
   },
   picker: {
     flex: 1,
     height: 50,
     borderWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
     borderRadius: 5,
     padding: 10,
     fontSize: 22,
+    //color: '#1B3444',
   },
   surahPicker: {
     marginLeft: 10,

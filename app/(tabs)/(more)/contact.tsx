@@ -16,5 +16,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
+    width: '100%',
+    maxWidth: 640,
+    margin: 2,
   },
 });

@@ -25,7 +25,7 @@ export default function Search() {
   const [inputText, setInputText] = useState('');
   const [filteredResults, setFilteredResults] = useState<QuranText[]>([]);
   const [show, setShow] = useState(false);
-  const { iconColor, tintColor } = useColors();
+  const { iconColor, tintColor, primaryColor } = useColors();
   const handleSearch = useDebounce((text: string) => {
     setQuery(text);
   }, 200);
@@ -98,7 +98,7 @@ export default function Search() {
           name="search"
           size={20}
           color={iconColor}
-          style={styles.icon}
+          style={[styles.icon, { color: primaryColor }]}
         />
       </ThemedView>
 
