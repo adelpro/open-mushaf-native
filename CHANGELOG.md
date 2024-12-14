@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0]
+
+### Updated
+
+- Unified UI over all screens.
+- Added Hizb and Juz notifications in Mushaf.
+
+### Fixed
+
+- Fixed Arabic and English privacy policies screen.
+
 ## [2.2.1]
 
 ### Updated
