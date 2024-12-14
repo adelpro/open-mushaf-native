@@ -116,33 +116,31 @@ export default function MushafPage() {
   }, [isFlipSoundEnabled]);
 
   useEffect(() => {
-    if (!currentHizb) {
-      setShowNotification(false);
-      return;
-    }
+    // Find the current Hizb and handle notification logic in a single effect
+    const hizb = hizbData.find((hizb) => hizb.startingPage === currentPage);
 
-    if (HizbNotificationValue === 0) {
-      setShowNotification(false);
-      return;
-    }
+    // Determine current Hizb
+    const currentHizbNumber = hizb && hizb.number !== 1 ? hizb.number : null;
 
-    if (HizbNotificationValue === 1) {
-      setShowNotification(true);
-      return;
-    }
+    // Determine notification visibility based on multiple conditions
+    const shouldShowNotification = (() => {
+      // If no current Hizb or notifications are disabled, don't show
+      if (!currentHizbNumber || HizbNotificationValue === 0) return false;
 
-    if (HizbNotificationValue === 2) {
-      if (currentHizb % 2 !== 0) {
-        setShowNotification(true);
-      } else {
-        setShowNotification(false);
-      }
-      return;
-    }
+      // Always show for mode 1 (all Hizbs)
+      if (HizbNotificationValue === 1) return true;
 
-    // Default case: hide notification
-    setShowNotification(false);
-  }, [currentHizb, HizbNotificationValue]);
+      // Show only for odd-numbered Hizbs in mode 2
+      if (HizbNotificationValue === 2) return currentHizbNumber % 2 !== 0;
+
+      // Default: hide notification
+      return false;
+    })();
+
+    // Update states in a single effect
+    setCurrentHizb(currentHizbNumber);
+    setShowNotification(shouldShowNotification);
+  }, [currentPage, hizbData, HizbNotificationValue]);
 
   useEffect(() => {
     const tag = 'MushafPage';
@@ -165,16 +163,6 @@ export default function MushafPage() {
       disableKeepAwake();
     };
   }, []);
-
-  useEffect(() => {
-    const hizb = hizbData.find((hizb) => hizb.startingPage === currentPage);
-    if (hizb && hizb.number !== 1) {
-      setCurrentHizb(hizb.number);
-      return;
-    }
-
-    setCurrentHizb(null);
-  }, [currentPage, hizbData]);
 
   if (assetError) {
     return (
