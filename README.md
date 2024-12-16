@@ -1,4 +1,12 @@
-# Welcome to Open-Mushaf Native
+# Open-Mushaf Native - Quran Mushaf Reader for Mobile and Web
+
+Open-Mushaf Native is an **open-source Quran Mushaf** application built with **React Native** and **Expo**.
+This mobile-friendly app offers **offline Quran reading**, **gesture navigation**, and **dynamic Tafseer popups**,
+designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macOS** platforms.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/design/bannier/bannier.png" alt="Open-Mushaf Logo" width="200" />
+</p>
 
 ![GitHub Stars](https://img.shields.io/github/stars/adelpro/open-mushaf-native?style=social)
 ![Forks](https://img.shields.io/github/forks/adelpro/open-mushaf-native?style=social)
@@ -31,18 +39,34 @@ and localized caching for Quranic images and Tafseer data.
 
 ## Demo
 
-[![Video Title](https://img.youtube.com/vi/SpqCVOhiVes/0.jpg)](https://www.youtube.com/watch?v=SpqCVOhiVes)
+Experience the seamless navigation and features of Open-Mushaf Native in this demo video.
+[Watch on YouTube](https://www.youtube.com/watch?v=SpqCVOhiVes)
 
 ## Screenshots
 
-![Mushaf Page](/screenshots/mushaf-page.png)
-![Tafseer Popup](/screenshots/tafseer-popup.png)
+- **Mushaf Page**: A minimalist Quran page layout for immersive reading.
 
-![Sura Index](/screenshots/sura-index.png)
-![Settings](/screenshots/settings.png)
+  ![Mushaf Page](/screenshots/mushaf-page.png)
 
-![Navigation](/screenshots/navigation.png)
-![Search](/screenshots/search.png)
+- **Tafseer Popup**: Resizeable Tafseer popups for deeper understanding.
+
+  ![Tafseer Popup](/screenshots/tafseer-popup.png)
+
+- **Sura Index**: Navigate through the Quran using the Sura Index.
+
+  ![Sura Index](/screenshots/sura-index.png)
+
+- **Settings**: Customize your reading experience.
+
+  ![Settings](/screenshots/settings.png)
+
+- **Navigation**: Swipe left or right to navigate the Quran.
+
+  ![Navigation](/screenshots/navigation.png)
+
+- **Search**: Search for specific Quranic content.
+
+  ![Search](/screenshots/search.png)
 
 ## Installation
 
@@ -73,6 +97,10 @@ and localized caching for Quranic images and Tafseer data.
 ## Contributing
 
 Contributions are welcome to Open-Mushaf Native! Please see the [contribution guidelines](https://github.com/adelpro/open-mushaf-native/blob/main/CONTRIBUTING.md)
+
+## Like the Project? ⭐
+
+If you find this project helpful, please give it a star to show your support!
 
 ## License
 
