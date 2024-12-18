@@ -28,8 +28,7 @@
     "android:build:preview:local": "eas build -p android --profile preview --local --output builds/app-preview.apk",
     "android:build:production:local": "eas build -p android --profile production --local --output builds/app-production.aab",
     "android:submit:preview": "eas submit -p android --profile preview",
-    "predeploy": "expo export -p web",
-    "deploy": "gh-pages -d dist",
+    "web:build": "expo export -p web",
     "prepare": "husky"
   },
   "jest": {
