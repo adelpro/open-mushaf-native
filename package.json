@@ -89,6 +89,7 @@
     "eslint-config-expo": "~8.0.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react-compiler": "^19.0.0-beta-df7b47d-20241124",
     "gh-pages": "^6.2.0",
