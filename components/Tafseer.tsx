@@ -173,7 +173,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
         <ThemedView
           style={{
             backgroundColor: 'transparent',
-            height: '100%',
+            flex: 1,
           }}
         >
           {renderTafseerContent(tafseerData)}

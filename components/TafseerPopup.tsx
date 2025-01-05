@@ -35,15 +35,14 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
 
   const [opacity, setOpacity] = useState(1);
-  const [popupHeightValue, setPopupHeight] =
-    useRecoilState<number>(popupHeight);
+  const [popupHeightValue, setPopupHeight] = useRecoilState(popupHeight);
   const [currentPopupHeight, setCurrentPopupHeight] =
     useState<number>(popupHeightValue);
   const popupRef = useRef<View | null>(null);
 
   const handleGesture = useCallback(
     (event: PanGestureHandlerGestureEvent) => {
-      if (popupRef?.current) {
+      if (popupRef.current) {
         const windowHeight = Dimensions.get('window').height;
         const translationY = event.nativeEvent.translationY;
 
@@ -93,7 +92,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
             onGestureEvent={handleGesture}
             onHandlerStateChange={handleGestureStateChange}
           >
-            <Pressable style={[styles.resizer, {}]}>
+            <Pressable style={styles.resizer}>
               <ThemedView
                 style={[styles.resizerIcon, { backgroundColor: tintColor }]}
               />
