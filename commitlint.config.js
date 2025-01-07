@@ -4,9 +4,11 @@ module.exports = {
   rules: {
     'header-max-length': [2, 'always', 200],
 
-    'subject-case': [2, 'always', 'lower-case'],
+    'scope-case': [2, 'always'],
 
-    'type-case': [2, 'always', 'lower-case'],
+    'subject-case': [2, 'always', 'sentence-case'],
+
+    'type-case': [2, 'always'],
 
     'type-enum': [
       2,

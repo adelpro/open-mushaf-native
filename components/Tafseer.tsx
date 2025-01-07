@@ -57,28 +57,28 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       <ScrollView
         style={{
           backgroundColor: 'transparent',
+          flex: 1,
         }}
         contentContainerStyle={styles.tafseerContent}
         nestedScrollEnabled
       >
-        <ThemedView style={{ flex: 1, height: '100%' }}>
-          <HTMLView
-            value={tafseerText}
-            style={{
+        <HTMLView
+          value={tafseerText}
+          style={{
+            backgroundColor: 'transparent',
+            paddingHorizontal: 10,
+            flex: 1,
+          }}
+          stylesheet={{
+            p: {
+              color: textColor,
+              fontFamily: 'Amiri_400Regular',
               backgroundColor: 'transparent',
-              paddingHorizontal: 10,
-            }}
-            stylesheet={{
-              p: {
-                color: textColor,
-                fontFamily: 'Amiri_400Regular',
-                backgroundColor: 'transparent',
-                textAlign: 'right',
-              },
-            }}
-            addLineBreaks={false}
-          />
-        </ThemedView>
+              textAlign: 'right',
+            },
+          }}
+          addLineBreaks={false}
+        />
       </ScrollView>
     );
   };
@@ -173,7 +173,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
         <ThemedView
           style={{
             backgroundColor: 'transparent',
-            height: '100%',
+            flex: 1,
           }}
         >
           {renderTafseerContent(tafseerData)}

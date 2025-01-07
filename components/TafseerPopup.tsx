@@ -93,7 +93,7 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
             onGestureEvent={handleGesture}
             onHandlerStateChange={handleGestureStateChange}
           >
-            <Pressable style={[styles.resizer, {}]}>
+            <Pressable style={styles.resizer}>
               <ThemedView
                 style={[styles.resizerIcon, { backgroundColor: tintColor }]}
               />

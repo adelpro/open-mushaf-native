@@ -35,11 +35,6 @@ export default function AboutScreen() {
       label: 'آيات',
     },
     {
-      text: 'الأيقونة من ',
-      link: 'https://www.svgrepo.com/',
-      label: 'SVGRepo',
-    },
-    {
       text: 'صوت تغيير الصفحة',
       link: 'https://pixabay.com',
       label: 'Pixabay',
