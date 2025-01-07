@@ -2,7 +2,7 @@
   "expo": {
     "name": "Mushaf Warsh",
     "slug": "open-mushaf-native",
-    "version": "2.3.0",
+    "version": "2.5.1",
     "orientation": "default",
     "assetBundlePatterns": ["**/*"],
     "icon": "./assets/images/icon.png",
