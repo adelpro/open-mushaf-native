@@ -6,7 +6,7 @@ module.exports = {
 
     'scope-case': [2, 'always'],
 
-    'subject-case': [2, 'always', 'sentence-case'],
+    'subject-case': [2, 'always'],
 
     'type-case': [2, 'always'],
 
