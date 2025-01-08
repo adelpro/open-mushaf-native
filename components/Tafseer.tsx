@@ -62,7 +62,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
         contentContainerStyle={styles.tafseerContent}
         nestedScrollEnabled
       >
-        <HTMLView
+        {/* <HTMLView
           value={tafseerText}
           style={{
             backgroundColor: 'transparent',
@@ -78,7 +78,10 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
             },
           }}
           addLineBreaks={false}
-        />
+        /> */}
+        <ThemedText style={{ color: textColor, textAlign: 'right' }}>
+          {tafseerText}
+        </ThemedText>
       </ScrollView>
     );
   };
