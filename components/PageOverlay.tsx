@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
 import { useSetRecoilState } from 'recoil';
