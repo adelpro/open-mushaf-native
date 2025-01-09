@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 
 import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
@@ -51,17 +56,14 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
     return (
       <HTMLView
         value={tafseerText}
-        style={{
-          backgroundColor: 'transparent',
-          paddingHorizontal: 10,
-          flex: 1,
-        }}
         stylesheet={{
           p: {
             color: textColor,
             fontFamily: 'Amiri_400Regular',
             backgroundColor: 'transparent',
             textAlign: 'right',
+            fontSize: 16,
+            lineHeight: 24,
           },
         }}
         addLineBreaks={false}
@@ -156,7 +158,17 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       </ThemedView>
 
       {tafseerData ? (
-        renderTafseerContent(tafseerData)
+        <ThemedView style={{ flex: 1 }}>
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1,
+              backgroundColor: 'transparent',
+              padding: 10,
+            }}
+          >
+            {renderTafseerContent(tafseerData)}
+          </ScrollView>
+        </ThemedView>
       ) : (
         <ActivityIndicator size="large" color={tintColor} />
       )}
@@ -165,7 +177,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: { flex: 1, padding: 10 },
   title: {
     fontSize: 18,
     marginBottom: 10,
