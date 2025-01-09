@@ -170,14 +170,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       </ThemedView>
 
       {tafseerData ? (
-        <ThemedView
-          style={{
-            backgroundColor: 'transparent',
-            flex: 1,
-          }}
-        >
-          {renderTafseerContent(tafseerData)}
-        </ThemedView>
+        renderTafseerContent(tafseerData)
       ) : (
         <ActivityIndicator size="large" color={tintColor} />
       )}
