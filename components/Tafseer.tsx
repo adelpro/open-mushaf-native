@@ -165,9 +165,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: {},
   title: {
     fontSize: 18,
     marginBottom: 10,
