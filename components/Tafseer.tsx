@@ -1,10 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
@@ -54,32 +49,23 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       tafseerText = ayaTafseer?.text;
     }
     return (
-      <ScrollView
+      <HTMLView
+        value={tafseerText}
         style={{
           backgroundColor: 'transparent',
+          paddingHorizontal: 10,
           flex: 1,
         }}
-        contentContainerStyle={styles.tafseerContent}
-        nestedScrollEnabled
-      >
-        <HTMLView
-          value={tafseerText}
-          style={{
+        stylesheet={{
+          p: {
+            color: textColor,
+            fontFamily: 'Amiri_400Regular',
             backgroundColor: 'transparent',
-            paddingHorizontal: 10,
-            flex: 1,
-          }}
-          stylesheet={{
-            p: {
-              color: textColor,
-              fontFamily: 'Amiri_400Regular',
-              backgroundColor: 'transparent',
-              textAlign: 'right',
-            },
-          }}
-          addLineBreaks={false}
-        />
-      </ScrollView>
+            textAlign: 'right',
+          },
+        }}
+        addLineBreaks={false}
+      />
     );
   };
 
@@ -200,9 +186,5 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomWidth: 2,
-  },
-  tafseerContent: {
-    marginVertical: 5,
-    backgroundColor: 'transparent',
   },
 });
