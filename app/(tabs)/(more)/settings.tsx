@@ -196,14 +196,4 @@ const styles = StyleSheet.create({
     height: 60,
     paddingHorizontal: 5,
   },
-  segmentedControl: {
-    width: '100%',
-    marginVertical: 8,
-    paddingHorizontal: 5,
-  },
-  segmentedControlTab: {
-    backgroundColor: 'transparent',
-    padding: 5,
-    borderRadius: 5,
-  },
 });
