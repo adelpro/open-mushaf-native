@@ -1,12 +1,16 @@
+'use dom';
+
 import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  I18nManager,
   Pressable,
   ScrollView,
   StyleSheet,
+  useWindowDimensions,
 } from 'react-native';
 
-import HTMLView from 'react-native-htmlview';
+import RenderHTML from 'react-native-render-html';
 import { useRecoilState } from 'recoil';
 
 import { useColors } from '@/hooks/useColors';
@@ -36,9 +40,11 @@ type Props = {
   opacity: number;
 };
 
+const isRTL = I18nManager.isRTL;
+
 export default function Tafseer({ aya, surah, opacity }: Props) {
   const { tintColor, textColor } = useColors();
-
+  const { width } = useWindowDimensions();
   const [surahName, setSurahName] = useState<string>('');
   const [selectedTabValue, setSelectedTab] =
     useRecoilState<TafseerTabs>(tafseerTab);
@@ -54,21 +60,22 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       tafseerText = ayaTafseer?.text;
     }
     return (
-      <HTMLView
-        value={tafseerText}
-        style={{ flex: 1 }}
-        stylesheet={{
-          p: {
-            color: textColor,
-            fontFamily: 'Amiri_400Regular',
-            backgroundColor: 'transparent',
-            textAlign: 'right',
-            fontSize: 16,
-            lineHeight: 24,
-          },
-        }}
-        addLineBreaks={false}
-      />
+      <ScrollView>
+        <RenderHTML
+          contentWidth={width}
+          source={{ html: tafseerText }}
+          tagsStyles={{
+            p: {
+              color: textColor,
+              fontFamily: 'Amiri_400Regular',
+              fontSize: 16,
+              lineHeight: 24,
+              textAlign: isRTL ? 'left' : 'right',
+              backgroundColor: 'transparent',
+            },
+          }}
+        />
+      </ScrollView>
     );
   };
 
@@ -159,17 +166,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       </ThemedView>
 
       {tafseerData ? (
-        <ThemedView style={{ flex: 1 }}>
-          <ScrollView
-            contentContainerStyle={{
-              flex: 1,
-              backgroundColor: 'transparent',
-              padding: 10,
-            }}
-          >
-            {renderTafseerContent(tafseerData)}
-          </ScrollView>
-        </ThemedView>
+        renderTafseerContent(tafseerData)
       ) : (
         <ActivityIndicator size="large" color={tintColor} />
       )}
@@ -178,7 +175,12 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10 },
+  container: {
+    flex: 1,
+    width: '100%',
+    backgroundColor: 'transparent',
+    padding: 5,
+  },
   title: {
     fontSize: 18,
     marginBottom: 10,
