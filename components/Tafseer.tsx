@@ -56,6 +56,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
     return (
       <HTMLView
         value={tafseerText}
+        style={{ flex: 1 }}
         stylesheet={{
           p: {
             color: textColor,
@@ -161,7 +162,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
         <ThemedView style={{ flex: 1 }}>
           <ScrollView
             contentContainerStyle={{
-              flexGrow: 1,
+              flex: 1,
               backgroundColor: 'transparent',
               padding: 10,
             }}
