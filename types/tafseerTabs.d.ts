@@ -6,6 +6,4 @@ export type TafseerTabs =
   | 'muyassar'
   | 'qortoby'
   | 'tabary'
-  | 'saady'
-  | 'tanweer'
-  | 'waseet';
+  | 'saady';

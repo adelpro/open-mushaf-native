@@ -28,8 +28,6 @@ const tabLabels: Record<TafseerTabs, string> = {
   qortoby: 'القرطبي',
   tabary: 'الطبري',
   saady: 'السعدي',
-  tanweer: 'التحرير و التنوير',
-  waseet: 'الوسيط',
 };
 
 type Props = {
@@ -58,10 +56,18 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       tafseerText = ayaTafseer?.text;
     }
     return (
-      <ScrollView>
+      <ScrollView style={{ paddingHorizontal: 20, overflow: 'scroll' }}>
         <RenderHTML
           contentWidth={width}
           source={{ html: tafseerText }}
+          baseStyle={{
+            color: textColor,
+            fontFamily: 'Amiri_400Regular',
+            fontSize: 16,
+            lineHeight: 24,
+            textAlign: isRTL ? 'left' : 'right',
+            backgroundColor: 'transparent',
+          }}
           tagsStyles={{
             p: {
               color: textColor,
@@ -109,12 +115,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
         case 'tabary':
           tafseerJSON = await import('@/assets/tafaseer/tabary.json');
           break;
-        case 'tanweer':
-          tafseerJSON = await import('@/assets/tafaseer/tanweer.json');
-          break;
-        case 'waseet':
-          tafseerJSON = await import('@/assets/tafaseer/waseet.json');
-          break;
+
         default:
           tafseerJSON = await import('@/assets/tafaseer/katheer.json');
       }
@@ -190,6 +191,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 2,
     justifyContent: 'flex-start',
+    marginBottom: 10,
   },
   tabButton: {
     paddingVertical: 10,
