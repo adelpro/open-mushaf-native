@@ -1,5 +1,3 @@
-'use dom';
-
 import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
