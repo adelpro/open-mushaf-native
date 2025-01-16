@@ -54,12 +54,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       tafseerText = ayaTafseer?.text;
     }
     return (
-      <ScrollView
-        style={[
-          { overflow: 'scroll' },
-          isRTL ? { paddingLeft: 30 } : { paddingRight: 30 },
-        ]}
-      >
+      <ScrollView>
         <HTMLView
           value={tafseerText}
           style={{
