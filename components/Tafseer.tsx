@@ -1,14 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   I18nManager,
   Pressable,
   ScrollView,
   StyleSheet,
-  useWindowDimensions,
 } from 'react-native';
 
-import RenderHTML from 'react-native-render-html';
+import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
 
 import { useColors } from '@/hooks/useColors';
@@ -40,7 +39,6 @@ const isRTL = I18nManager.isRTL;
 
 export default function Tafseer({ aya, surah, opacity }: Props) {
   const { tintColor, textColor } = useColors();
-  const { width } = useWindowDimensions();
   const [surahName, setSurahName] = useState<string>('');
   const [selectedTabValue, setSelectedTab] =
     useRecoilState<TafseerTabs>(tafseerTab);
@@ -62,18 +60,13 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
           isRTL ? { paddingLeft: 30 } : { paddingRight: 30 },
         ]}
       >
-        <RenderHTML
-          contentWidth={width}
-          source={{ html: tafseerText }}
-          baseStyle={{
-            color: textColor,
-            fontFamily: 'Amiri_400Regular',
-            fontSize: 16,
-            lineHeight: 24,
-            textAlign: isRTL ? 'left' : 'right',
+        <HTMLView
+          value={tafseerText}
+          style={{
+            paddingHorizontal: 10,
             backgroundColor: 'transparent',
           }}
-          tagsStyles={{
+          stylesheet={{
             p: {
               color: textColor,
               fontFamily: 'Amiri_400Regular',
@@ -83,6 +76,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
               backgroundColor: 'transparent',
             },
           }}
+          addLineBreaks={false}
         />
       </ScrollView>
     );

@@ -46,7 +46,8 @@
       ],
       "expo-router",
       "expo-font",
-      "expo-av"
+      "expo-av",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
