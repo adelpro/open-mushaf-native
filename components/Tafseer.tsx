@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   I18nManager,
   Pressable,
-  ScrollView,
   StyleSheet,
 } from 'react-native';
 
@@ -32,12 +31,12 @@ const tabLabels: Record<TafseerTabs, string> = {
 type Props = {
   aya: number;
   surah: number;
-  opacity: number;
+  opacity?: number | undefined;
 };
 
 const isRTL = I18nManager.isRTL;
 
-export default function Tafseer({ aya, surah, opacity }: Props) {
+export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
   const { tintColor, textColor } = useColors();
   const [surahName, setSurahName] = useState<string>('');
   const [selectedTabValue, setSelectedTab] =
@@ -51,34 +50,37 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
     if (!ayaTafseer?.text || ayaTafseer?.text === '<p></p>') {
       tafseerText = '<p>لا يوجد تفسير.</p>';
     } else {
-      tafseerText = ayaTafseer?.text;
+      tafseerText = `<div>${ayaTafseer?.text}</div>`;
     }
     return (
       <ThemedView style={{ flex: 1 }}>
-        <ScrollView
-          style={{ flex: 1, paddingRight: 10 }}
-          contentContainerStyle={{ flexGrow: 1 }}
-          keyboardShouldPersistTaps="handled"
-        >
-          <HTMLView
-            value={tafseerText}
-            style={{
-              paddingHorizontal: 10,
+        <HTMLView
+          value={tafseerText}
+          style={{
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            backgroundColor: 'transparent',
+          }}
+          stylesheet={{
+            div: {
+              color: textColor,
+              fontFamily: 'Amiri_400Regular',
+              fontSize: 16,
+              lineHeight: 24,
+              textAlign: isRTL ? 'left' : 'right',
               backgroundColor: 'transparent',
-            }}
-            stylesheet={{
-              p: {
-                color: textColor,
-                fontFamily: 'Amiri_400Regular',
-                fontSize: 16,
-                lineHeight: 24,
-                textAlign: isRTL ? 'left' : 'right',
-                backgroundColor: 'transparent',
-              },
-            }}
-            addLineBreaks={false}
-          />
-        </ScrollView>
+            },
+            p: {
+              color: textColor,
+              fontFamily: 'Amiri_400Regular',
+              fontSize: 16,
+              lineHeight: 24,
+              textAlign: isRTL ? 'left' : 'right',
+              backgroundColor: 'transparent',
+            },
+          }}
+          addLineBreaks={false}
+        />
       </ThemedView>
     );
   };
@@ -132,7 +134,9 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
   }, [loadTafseerData]);
 
   return (
-    <ThemedView style={[styles.container, { opacity }]}>
+    <ThemedView
+      style={[styles.container, opacity !== undefined ? { opacity } : {}]}
+    >
       <ThemedText style={[styles.title, { backgroundColor: 'transparent' }]}>
         {surahName} - الآية {aya}
       </ThemedText>

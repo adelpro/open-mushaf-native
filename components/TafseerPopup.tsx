@@ -1,23 +1,17 @@
-import React, { Suspense, useCallback, useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  Dimensions,
-  Pressable,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, StyleSheet, useColorScheme } from 'react-native';
 
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetScrollView,
+} from '@gorhom/bottom-sheet';
 import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-  PanGestureHandlerStateChangeEvent,
-  State,
-} from 'react-native-gesture-handler';
-import { useRecoilState } from 'recoil';
+  runOnJS,
+  useAnimatedReaction,
+  useSharedValue,
+} from 'react-native-reanimated';
 
 import { Colors } from '@/constants/Colors';
-import { popupHeight } from '@/recoil/atoms';
 
 import Tafseer from './Tafseer';
 import { ThemedView } from './ThemedView';
@@ -33,116 +27,89 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
   const colorScheme = useColorScheme();
   const tintColor = Colors[colorScheme ?? 'light'].tint;
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
-
+  const bottomSheetRef = useRef<BottomSheet>(null);
   const [opacity, setOpacity] = useState(1);
-  const [popupHeightValue, setPopupHeight] =
-    useRecoilState<number>(popupHeight);
-  const [currentPopupHeight, setCurrentPopupHeight] =
-    useState<number>(popupHeightValue);
-  const popupRef = useRef<View | null>(null);
+  const animatedPosition = useSharedValue(0);
 
-  const handleGesture = useCallback(
-    (event: PanGestureHandlerGestureEvent) => {
-      if (popupRef?.current) {
-        const windowHeight = Dimensions.get('window').height;
-        const translationY = event.nativeEvent.translationY;
-
-        const newHeight = popupHeightValue - translationY;
-
-        if (newHeight > windowHeight * 0.7 || newHeight < windowHeight * 0.3) {
-          return;
-        }
-
-        setCurrentPopupHeight(newHeight);
-      }
+  useAnimatedReaction(
+    () => animatedPosition.value,
+    (currentValue) => {
+      const isResizing = currentValue % 1 !== 0;
+      runOnJS(setOpacity)(isResizing ? 0.8 : 1);
     },
-    [popupHeightValue],
   );
 
-  const handleGestureStateChange = useCallback(
-    (event: PanGestureHandlerStateChangeEvent) => {
-      if (event.nativeEvent.state === State.BEGAN) {
-        setOpacity(0.8);
-      } else if (event.nativeEvent.state === State.CANCELLED) {
-        setOpacity(1);
-      } else if (event.nativeEvent.state === State.END) {
-        setPopupHeight(currentPopupHeight);
-        setOpacity(1);
-      }
+  const snapPoints = useMemo(() => ['40%', '70%', '90%'], []);
+
+  const handleSheetChange = useCallback(
+    (index: number) => {
+      if (index === -1) setShow(false);
     },
-    [currentPopupHeight, setPopupHeight],
+    [setShow],
+  );
+
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+        opacity={0.6}
+        onPress={() => bottomSheetRef.current?.close()}
+      />
+    ),
+    [],
+  );
+
+  const renderHandle = useCallback(
+    () => (
+      <ThemedView style={styles.resizer}>
+        <ThemedView
+          style={[styles.resizerIcon, { backgroundColor: tintColor }]}
+        />
+      </ThemedView>
+    ),
+    [tintColor],
   );
 
   if (!show) return null;
 
   return (
-    <ThemedView
-      style={[styles.overlay]}
-      accessibilityLabel={`تفسير الآية ${aya}`}
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={1}
+      snapPoints={snapPoints}
+      onChange={handleSheetChange}
+      backdropComponent={renderBackdrop}
+      handleComponent={renderHandle}
+      enablePanDownToClose
+      backgroundStyle={{ backgroundColor }}
+      animatedPosition={animatedPosition}
+      activeOffsetY={[-1, 1]}
     >
-      <Pressable style={styles.background} onPress={() => setShow(false)}>
-        <Pressable
-          ref={popupRef}
-          style={[
-            styles.popup,
-            { height: currentPopupHeight, backgroundColor, opacity },
-          ]}
-          onPress={(e) => e.stopPropagation()}
+      <BottomSheetScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        <Suspense
+          fallback={<ActivityIndicator size="large" color={tintColor} />}
         >
-          <PanGestureHandler
-            onGestureEvent={handleGesture}
-            onHandlerStateChange={handleGestureStateChange}
-          >
-            <Pressable style={styles.resizer}>
-              <ThemedView
-                style={[styles.resizerIcon, { backgroundColor: tintColor }]}
-              />
-            </Pressable>
-          </PanGestureHandler>
-
-          <Suspense
-            fallback={<ActivityIndicator size={'large'} color={tintColor} />}
-          >
-            <Tafseer opacity={opacity} aya={aya} surah={surah} />
-          </Suspense>
-        </Pressable>
-      </Pressable>
-    </ThemedView>
+          <Tafseer aya={aya} surah={surah} opacity={opacity} />
+        </Suspense>
+      </BottomSheetScrollView>
+    </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  background: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  popup: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: '100%',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    elevation: 5,
+  content: {
+    flexGrow: 1,
+    paddingHorizontal: 2,
+    paddingBottom: 2,
   },
   resizer: {
     alignSelf: 'center',
-    width: '60%',
     paddingVertical: 10,
-    paddingHorizontal: 30,
   },
   resizerIcon: {
     width: 80,
