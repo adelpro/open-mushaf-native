@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.6.0]
+
+### Fixed
+
+- Fixed Tafseer popup scroll issue.
+
+## [2.4.0]
+
+### Fixed
+
+- Improuved accessibility for the app.
+
 ## [2.3.0]
 
 ### Updated
