@@ -1,7 +1,7 @@
 import { Aya, Page } from '@/types';
 import { getDimensionCoeff } from '@/utils';
 
-import ayas from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/aya.json';
+import coordinatesData from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/coordinates.json';
 import specs from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json';
 
 const usePageOverlay = ({
@@ -11,7 +11,7 @@ const usePageOverlay = ({
   index: number;
   dimensions: { customPageWidth: number; customPageHeight: number };
 }) => {
-  const coordinates = ayas.coordinates as Page[];
+  const coordinates = coordinatesData.coordinates as Page[];
   const page: Aya[] = coordinates[index];
   const { customPageHeight, customPageWidth } = dimensions;
   const {
