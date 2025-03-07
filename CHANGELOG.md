@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.1]
+
+- Add multiple github actions to enhance the workflow
+
 ## [3.0.0]
 
 ### Updated
@@ -9,10 +13,6 @@ All notable changes to this project will be documented in this file.
 - Added the option to choose metween riwayas: warsh or hafs
 
 ## [2.8.0]
-
-### Updated
-
-- Added a new version change logs modal
 
 ### Fixed
 

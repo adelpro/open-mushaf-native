@@ -13,7 +13,6 @@ export default function HomeScreen() {
   const mushafRiwayaValue = useAtomValue(MushafRiwaya);
   const showSelectRiwayaModal = mushafRiwayaValue === undefined;
 
-  console.log('showSelectriwayaModal', showSelectRiwayaModal);
   return (
     <ThemedSafeAreaView style={styles.container}>
       <TopMenu />

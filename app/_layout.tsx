@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { I18nManager, InteractionManager, Platform } from 'react-native';
 
 import {
@@ -17,14 +17,11 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
-import { Provider, useAtom } from 'jotai';
+import { Provider } from 'jotai';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import ChangeLogModal from '@/components/ChangeLogModal';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { currentVersion } from '@/jotai/atoms';
-import { getAppVersion } from '@/utils';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -34,25 +31,12 @@ SplashScreen.setOptions({ fade: true, duration: 1000 });
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const [currentVersionValue, setCurrentVersionValue] = useAtom(currentVersion);
-  const [showChangeLogModal, setShowChangeLogModal] = useState(false);
   const [loaded] = useFonts({
     Amiri_400Regular,
     Amiri_700Bold,
     Amiri_400Regular_Italic,
     Amiri_700Bold_Italic,
   });
-
-  useEffect(() => {
-    const appVersion = getAppVersion();
-    if (currentVersionValue === undefined) {
-      return;
-    }
-    if (currentVersionValue !== appVersion) {
-      setCurrentVersionValue(appVersion);
-      setShowChangeLogModal(true);
-    }
-  }, [currentVersionValue, setCurrentVersionValue]);
 
   useEffect(() => {
     async function applyRTL() {
@@ -93,12 +77,7 @@ export default function RootLayout() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
           <StatusBar style="auto" />
-          <ChangeLogModal
-            visible={showChangeLogModal}
-            onClose={() => {
-              setShowChangeLogModal(false);
-            }}
-          />
+
           <ThemeProvider
             value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
           >

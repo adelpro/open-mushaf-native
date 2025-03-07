@@ -24,11 +24,9 @@ export default function useImagesArray() {
         break;
       case 0:
         setImageMap(imagesMapWarsh);
-        console.log('warsh selected');
         break;
       case 1:
         setImageMap(imagesMapHafs);
-        console.log('hafs selected');
         break;
     }
   }, [MushafRiwayaValue]);
