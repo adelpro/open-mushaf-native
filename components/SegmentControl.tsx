@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     padding: 8,
     fontWeight: '400',
+    minWidth: 200,
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',

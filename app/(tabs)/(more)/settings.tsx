@@ -9,12 +9,20 @@ import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
-import { flipSound, hizbNotification, mushafContrast } from '@/jotai/atoms';
+import {
+  flipSound,
+  hizbNotification,
+  mushafContrast,
+  MushafRiwaya,
+} from '@/jotai/atoms';
 
 const isRTL = I18nManager.isRTL;
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useAtom(flipSound);
-  const options = ['تعطيل', 'حزب', 'جزء'];
+  const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(MushafRiwaya);
+
+  const hizbNotificationOptions = ['تعطيل', 'حزب', 'جزء'];
+  const riwayaOptions = ['ورش', 'حفص'];
 
   const [HizbNotificationValue, setHizbNotificationValue] =
     useAtom(hizbNotification);
@@ -136,7 +144,7 @@ export default function SettingsScreen() {
         </ThemedView>
         <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
           <SegmentedControl
-            options={options}
+            options={hizbNotificationOptions}
             showDisableOption
             initialSelectedIndex={HizbNotificationValue}
             activeColor={primaryColor}
@@ -145,6 +153,33 @@ export default function SettingsScreen() {
             onSelectionChange={(index: number) =>
               handleHizbNotificationValueChange(index)
             }
+          />
+        </Pressable>
+      </ThemedView>
+
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          { flexDirection: 'column', backgroundColor: cardColor },
+        ]}
+      >
+        <ThemedText
+          type="defaultSemiBold"
+          style={[styles.itemText, { width: '100%' }]}
+        >
+          يرجى اختيار الرواية
+        </ThemedText>
+        <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
+          <SegmentedControl
+            options={riwayaOptions}
+            initialSelectedIndex={mushafRiwayaValue}
+            activeColor={primaryColor}
+            textColor={primaryColor}
+            disabledTextColor={primaryColor}
+            onSelectionChange={(index: number) => {
+              console.log('selected mushaf with index:', index);
+              setMushafRiwayaValue(index);
+            }}
           />
         </Pressable>
       </ThemedView>

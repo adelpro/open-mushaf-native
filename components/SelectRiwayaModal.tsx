@@ -41,7 +41,6 @@ export default function SelectRiwayaModal({
                 textColor={primaryColor}
                 disabledTextColor={primaryColor}
                 onSelectionChange={(index: number) => {
-                  console.log('selected mushaf with index:', index);
                   setMushafRiwayaValue(index);
                 }}
               />
