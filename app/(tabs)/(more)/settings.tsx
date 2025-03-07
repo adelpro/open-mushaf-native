@@ -1,26 +1,25 @@
 import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import Slider from '@react-native-community/slider';
+import { useAtom, useSetAtom } from 'jotai';
 import Toggle from 'react-native-toggle-input';
-import { useRecoilState } from 'recoil';
 
 import SegmentedControl from '@/components/SegmentControl';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
-import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
+import { flipSound, hizbNotification, mushafContrast } from '@/jotai/atoms';
 
 const isRTL = I18nManager.isRTL;
 export default function SettingsScreen() {
-  const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
+  const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useAtom(flipSound);
   const options = ['تعطيل', 'حزب', 'جزء'];
 
   const [HizbNotificationValue, setHizbNotificationValue] =
-    useRecoilState<number>(hizbNotification);
+    useAtom(hizbNotification);
   const { textColor, primaryColor, primaryLightColor, cardColor } = useColors();
-  const [mushafContrastValue, setMushafContrastValue] =
-    useRecoilState(mushafContrast);
+  const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
 
   const toggleSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);

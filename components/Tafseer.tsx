@@ -6,11 +6,11 @@ import {
   StyleSheet,
 } from 'react-native';
 
+import { useAtom } from 'jotai';
 import HTMLView from 'react-native-htmlview';
-import { useRecoilState } from 'recoil';
 
 import { useColors } from '@/hooks/useColors';
-import { tafseerTab } from '@/recoil/atoms';
+import { tafseerTab } from '@/jotai/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
 
 import { ThemedText } from './ThemedText';
@@ -39,8 +39,7 @@ const isRTL = I18nManager.isRTL;
 export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
   const { tintColor, textColor } = useColors();
   const [surahName, setSurahName] = useState<string>('');
-  const [selectedTabValue, setSelectedTab] =
-    useRecoilState<TafseerTabs>(tafseerTab);
+  const [selectedTabValue, setSelectedTab] = useAtom(tafseerTab);
   const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
 
   const renderTafseerContent = (tafseer: TafseerAya[] | null): JSX.Element => {

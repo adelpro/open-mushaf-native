@@ -1,14 +1,14 @@
 import { Pressable, StyleSheet } from 'react-native';
 
-import { useSetRecoilState } from 'recoil';
+import { useSetAtom } from 'jotai';
 
 import MushafPage from '@/components/MushafPage';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import TopMenu from '@/components/TopMenu';
-import { topMenuState } from '@/recoil/atoms';
+import { topMenuStateWithEffect } from '@/jotai/atoms';
 
 export default function HomeScreen() {
-  const setShowTopMenu = useSetRecoilState(topMenuState);
+  const setShowTopMenu = useSetAtom(topMenuStateWithEffect);
 
   return (
     <ThemedSafeAreaView style={styles.container}>

@@ -17,12 +17,9 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
+import { Provider } from 'jotai';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import ReactNativeRecoilPersist, {
-  ReactNativeRecoilPersistGate,
-} from 'react-native-recoil-persist';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { RecoilRoot } from 'recoil';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -77,34 +74,32 @@ export default function RootLayout() {
   }
 
   return (
-    <RecoilRoot>
+    <Provider>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
           <StatusBar style="auto" />
-          <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
-            <ThemeProvider
-              value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-            >
-              <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="+not-found" />
-                <Stack.Screen
-                  name="search"
-                  options={{
-                    title: 'بحث',
-                  }}
-                />
-                <Stack.Screen
-                  name="navigation"
-                  options={{
-                    title: 'تنقل',
-                  }}
-                />
-              </Stack>
-            </ThemeProvider>
-          </ReactNativeRecoilPersistGate>
+          <ThemeProvider
+            value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+          >
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+              <Stack.Screen
+                name="search"
+                options={{
+                  title: 'بحث',
+                }}
+              />
+              <Stack.Screen
+                name="navigation"
+                options={{
+                  title: 'تنقل',
+                }}
+              />
+            </Stack>
+          </ThemeProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
-    </RecoilRoot>
+    </Provider>
   );
 }
