@@ -1,8 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { add, formatISO } from 'date-fns';
-import { Getter, Setter } from 'jotai';
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';
-import { atomEffect, withAtomEffect } from 'jotai-effect';
+import { withAtomEffect } from 'jotai-effect';
 
 import { TafseerTabs } from '@/types';
 
@@ -72,6 +71,12 @@ export const hizbNotification = atomWithAsyncStorage<number>(
   0,
 );
 hizbNotification.debugLabel = 'hizb-notification';
+
+export const currentVersion = atomWithAsyncStorage<string | undefined>(
+  'currentVersion',
+  undefined,
+);
+currentVersion.debugLabel = 'current-version';
 
 // Define a top menu state atom with a timer effect
 const topMenuState = atomWithAsyncStorage<boolean>('TopMenuState', false);

@@ -7,11 +7,11 @@ import { ExternalLink } from '@/components/ExternalLink';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { getAppVersion } from '@/utils';
 
 export default function AboutScreen() {
-  const appVersion = Application.nativeApplicationVersion ?? 'Unknown';
+  const appVersion = getAppVersion();
   const buildVersion = Application.nativeBuildVersion ?? 'Unknown';
-  console.info(`App Version: ${appVersion} (${buildVersion})`);
 
   const sourcesList: { text: string; link: Href; label: string }[] = [
     {

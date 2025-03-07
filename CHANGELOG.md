@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.8.0]
+
+### Updated
+
+- Added a new version change logs modal
+
+### Fixed
+
+- Moved from Recoil (End of life) to Jotai.
+
 ## [2.6.0]
 
 ### Fixed
