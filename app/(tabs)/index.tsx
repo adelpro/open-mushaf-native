@@ -1,21 +1,26 @@
 import { Pressable, StyleSheet } from 'react-native';
 
-import { useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 
 import MushafPage from '@/components/MushafPage';
+import SelectRiwayaModal from '@/components/SelectRiwayaModal';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import TopMenu from '@/components/TopMenu';
-import { topMenuStateWithEffect } from '@/jotai/atoms';
+import { MushafRiwaya, topMenuStateWithEffect } from '@/jotai/atoms';
 
 export default function HomeScreen() {
   const setShowTopMenu = useSetAtom(topMenuStateWithEffect);
+  const mushafRiwayaValue = useAtomValue(MushafRiwaya);
+  const showSelectRiwayaModal = mushafRiwayaValue === undefined;
 
+  console.log('showSelectriwayaModal', showSelectRiwayaModal);
   return (
     <ThemedSafeAreaView style={styles.container}>
       <TopMenu />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
         <MushafPage />
       </Pressable>
+      <SelectRiwayaModal visible={showSelectRiwayaModal} />
     </ThemedSafeAreaView>
   );
 }

@@ -45,14 +45,6 @@ export default function RootLayout() {
 
   useEffect(() => {
     const appVersion = getAppVersion();
-    console.log(
-      `App version: ${appVersion}`,
-      typeof appVersion,
-      `Current version: ${currentVersionValue}`,
-      'copmarison',
-      typeof currentVersionValue,
-      appVersion === currentVersionValue,
-    );
     if (currentVersionValue === undefined) {
       return;
     }

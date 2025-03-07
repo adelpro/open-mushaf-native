@@ -66,6 +66,12 @@ export const mushafContrast = atomWithAsyncStorage<number>(
 );
 mushafContrast.debugLabel = 'mushaf-contrast';
 
+/**
+ * 0 - disabled
+ *  1 - hizb
+ *  2 - juz
+ */
+
 export const hizbNotification = atomWithAsyncStorage<number>(
   'HizbNotification',
   0,
@@ -76,6 +82,18 @@ export const currentVersion = atomWithAsyncStorage<string | undefined>(
   'currentVersion',
   undefined,
 );
+
+/**
+ * 0 - warsh
+ * 1 - hafs
+ * undefined
+ */
+
+export const MushafRiwaya = atomWithAsyncStorage<number | undefined>(
+  'MushafRiwaya',
+  undefined,
+);
+
 currentVersion.debugLabel = 'current-version';
 
 // Define a top menu state atom with a timer effect

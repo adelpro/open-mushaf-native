@@ -10,12 +10,12 @@ import changeLogsJSON from '../assets/changelogs.json';
 
 type ChangeLogModalProps = {
   visible: boolean;
-  onClose: () => void;
+  onClose?: () => void;
 };
 
 export default function ChangeLogModal({
   visible,
-  onClose,
+  onClose = () => {},
 }: ChangeLogModalProps) {
   const appVersion = getAppVersion();
   const changeLogs = changeLogsJSON.find(

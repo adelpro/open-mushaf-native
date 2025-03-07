@@ -1,4 +1,4 @@
-export const imagesMap: Record<number, number> = {
+export const imagesMapWarsh: Record<number, number> = {
   1: require('@/assets/mushaf-data/mushaf-elmadina-warsh-azrak/1.png'),
   2: require('@/assets/mushaf-data/mushaf-elmadina-warsh-azrak/2.png'),
   3: require('@/assets/mushaf-data/mushaf-elmadina-warsh-azrak/3.png'),

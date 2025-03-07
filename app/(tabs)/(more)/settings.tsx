@@ -1,7 +1,7 @@
 import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import Slider from '@react-native-community/slider';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import Toggle from 'react-native-toggle-input';
 
 import SegmentedControl from '@/components/SegmentControl';
@@ -137,6 +137,7 @@ export default function SettingsScreen() {
         <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
           <SegmentedControl
             options={options}
+            showDisableOption
             initialSelectedIndex={HizbNotificationValue}
             activeColor={primaryColor}
             textColor={primaryColor}

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.0]
+
+### Updated
+
+- Added the option to choose metween riwayas: warsh or hafs
+
 ## [2.8.0]
 
 ### Updated

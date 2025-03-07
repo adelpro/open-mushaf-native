@@ -6,6 +6,7 @@ import { ThemedView } from './ThemedView';
 
 interface SegmentedControlProps {
   options: string[];
+  showDisableOption?: boolean;
   onSelectionChange: (selectedIndex: number) => void;
   initialSelectedIndex?: number;
   activeColor?: string;
@@ -17,6 +18,7 @@ interface SegmentedControlProps {
 
 export default function SegmentedControl({
   options,
+  showDisableOption = false,
   onSelectionChange,
   initialSelectedIndex = 0,
   activeColor = '#007AFF',
@@ -40,9 +42,10 @@ export default function SegmentedControl({
           style={[
             styles.option,
             index === selectedIndex && { backgroundColor: activeColor },
-            index === 0 && {
-              backgroundColor: activeDisabledColor,
-            },
+            index === 0 &&
+              showDisableOption && {
+                backgroundColor: activeDisabledColor,
+              },
             index === options.length - 1 && styles.lastOption,
           ]}
           onPress={() => handlePress(index)}

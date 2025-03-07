@@ -15,3 +15,5 @@ export * from './tafseerAya';
 export * from './specs';
 
 export * from './hizb';
+
+export * from './riwaya';
