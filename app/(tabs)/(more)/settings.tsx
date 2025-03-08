@@ -2,11 +2,11 @@ import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import Slider from '@react-native-community/slider';
 import { useAtom } from 'jotai';
+import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
 
 import SegmentedControl from '@/components/SegmentControl';
 import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
@@ -46,7 +46,7 @@ export default function SettingsScreen() {
     setHizbNotificationValue(0);
   };
   return (
-    <ThemedSafeAreaView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Pressable
         style={[
           styles.settingsSection,
@@ -186,13 +186,14 @@ export default function SettingsScreen() {
           />
         </Pressable>
       </ThemedView>
-      <ThemedView
-        style={[
-          styles.settingsSection,
-          { flexDirection: 'column', backgroundColor: cardColor },
-        ]}
-      >
-        {debug ? (
+
+      {debug ? (
+        <ThemedView
+          style={[
+            styles.settingsSection,
+            { flexDirection: 'column', backgroundColor: cardColor },
+          ]}
+        >
           <ThemedButton
             role="button"
             variant="danger"
@@ -200,9 +201,9 @@ export default function SettingsScreen() {
           >
             حذف كل التغييرات
           </ThemedButton>
-        ) : null}
-      </ThemedView>
-    </ThemedSafeAreaView>
+        </ThemedView>
+      ) : null}
+    </ScrollView>
   );
 }
 
