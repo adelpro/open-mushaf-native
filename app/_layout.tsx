@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { I18nManager, InteractionManager, Platform } from 'react-native';
 
 import {
@@ -17,11 +17,16 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
-import { Provider } from 'jotai';
+import { Provider, useAtomValue } from 'jotai';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import ChangeLogModal from '@/components/ChangeLogsModal';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { currentVersion } from '@/jotai/atoms';
+import { getAppVersion } from '@/utils';
+
+import changeLogsJSON from '../assets/changelogs.json';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -31,6 +36,12 @@ SplashScreen.setOptions({ fade: true, duration: 1000 });
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const appVersion = getAppVersion();
+  const currentVersionValue = useAtomValue(currentVersion);
+  const [showChangeLogsModal, setShowChangeLogsModal] =
+    useState<boolean>(false);
+  const changeLogs = changeLogsJSON?.logs;
+
   const [loaded] = useFonts({
     Amiri_400Regular,
     Amiri_700Bold,
@@ -63,6 +74,24 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
+    const isWeb = Platform.OS === 'web';
+    if (isWeb) {
+      setShowChangeLogsModal(false);
+      return;
+    }
+
+    if (!changeLogs || changeLogs?.length === 0) {
+      setShowChangeLogsModal(false);
+      return;
+    }
+    if (currentVersionValue === appVersion) {
+      setShowChangeLogsModal(false);
+    } else {
+      setShowChangeLogsModal(true);
+    }
+  }, [appVersion, changeLogs, currentVersionValue]);
+
+  useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
     }
@@ -76,8 +105,13 @@ export default function RootLayout() {
     <Provider>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
+          <Suspense>
+            <ChangeLogModal
+              visible={showChangeLogsModal}
+              onClose={() => setShowChangeLogsModal(false)}
+            />
+          </Suspense>
           <StatusBar style="auto" />
-
           <ThemeProvider
             value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
           >

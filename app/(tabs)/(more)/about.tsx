@@ -11,6 +11,7 @@ import { getAppVersion } from '@/utils';
 
 export default function AboutScreen() {
   const appVersion = getAppVersion();
+  console.log('appVersion', appVersion);
   const buildVersion = Application.nativeBuildVersion ?? 'Unknown';
 
   const sourcesList: { text: string; link: Href; label: string }[] = [

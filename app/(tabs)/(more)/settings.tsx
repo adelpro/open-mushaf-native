@@ -5,6 +5,7 @@ import { useAtom } from 'jotai';
 import Toggle from 'react-native-toggle-input';
 
 import SegmentedControl from '@/components/SegmentControl';
+import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -15,11 +16,14 @@ import {
   mushafContrast,
   MushafRiwaya,
 } from '@/jotai/atoms';
+import { clearStorageAndReload } from '@/utils';
 
 const isRTL = I18nManager.isRTL;
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useAtom(flipSound);
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(MushafRiwaya);
+  const debugValue = process.env.EXPO_PUBLIC_DEBUG;
+  const debug = debugValue === 'true' ? true : false;
 
   const hizbNotificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const riwayaOptions = ['ورش', 'حفص'];
@@ -181,6 +185,22 @@ export default function SettingsScreen() {
             }}
           />
         </Pressable>
+      </ThemedView>
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          { flexDirection: 'column', backgroundColor: cardColor },
+        ]}
+      >
+        {debug ? (
+          <ThemedButton
+            role="button"
+            variant="danger"
+            onPress={clearStorageAndReload}
+          >
+            حذف كل التغييرات
+          </ThemedButton>
+        ) : null}
       </ThemedView>
     </ThemedSafeAreaView>
   );
