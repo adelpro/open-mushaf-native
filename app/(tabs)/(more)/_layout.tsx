@@ -27,6 +27,10 @@ export default function MoreLayout() {
         name="about"
         options={{ headerShown: true, title: 'حول' }}
       />
+      <Stack.Screen
+        name="tutorial"
+        options={{ headerShown: true, title: 'جولة تعليمية' }}
+      />
     </Stack>
   );
 }

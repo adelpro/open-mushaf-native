@@ -169,12 +169,6 @@ export default function Navigation() {
               />
             ))}
           </Picker>
-          {/*           <ThemedText
-            style={styles.separator}
-            accessibilityLabel="Separator between Surah and Aya"
-          >
-            -
-          </ThemedText> */}
           <Picker
             style={[styles.picker, styles.ayaPicker, { color: primaryColor }]}
             selectedValue={currentAyaNumber}
@@ -252,11 +246,5 @@ const styles = StyleSheet.create({
   },
   ayaPicker: {
     marginRight: 10,
-  },
-  separator: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginHorizontal: 10,
-    width: 30,
   },
 });

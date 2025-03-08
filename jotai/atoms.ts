@@ -97,6 +97,12 @@ export const MushafRiwaya = atomWithAsyncStorage<number | undefined>(
 );
 currentVersion.debugLabel = 'mushaf-riwaya';
 
+export const finichedTutorial = atomWithAsyncStorage<boolean>(
+  'FinichedTutorial',
+  false,
+);
+finichedTutorial.debugLabel = 'finiched-tutorial';
+
 // Define a top menu state atom with a timer effect
 const topMenuState = atomWithAsyncStorage<boolean>('TopMenuState', false);
 topMenuState.debugLabel = 'top-menu-state';

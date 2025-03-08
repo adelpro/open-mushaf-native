@@ -18,6 +18,10 @@ export default function MoreScreen() {
       <ThemedButton onPress={() => router.push('/contact')} variant="primary">
         <Text>تواصل معنا</Text>
       </ThemedButton>
+      <ThemedButton variant="primary" onPress={() => router.push('/tutorial')}>
+        جولة تعليمة
+      </ThemedButton>
+
       <ThemedButton onPress={() => router.push('/about')} variant="primary">
         <Text>حول التطبيق</Text>
       </ThemedButton>

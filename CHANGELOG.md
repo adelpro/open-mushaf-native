@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.0]
+
+### Updated
+
+- Add a reset button (behind debug flug) in the settings screen
+
+- Add Tutorial screen
+
 ## [3.0.1]
+
+### Updated
 
 - Add multiple github actions to enhance the workflow
 
