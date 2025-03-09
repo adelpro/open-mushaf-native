@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
@@ -34,10 +34,12 @@ import {
 import { Hizb } from '@/types';
 import { getAppVersion } from '@/utils';
 
+import ChangeLogsModal from './ChangeLogsModal';
 import PageOverlay from './PageOverlay';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 import TopNotification from './TopNotification';
+import changeLogsJSON from '../assets/changelogs.json';
 
 export default function MushafPage() {
   const finichedTutorialValue = useAtomValue(finichedTutorial);
@@ -50,6 +52,9 @@ export default function MushafPage() {
   const hizbData = hizbJson as Hizb[];
   const [currentHizb, setCurrentHizb] = useState<number | null>(null);
   const [showNotification, setShowNotification] = useState(false);
+  const [showChangeLogsModal, setShowChangeLogsModal] =
+    useState<boolean>(false);
+  const changeLogs = changeLogsJSON?.logs;
 
   const colorScheme = useColorScheme();
   const { tintColor } = useColors();
@@ -182,16 +187,29 @@ export default function MushafPage() {
 
   // Show the tutorial if its the first visite
   useEffect(() => {
-    //Check used to prevent showing the tutorial in the same time with showChangeLogs modal
-    const appVersionCheck = appVersion === currentVersionValue;
     if (!isMounted) {
       return;
     }
-    if (finichedTutorialValue === false && appVersionCheck) {
+
+    const isWeb = Platform.OS === 'web';
+
+    const showChangeLogsCheck: boolean =
+      !isWeb &&
+      changeLogs &&
+      changeLogs?.length !== 0 &&
+      currentVersionValue === appVersion;
+
+    if (showChangeLogsCheck) {
+      setShowChangeLogsModal(true);
+      return;
+    }
+
+    if (!finichedTutorialValue) {
       router.replace({ pathname: '/tutorial' });
     }
   }, [
     appVersion,
+    changeLogs,
     currentVersionValue,
     finichedTutorialValue,
     isMounted,
@@ -230,6 +248,12 @@ export default function MushafPage() {
 
   return (
     <GestureDetector gesture={panGestureHandler}>
+      <Suspense>
+        <ChangeLogsModal
+          visible={showChangeLogsModal}
+          onClose={() => setShowChangeLogsModal(false)}
+        />
+      </Suspense>
       <Animated.View
         style={[
           styles.imageContainer,
