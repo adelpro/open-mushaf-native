@@ -248,12 +248,6 @@ export default function MushafPage() {
 
   return (
     <GestureDetector gesture={panGestureHandler}>
-      <Suspense>
-        <ChangeLogsModal
-          visible={showChangeLogsModal}
-          onClose={() => setShowChangeLogsModal(false)}
-        />
-      </Suspense>
       <Animated.View
         style={[
           styles.imageContainer,
@@ -283,6 +277,13 @@ export default function MushafPage() {
                   : `الحزب - ${currentHizb?.toString()}`
               }
             />
+            <Suspense>
+              <ChangeLogsModal
+                visible={showChangeLogsModal}
+                onClose={() => setShowChangeLogsModal(false)}
+              />
+            </Suspense>
+            ;
           </>
         ) : (
           <ActivityIndicator size="large" color={tintColor} />
