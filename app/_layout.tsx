@@ -13,7 +13,7 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
-import { router, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
@@ -23,7 +23,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import ChangeLogModal from '@/components/ChangeLogsModal';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { currentVersion, finichedTutorial } from '@/jotai/atoms';
+import { currentVersion } from '@/jotai/atoms';
 import { getAppVersion } from '@/utils';
 
 import changeLogsJSON from '../assets/changelogs.json';
@@ -135,6 +135,7 @@ export default function RootLayout() {
                 name="tutorial"
                 options={{
                   title: 'جولة تعليمة',
+                  headerShown: false,
                 }}
               />
             </Stack>

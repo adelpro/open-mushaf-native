@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 
 import { useRouter } from 'expo-router';
 import { useSetAtom } from 'jotai';
@@ -99,19 +99,23 @@ export default function TutorialScreen() {
         <ThemedButton
           onPress={() => setIndex(index + 1)}
           variant="primary"
-          style={styles.buttonContent}
+          style={styles.button}
         >
-          <ThemedText style={styles.buttonText}>التالي</ThemedText>
-          <NextSVG width={24} height={24} />
+          <View style={styles.buttonContent}>
+            <ThemedText style={styles.buttonText}>التالي</ThemedText>
+            <NextSVG width={24} height={24} style={styles.svg} />
+          </View>
         </ThemedButton>
       ) : (
         <ThemedButton
           onPress={finishTutorial}
           variant="primary"
-          style={styles.buttonContent}
+          style={styles.button}
         >
-          <ThemedText style={styles.buttonText}>إنتهاء</ThemedText>
-          <CheckedSVG width={24} height={24} />
+          <View style={styles.buttonContent}>
+            <CheckedSVG width={24} height={24} style={styles.svg} />
+            <ThemedText style={styles.buttonText}>إنتهاء</ThemedText>
+          </View>
         </ThemedButton>
       )}
     </Animated.View>
@@ -119,15 +123,26 @@ export default function TutorialScreen() {
 }
 
 const styles = StyleSheet.create({
-  buttonContent: {
-    flexDirection: 'row',
+  button: {
+    height: 60,
+    justifyContent: 'center',
     alignItems: 'center',
-    maxWidth: 120,
+    width: 200,
+  },
+  buttonContent: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
   },
   buttonText: {
     color: 'white',
-    lineHeight: 32,
-    marginLeft: 5,
+    fontSize: 24,
+    lineHeight: 34,
+    marginHorizontal: 10,
+  },
+  svg: {
+    color: 'white',
   },
   image: { width: '100%', maxWidth: 600, height: 300, marginBottom: 20 },
 });

@@ -25,12 +25,14 @@ import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagesArray from '@/hooks/useImagesArray';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import {
+  currentVersion,
   finichedTutorial,
   flipSound,
   hizbNotification,
   mushafContrast,
 } from '@/jotai/atoms';
 import { Hizb } from '@/types';
+import { getAppVersion } from '@/utils';
 
 import PageOverlay from './PageOverlay';
 import { ThemedText } from './ThemedText';
@@ -39,6 +41,8 @@ import TopNotification from './TopNotification';
 
 export default function MushafPage() {
   const finichedTutorialValue = useAtomValue(finichedTutorial);
+  const currentVersionValue = useAtomValue(currentVersion);
+  const appVersion = getAppVersion();
   const sound = useRef<Audio.Sound | null>(null);
   const isFlipSoundEnabled = useAtomValue(flipSound);
   const mushafContrastValue = useAtomValue(mushafContrast);
@@ -177,13 +181,21 @@ export default function MushafPage() {
 
   // Show the tutorial if its the first visite
   useEffect(() => {
+    //Check used to prevent showing the tutorial in the same time with showChangeLogs modal
+    const appVersionCheck = appVersion === currentVersionValue;
     if (!isMounted) {
       return;
     }
-    if (finichedTutorialValue === false) {
+    if (finichedTutorialValue === false && appVersionCheck) {
       router.replace({ pathname: '/tutorial' });
     }
-  }, [finichedTutorialValue, isMounted, router]);
+  }, [
+    appVersion,
+    currentVersionValue,
+    finichedTutorialValue,
+    isMounted,
+    router,
+  ]);
 
   if (assetError) {
     return (
