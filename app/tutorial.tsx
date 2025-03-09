@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { I18nManager, Image, StyleSheet, View } from 'react-native';
 
 import { useRouter } from 'expo-router';
 import { useSetAtom } from 'jotai';
@@ -9,6 +9,7 @@ import CheckedSVG from '@/assets/svgs/checked.svg';
 import NextSVG from '@/assets/svgs/next.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
+import { useColors } from '@/hooks/useColors';
 import { finichedTutorial } from '@/jotai/atoms';
 
 const slides = [
@@ -51,6 +52,7 @@ const slides = [
 
 export default function TutorialScreen() {
   const router = useRouter();
+  const { primaryColor } = useColors();
   const setFinichedTutorial = useSetAtom(finichedTutorial);
   const [index, setIndex] = useState(0);
 
@@ -95,6 +97,28 @@ export default function TutorialScreen() {
         {slides[index].description}
       </ThemedText>
 
+      <View
+        style={{
+          flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse',
+          marginBottom: 20,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {slides.map((_, i) => (
+          <View
+            key={i}
+            style={{
+              width: i === index ? 10 : 5,
+              height: i === index ? 10 : 5,
+              borderRadius: 1,
+              marginHorizontal: 6,
+              backgroundColor: i === index ? primaryColor : '#E0E0E0',
+            }}
+          />
+        ))}
+      </View>
+
       {index < slides.length - 1 ? (
         <ThemedButton
           onPress={() => setIndex(index + 1)}
@@ -130,7 +154,7 @@ const styles = StyleSheet.create({
     width: 200,
   },
   buttonContent: {
-    flexDirection: 'row-reverse',
+    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',

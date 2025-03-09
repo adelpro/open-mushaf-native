@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { I18nManager, StyleSheet, Text, View } from 'react-native';
 
 import { router } from 'expo-router';
 
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     height: 50,
   },
   buttonContent: {
-    flexDirection: 'row',
+    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
     width: 200,
