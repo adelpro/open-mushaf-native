@@ -32,6 +32,7 @@
     "android:build:production:local": "eas build -p android --profile production --local --output builds/app-production.aab",
     "android:submit:preview": "eas submit -p android --profile preview",
     "web:build": "npx expo export -p web",
+    "typecheck": "tsc --noEmit",
     "prepare": "husky"
   },
   "jest": {
