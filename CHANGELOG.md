@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.1]
+
+### Update
+
+- Update the way we handle svgs
+
 ## [3.1.0]
 
 ### Updated

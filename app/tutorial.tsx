@@ -5,6 +5,8 @@ import { useRouter } from 'expo-router';
 import { useSetAtom } from 'jotai';
 import Animated, { FadeInLeft, FadeOutRight } from 'react-native-reanimated';
 
+import CheckedSVG from '@/assets/svgs/checked.svg';
+import NextSVG from '@/assets/svgs/next.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { finichedTutorial } from '@/jotai/atoms';
@@ -100,21 +102,7 @@ export default function TutorialScreen() {
           style={styles.buttonContent}
         >
           <ThemedText style={styles.buttonText}>التالي</ThemedText>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="m14.25 4.75l-6.19 6.19a1.5 1.5 0 0 0 0 2.12l6.19 6.19"
-            />
-          </svg>
+          <NextSVG width={24} height={24} />
         </ThemedButton>
       ) : (
         <ThemedButton
@@ -123,26 +111,7 @@ export default function TutorialScreen() {
           style={styles.buttonContent}
         >
           <ThemedText style={styles.buttonText}>إنتهاء</ThemedText>
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <g
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeWidth="2"
-            >
-              <circle cx="12" cy="12" r="9.25" />
-              <path
-                strokeLinejoin="round"
-                d="m16.375 9.194l-5.611 5.612l-3.139-3.134"
-              />
-            </g>
-          </svg>
+          <CheckedSVG width={24} height={24} />
         </ThemedButton>
       )}
     </Animated.View>
