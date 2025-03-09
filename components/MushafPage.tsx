@@ -195,7 +195,7 @@ export default function MushafPage() {
 
     const showChangeLogsCheck: boolean =
       !isWeb &&
-      changeLogs &&
+      !!changeLogs &&
       changeLogs?.length !== 0 &&
       currentVersionValue === appVersion;
 
