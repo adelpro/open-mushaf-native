@@ -283,7 +283,6 @@ export default function MushafPage() {
                 onClose={() => setShowChangeLogsModal(false)}
               />
             </Suspense>
-            ;
           </>
         ) : (
           <ActivityIndicator size="large" color={tintColor} />

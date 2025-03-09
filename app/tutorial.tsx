@@ -66,79 +66,82 @@ export default function TutorialScreen() {
     <Animated.View
       entering={FadeInLeft.duration(500)}
       exiting={FadeOutRight.duration(500)}
-      style={styles.container}
+      style={{ justifyContent: 'center', alignItems: 'center' }}
     >
-      <Image
-        source={slides[index].image}
-        style={styles.image}
-        resizeMode="contain"
-      />
-      <View style={styles.sectionContainer}>
-        <ThemedText
-          style={{
-            fontSize: 28,
-            fontWeight: 'bold',
-            marginBottom: 5,
-            padding: 10,
-          }}
-        >
-          {slides[index].title}
-        </ThemedText>
-        <ThemedText
-          style={{
-            fontSize: 16,
-            textAlign: isRTL ? 'left' : 'right',
-            marginBottom: 5,
-          }}
-        >
-          {slides[index].description}
-        </ThemedText>
-      </View>
-      <View style={styles.sectionContainer}>
-        <View
-          style={{
-            flexDirection: isRTL ? 'row' : 'row-reverse',
-            marginBottom: 5,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          {slides.map((_, i) => (
-            <View
-              key={i}
-              style={{
-                width: i === index ? 15 : 5,
-                height: i === index ? 15 : 5,
-                borderRadius: 1,
-                marginHorizontal: 6,
-                backgroundColor: i === index ? primaryColor : '#E0E0E0',
-              }}
-            />
-          ))}
+      <View style={styles.container}>
+        <Image
+          source={slides[index].image}
+          style={styles.image}
+          resizeMode="contain"
+        />
+        <View style={styles.sectionContainer}>
+          <ThemedText
+            style={{
+              fontSize: 28,
+              fontWeight: 'bold',
+              marginBottom: 5,
+              padding: 10,
+            }}
+          >
+            {slides[index].title}
+          </ThemedText>
+          <ThemedText
+            style={{
+              fontSize: 16,
+              textAlign: isRTL ? 'left' : 'right',
+              marginBottom: 5,
+            }}
+          >
+            {slides[index].description}
+          </ThemedText>
         </View>
-        {index < slides.length - 1 ? (
-          <ThemedButton
-            onPress={() => setIndex(index + 1)}
-            variant="primary"
-            style={styles.button}
+        <View style={styles.sectionContainer}>
+          <View
+            style={{
+              flexDirection: isRTL ? 'row' : 'row-reverse',
+              marginBottom: 5,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
           >
-            <View style={styles.buttonContent}>
-              <NextSVG width={24} height={24} style={styles.svg} />
-              <Text style={styles.buttonText}>التالي</Text>
-            </View>
-          </ThemedButton>
-        ) : (
-          <ThemedButton
-            onPress={finishTutorial}
-            variant="primary"
-            style={styles.button}
-          >
-            <View style={styles.buttonContent}>
-              <Text style={styles.buttonText}>إنتهاء</Text>
-              <CheckedSVG width={24} height={24} style={styles.svg} />
-            </View>
-          </ThemedButton>
-        )}
+            {slides.map((_, i) => (
+              <View
+                key={i}
+                style={{
+                  width: i === index ? 15 : 5,
+                  height: i === index ? 15 : 5,
+                  marginVertical: 10,
+                  borderRadius: 4,
+                  marginHorizontal: 5,
+                  backgroundColor: i === index ? primaryColor : '#E0E0E0',
+                }}
+              />
+            ))}
+          </View>
+          {index < slides.length - 1 ? (
+            <ThemedButton
+              onPress={() => setIndex(index + 1)}
+              variant="primary"
+              style={styles.button}
+            >
+              <View style={styles.buttonContent}>
+                <NextSVG width={24} height={24} style={styles.svg} />
+                <Text style={styles.buttonText}>التالي</Text>
+              </View>
+            </ThemedButton>
+          ) : (
+            <ThemedButton
+              onPress={finishTutorial}
+              variant="primary"
+              style={styles.button}
+            >
+              <View style={styles.buttonContent}>
+                <Text style={styles.buttonText}>إنتهاء</Text>
+                <CheckedSVG width={24} height={24} style={styles.svg} />
+              </View>
+            </ThemedButton>
+          )}
+        </View>
       </View>
     </Animated.View>
   );
