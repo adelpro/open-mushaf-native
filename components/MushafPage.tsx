@@ -176,7 +176,8 @@ export default function MushafPage() {
   }, []);
 
   useEffect(() => {
-    setIsMounted(true); // Mark component as mounted
+    // Mark component as mounted
+    setIsMounted(true);
   }, []);
 
   // Show the tutorial if its the first visite

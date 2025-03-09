@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.4]
+
+### Fix
+
+- Speed up mushaf pages navigation
+
 ## [3.1.1]
 
 ### Update

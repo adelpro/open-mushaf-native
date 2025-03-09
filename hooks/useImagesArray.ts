@@ -46,7 +46,24 @@ export default function useImagesArray() {
           await assetToLoad.downloadAsync();
         }
         if (isMounted.current) {
-          setAsset(assetToLoad); // Only set asset if mounted
+          // Only set asset if mounted
+          setAsset(assetToLoad);
+        }
+
+        // Prefetch next and previous pages
+        const nextPage = page + 1;
+        if (imagesMap[nextPage]) {
+          const nextAsset = Asset.fromModule(imagesMap[nextPage]);
+          if (!nextAsset.downloaded) {
+            await nextAsset.downloadAsync(); // Prefetch next
+          }
+        }
+        const prevPage = page - 1;
+        if (imagesMap[prevPage]) {
+          const prevAsset = Asset.fromModule(imagesMap[prevPage]);
+          if (!prevAsset.downloaded) {
+            await prevAsset.downloadAsync(); // Prefetch previous
+          }
         }
       } catch (error) {
         if (isMounted.current) {
