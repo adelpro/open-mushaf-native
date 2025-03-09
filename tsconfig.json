@@ -5,14 +5,16 @@
     "target": "es2020",
     "strict": true,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "metro.config.js",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "metro.config.js"
+    "expo-env.d.ts"
   ]
 }

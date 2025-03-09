@@ -19,7 +19,7 @@ import { useColors } from '@/hooks/useColors';
 import useDebounce from '@/hooks/useDebounce';
 import { QuranText } from '@/types';
 
-export default function Search() {
+export default function SearchScreen() {
   const quranText: QuranText[] = quranJson as QuranText[];
   const [query, setQuery] = useState('');
   const [inputText, setInputText] = useState('');

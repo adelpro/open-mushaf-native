@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import ContactForm from '@/components/ContactForm';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 
-export default function Contact() {
+export default function ContactScreen() {
   return (
     <ThemedSafeAreaView style={styles.container}>
       <ContactForm />

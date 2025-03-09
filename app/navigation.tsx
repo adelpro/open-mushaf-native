@@ -15,7 +15,7 @@ import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import { QuranText } from '@/types';
 
-export default function Navigation() {
+export default function NavigationScreen() {
   const router = useRouter();
   const pages = Array.from({ length: defaultNumberOfPages }, (_, i) => i + 1);
   const { currentPage, setCurrentPage } = useCurrentPage();
