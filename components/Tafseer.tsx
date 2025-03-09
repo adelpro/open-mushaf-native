@@ -1,10 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  I18nManager,
-  Pressable,
-  StyleSheet,
-} from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { useAtom } from 'jotai';
 import HTMLView from 'react-native-htmlview';
@@ -12,6 +7,7 @@ import HTMLView from 'react-native-htmlview';
 import { useColors } from '@/hooks/useColors';
 import { tafseerTab } from '@/jotai/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
+import { isRTL } from '@/utils';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -33,8 +29,6 @@ type Props = {
   surah: number;
   opacity?: number | undefined;
 };
-
-const isRTL = I18nManager.isRTL;
 
 export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
   const { tintColor, textColor } = useColors();

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { I18nManager, Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { useRouter } from 'expo-router';
 import { useSetAtom } from 'jotai';
@@ -11,6 +11,7 @@ import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { useColors } from '@/hooks/useColors';
 import { finichedTutorial } from '@/jotai/atoms';
+import { isRTL } from '@/utils';
 
 const slides = [
   {
@@ -65,88 +66,96 @@ export default function TutorialScreen() {
     <Animated.View
       entering={FadeInLeft.duration(500)}
       exiting={FadeOutRight.duration(500)}
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 20,
-      }}
+      style={styles.container}
     >
       <Image
         source={slides[index].image}
         style={styles.image}
         resizeMode="contain"
       />
-      <ThemedText
-        style={{
-          fontSize: 28,
-          fontWeight: 'bold',
-          marginBottom: 20,
-          padding: 10,
-        }}
-      >
-        {slides[index].title}
-      </ThemedText>
-      <ThemedText
-        style={{
-          fontSize: 16,
-          textAlign: 'right',
-          marginBottom: 30,
-        }}
-      >
-        {slides[index].description}
-      </ThemedText>
-
-      <View
-        style={{
-          flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse',
-          marginBottom: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        {slides.map((_, i) => (
-          <View
-            key={i}
-            style={{
-              width: i === index ? 10 : 5,
-              height: i === index ? 10 : 5,
-              borderRadius: 1,
-              marginHorizontal: 6,
-              backgroundColor: i === index ? primaryColor : '#E0E0E0',
-            }}
-          />
-        ))}
+      <View style={styles.sectionContainer}>
+        <ThemedText
+          style={{
+            fontSize: 28,
+            fontWeight: 'bold',
+            marginBottom: 5,
+            padding: 10,
+          }}
+        >
+          {slides[index].title}
+        </ThemedText>
+        <ThemedText
+          style={{
+            fontSize: 16,
+            textAlign: isRTL ? 'left' : 'right',
+            marginBottom: 5,
+          }}
+        >
+          {slides[index].description}
+        </ThemedText>
       </View>
-
-      {index < slides.length - 1 ? (
-        <ThemedButton
-          onPress={() => setIndex(index + 1)}
-          variant="primary"
-          style={styles.button}
+      <View style={styles.sectionContainer}>
+        <View
+          style={{
+            flexDirection: isRTL ? 'row' : 'row-reverse',
+            marginBottom: 5,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
-          <View style={styles.buttonContent}>
-            <ThemedText style={styles.buttonText}>التالي</ThemedText>
-            <NextSVG width={24} height={24} style={styles.svg} />
-          </View>
-        </ThemedButton>
-      ) : (
-        <ThemedButton
-          onPress={finishTutorial}
-          variant="primary"
-          style={styles.button}
-        >
-          <View style={styles.buttonContent}>
-            <CheckedSVG width={24} height={24} style={styles.svg} />
-            <ThemedText style={styles.buttonText}>إنتهاء</ThemedText>
-          </View>
-        </ThemedButton>
-      )}
+          {slides.map((_, i) => (
+            <View
+              key={i}
+              style={{
+                width: i === index ? 15 : 5,
+                height: i === index ? 15 : 5,
+                borderRadius: 1,
+                marginHorizontal: 6,
+                backgroundColor: i === index ? primaryColor : '#E0E0E0',
+              }}
+            />
+          ))}
+        </View>
+        {index < slides.length - 1 ? (
+          <ThemedButton
+            onPress={() => setIndex(index + 1)}
+            variant="primary"
+            style={styles.button}
+          >
+            <View style={styles.buttonContent}>
+              <NextSVG width={24} height={24} style={styles.svg} />
+              <Text style={styles.buttonText}>التالي</Text>
+            </View>
+          </ThemedButton>
+        ) : (
+          <ThemedButton
+            onPress={finishTutorial}
+            variant="primary"
+            style={styles.button}
+          >
+            <View style={styles.buttonContent}>
+              <Text style={styles.buttonText}>إنتهاء</Text>
+              <CheckedSVG width={24} height={24} style={styles.svg} />
+            </View>
+          </ThemedButton>
+        )}
+      </View>
     </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 5,
+    width: '100%',
+    maxWidth: 600,
+    height: '100%',
+    maxHeight: 600,
+    marginTop: 10,
+  },
   button: {
     height: 60,
     justifyContent: 'center',
@@ -154,19 +163,26 @@ const styles = StyleSheet.create({
     width: 200,
   },
   buttonContent: {
-    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+    flexDirection: isRTL ? 'row' : 'row-reverse',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
+    width: 200,
+    height: 50,
   },
   buttonText: {
     color: 'white',
     fontSize: 24,
-    lineHeight: 34,
-    marginHorizontal: 10,
+    lineHeight: 26,
+    paddingHorizontal: 5,
+  },
+  sectionContainer: {
+    rowGap: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
   },
   svg: {
     color: 'white',
   },
-  image: { width: '100%', maxWidth: 600, height: 300, marginBottom: 20 },
+  image: { width: '100%', maxWidth: 600, height: 300, marginBottom: 5 },
 });

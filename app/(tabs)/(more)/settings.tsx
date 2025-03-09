@@ -1,4 +1,4 @@
-import { I18nManager, Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import Slider from '@react-native-community/slider';
 import { useAtom } from 'jotai';
@@ -16,9 +16,8 @@ import {
   mushafContrast,
   MushafRiwaya,
 } from '@/jotai/atoms';
-import { clearStorageAndReload } from '@/utils';
+import { clearStorageAndReload, isRTL } from '@/utils';
 
-const isRTL = I18nManager.isRTL;
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useAtom(flipSound);
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(MushafRiwaya);

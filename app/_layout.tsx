@@ -24,7 +24,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ChangeLogModal from '@/components/ChangeLogsModal';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { currentVersion } from '@/jotai/atoms';
-import { getAppVersion } from '@/utils';
+import { getAppVersion, isRTL } from '@/utils';
 
 import changeLogsJSON from '../assets/changelogs.json';
 
@@ -51,7 +51,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     async function applyRTL() {
-      if (!I18nManager.isRTL) {
+      if (!isRTL) {
         I18nManager.allowRTL(true);
         I18nManager.forceRTL(true);
 

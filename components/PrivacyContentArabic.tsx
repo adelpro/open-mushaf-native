@@ -1,12 +1,12 @@
 import React from 'react';
-import { I18nManager, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { isRTL } from '@/utils';
 
 import { ExternalLink } from './ExternalLink';
 
-const isRTL = I18nManager.isRTL;
 export default function PrivacyContentArabicNew() {
   return (
     <ThemedView style={[styles.container]}>

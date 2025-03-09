@@ -1,5 +1,5 @@
 import React from 'react';
-import { I18nManager, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { router } from 'expo-router';
 
@@ -10,6 +10,7 @@ import SettingsSVG from '@/assets/svgs/settings.svg';
 import WelcomeSVG from '@/assets/svgs/welcome.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
+import { isRTL } from '@/utils';
 
 export default function MoreScreen() {
   return (
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     height: 50,
   },
   buttonContent: {
-    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+    flexDirection: isRTL ? 'row-reverse' : 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
     width: 200,
