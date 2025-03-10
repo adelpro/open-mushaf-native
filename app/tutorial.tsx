@@ -66,7 +66,7 @@ export default function TutorialScreen() {
     <Animated.View
       entering={FadeInLeft.duration(500)}
       exiting={FadeOutRight.duration(500)}
-      style={{ justifyContent: 'center', alignItems: 'center' }}
+      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
     >
       <View style={styles.container}>
         <Image
