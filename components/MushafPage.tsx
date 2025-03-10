@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
@@ -195,7 +195,7 @@ export default function MushafPage() {
 
     const showChangeLogsCheck: boolean =
       !isWeb &&
-      !!changeLogs &&
+      changeLogs &&
       changeLogs?.length !== 0 &&
       currentVersionValue === appVersion;
 
@@ -277,12 +277,11 @@ export default function MushafPage() {
                   : `الحزب - ${currentHizb?.toString()}`
               }
             />
-            <Suspense>
-              <ChangeLogsModal
-                visible={showChangeLogsModal}
-                onClose={() => setShowChangeLogsModal(false)}
-              />
-            </Suspense>
+
+            <ChangeLogsModal
+              visible={false}
+              onClose={() => setShowChangeLogsModal(false)}
+            />
           </>
         ) : (
           <ActivityIndicator size="large" color={tintColor} />

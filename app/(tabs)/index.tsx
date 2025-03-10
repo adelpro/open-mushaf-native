@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -17,12 +16,13 @@ export default function HomeScreen() {
   return (
     <ThemedSafeAreaView style={styles.container}>
       <TopMenu />
-      <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
-        <MushafPage />
-      </Pressable>
-      <Suspense>
-        <SelectRiwayaModal visible={showSelectRiwayaModal} />
-      </Suspense>
+      {!showSelectRiwayaModal ? (
+        <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
+          <MushafPage />
+        </Pressable>
+      ) : null}
+
+      <SelectRiwayaModal visible={showSelectRiwayaModal} />
     </ThemedSafeAreaView>
   );
 }
