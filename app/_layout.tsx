@@ -97,6 +97,10 @@ export default function RootLayout() {
                   title: 'تنقل',
                 }}
               />
+              <Stack.Screen
+                name="tutorial"
+                options={{ headerShown: true, title: 'جولة تعليمية' }}
+              />
             </Stack>
           </ThemeProvider>
         </SafeAreaProvider>
