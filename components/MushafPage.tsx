@@ -25,26 +25,20 @@ import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagesArray from '@/hooks/useImagesArray';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import {
-  currentVersion,
   finichedTutorial,
   flipSound,
   hizbNotification,
   mushafContrast,
 } from '@/jotai/atoms';
 import { Hizb } from '@/types';
-import { getAppVersion } from '@/utils';
 
-import ChangeLogsModal from './ChangeLogsModal';
 import PageOverlay from './PageOverlay';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 import TopNotification from './TopNotification';
-import changeLogsJSON from '../assets/changelogs.json';
 
 export default function MushafPage() {
   const finichedTutorialValue = useAtomValue(finichedTutorial);
-  const currentVersionValue = useAtomValue(currentVersion);
-  const appVersion = getAppVersion();
   const sound = useRef<Audio.Sound | null>(null);
   const isFlipSoundEnabled = useAtomValue(flipSound);
   const mushafContrastValue = useAtomValue(mushafContrast);
@@ -52,9 +46,6 @@ export default function MushafPage() {
   const hizbData = hizbJson as Hizb[];
   const [currentHizb, setCurrentHizb] = useState<number | null>(null);
   const [showNotification, setShowNotification] = useState(false);
-  const [showChangeLogsModal, setShowChangeLogsModal] =
-    useState<boolean>(false);
-  const changeLogs = changeLogsJSON?.logs;
 
   const colorScheme = useColorScheme();
   const { tintColor } = useColors();
@@ -191,30 +182,10 @@ export default function MushafPage() {
       return;
     }
 
-    const isWeb = Platform.OS === 'web';
-
-    const showChangeLogsCheck: boolean =
-      !isWeb &&
-      changeLogs &&
-      changeLogs?.length !== 0 &&
-      currentVersionValue === appVersion;
-
-    if (showChangeLogsCheck) {
-      setShowChangeLogsModal(true);
-      return;
-    }
-
-    if (!finichedTutorialValue) {
+    if (finichedTutorialValue === false) {
       router.replace({ pathname: '/tutorial' });
     }
-  }, [
-    appVersion,
-    changeLogs,
-    currentVersionValue,
-    finichedTutorialValue,
-    isMounted,
-    router,
-  ]);
+  }, [finichedTutorialValue, isMounted, router]);
 
   if (assetError) {
     return (
@@ -276,11 +247,6 @@ export default function MushafPage() {
                   ? `الجزء - ${(currentHizb - 1)?.toString()}`
                   : `الحزب - ${currentHizb?.toString()}`
               }
-            />
-
-            <ChangeLogsModal
-              visible={false}
-              onClose={() => setShowChangeLogsModal(false)}
             />
           </>
         ) : (
