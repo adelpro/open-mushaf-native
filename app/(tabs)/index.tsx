@@ -29,9 +29,9 @@ export default function HomeScreen() {
     return <ChangeLogs />;
   } */
 
-  if (!finichedTutorialValue) {
+  /*if (!finichedTutorialValue) {
     return <TutorialGuide />;
-  }
+  }*/
 
   if (mushafRiwayaValue === undefined) {
     return <SelectRiwaya />;
