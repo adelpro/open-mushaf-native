@@ -78,12 +78,12 @@ export const hizbNotification = atomWithAsyncStorage<number>(
 );
 hizbNotification.debugLabel = 'hizb-notification';
 
-export const currentVersion = atomWithAsyncStorage<string | undefined>(
-  'CurrentVersion',
+export const currentAppVersion = atomWithAsyncStorage<string | undefined>(
+  'CurrentAppVersion',
   undefined,
 );
 
-currentVersion.debugLabel = 'current-version';
+currentAppVersion.debugLabel = 'current-app- version';
 
 /**
  * 0 - warsh
@@ -95,13 +95,13 @@ export const MushafRiwaya = atomWithAsyncStorage<number | undefined>(
   'MushafRiwaya',
   undefined,
 );
-currentVersion.debugLabel = 'mushaf-riwaya';
+MushafRiwaya.debugLabel = 'mushaf-riwaya';
 
-export const finichedTutorial = atomWithAsyncStorage<boolean>(
-  'FinichedTutorial',
+export const finishedTutorial = atomWithAsyncStorage<boolean>(
+  'FinishedTutorial',
   false,
 );
-finichedTutorial.debugLabel = 'finiched-tutorial';
+finishedTutorial.debugLabel = 'finiched-tutorial';
 
 // Define a top menu state atom with a timer effect
 const topMenuState = atomWithAsyncStorage<boolean>('TopMenuState', false);

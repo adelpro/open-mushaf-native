@@ -24,12 +24,7 @@ import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagesArray from '@/hooks/useImagesArray';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
-import {
-  finichedTutorial,
-  flipSound,
-  hizbNotification,
-  mushafContrast,
-} from '@/jotai/atoms';
+import { flipSound, hizbNotification, mushafContrast } from '@/jotai/atoms';
 import { Hizb } from '@/types';
 
 import PageOverlay from './PageOverlay';
@@ -38,7 +33,6 @@ import { ThemedView } from './ThemedView';
 import TopNotification from './TopNotification';
 
 export default function MushafPage() {
-  const finichedTutorialValue = useAtomValue(finichedTutorial);
   const sound = useRef<Audio.Sound | null>(null);
   const isFlipSoundEnabled = useAtomValue(flipSound);
   const mushafContrastValue = useAtomValue(mushafContrast);
@@ -49,7 +43,6 @@ export default function MushafPage() {
 
   const colorScheme = useColorScheme();
   const { tintColor } = useColors();
-  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   const { currentPage, setCurrentPage } = useCurrentPage();
   const [dimensions, setDimensions] = useState({
@@ -170,22 +163,6 @@ export default function MushafPage() {
       disableKeepAwake();
     };
   }, []);
-
-  useEffect(() => {
-    // Mark component as mounted
-    setIsMounted(true);
-  }, []);
-
-  // Show the tutorial if its the first visite
-  useEffect(() => {
-    if (!isMounted) {
-      return;
-    }
-
-    if (finichedTutorialValue === false) {
-      router.replace({ pathname: '/tutorial' });
-    }
-  }, [finichedTutorialValue, isMounted, router]);
 
   if (assetError) {
     return (
