@@ -25,9 +25,9 @@ export default function HomeScreen() {
   const appVersion = getAppVersion();
   const isWeb = Platform.OS === 'web';
 
-  if (!isWeb && currentAppVersionValue !== appVersion) {
+  /*  if (!isWeb && currentAppVersionValue !== appVersion) {
     return <ChangeLogs />;
-  }
+  } */
 
   if (!finichedTutorialValue) {
     return <TutorialGuide />;
