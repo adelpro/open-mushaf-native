@@ -25,7 +25,7 @@ export default function HomeScreen() {
   const appVersion = getAppVersion();
   const isWeb = Platform.OS === 'web';
 
-  if (!isWeb && currentAppVersionValue !== appVersion) {
+  /*   if (!isWeb && currentAppVersionValue !== appVersion) {
     return <ChangeLogs />;
   }
 
@@ -35,7 +35,7 @@ export default function HomeScreen() {
 
   if (mushafRiwayaValue === undefined) {
     return <SelectRiwaya />;
-  }
+  } */
   return (
     <ThemedSafeAreaView style={styles.container}>
       <TopMenu />
