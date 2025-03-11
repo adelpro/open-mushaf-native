@@ -19,19 +19,19 @@ import { getAppVersion } from '@/utils';
 export default function HomeScreen() {
   const setShowTopMenu = useSetAtom(topMenuStateWithEffect);
   const mushafRiwayaValue = useAtomValue(MushafRiwaya);
-  const finichedTutorialValue = useAtomValue(finishedTutorial);
+  const finishedTutorialValue = useAtomValue(finishedTutorial);
 
   const currentAppVersionValue = useAtomValue(currentAppVersion);
   const appVersion = getAppVersion();
   const isWeb = Platform.OS === 'web';
 
-  /*  if (!isWeb && currentAppVersionValue !== appVersion) {
+  if (!isWeb && currentAppVersionValue !== appVersion) {
     return <ChangeLogs />;
-  } */
+  }
 
-  /*if (!finichedTutorialValue) {
+  if (!finishedTutorialValue) {
     return <TutorialGuide />;
-  }*/
+  }
 
   if (mushafRiwayaValue === undefined) {
     return <SelectRiwaya />;

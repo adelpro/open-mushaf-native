@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { add, formatISO } from 'date-fns';
+import { add, formatISO, isBefore, parseISO } from 'date-fns';
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 import { withAtomEffect } from 'jotai-effect';
 
@@ -31,6 +31,19 @@ const atomWithAsyncStorage = <T>(key: string, initialValue: T) => {
   storage.getItem = async () => {
     // call original getItem
     const value = await originalGetItem.call(storage, key, initialValue);
+
+    // check if the value has expired if it's an object with an expireAt property
+    if (value && typeof value === 'object') {
+      const valueWithExpire = value as T & { expireAt?: string };
+      if (valueWithExpire.expireAt) {
+        const expireAt = parseISO(valueWithExpire.expireAt);
+        if (isBefore(expireAt, new Date())) {
+          // value has expired, remove it from storage and return initialValue
+          await AsyncStorage.removeItem(key);
+          return initialValue;
+        }
+      }
+    }
 
     // value is already a JSON object -- createJSONStorage handles that for us
     return value;
@@ -68,10 +81,9 @@ mushafContrast.debugLabel = 'mushaf-contrast';
 
 /**
  * 0 - disabled
- *  1 - hizb
- *  2 - juz
+ * 1 - hizb
+ * 2 - juz
  */
-
 export const hizbNotification = atomWithAsyncStorage<number>(
   'HizbNotification',
   0,
@@ -82,15 +94,13 @@ export const currentAppVersion = atomWithAsyncStorage<string | undefined>(
   'CurrentAppVersion',
   undefined,
 );
-
-currentAppVersion.debugLabel = 'current-app- version';
+currentAppVersion.debugLabel = 'current-app-version';
 
 /**
  * 0 - warsh
  * 1 - hafs
  * undefined
  */
-
 export const MushafRiwaya = atomWithAsyncStorage<number | undefined>(
   'MushafRiwaya',
   undefined,
@@ -101,7 +111,7 @@ export const finishedTutorial = atomWithAsyncStorage<boolean>(
   'FinishedTutorial',
   false,
 );
-finishedTutorial.debugLabel = 'finiched-tutorial';
+finishedTutorial.debugLabel = 'finished-tutorial';
 
 // Define a top menu state atom with a timer effect
 const topMenuState = atomWithAsyncStorage<boolean>('TopMenuState', false);
