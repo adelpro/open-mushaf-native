@@ -18,7 +18,7 @@ interface BaseProps {
 export default function SegmentedControlWithDisabled({
   options,
   onSelectionChange,
-  initialSelectedIndex = 1,
+  initialSelectedIndex = 0,
   activeColor = '#007AFF',
   textColor = '#000',
   activeTextColor = '#fff',
