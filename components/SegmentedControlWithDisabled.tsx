@@ -11,15 +11,19 @@ interface BaseProps {
   activeColor?: string;
   textColor?: string;
   activeTextColor?: string;
+  disabledTextColor?: string;
+  activeDisabledColor?: string;
 }
 
-export default function SegmentedControl({
+export default function SegmentedControlWithDisabled({
   options,
   onSelectionChange,
-  initialSelectedIndex = 0,
+  initialSelectedIndex = 1,
   activeColor = '#007AFF',
   textColor = '#000',
   activeTextColor = '#fff',
+  disabledTextColor = '#999',
+  activeDisabledColor = '#E0E0E0',
 }: BaseProps) {
   const [selectedIndex, setSelectedIndex] = useState(initialSelectedIndex);
 
@@ -35,7 +39,10 @@ export default function SegmentedControl({
           key={index}
           style={[
             styles.option,
-            index === selectedIndex && { backgroundColor: activeColor },
+            index === selectedIndex &&
+              index !== 0 && { backgroundColor: activeColor },
+            index === selectedIndex &&
+              index === 0 && { backgroundColor: activeDisabledColor },
           ]}
           onPress={() => handlePress(index)}
         >
@@ -43,7 +50,12 @@ export default function SegmentedControl({
             style={[
               styles.optionText,
               {
-                color: index === selectedIndex ? activeTextColor : textColor,
+                color:
+                  index === 0
+                    ? disabledTextColor
+                    : index === selectedIndex
+                      ? activeTextColor
+                      : textColor,
               },
             ]}
           >

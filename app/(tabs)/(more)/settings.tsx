@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
 
 import SegmentedControl from '@/components/SegmentControl';
+import SegmentedControlWithDisabled from '@/components/SegmentedControlWithDisabled';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -146,9 +147,8 @@ export default function SettingsScreen() {
           </ThemedText>
         </ThemedView>
         <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
-          <SegmentedControl
+          <SegmentedControlWithDisabled
             options={hizbNotificationOptions}
-            showDisableOption
             initialSelectedIndex={HizbNotificationValue}
             activeColor={primaryColor}
             textColor={primaryColor}
@@ -178,7 +178,6 @@ export default function SettingsScreen() {
             initialSelectedIndex={mushafRiwayaValue}
             activeColor={primaryColor}
             textColor={primaryColor}
-            disabledTextColor={primaryColor}
             onSelectionChange={(index: number) => {
               setMushafRiwayaValue(index);
             }}

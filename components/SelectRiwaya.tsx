@@ -30,7 +30,6 @@ export default function SelectRiwaya() {
             initialSelectedIndex={mushafRiwayaValue}
             activeColor={primaryColor}
             textColor={primaryColor}
-            disabledTextColor={primaryColor}
             onSelectionChange={(index: number) => {
               setMushafRiwayaValue(index);
             }}
