@@ -28,9 +28,7 @@ export default function SegmentedControl({
   disabledTextColor = '#999',
 }: SegmentedControlProps) {
   const [selectedIndex, setSelectedIndex] = useState(
-    initialSelectedIndex === 0 || initialSelectedIndex === undefined
-      ? -1
-      : initialSelectedIndex,
+    initialSelectedIndex === undefined ? -1 : initialSelectedIndex,
   );
 
   const handlePress = (index: number) => {
@@ -46,10 +44,9 @@ export default function SegmentedControl({
           style={[
             styles.option,
             index === selectedIndex && { backgroundColor: activeColor },
-            index === 0 &&
-              showDisableOption && {
-                backgroundColor: activeDisabledColor,
-              },
+            showDisableOption && {
+              backgroundColor: activeDisabledColor,
+            },
             index === options.length - 1 && styles.lastOption,
           ]}
           onPress={() => handlePress(index)}
