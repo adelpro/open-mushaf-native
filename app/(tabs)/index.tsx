@@ -4,7 +4,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 
 import ChangeLogs from '@/components/ChangeLogs';
 import MushafPage from '@/components/MushafPage';
-import SelectRiwayaModal from '@/components/SelectRiwayaModal';
+import SelectRiwaya from '@/components/SelectRiwaya';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import TopMenu from '@/components/TopMenu';
 import TutorialGuide from '@/components/TutorialGuide';
@@ -20,7 +20,6 @@ export default function HomeScreen() {
   const setShowTopMenu = useSetAtom(topMenuStateWithEffect);
   const mushafRiwayaValue = useAtomValue(MushafRiwaya);
   const finichedTutorialValue = useAtomValue(finishedTutorial);
-  const showSelectRiwayaModal = mushafRiwayaValue === undefined;
 
   const currentAppVersionValue = useAtomValue(currentAppVersion);
   const appVersion = getAppVersion();
@@ -33,16 +32,17 @@ export default function HomeScreen() {
   if (!finichedTutorialValue) {
     return <TutorialGuide />;
   }
+
+  if (mushafRiwayaValue === undefined) {
+    return <SelectRiwaya />;
+  }
   return (
     <ThemedSafeAreaView style={styles.container}>
       <TopMenu />
-      {!showSelectRiwayaModal ? (
-        <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
-          <MushafPage />
-        </Pressable>
-      ) : null}
 
-      <SelectRiwayaModal visible={showSelectRiwayaModal} />
+      <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
+        <MushafPage />
+      </Pressable>
     </ThemedSafeAreaView>
   );
 }

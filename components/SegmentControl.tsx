@@ -20,14 +20,18 @@ export default function SegmentedControl({
   options,
   showDisableOption = false,
   onSelectionChange,
-  initialSelectedIndex = 0,
+  initialSelectedIndex,
   activeColor = '#007AFF',
   textColor = '#000',
   activeTextColor = '#fff',
   activeDisabledColor = '#E0E0E0',
   disabledTextColor = '#999',
 }: SegmentedControlProps) {
-  const [selectedIndex, setSelectedIndex] = useState(initialSelectedIndex);
+  const [selectedIndex, setSelectedIndex] = useState(
+    initialSelectedIndex === 0 || initialSelectedIndex === undefined
+      ? -1
+      : initialSelectedIndex,
+  );
 
   const handlePress = (index: number) => {
     setSelectedIndex(index);

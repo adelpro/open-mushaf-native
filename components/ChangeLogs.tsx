@@ -22,8 +22,8 @@ export default function ChangeLogs() {
   };
 
   return (
-    <ThemedView style={styles.modalContainer}>
-      <ThemedView style={styles.modalContent}>
+    <ThemedView style={styles.container}>
+      <ThemedView style={styles.content}>
         <ThemedText style={styles.title}>ما الجديد</ThemedText>
         {changeLogs?.map((log, index) => (
           <ThemedText key={index} style={styles.changeLogItem}>
@@ -39,13 +39,13 @@ export default function ChangeLogs() {
 }
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  modalContent: {
+  content: {
     width: '80%',
     padding: 20,
     borderRadius: 5,
