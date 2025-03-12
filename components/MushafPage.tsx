@@ -34,7 +34,7 @@ import TopNotification from './TopNotification';
 
 export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
-  const isFlipSoundEnabled = useAtomValue(flipSound);
+  const FlipSoundEnabledValue = useAtomValue(flipSound);
   const mushafContrastValue = useAtomValue(mushafContrast);
   const HizbNotificationValue = useAtomValue(hizbNotification);
   const hizbData = hizbJson as Hizb[];
@@ -65,7 +65,7 @@ export default function MushafPage() {
     setCurrentPage(page);
     router.replace({ pathname: '/', params: { page: page.toString() } });
 
-    if (isFlipSoundEnabled && sound.current) {
+    if (FlipSoundEnabledValue && sound.current) {
       sound.current.replayAsync();
     }
   };
@@ -99,7 +99,7 @@ export default function MushafPage() {
   });
 
   useEffect(() => {
-    if (!isFlipSoundEnabled) return;
+    if (!FlipSoundEnabledValue) return;
 
     const loadSound = async () => {
       const { sound: soundObject } = await Audio.Sound.createAsync(
@@ -113,7 +113,7 @@ export default function MushafPage() {
     return () => {
       sound.current?.unloadAsync().then(() => (sound.current = null));
     };
-  }, [isFlipSoundEnabled]);
+  }, [FlipSoundEnabledValue]);
 
   useEffect(() => {
     // Find the current Hizb and handle notification logic in a single effect
