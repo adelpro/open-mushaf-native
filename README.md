@@ -36,7 +36,7 @@ and localized caching for Quranic images and Tafseer data.
 - **Offline Access**: Preload and cache Quran pages and Tafseer data for complete offline functionality.
 - **Dynamic Tafseer Popups**: Smoothly resize Tafseer popups with gesture control.
 - **Optimized Image Loading**: Efficient loading of large Quran pages using `expo-image` for better memory management.
-- **Jotai State Management**: Smooth state management for all app interactions.
+- **Recoil State Management**: Smooth state management for all app interactions.
 - **Cross-Platform Support**: Built with Expo for easy deployment on Android and web platforms.
 
 ## Demo

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
-import { useAtom } from 'jotai';
+import { useRecoilState } from 'recoil';
 
 import { useColors } from '@/hooks/useColors';
-import { MushafRiwaya } from '@/jotai/atoms';
+import { MushafRiwaya } from '@/recoil/atom';
 
 import SegmentedControl from './SegmentControl';
 import { ThemedText } from './ThemedText';
@@ -13,7 +13,8 @@ import { ThemedView } from './ThemedView';
 const riwayaOptions = ['ورش', 'حفص'];
 
 export default function SelectRiwaya() {
-  const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(MushafRiwaya);
+  const [mushafRiwayaValue, setMushafRiwayaValue] =
+    useRecoilState(MushafRiwaya);
   const { primaryColor } = useColors();
   return (
     <ThemedView style={styles.container}>

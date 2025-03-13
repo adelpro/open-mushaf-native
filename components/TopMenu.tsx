@@ -7,12 +7,12 @@ import {
   MaterialIcons,
 } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useAtom } from 'jotai';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRecoilState } from 'recoil';
 
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
-import { bottomMenuState, topMenuStateWithEffect } from '@/jotai/atoms';
+import { bottomMenuState, topMenuState } from '@/recoil/atom';
 
 import { ThemedSafeAreaView } from './ThemedSafeAreaView';
 
@@ -22,10 +22,9 @@ export default function TopMenu() {
   const isDarkMode = colorScheme === 'dark';
   const insets = useSafeAreaInsets();
 
-  const [showBottomMenuState, setBottomMenuState] = useAtom(bottomMenuState);
-  const [showTopMenuState, setShowTopMenuState] = useAtom(
-    topMenuStateWithEffect,
-  );
+  const [showBottomMenuState, setBottomMenuState] =
+    useRecoilState(bottomMenuState);
+  const [showTopMenuState, setShowTopMenuState] = useRecoilState(topMenuState);
 
   const toggleMenu = () => {
     setBottomMenuState((state) => !state);

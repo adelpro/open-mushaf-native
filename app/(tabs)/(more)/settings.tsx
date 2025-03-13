@@ -1,9 +1,9 @@
 import { Pressable, StyleSheet } from 'react-native';
 
 import Slider from '@react-native-community/slider';
-import { useAtom } from 'jotai';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
+import { useRecoilState } from 'recoil';
 
 import SegmentedControl from '@/components/SegmentControl';
 import SegmentedControlWithDisabled from '@/components/SegmentedControlWithDisabled';
@@ -16,12 +16,13 @@ import {
   hizbNotification,
   mushafContrast,
   MushafRiwaya,
-} from '@/jotai/atoms';
+} from '@/recoil/atom';
 import { clearStorageAndReload, isRTL } from '@/utils';
 
 export default function SettingsScreen() {
-  const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useAtom(flipSound);
-  const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(MushafRiwaya);
+  const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
+  const [mushafRiwayaValue, setMushafRiwayaValue] =
+    useRecoilState(MushafRiwaya);
   const debugValue = process.env.EXPO_PUBLIC_DEBUG;
   const debug = debugValue === 'true' ? true : false;
 
@@ -29,9 +30,10 @@ export default function SettingsScreen() {
   const riwayaOptions = ['ورش', 'حفص'];
 
   const [HizbNotificationValue, setHizbNotificationValue] =
-    useAtom(hizbNotification);
+    useRecoilState(hizbNotification);
   const { textColor, primaryColor, primaryLightColor, cardColor } = useColors();
-  const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
+  const [mushafContrastValue, setMushafContrastValue] =
+    useRecoilState(mushafContrast);
 
   const toggleSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);

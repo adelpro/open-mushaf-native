@@ -21,9 +21,12 @@ builds/
 # Expo generated files (you may want to ignore them if they are not needed in the build process)
 .expo/
 
-dist/
+
 web/
-web:build/
+dist/
+builds/
+design/
+screenshots/
 android/
 ios/
 

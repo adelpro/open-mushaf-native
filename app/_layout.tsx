@@ -17,9 +17,9 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
-import { Provider } from 'jotai';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { RecoilRoot } from 'recoil';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { isRTL } from '@/utils';
@@ -75,7 +75,7 @@ export default function RootLayout() {
   }
 
   return (
-    <Provider>
+    <RecoilRoot>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
           <StatusBar style="auto" />
@@ -105,6 +105,6 @@ export default function RootLayout() {
           </ThemeProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
-    </Provider>
+    </RecoilRoot>
   );
 }

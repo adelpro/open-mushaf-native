@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { usePathname, useRouter } from 'expo-router';
-import { useSetAtom } from 'jotai';
 import Animated, { FadeInLeft, FadeOutRight } from 'react-native-reanimated';
+import { useSetRecoilState } from 'recoil';
 
 import CheckedSVG from '@/assets/svgs/checked.svg';
 import NextSVG from '@/assets/svgs/next.svg';
@@ -11,7 +11,7 @@ import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { SLIDES } from '@/constants';
 import { useColors } from '@/hooks/useColors';
-import { finishedTutorial } from '@/jotai/atoms';
+import { finishedTutorial } from '@/recoil/atom';
 import { isRTL } from '@/utils';
 
 import { ThemedSafeAreaView } from './ThemedSafeAreaView';
@@ -20,7 +20,7 @@ export default function TutorialGuide() {
   const router = useRouter();
   const pathname = usePathname();
   const { primaryColor } = useColors();
-  const setFinishedTutorial = useSetAtom(finishedTutorial);
+  const setFinishedTutorial = useSetRecoilState(finishedTutorial);
   const [index, setIndex] = useState(0);
 
   const finishTutorial = () => {
