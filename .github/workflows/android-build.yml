@@ -74,3 +74,24 @@ jobs:
         with:
           name: app-release-aab
           path: app-production.aab
+          
+      - name: Send email notification
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.MAIL_SERVER }}
+          server_port: ${{ secrets.MAIL_PORT }}
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "GitHub Actions: Android Build ${{ job.status }}"
+          body: |
+            Android Build workflow has ${{ job.status }}.
+            
+            Repository: ${{ github.repository }}
+            Workflow: ${{ github.workflow }}
+            Run ID: ${{ github.run_id }}
+            Run URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            Triggered by: ${{ github.actor }}
+          to: ${{ secrets.MAIL_RECIPIENT }}
+          from: GitHub Actions <${{ secrets.MAIL_USERNAME }}>
