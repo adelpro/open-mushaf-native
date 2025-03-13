@@ -7,7 +7,6 @@ All notable changes to this project will be documented in this file.
 ### Fix
 
 - Speed up mushaf pages navigation
-- Moved back to Recoil.
 
 ## [3.1.1]
 

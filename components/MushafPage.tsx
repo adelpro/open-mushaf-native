@@ -14,9 +14,9 @@ import {
   isAvailableAsync,
 } from 'expo-keep-awake';
 import { useRouter } from 'expo-router';
+import { useAtomValue } from 'jotai';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useRecoilValue } from 'recoil';
 
 import hizbJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.json';
 import { defaultNumberOfPages } from '@/constants';
@@ -24,7 +24,7 @@ import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagesArray from '@/hooks/useImagesArray';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
-import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atom';
+import { flipSound, hizbNotification, mushafContrast } from '@/jotai/atoms';
 import { Hizb } from '@/types';
 
 import PageOverlay from './PageOverlay';
@@ -34,9 +34,9 @@ import TopNotification from './TopNotification';
 
 export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
-  const FlipSoundEnabledValue = useRecoilValue(flipSound);
-  const mushafContrastValue = useRecoilValue(mushafContrast);
-  const HizbNotificationValue = useRecoilValue(hizbNotification);
+  const FlipSoundEnabledValue = useAtomValue(flipSound);
+  const mushafContrastValue = useAtomValue(mushafContrast);
+  const HizbNotificationValue = useAtomValue(hizbNotification);
   const hizbData = hizbJson as Hizb[];
   const [currentHizb, setCurrentHizb] = useState<number | null>(null);
   const [showNotification, setShowNotification] = useState(false);

@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Asset } from 'expo-asset';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 
 import { imagesMapHafs, imagesMapWarsh } from '@/constants';
 import useCurrentPage from '@/hooks/useCurrentPage';
-import { MushafRiwaya } from '@/recoil/atom';
+import { MushafRiwaya } from '@/jotai/atoms';
 
 export default function useImagesArray() {
   const [error, setError] = useState<string | null>(null);
   const [asset, setAsset] = useState<Asset | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const MushafRiwayaValue = useRecoilValue(MushafRiwaya);
+  const MushafRiwayaValue = useAtomValue(MushafRiwaya);
   const { currentPage: page } = useCurrentPage();
   const [imagesMap, setImageMap] = useState<
     Record<number, number> | undefined
