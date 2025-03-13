@@ -1,5 +1,10 @@
+/dis
+/android
+/ios
+/design
+/screenshots
+/assets
 /.expo
-
 node_modules
 
 *-lock.json 

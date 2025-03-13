@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Asset } from 'expo-asset';
 import { useAtomValue } from 'jotai';
@@ -7,65 +7,94 @@ import { imagesMapHafs, imagesMapWarsh } from '@/constants';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import { MushafRiwaya } from '@/jotai/atoms';
 
+// Cache to store preloaded assets
+const assetCache = new Map<string, Asset>();
+
 export default function useImagesArray() {
   const [error, setError] = useState<string | null>(null);
   const [asset, setAsset] = useState<Asset | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const MushafRiwayaValue = useAtomValue(MushafRiwaya);
   const { currentPage: page } = useCurrentPage();
-  const [imagesMap, setImageMap] = useState<
-    Record<number, number> | undefined
-  >();
   const isMounted = useRef(true);
 
-  useEffect(() => {
+  const imagesMap = useMemo(() => {
     switch (MushafRiwayaValue) {
-      case undefined:
-        setImageMap(undefined);
-        break;
       case 0:
-        setImageMap(imagesMapWarsh);
-        break;
+        return imagesMapWarsh;
       case 1:
-        setImageMap(imagesMapHafs);
-        break;
+        return imagesMapHafs;
+      default:
+        return undefined;
     }
   }, [MushafRiwayaValue]);
+
+  // Helper function to load and cache an asset
+  const loadAndCacheAsset = useCallback(
+    async (pageNum: number): Promise<Asset | undefined> => {
+      if (!imagesMap?.[pageNum]) return undefined;
+
+      const cacheKey = `${MushafRiwayaValue}-${pageNum}`;
+      if (assetCache.has(cacheKey)) {
+        return assetCache.get(cacheKey) as Asset;
+      }
+
+      const image = imagesMap[pageNum];
+      const assetToLoad = Asset.fromModule(image);
+
+      if (!assetToLoad.downloaded) {
+        await assetToLoad.downloadAsync();
+      }
+
+      assetCache.set(cacheKey, assetToLoad);
+      return assetToLoad;
+    },
+    [imagesMap, MushafRiwayaValue],
+  );
+
+  // Prefetch adjacent pages
+  const prefetchAdjacentPages = useCallback(async () => {
+    if (!imagesMap) return;
+
+    // Prefetch next and previous pages in parallel
+    const pagesToPrefetch = [page + 1, page + 2, page - 1, page - 2].filter(
+      (p) => p > 0 && p <= Object.keys(imagesMap).length,
+    );
+
+    Promise.all(pagesToPrefetch.map((p) => loadAndCacheAsset(p))).catch(
+      (err) => {
+        setError('خطأ في تحميل الصفحات');
+      },
+    );
+  }, [page, imagesMap, loadAndCacheAsset]);
+
   useEffect(() => {
     isMounted.current = true;
-    setIsLoading(true);
-    if (imagesMap === undefined) {
-      return;
-    }
+
     const loadAsset = async () => {
       try {
-        const image = imagesMap[page];
-        if (!image) throw new Error(`الصفحة ${page} غير موجودة`);
-
-        const assetToLoad = Asset.fromModule(image);
-        if (!assetToLoad.downloaded) {
-          await assetToLoad.downloadAsync();
+        if (!imagesMap?.[page]) {
+          setIsLoading(false);
+          return;
         }
-        if (isMounted.current) {
-          // Only set asset if mounted
+
+        setIsLoading(true);
+
+        // Try to get from cache first
+        const cacheKey = `${MushafRiwayaValue}-${page}`;
+        let assetToLoad = assetCache.get(cacheKey);
+
+        if (!assetToLoad) {
+          assetToLoad = await loadAndCacheAsset(page);
+        }
+
+        if (isMounted.current && assetToLoad) {
           setAsset(assetToLoad);
-        }
+          setError(null);
 
-        // Prefetch next and previous pages
-        /*  const nextPage = page + 1;
-        if (imagesMap[nextPage]) {
-          const nextAsset = Asset.fromModule(imagesMap[nextPage]);
-          if (!nextAsset.downloaded) {
-            await nextAsset.downloadAsync(); // Prefetch next
-          }
+          // Start prefetching adjacent pages after current page is loaded
+          prefetchAdjacentPages();
         }
-        const prevPage = page - 1;
-        if (imagesMap[prevPage]) {
-          const prevAsset = Asset.fromModule(imagesMap[prevPage]);
-          if (!prevAsset.downloaded) {
-            await prevAsset.downloadAsync(); // Prefetch previous
-          }
-        } */
       } catch (error) {
         if (isMounted.current) {
           setError(
@@ -81,10 +110,17 @@ export default function useImagesArray() {
     };
 
     loadAsset();
+
     return () => {
-      isMounted.current = false; // Mark as unmounted
+      isMounted.current = false;
     };
-  }, [imagesMap, page]);
+  }, [
+    imagesMap,
+    page,
+    MushafRiwayaValue,
+    loadAndCacheAsset,
+    prefetchAdjacentPages,
+  ]);
 
   return { asset, isLoading, error };
 }
