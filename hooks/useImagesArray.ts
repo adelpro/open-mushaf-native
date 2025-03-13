@@ -21,6 +21,7 @@ export default function useImagesArray() {
   useEffect(() => {
     switch (MushafRiwayaValue) {
       case undefined:
+        setImageMap(undefined);
         break;
       case 0:
         setImageMap(imagesMapWarsh);
@@ -51,7 +52,7 @@ export default function useImagesArray() {
         }
 
         // Prefetch next and previous pages
-        const nextPage = page + 1;
+        /*  const nextPage = page + 1;
         if (imagesMap[nextPage]) {
           const nextAsset = Asset.fromModule(imagesMap[nextPage]);
           if (!nextAsset.downloaded) {
@@ -64,7 +65,7 @@ export default function useImagesArray() {
           if (!prevAsset.downloaded) {
             await prevAsset.downloadAsync(); // Prefetch previous
           }
-        }
+        } */
       } catch (error) {
         if (isMounted.current) {
           setError(
