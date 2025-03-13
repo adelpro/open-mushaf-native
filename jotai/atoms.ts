@@ -5,51 +5,50 @@ import { withAtomEffect } from 'jotai-effect';
 
 import { TafseerTabs } from '@/types';
 
+type WrappedValue<T> = {
+  data: T;
+  expireAt?: string;
+};
+
 const atomWithAsyncStorage = <T>(key: string, initialValue: T) => {
-  const storage = createJSONStorage<T>(() => AsyncStorage);
+  // Create a raw storage that works with WrappedValue<T>
+  const rawStorage = createJSONStorage<WrappedValue<T>>(() => AsyncStorage);
 
-  // preserve original getItem and setItem
-  const originalGetItem = storage.getItem;
-  const originalSetItem = storage.setItem;
-
-  // override setItem
-  storage.setItem = async (_, value, expireInHours?: number) => {
-    let updatedValue = value;
-
-    // add expireAt to newValue if expireInHours is provided
-    if (expireInHours !== undefined) {
-      const expireAt = add(new Date(), { hours: expireInHours });
-      updatedValue = { ...value, expireAt: formatISO(expireAt) };
-    }
-
-    // updatedValue is a JSON object -- createJSONStorage handles that for us
-    // call original setItem with updatedValue
-    return originalSetItem.call(storage, key, updatedValue);
-  };
-
-  // override getItem
-  storage.getItem = async () => {
-    // call original getItem
-    const value = await originalGetItem.call(storage, key, initialValue);
-
-    // check if the value has expired if it's an object with an expireAt property
-    if (value && typeof value === 'object') {
-      const valueWithExpire = value as T & { expireAt?: string };
-      if (valueWithExpire.expireAt) {
-        const expireAt = parseISO(valueWithExpire.expireAt);
-        if (isBefore(expireAt, new Date())) {
-          // value has expired, remove it from storage and return initialValue
-          await AsyncStorage.removeItem(key);
-          return initialValue;
-        }
+  // Build an adapter that matches the storage API expected by atomWithStorage:
+  // getItem: (key: string, initialValue: T) => Promise<T>
+  // setItem: (key: string, newValue: T, expireInHours?: number) => Promise<void>
+  // removeItem: (key: string) => Promise<void>
+  const storageAdapter = {
+    getItem: async (key: string, defaultValue: T): Promise<T> => {
+      const wrappedDefault: WrappedValue<T> = {
+        data: defaultValue,
+        expireAt: undefined,
+      };
+      const stored = await rawStorage.getItem(key, wrappedDefault);
+      if (stored.expireAt && isBefore(parseISO(stored.expireAt), new Date())) {
+        // Expired – remove the stored item and return the default value.
+        await rawStorage.removeItem(key);
+        return defaultValue;
       }
-    }
-
-    // value is already a JSON object -- createJSONStorage handles that for us
-    return value;
+      return stored.data;
+    },
+    setItem: async (
+      key: string,
+      newValue: T,
+      expireInHours?: number,
+    ): Promise<void> => {
+      const wrapped: WrappedValue<T> = {
+        data: newValue,
+        expireAt: expireInHours
+          ? formatISO(add(new Date(), { hours: expireInHours }))
+          : undefined,
+      };
+      return rawStorage.setItem(key, wrapped);
+    },
+    removeItem: rawStorage.removeItem.bind(rawStorage),
   };
 
-  return atomWithStorage(key, initialValue, storage);
+  return atomWithStorage(key, initialValue, storageAdapter);
 };
 
 export const bottomMenuState = atomWithAsyncStorage<boolean>(

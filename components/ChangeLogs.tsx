@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { useSetAtom } from 'jotai';
@@ -13,7 +13,7 @@ import changeLogsJSON from '../assets/changelogs.json';
 
 export default function ChangeLogs() {
   const setCurrentVersionValue = useSetAtom(currentAppVersion);
-  const appVersion = getAppVersion();
+  const appVersion = useMemo(() => getAppVersion(), []);
 
   const changeLogs = changeLogsJSON.logs;
 

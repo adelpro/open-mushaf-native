@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Platform, Pressable, StyleSheet } from 'react-native';
 
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -22,20 +23,15 @@ export default function HomeScreen() {
   const finishedTutorialValue = useAtomValue(finishedTutorial);
 
   const currentAppVersionValue = useAtomValue(currentAppVersion);
-  const appVersion = getAppVersion();
+  const appVersion = useMemo(() => getAppVersion(), []);
   const isWeb = Platform.OS === 'web';
 
-  /*   if (!isWeb && currentAppVersionValue !== appVersion) {
-    return <ChangeLogs />;
-  }
+  const showChangeLogs = !isWeb && currentAppVersionValue !== appVersion;
 
   if (!finishedTutorialValue) {
     return <TutorialGuide />;
   }
 
-  if (mushafRiwayaValue === undefined) {
-    return <SelectRiwaya />;
-  } */
   return (
     <ThemedSafeAreaView style={styles.container}>
       <TopMenu />
@@ -43,6 +39,9 @@ export default function HomeScreen() {
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
         <MushafPage />
       </Pressable>
+      {showChangeLogs ? <ChangeLogs /> : null}
+      {!finishedTutorialValue ? <TutorialGuide /> : null}
+      {mushafRiwayaValue === undefined ? <SelectRiwaya /> : null}
     </ThemedSafeAreaView>
   );
 }
