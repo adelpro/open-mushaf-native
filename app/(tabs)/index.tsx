@@ -28,20 +28,21 @@ export default function HomeScreen() {
 
   const showChangeLogs = !isWeb && currentAppVersionValue !== appVersion;
 
-  if (!finishedTutorialValue) {
-    return <TutorialGuide />;
-  }
-
   return (
     <ThemedSafeAreaView style={styles.container}>
       <TopMenu />
 
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
-        <MushafPage />
+        {showChangeLogs ? (
+          <ChangeLogs />
+        ) : !finishedTutorialValue ? (
+          <TutorialGuide />
+        ) : mushafRiwayaValue === undefined ? (
+          <SelectRiwaya />
+        ) : (
+          <MushafPage />
+        )}
       </Pressable>
-      {showChangeLogs ? <ChangeLogs /> : null}
-      {!finishedTutorialValue ? <TutorialGuide /> : null}
-      {mushafRiwayaValue === undefined ? <SelectRiwaya /> : null}
     </ThemedSafeAreaView>
   );
 }
