@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 
 import { useLocalSearchParams } from 'expo-router';
 import { useAtom } from 'jotai';
