@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '100%',
+    paddingHorizontal: 20,
   },
   contentContainer: {
     display: 'flex',
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 20,
-    fontFamily: 'Amiri_700Bold',
+    fontFamily: 'Tajawal_700Bold',
     paddingVertical: 8,
     paddingHorizontal: 5,
     textAlign: 'center',

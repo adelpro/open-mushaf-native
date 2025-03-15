@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Platform, Pressable, StyleSheet } from 'react-native';
 
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 
 import ChangeLogs from '@/components/ChangeLogs';
 import MushafPage from '@/components/MushafPage';
@@ -18,7 +18,7 @@ import {
 import { getAppVersion } from '@/utils';
 
 export default function HomeScreen() {
-  const setShowTopMenu = useSetAtom(topMenuStateWithEffect);
+  const [topMenuStateValue, setShowTopMenu] = useAtom(topMenuStateWithEffect);
   const mushafRiwayaValue = useAtomValue(MushafRiwaya);
   const finishedTutorialValue = useAtomValue(finishedTutorial);
 
@@ -32,7 +32,14 @@ export default function HomeScreen() {
     <ThemedSafeAreaView style={styles.container}>
       <TopMenu />
 
-      <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
+      <Pressable
+        style={styles.content}
+        onPress={() => {
+          if (!topMenuStateValue) {
+            setShowTopMenu(true);
+          }
+        }}
+      >
         {showChangeLogs ? (
           <ChangeLogs />
         ) : !finishedTutorialValue ? (

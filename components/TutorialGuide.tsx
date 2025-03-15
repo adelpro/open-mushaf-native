@@ -22,6 +22,7 @@ export default function TutorialGuide() {
   const { primaryColor } = useColors();
   const setFinishedTutorial = useSetAtom(finishedTutorial);
   const [index, setIndex] = useState(0);
+  const rtl = isRTL;
 
   const finishTutorial = () => {
     setFinishedTutorial(true);
@@ -35,7 +36,7 @@ export default function TutorialGuide() {
       <Animated.View
         entering={FadeInLeft.duration(500)}
         exiting={FadeOutRight.duration(500)}
-        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        style={styles.animatedContainer}
       >
         <View style={styles.contentContainer}>
           <Image
@@ -43,73 +44,65 @@ export default function TutorialGuide() {
             style={styles.image}
             resizeMode="contain"
           />
-          <View style={styles.sectionContainer}>
-            <ThemedText
-              style={{
-                fontSize: 28,
-                fontWeight: 'bold',
-                marginBottom: 5,
-                padding: 10,
-              }}
-            >
-              {SLIDES[index].title}
-            </ThemedText>
-            <ThemedText
-              style={{
-                fontSize: 16,
-                textAlign: isRTL ? 'left' : 'right',
-                marginBottom: 5,
-              }}
-            >
+
+          <View style={styles.textContainer}>
+            <ThemedText style={styles.title}>{SLIDES[index].title}</ThemedText>
+            <ThemedText style={styles.description}>
               {SLIDES[index].description}
             </ThemedText>
           </View>
-          <View style={styles.sectionContainer}>
+
+          <View style={styles.controlsContainer}>
             <View
-              style={{
-                flexDirection: isRTL ? 'row' : 'row-reverse',
-                marginBottom: 5,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+              style={[
+                styles.dotsContainer,
+                { flexDirection: rtl ? 'row' : 'row-reverse' },
+              ]}
             >
               {SLIDES.map((_, i) => (
                 <View
                   key={i}
-                  style={{
-                    width: i === index ? 15 : 5,
-                    height: i === index ? 15 : 5,
-                    marginVertical: 10,
-                    borderRadius: 4,
-                    marginHorizontal: 5,
-                    backgroundColor: i === index ? primaryColor : '#E0E0E0',
-                  }}
+                  style={[
+                    styles.dot,
+                    i === index && styles.activeDot,
+                    i === index && { backgroundColor: primaryColor },
+                  ]}
                 />
               ))}
             </View>
-            {index < SLIDES.length - 1 ? (
-              <ThemedButton
-                onPress={() => setIndex(index + 1)}
-                variant="primary"
-                style={styles.button}
+
+            <ThemedButton
+              onPress={
+                index < SLIDES.length - 1
+                  ? () => setIndex(index + 1)
+                  : finishTutorial
+              }
+              variant="primary"
+              style={styles.button}
+            >
+              <View
+                style={[
+                  styles.buttonContent,
+                  { flexDirection: rtl ? 'row' : 'row-reverse' },
+                ]}
               >
-                <View style={styles.buttonContent}>
-                  <NextSVG width={24} height={24} style={styles.svg} />
-                  <Text style={styles.buttonText}>التالي</Text>
-                </View>
-              </ThemedButton>
-            ) : (
-              <ThemedButton
-                onPress={finishTutorial}
-                variant="primary"
-                style={styles.button}
-              >
-                <View style={styles.buttonContent}>
-                  <Text style={styles.buttonText}>إنتهاء</Text>
-                  <CheckedSVG width={24} height={24} style={styles.svg} />
-                </View>
-              </ThemedButton>
-            )}
+                {index < SLIDES.length - 1 ? (
+                  <>
+                    <NextSVG width={24} height={24} style={styles.buttonIcon} />
+                    <Text style={styles.buttonText}>التالي</Text>
+                  </>
+                ) : (
+                  <>
+                    <Text style={styles.buttonText}>إنتهاء</Text>
+                    <CheckedSVG
+                      width={24}
+                      height={24}
+                      style={styles.buttonIcon}
+                    />
+                  </>
+                )}
+              </View>
+            </ThemedButton>
           </View>
         </View>
       </Animated.View>
@@ -119,7 +112,7 @@ export default function TutorialGuide() {
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
@@ -127,16 +120,64 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingBottom: 20,
   },
+  animatedContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
   contentContainer: {
-    alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 5,
     width: '100%',
     maxWidth: 600,
     height: '100%',
     maxHeight: 600,
+    padding: 10,
+  },
+  image: {
+    width: '100%',
+    height: 300,
+    marginBottom: 10,
+  },
+  textContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+    lineHeight: 36,
+  },
+  description: {
+    fontSize: 16,
+    textAlign: 'center',
+    paddingHorizontal: 15,
+    width: '100%',
+  },
+  controlsContainer: {
+    width: '100%',
+    alignItems: 'center',
     marginTop: 10,
+  },
+  dotsContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  dot: {
+    width: 5,
+    height: 5,
+    borderRadius: 4,
+    marginHorizontal: 5,
+    backgroundColor: '#E0E0E0',
+  },
+  activeDot: {
+    width: 15,
+    height: 15,
   },
   button: {
     height: 60,
@@ -145,26 +186,16 @@ const styles = StyleSheet.create({
     width: 200,
   },
   buttonContent: {
-    flexDirection: isRTL ? 'row' : 'row-reverse',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 200,
-    height: 50,
+    width: '100%',
   },
   buttonText: {
     color: 'white',
     fontSize: 24,
-    lineHeight: 26,
     paddingHorizontal: 5,
   },
-  sectionContainer: {
-    rowGap: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-  },
-  svg: {
+  buttonIcon: {
     color: 'white',
   },
-  image: { width: '100%', maxWidth: 600, height: 300, marginBottom: 5 },
 });

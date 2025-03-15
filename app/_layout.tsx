@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { I18nManager, InteractionManager, Platform } from 'react-native';
 
+import { Amiri_400Regular } from '@expo-google-fonts/amiri';
 import {
-  Amiri_400Regular,
-  Amiri_400Regular_Italic,
-  Amiri_700Bold,
-  Amiri_700Bold_Italic,
+  Tajawal_400Regular,
+  Tajawal_500Medium,
+  Tajawal_700Bold,
   useFonts,
-} from '@expo-google-fonts/amiri';
+} from '@expo-google-fonts/tajawal';
 import {
   DarkTheme,
   DefaultTheme,
@@ -27,17 +27,19 @@ import { isRTL } from '@/utils';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-// Add fade animation to splash screen
-SplashScreen.setOptions({ fade: true, duration: 1000 });
+// Add fade animation to splash screen (wrapped in conditional to avoid Expo Go warning)
+if (!__DEV__ || Platform.OS === 'web') {
+  SplashScreen.setOptions({ fade: true, duration: 1000 });
+}
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   const [loaded] = useFonts({
     Amiri_400Regular,
-    Amiri_700Bold,
-    Amiri_400Regular_Italic,
-    Amiri_700Bold_Italic,
+    Tajawal_400Regular,
+    Tajawal_500Medium,
+    Tajawal_700Bold,
   });
 
   useEffect(() => {

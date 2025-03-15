@@ -11,13 +11,8 @@ type WrappedValue<T> = {
 };
 
 const atomWithAsyncStorage = <T>(key: string, initialValue: T) => {
-  // Create a raw storage that works with WrappedValue<T>
   const rawStorage = createJSONStorage<WrappedValue<T>>(() => AsyncStorage);
 
-  // Build an adapter that matches the storage API expected by atomWithStorage:
-  // getItem: (key: string, initialValue: T) => Promise<T>
-  // setItem: (key: string, newValue: T, expireInHours?: number) => Promise<void>
-  // removeItem: (key: string) => Promise<void>
   const storageAdapter = {
     getItem: async (key: string, defaultValue: T): Promise<T> => {
       const wrappedDefault: WrappedValue<T> = {
@@ -129,7 +124,10 @@ export const topMenuStateWithEffect = withAtomEffect(
           set(topMenuState, false);
         }
       }, durationMs);
-      return () => clearTimeout(timerId);
+
+      return () => {
+        clearTimeout(timerId);
+      };
     }
   },
 );

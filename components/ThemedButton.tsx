@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   text: {
-    fontFamily: 'Amiri_400Regular',
+    fontFamily: 'Tajawal_400Regular',
     fontSize: 18,
     fontWeight: 'bold',
   },

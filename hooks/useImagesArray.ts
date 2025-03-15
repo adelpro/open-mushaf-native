@@ -34,6 +34,12 @@ export default function useImagesArray() {
     async (pageNum: number): Promise<Asset | undefined> => {
       if (!imagesMap?.[pageNum]) return undefined;
 
+      if (assetCache.size > 50) {
+        // Clear oldest 10 entries
+        const keys = Array.from(assetCache.keys()).slice(0, 10);
+        keys.forEach((key) => assetCache.delete(key));
+      }
+
       const cacheKey = `${MushafRiwayaValue}-${pageNum}`;
       if (assetCache.has(cacheKey)) {
         return assetCache.get(cacheKey) as Asset;

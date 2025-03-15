@@ -57,7 +57,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
           stylesheet={{
             div: {
               color: textColor,
-              fontFamily: 'Amiri_400Regular',
+              fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
               textAlign: isRTL ? 'left' : 'right',
@@ -65,7 +65,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
             },
             p: {
               color: textColor,
-              fontFamily: 'Amiri_400Regular',
+              fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
               textAlign: isRTL ? 'left' : 'right',

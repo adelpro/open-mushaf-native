@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 20,
-    fontFamily: 'Amiri_700Bold',
+    fontFamily: 'Tajawal_700Bold',
     paddingVertical: 8,
     paddingHorizontal: 5,
     textAlignVertical: 'center',
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   },
   sliderValue: {
     fontSize: 22,
-    fontFamily: 'Amiri_700Bold',
+    fontFamily: 'Tajawal_700Bold',
     textAlignVertical: 'center',
     paddingHorizontal: 10,
   },

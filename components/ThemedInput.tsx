@@ -56,19 +56,19 @@ export function ThemedTextInput({
 
 const styles = StyleSheet.create({
   default: {
-    fontFamily: 'Amiri_400Regular',
+    fontFamily: 'Tajawal_400Regular',
     fontSize: 16,
     padding: 10,
   },
   outlined: {
-    fontFamily: 'Amiri_400Regular',
+    fontFamily: 'Tajawal_400Regular',
     fontSize: 16,
     padding: 10,
 
     borderRadius: 4,
   },
   rounded: {
-    fontFamily: 'Amiri_400Regular',
+    fontFamily: 'Tajawal_400Regular',
     fontSize: 16,
     padding: 10,
     borderRadius: 50,

@@ -164,5 +164,6 @@ const styles = StyleSheet.create({
   },
   uthmani: {
     paddingVertical: 10,
+    fontFamily: 'Amiri_400Regular',
   },
 });
