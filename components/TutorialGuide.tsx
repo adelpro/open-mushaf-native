@@ -31,99 +31,109 @@ export default function TutorialGuide() {
   };
 
   return (
-    <ThemedSafeAreaView style={styles.container}>
-      <Animated.View
-        entering={FadeInLeft.duration(500)}
-        exiting={FadeOutRight.duration(500)}
-        style={styles.animatedContainer}
-      >
-        <View style={styles.contentContainer}>
-          <Image
-            source={SLIDES[index].image}
-            style={styles.image}
-            resizeMode="contain"
-          />
+    <Animated.ScrollView
+      entering={FadeInLeft.duration(500)}
+      exiting={FadeOutRight.duration(500)}
+      contentContainerStyle={styles.animatedContainer}
+    >
+      <View style={styles.contentContainer}>
+        <Image
+          source={SLIDES[index].image}
+          style={styles.image}
+          resizeMode="contain"
+        />
 
-          <View style={styles.textContainer}>
-            <ThemedText style={styles.title}>{SLIDES[index].title}</ThemedText>
+        <View style={styles.textContainer}>
+          <ThemedText style={styles.title}>{SLIDES[index].title}</ThemedText>
+          {Array.isArray(SLIDES[index].description) ? (
+            // Handle array of description items (for mixed content)
+            SLIDES[index].description.map((item, i) => (
+              <ThemedText
+                key={i}
+                style={[
+                  styles.description,
+                  item.align === 'start' && {
+                    width: '100%',
+                    textAlign: !isRTL || isRTL === undefined ? 'right' : 'left',
+                    paddingHorizontal: 25,
+                  },
+                ]}
+              >
+                {item.text}
+              </ThemedText>
+            ))
+          ) : (
+            // Handle simple string description (centered)
             <ThemedText style={styles.description}>
               {SLIDES[index].description}
             </ThemedText>
+          )}
+        </View>
+
+        <View style={styles.controlsContainer}>
+          <View
+            style={[
+              styles.dotsContainer,
+              { flexDirection: isRTL ? 'row' : 'row-reverse' },
+            ]}
+          >
+            {SLIDES.map((_, i) => (
+              <View
+                key={i}
+                style={[
+                  styles.dot,
+                  i === index && styles.activeDot,
+                  i === index && { backgroundColor: primaryColor },
+                ]}
+              />
+            ))}
           </View>
 
-          <View style={styles.controlsContainer}>
+          <ThemedButton
+            onPress={
+              index < SLIDES.length - 1
+                ? () => setIndex(index + 1)
+                : finishTutorial
+            }
+            variant="primary"
+            style={styles.button}
+          >
             <View
               style={[
-                styles.dotsContainer,
+                styles.buttonContent,
                 { flexDirection: isRTL ? 'row' : 'row-reverse' },
               ]}
             >
-              {SLIDES.map((_, i) => (
-                <View
-                  key={i}
-                  style={[
-                    styles.dot,
-                    i === index && styles.activeDot,
-                    i === index && { backgroundColor: primaryColor },
-                  ]}
-                />
-              ))}
+              {index < SLIDES.length - 1 ? (
+                <>
+                  <NextSVG width={24} height={24} style={styles.buttonIcon} />
+                  <Text style={styles.buttonText}>التالي</Text>
+                </>
+              ) : (
+                <>
+                  <Text style={styles.buttonText}>إنتهاء</Text>
+                  <CheckedSVG
+                    width={24}
+                    height={24}
+                    style={styles.buttonIcon}
+                  />
+                </>
+              )}
             </View>
-
-            <ThemedButton
-              onPress={
-                index < SLIDES.length - 1
-                  ? () => setIndex(index + 1)
-                  : finishTutorial
-              }
-              variant="primary"
-              style={styles.button}
-            >
-              <View
-                style={[
-                  styles.buttonContent,
-                  { flexDirection: isRTL ? 'row' : 'row-reverse' },
-                ]}
-              >
-                {index < SLIDES.length - 1 ? (
-                  <>
-                    <NextSVG width={24} height={24} style={styles.buttonIcon} />
-                    <Text style={styles.buttonText}>التالي</Text>
-                  </>
-                ) : (
-                  <>
-                    <Text style={styles.buttonText}>إنتهاء</Text>
-                    <CheckedSVG
-                      width={24}
-                      height={24}
-                      style={styles.buttonIcon}
-                    />
-                  </>
-                )}
-              </View>
-            </ThemedButton>
-          </View>
+          </ThemedButton>
         </View>
-      </Animated.View>
-    </ThemedSafeAreaView>
+      </View>
+    </Animated.ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  animatedContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     height: '100%',
     padding: 5,
-    paddingBottom: 20,
-  },
-  animatedContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
   },
   contentContainer: {
     alignItems: 'center',
@@ -183,6 +193,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 200,
+    marginBottom: 10,
   },
   buttonContent: {
     alignItems: 'center',
