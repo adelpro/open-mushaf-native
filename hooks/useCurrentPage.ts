@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useLocalSearchParams } from 'expo-router';
 import { useAtom } from 'jotai';
@@ -10,6 +10,7 @@ export default function useCurrentPage() {
   const { page: pageParam } = useLocalSearchParams();
   const [currentSavedPageValue, setCurrentSavedPageValue] =
     useAtom(currentSavedPage);
+  const isInitialMount = useRef(true);
 
   const setNewCurrentPage = (page: number) => {
     if (page < 1) {
@@ -22,14 +23,21 @@ export default function useCurrentPage() {
   };
 
   useEffect(() => {
+    // Skip the first render to prevent initial loop
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     const parsedPage = Array.isArray(pageParam)
       ? parseInt(pageParam[0])
       : parseInt(pageParam);
 
-    if (!isNaN(parsedPage)) {
+    // Only update if the parsed page is valid and different from current value
+    if (!isNaN(parsedPage) && parsedPage !== currentSavedPageValue) {
       setCurrentSavedPageValue(parsedPage);
     }
-  }, [pageParam, setCurrentSavedPageValue]);
+  }, [pageParam, setCurrentSavedPageValue, currentSavedPageValue]);
 
   return {
     currentPage: currentSavedPageValue || 1,

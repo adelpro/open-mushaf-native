@@ -22,7 +22,6 @@ export default function TutorialGuide() {
   const { primaryColor } = useColors();
   const setFinishedTutorial = useSetAtom(finishedTutorial);
   const [index, setIndex] = useState(0);
-  const rtl = isRTL;
 
   const finishTutorial = () => {
     setFinishedTutorial(true);
@@ -56,7 +55,7 @@ export default function TutorialGuide() {
             <View
               style={[
                 styles.dotsContainer,
-                { flexDirection: rtl ? 'row' : 'row-reverse' },
+                { flexDirection: isRTL ? 'row' : 'row-reverse' },
               ]}
             >
               {SLIDES.map((_, i) => (
@@ -83,7 +82,7 @@ export default function TutorialGuide() {
               <View
                 style={[
                   styles.buttonContent,
-                  { flexDirection: rtl ? 'row' : 'row-reverse' },
+                  { flexDirection: isRTL ? 'row' : 'row-reverse' },
                 ]}
               >
                 {index < SLIDES.length - 1 ? (

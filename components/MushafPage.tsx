@@ -34,9 +34,9 @@ import TopNotification from './TopNotification';
 
 export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
-  const FlipSoundEnabledValue = useAtomValue(flipSound);
+  const flipSoundEnabledValue = useAtomValue(flipSound);
   const mushafContrastValue = useAtomValue(mushafContrast);
-  const HizbNotificationValue = useAtomValue(hizbNotification);
+  const hizbNotificationValue = useAtomValue(hizbNotification);
   const hizbData = hizbJson as Hizb[];
   const [currentHizb, setCurrentHizb] = useState<number | null>(null);
   const [showNotification, setShowNotification] = useState(false);
@@ -55,6 +55,7 @@ export default function MushafPage() {
     isLoading: assetIsLoading,
     error: assetError,
   } = useImagesArray();
+
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
     setDimensions({ customPageWidth: width, customPageHeight: height });
@@ -65,7 +66,7 @@ export default function MushafPage() {
     setCurrentPage(page);
     router.replace({ pathname: '/', params: { page: page.toString() } });
 
-    if (FlipSoundEnabledValue && sound.current) {
+    if (flipSoundEnabledValue && sound.current) {
       sound.current.replayAsync();
     }
   };
@@ -99,7 +100,7 @@ export default function MushafPage() {
   });
 
   useEffect(() => {
-    if (!FlipSoundEnabledValue) return;
+    if (!flipSoundEnabledValue) return;
 
     const loadSound = async () => {
       const { sound: soundObject } = await Audio.Sound.createAsync(
@@ -113,7 +114,7 @@ export default function MushafPage() {
     return () => {
       sound.current?.unloadAsync().then(() => (sound.current = null));
     };
-  }, [FlipSoundEnabledValue]);
+  }, [flipSoundEnabledValue]);
 
   useEffect(() => {
     // Find the current Hizb and handle notification logic in a single effect
@@ -125,13 +126,13 @@ export default function MushafPage() {
     // Determine notification visibility based on multiple conditions
     const shouldShowNotification = (() => {
       // If no current Hizb or notifications are disabled, don't show
-      if (!currentHizbNumber || HizbNotificationValue === 0) return false;
+      if (!currentHizbNumber || hizbNotificationValue === 0) return false;
 
       // Always show for mode 1 (all Hizbs)
-      if (HizbNotificationValue === 1) return true;
+      if (hizbNotificationValue === 1) return true;
 
       // Show only for odd-numbered Hizbs in mode 2
-      if (HizbNotificationValue === 2) return currentHizbNumber % 2 !== 0;
+      if (hizbNotificationValue === 2) return currentHizbNumber % 2 !== 0;
 
       // Default: hide notification
       return false;
@@ -140,7 +141,7 @@ export default function MushafPage() {
     // Update states in a single effect
     setCurrentHizb(currentHizbNumber);
     setShowNotification(shouldShowNotification);
-  }, [currentPage, hizbData, HizbNotificationValue]);
+  }, [currentPage, hizbData, hizbNotificationValue]);
 
   useEffect(() => {
     const tag = 'MushafPage';
@@ -181,14 +182,7 @@ export default function MushafPage() {
 
   if (assetIsLoading) {
     return (
-      <ThemedView
-        style={[
-          styles.loadingContainer,
-          colorScheme === 'dark'
-            ? { backgroundColor: '#d5d4d2' }
-            : { backgroundColor: '#f5f1eb' },
-        ]}
-      >
+      <ThemedView style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={tintColor} />
       </ThemedView>
     );
@@ -211,7 +205,7 @@ export default function MushafPage() {
             <Image
               style={[
                 styles.image,
-                { width: '100%' },
+
                 colorScheme === 'dark' && { opacity: mushafContrastValue },
               ]}
               source={{ uri: asset?.localUri }}
@@ -220,7 +214,7 @@ export default function MushafPage() {
             <TopNotification
               show={showNotification}
               text={
-                currentHizb && HizbNotificationValue === 2
+                currentHizb && hizbNotificationValue === 2
                   ? `الجزء - ${(currentHizb - 1)?.toString()}`
                   : `الحزب - ${currentHizb?.toString()}`
               }
@@ -250,7 +244,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    //width: '100%',
+    width: '100%',
   },
   errorContainer: {
     flex: 1,
