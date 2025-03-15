@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useLocalSearchParams } from 'expo-router';
 import { useAtom } from 'jotai';
@@ -10,37 +10,29 @@ export default function useCurrentPage() {
   const { page: pageParam } = useLocalSearchParams();
   const [currentSavedPageValue, setCurrentSavedPageValue] =
     useAtom(currentSavedPage);
-  const isInitialMount = useRef(true);
-
-  const setNewCurrentPage = (page: number) => {
-    if (page < 1) {
-      setCurrentSavedPageValue(1);
-    } else if (page > defaultNumberOfPages) {
-      setCurrentSavedPageValue(defaultNumberOfPages);
-    } else {
-      setCurrentSavedPageValue(page);
-    }
-  };
 
   useEffect(() => {
-    // Skip the first render to prevent initial loop
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-
     const parsedPage = Array.isArray(pageParam)
       ? parseInt(pageParam[0])
       : parseInt(pageParam);
 
-    // Only update if the parsed page is valid and different from current value
-    if (!isNaN(parsedPage) && parsedPage !== currentSavedPageValue) {
-      setCurrentSavedPageValue(parsedPage);
+    if (!isNaN(parsedPage) && parsedPage === currentSavedPageValue) {
+      return;
     }
-  }, [pageParam, setCurrentSavedPageValue, currentSavedPageValue]);
+    if (parsedPage < 1) {
+      setCurrentSavedPageValue(1);
+      return;
+    }
+
+    if (parsedPage > defaultNumberOfPages) {
+      setCurrentSavedPageValue(defaultNumberOfPages);
+      return;
+    }
+    setCurrentSavedPageValue(parsedPage);
+  }, [currentSavedPageValue, pageParam, setCurrentSavedPageValue]);
 
   return {
     currentPage: currentSavedPageValue || 1,
-    setCurrentPage: setNewCurrentPage,
+    setCurrentPage: setCurrentSavedPageValue,
   };
 }
