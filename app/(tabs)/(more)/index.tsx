@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     flexDirection: isRTL ? 'row-reverse' : 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: 200,
+    width: 300,
     height: 50,
   },
   buttonText: {
