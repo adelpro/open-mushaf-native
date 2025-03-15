@@ -19,94 +19,69 @@ export default function useImagesArray() {
   const isMounted = useRef(true);
 
   const imagesMap = useMemo(() => {
-    switch (MushafRiwayaValue) {
-      case 0:
-        return imagesMapWarsh;
-      case 1:
-        return imagesMapHafs;
-      default:
-        return undefined;
-    }
+    return MushafRiwayaValue === 0 ? imagesMapWarsh : imagesMapHafs;
   }, [MushafRiwayaValue]);
 
-  // Helper function to load and cache an asset
   const loadAndCacheAsset = useCallback(
     async (pageNum: number): Promise<Asset | undefined> => {
-      if (!imagesMap?.[pageNum]) return undefined;
-
-      if (assetCache.size > 50) {
-        // Clear oldest 10 entries
-        const keys = Array.from(assetCache.keys()).slice(0, 10);
-        keys.forEach((key) => assetCache.delete(key));
-      }
-
       const cacheKey = `${MushafRiwayaValue}-${pageNum}`;
       if (assetCache.has(cacheKey)) {
-        return assetCache.get(cacheKey) as Asset;
+        return assetCache.get(cacheKey);
       }
 
-      const image = imagesMap[pageNum];
-      const assetToLoad = Asset.fromModule(image);
+      const image = imagesMap?.[pageNum];
+      if (!image) return undefined;
 
+      const assetToLoad = Asset.fromModule(image);
       if (!assetToLoad.downloaded) {
         await assetToLoad.downloadAsync();
       }
 
       assetCache.set(cacheKey, assetToLoad);
+
+      // Maintain cache size limit
+      if (assetCache.size > 50) {
+        const keys = Array.from(assetCache.keys()).slice(0, 10);
+        keys.forEach((key) => assetCache.delete(key));
+      }
+
       return assetToLoad;
     },
     [imagesMap, MushafRiwayaValue],
   );
 
-  // Prefetch adjacent pages
   const prefetchAdjacentPages = useCallback(async () => {
     if (!imagesMap) return;
 
-    // Prefetch next and previous pages in parallel
-    const pagesToPrefetch = [page + 1, page + 2, page - 1, page - 2].filter(
-      (p) => p > 0 && p <= Object.keys(imagesMap).length,
+    const totalPages = Object.keys(imagesMap).length;
+    const pagesToPrefetch = [page + 1, page - 1].filter(
+      (p) => p > 0 && p <= totalPages,
     );
 
-    Promise.all(pagesToPrefetch.map((p) => loadAndCacheAsset(p))).catch(
-      (err) => {
-        setError('خطأ في تحميل الصفحات');
-      },
-    );
+    try {
+      await Promise.all(pagesToPrefetch.map((p) => loadAndCacheAsset(p)));
+    } catch {
+      setError('خطأ في تحميل الصفحات');
+    }
   }, [page, imagesMap, loadAndCacheAsset]);
 
   useEffect(() => {
     isMounted.current = true;
 
     const loadAsset = async () => {
+      setIsLoading(true);
+
       try {
-        if (!imagesMap?.[page]) {
-          setIsLoading(false);
-          return;
-        }
-
-        setIsLoading(true);
-
-        // Try to get from cache first
-        const cacheKey = `${MushafRiwayaValue}-${page}`;
-        let assetToLoad = assetCache.get(cacheKey);
-
-        if (!assetToLoad) {
-          assetToLoad = await loadAndCacheAsset(page);
-        }
-
-        if (isMounted.current && assetToLoad) {
-          setAsset(assetToLoad);
-          setError(null);
-
-          // Start prefetching adjacent pages after current page is loaded
+        const assetToLoad = await loadAndCacheAsset(page);
+        if (isMounted.current) {
+          setAsset(assetToLoad || null);
+          setError(assetToLoad ? null : `الصفحة ${page} غير موجودة`);
           prefetchAdjacentPages();
         }
-      } catch (error) {
+      } catch (err) {
         if (isMounted.current) {
           setError(
-            error instanceof Error
-              ? error.message
-              : `الصفحة ${page} غير موجودة`,
+            err instanceof Error ? err.message : `الصفحة ${page} غير موجودة`,
           );
           setAsset(null);
         }
@@ -120,13 +95,7 @@ export default function useImagesArray() {
     return () => {
       isMounted.current = false;
     };
-  }, [
-    imagesMap,
-    page,
-    MushafRiwayaValue,
-    loadAndCacheAsset,
-    prefetchAdjacentPages,
-  ]);
+  }, [page, loadAndCacheAsset, prefetchAdjacentPages]);
 
   return { asset, isLoading, error };
 }
