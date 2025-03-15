@@ -14,8 +14,6 @@ import { useColors } from '@/hooks/useColors';
 import { finishedTutorial } from '@/jotai/atoms';
 import { isRTL } from '@/utils';
 
-import { ThemedSafeAreaView } from './ThemedSafeAreaView';
-
 export default function TutorialGuide() {
   const router = useRouter();
   const pathname = usePathname();
