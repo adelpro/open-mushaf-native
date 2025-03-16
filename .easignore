@@ -17,16 +17,16 @@ yarn-error.log
 # Ignore build artifacts
 build/
 builds/
-dist/
 
 # Expo generated files (you may want to ignore them if they are not needed in the build process)
 .expo/
 
-web-build/
+dist/
+web/
+web:build/
 android/
 ios/
 
 # Ignore design files
 design/
 screenshots/
-

@@ -2,6 +2,64 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.6]
+
+## [3.1.5]
+
+### Fix
+
+- Revert back to recoil
+
+## [3.1.4]
+
+### Fix
+
+- Speed up mushaf pages navigation
+
+## [3.1.1]
+
+### Update
+
+- Update the way we handle svgs
+
+## [3.1.0]
+
+### Updated
+
+- Add a reset button (behind debug flug) in the settings screen
+
+- Add Tutorial screen
+
+## [3.0.1]
+
+### Updated
+
+- Add multiple github actions to enhance the workflow
+
+## [3.0.0]
+
+### Updated
+
+- Added the option to choose metween riwayas: warsh or hafs
+
+## [2.8.0]
+
+### Fixed
+
+- Moved from Recoil (End of life) to Jotai.
+
+## [2.6.0]
+
+### Fixed
+
+- Fixed Tafseer popup scroll issue.
+
+## [2.4.0]
+
+### Fixed
+
+- Improuved accessibility for the app.
+
 ## [2.3.0]
 
 ### Updated
