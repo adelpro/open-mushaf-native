@@ -6,15 +6,15 @@ import {
   MaterialCommunityIcons,
 } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import { useAtomValue } from 'jotai';
+import { useRecoilValue } from 'recoil';
 
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { bottomMenuState } from '@/jotai/atoms';
+import { bottomMenuState } from '@/recoil/atoms';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const menuStateValue = useAtomValue(bottomMenuState);
+  const menuStateValue = useRecoilValue(bottomMenuState);
 
   return (
     <Tabs

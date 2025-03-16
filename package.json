@@ -44,6 +44,7 @@
     "mushaf",
     "quran",
     "warsh",
+    "hafs",
     "open-source",
     "islam",
     "muslim"
@@ -78,8 +79,6 @@
     "expo-system-ui": "~4.0.8",
     "expo-updates": "~0.27.3",
     "expo-web-browser": "~14.0.1",
-    "jotai": "^2.12.1",
-    "jotai-effect": "^2.0.1",
     "react": "18.3.1",
     "react-compiler-runtime": "^19.0.0-beta-df7b47d-20241124",
     "react-dom": "18.3.1",
@@ -87,12 +86,14 @@
     "react-native-gesture-handler": "~2.20.2",
     "react-native-htmlview": "^0.17.0",
     "react-native-reanimated": "~3.16.1",
+    "react-native-recoil-persist": "^0.0.6",
     "react-native-safe-area-context": "4.12.0",
     "react-native-screens": "~4.4.0",
     "react-native-svg": "15.8.0",
     "react-native-toast-message": "^2.2.1",
     "react-native-toggle-input": "^1.0.12",
-    "react-native-web": "~0.19.10"
+    "react-native-web": "~0.19.10",
+    "recoil": "^0.7.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -100,9 +101,9 @@
     "@types/react": "~18.3.12",
     "@types/react-native-htmlview": "^0.16.5",
     "@types/react-test-renderer": "^18.0.7",
+    "babel-plugin-react-compiler": "^19.0.0-beta-df7b47d-20241124",
     "eslint": "^8.57.0",
     "eslint-config-expo": "~8.0.1",
-    "babel-plugin-react-compiler": "^19.0.0-beta-df7b47d-20241124",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.1",

@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
 
 import { useLocalSearchParams } from 'expo-router';
-import { useAtom } from 'jotai';
+import { useRecoilState } from 'recoil';
 
 import { defaultNumberOfPages } from '@/constants';
-import { currentSavedPage } from '@/jotai/atoms';
+import { currentSavedPage } from '@/recoil/atoms';
 
 export default function useCurrentPage() {
   const { page: pageParam } = useLocalSearchParams();
   const [currentSavedPageValue, setCurrentSavedPageValue] =
-    useAtom(currentSavedPage);
+    useRecoilState(currentSavedPage);
 
   const setNewCurrentPage = (page: number) => {
     if (page < 1) {

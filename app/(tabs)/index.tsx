@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Platform, Pressable, StyleSheet } from 'react-native';
 
-import { useAtom, useAtomValue } from 'jotai';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import ChangeLogs from '@/components/ChangeLogs';
 import MushafPage from '@/components/MushafPage';
@@ -12,17 +12,17 @@ import TutorialGuide from '@/components/TutorialGuide';
 import {
   currentAppVersion,
   finishedTutorial,
-  MushafRiwaya,
-  topMenuStateWithEffect,
-} from '@/jotai/atoms';
+  mushafRiwaya,
+  topMenuState,
+} from '@/recoil/atoms';
 import { getAppVersion } from '@/utils';
 
 export default function HomeScreen() {
-  const [topMenuStateValue, setShowTopMenu] = useAtom(topMenuStateWithEffect);
-  const mushafRiwayaValue = useAtomValue(MushafRiwaya);
-  const finishedTutorialValue = useAtomValue(finishedTutorial);
+  const [topMenuStateValue, setShowTopMenu] = useRecoilState(topMenuState);
+  const mushafRiwayaValue = useRecoilValue(mushafRiwaya);
+  const finishedTutorialValue = useRecoilValue(finishedTutorial);
 
-  const currentAppVersionValue = useAtomValue(currentAppVersion);
+  const currentAppVersionValue = useRecoilValue(currentAppVersion);
   const appVersion = useMemo(() => getAppVersion(), []);
   const isWeb = Platform.OS === 'web';
 
