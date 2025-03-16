@@ -71,7 +71,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
             stylesheet={{
               p: {
                 color: textColor,
-                fontFamily: 'Amiri_400Regular',
+                fontFamily: 'Tajawal_400Regular',
                 backgroundColor: 'transparent',
                 textAlign: 'right',
               },

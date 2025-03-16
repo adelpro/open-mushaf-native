@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   number: {
     fontSize: 20,
-    fontFamily: 'Amiri_700Bold',
+    fontFamily: 'Tajawal_700Bold',
     fontStyle: 'italic',
     padding: 10,
     textAlign: 'center',
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 20,
-    fontFamily: 'Amiri_700Bold',
+    fontFamily: 'Tajawal_700Bold',
     lineHeight: 22,
     padding: 10,
   },

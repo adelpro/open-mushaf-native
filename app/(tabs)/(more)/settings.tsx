@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 20,
-    fontFamily: 'Amiri_700Bold',
+    fontFamily: 'Tajawal_700Bold',
     paddingVertical: 8,
     paddingHorizontal: 5,
     textAlignVertical: 'center',
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   },
   sliderValue: {
     fontSize: 22,
-    fontFamily: 'Amiri_700Bold',
+    fontFamily: 'Tajawal_700Bold',
     textAlignVertical: 'center',
     paddingHorizontal: 10,
   },
@@ -195,15 +195,5 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     paddingHorizontal: 5,
-  },
-  segmentedControl: {
-    width: '100%',
-    marginVertical: 8,
-    paddingHorizontal: 5,
-  },
-  segmentedControlTab: {
-    backgroundColor: 'transparent',
-    padding: 5,
-    borderRadius: 5,
   },
 });

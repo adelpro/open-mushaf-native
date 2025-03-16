@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
+import { Amiri_400Regular } from '@expo-google-fonts/amiri';
 import { router } from 'expo-router';
 
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
@@ -164,5 +165,6 @@ const styles = StyleSheet.create({
   },
   uthmani: {
     paddingVertical: 10,
+    fontFamily: 'Amiri_400Regular',
   },
 });

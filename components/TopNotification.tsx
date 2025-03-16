@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   notificationText: {
     textAlign: 'center',
     color: '#F2F2F2',
-    fontFamily: 'Amiri_400Regular',
+    fontFamily: 'Tajawal_400Regular',
     fontSize: 16,
     paddingHorizontal: 10,
   },

@@ -1031,6 +1031,11 @@
   resolved "https://registry.npmjs.org/@expo-google-fonts/amiri/-/amiri-0.2.3.tgz"
   integrity sha512-kjyddy14Jvvnw0kFn5SRItu8QdEVyuPF908eOfLv6+9wWi5wVgQMpQsYz94gcoEojFsEb6suNB8M+jWId7eRCw==
 
+"@expo-google-fonts/tajawal@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/tajawal/-/tajawal-0.2.3.tgz#9cc44750871ce58d6ff0b4bd693835aa4b4b7d80"
+  integrity sha512-FQZsqIBEQcWwy+33pCMaB071k8vl5ZacBfhkwN5Eopxn/22iTHt0LhQv4g9NNM6gUerZCrU6qk7N60ihFKWyHw==
+
 "@expo/bunyan@^4.0.0":
   version "4.0.1"
   resolved "https://registry.npmjs.org/@expo/bunyan/-/bunyan-4.0.1.tgz"

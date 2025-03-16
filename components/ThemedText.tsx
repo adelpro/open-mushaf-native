@@ -35,29 +35,29 @@ export function ThemedText({
 
 const styles = StyleSheet.create({
   default: {
-    fontFamily: 'Amiri_400Regular',
+    fontFamily: 'Tajawal_400Regular',
     fontSize: 16,
     lineHeight: 24,
   },
   defaultSemiBold: {
-    fontFamily: 'Amiri_400Regular',
+    fontFamily: 'Tajawal_400Regular',
     fontSize: 16,
     lineHeight: 24,
     fontWeight: '600',
   },
   title: {
-    fontFamily: 'Amiri_700Bold',
+    fontFamily: 'Tajawal_700Bold',
     fontSize: 32,
     fontWeight: 'bold',
     lineHeight: 32,
   },
   subtitle: {
-    fontFamily: 'Amiri_700Bold',
+    fontFamily: 'Tajawal_700Bold',
     fontSize: 20,
     fontWeight: 'bold',
   },
   link: {
-    fontFamily: 'Amiri_400Regular_Italic',
+    fontFamily: 'Tajawal_400Regular_Italic',
     lineHeight: 30,
     fontSize: 16,
     color: '#0a7ea4',
