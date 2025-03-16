@@ -1,20 +1,32 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { Platform, Pressable, StyleSheet } from 'react-native';
 
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
+import ChangeLogs from '@/components/ChangeLogs';
 import MushafPage from '@/components/MushafPage';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import TopMenu from '@/components/TopMenu';
-import { topMenuState } from '@/recoil/atoms';
+import { currentAppVersion, topMenuState } from '@/recoil/atoms';
+import { getAppVersion } from '@/utils';
 
 export default function HomeScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
+  const [showChangeLogs, setShowChangeLogs] = useState<boolean>(false);
+  const currentAppVersionValue = useRecoilValue(currentAppVersion);
+
+  useEffect(() => {
+    const isWeb = Platform.OS === 'web';
+    const appVersion = getAppVersion();
+    const show = !isWeb && currentAppVersionValue !== appVersion;
+    setShowChangeLogs(show);
+  }, [currentAppVersionValue]);
 
   return (
     <ThemedSafeAreaView style={styles.container}>
       <TopMenu />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
-        <MushafPage />
+        {showChangeLogs ? <ChangeLogs /> : <MushafPage />}
       </Pressable>
     </ThemedSafeAreaView>
   );

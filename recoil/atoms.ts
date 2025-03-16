@@ -33,6 +33,12 @@ export const flipSound = atom<boolean>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
+export const currentAppVersion = atom<string | undefined>({
+  key: 'CurrentAppVersion',
+  default: undefined,
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+
 export const mushafContrast = atom<number>({
   key: 'MushafContrast',
   default: 0.5,
