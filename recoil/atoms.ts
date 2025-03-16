@@ -52,7 +52,7 @@ export const mushafContrast = atom<number>({
  */
 export const mushafRiwaya = atom<number | undefined>({
   key: 'MushafRiwaya',
-  default: undefined,
+  default: 0,
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
