@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Asset } from 'expo-asset';
 import { useAtomValue } from 'jotai';
@@ -18,19 +18,19 @@ export default function useImagesArray() {
   const { currentPage: page } = useCurrentPage();
   const isMounted = useRef(true);
 
-  const imagesMap = useMemo(() => {
-    return MushafRiwayaValue === 0 ? imagesMapWarsh : imagesMapHafs;
-  }, [MushafRiwayaValue]);
-
   const loadAndCacheAsset = useCallback(
     async (pageNum: number): Promise<Asset | undefined> => {
+      const imagesMap =
+        MushafRiwayaValue === 0 ? imagesMapWarsh : imagesMapHafs;
       const cacheKey = `${MushafRiwayaValue}-${pageNum}`;
       if (assetCache.has(cacheKey)) {
         return assetCache.get(cacheKey);
       }
 
       const image = imagesMap?.[pageNum];
-      if (!image) return undefined;
+      if (!image) {
+        throw new Error(`الصفحة ${page} غير موجودة`);
+      }
 
       const assetToLoad = Asset.fromModule(image);
       if (!assetToLoad.downloaded) {
@@ -40,17 +40,18 @@ export default function useImagesArray() {
       assetCache.set(cacheKey, assetToLoad);
 
       // Maintain cache size limit
-      if (assetCache.size > 50) {
+      if (assetCache.size > 30) {
         const keys = Array.from(assetCache.keys()).slice(0, 10);
         keys.forEach((key) => assetCache.delete(key));
       }
 
       return assetToLoad;
     },
-    [imagesMap, MushafRiwayaValue],
+    [MushafRiwayaValue, page],
   );
 
-  const prefetchAdjacentPages = useCallback(async () => {
+  /*   const prefetchAdjacentPages = useCallback(async () => {
+    const imagesMap = MushafRiwayaValue === 0 ? imagesMapWarsh : imagesMapHafs;
     if (!imagesMap) return;
 
     const totalPages = Object.keys(imagesMap).length;
@@ -63,20 +64,22 @@ export default function useImagesArray() {
     } catch {
       setError('خطأ في تحميل الصفحات');
     }
-  }, [page, imagesMap, loadAndCacheAsset]);
+  }, [MushafRiwayaValue, page, loadAndCacheAsset]); */
 
   useEffect(() => {
     isMounted.current = true;
 
     const loadAsset = async () => {
-      setIsLoading(true);
-
       try {
-        const assetToLoad = await loadAndCacheAsset(page);
         if (isMounted.current) {
-          setAsset(assetToLoad || null);
-          setError(assetToLoad ? null : `الصفحة ${page} غير موجودة`);
-          prefetchAdjacentPages();
+          setIsLoading(true);
+          const assetToLoad = await loadAndCacheAsset(page);
+          if (!assetToLoad) {
+            setError(`الصفحة ${page} غير موجودة`);
+            return;
+          }
+          setAsset(assetToLoad);
+          /*  prefetchAdjacentPages(); */
         }
       } catch (err) {
         if (isMounted.current) {
@@ -86,7 +89,9 @@ export default function useImagesArray() {
           setAsset(null);
         }
       } finally {
-        if (isMounted.current) setIsLoading(false);
+        if (isMounted.current) {
+          setIsLoading(false);
+        }
       }
     };
 
@@ -95,7 +100,7 @@ export default function useImagesArray() {
     return () => {
       isMounted.current = false;
     };
-  }, [page, loadAndCacheAsset, prefetchAdjacentPages]);
+  }, [page, loadAndCacheAsset]);
 
   return { asset, isLoading, error };
 }
