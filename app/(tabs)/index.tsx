@@ -40,7 +40,8 @@ export default function HomeScreen() {
           }
         }}
       >
-        {showChangeLogs ? (
+        <MushafPage />
+        {/*  {showChangeLogs ? (
           <ChangeLogs />
         ) : !finishedTutorialValue ? (
           <TutorialGuide />
@@ -48,7 +49,7 @@ export default function HomeScreen() {
           <SelectRiwaya />
         ) : (
           <MushafPage />
-        )}
+        )} */}
       </Pressable>
     </ThemedSafeAreaView>
   );

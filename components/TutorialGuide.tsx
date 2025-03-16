@@ -137,9 +137,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    maxWidth: 600,
+    maxWidth: 800,
     height: '100%',
-    maxHeight: 600,
+    maxHeight: 800,
     padding: 10,
   },
   image: {

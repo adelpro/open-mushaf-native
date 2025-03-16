@@ -9,7 +9,7 @@ export default function useImagesArray() {
   const [error, setError] = useState<string | null>(null);
   const [asset, setAsset] = useState<Asset | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { currentPage: page } = useCurrentPage();
+  //const { currentPage: page } = useCurrentPage();
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -18,8 +18,8 @@ export default function useImagesArray() {
 
     const loadAsset = async () => {
       try {
-        const image = imagesMapWarsh[page];
-        if (!image) throw new Error(`الصفحة ${page} غير موجودة`);
+        const image = imagesMapWarsh[20];
+        if (!image) throw new Error(`الصفحة ${20} غير موجودة`);
 
         const assetToLoad = Asset.fromModule(image);
         if (!assetToLoad.downloaded) {
@@ -31,9 +31,7 @@ export default function useImagesArray() {
       } catch (error) {
         if (isMounted.current) {
           setError(
-            error instanceof Error
-              ? error.message
-              : `الصفحة ${page} غير موجودة`,
+            error instanceof Error ? error.message : `الصفحة ${20} غير موجودة`,
           );
           setAsset(null);
         }
@@ -46,7 +44,7 @@ export default function useImagesArray() {
     return () => {
       isMounted.current = false; // Mark as unmounted
     };
-  }, [page]);
+  }, []);
 
   return { asset, isLoading, error };
 }
