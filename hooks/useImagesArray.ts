@@ -57,7 +57,7 @@ export default function useImagesArray() {
     return () => {
       isMounted.current = false; // Mark as unmounted
     };
-  }, [page]);
+  }, [MushafRiwayaValue, page]);
 
   return { asset, isLoading, error };
 }
