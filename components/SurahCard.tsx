@@ -4,13 +4,13 @@ import { Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { useColors } from '@/hooks/useColors';
-import { Chapter } from '@/types';
+import { Surah } from '@/types';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
 type Props = {
-  surah: Chapter;
+  surah: Surah;
 };
 
 export default function SurahCard({ surah }: Props) {
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 20,
-    fontFamily: 'Tajawal_700Bold',
+    fontFamily: 'Amiri_400Regular',
     lineHeight: 24,
     padding: 10,
   },

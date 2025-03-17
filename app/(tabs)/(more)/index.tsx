@@ -1,25 +1,69 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { router } from 'expo-router';
 
+import InfoSVG from '@/assets/svgs/info.svg';
+import MailSVG from '@/assets/svgs/mail.svg';
+import PageSVG from '@/assets/svgs/page.svg';
+import SettingsSVG from '@/assets/svgs/settings.svg';
+import WelcomeSVG from '@/assets/svgs/welcome.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
+import { isRTL } from '@/utils';
 
 export default function MoreScreen() {
   return (
     <ThemedSafeAreaView style={styles.container}>
-      <ThemedButton onPress={() => router.push('/settings')} variant="primary">
-        <Text>الإعدادات</Text>
+      <ThemedButton
+        onPress={() => router.push('/settings')}
+        variant="primary"
+        style={styles.button}
+      >
+        <View style={styles.buttonContent}>
+          <SettingsSVG width={24} height={24} style={styles.svg} />
+          <Text style={styles.buttonText}>الإعدادات</Text>
+        </View>
       </ThemedButton>
-      <ThemedButton onPress={() => router.push('/privacy')} variant="primary">
-        <Text>سياسة الخصوصية</Text>
+      <ThemedButton
+        onPress={() => router.push('/privacy')}
+        variant="primary"
+        style={styles.button}
+      >
+        <View style={styles.buttonContent}>
+          <PageSVG width={24} height={24} style={styles.svg} />
+          <Text style={styles.buttonText}>سياسة الخصوصية</Text>
+        </View>
       </ThemedButton>
-      <ThemedButton onPress={() => router.push('/contact')} variant="primary">
-        <Text>تواصل معنا</Text>
+      <ThemedButton
+        onPress={() => router.push('/contact')}
+        variant="primary"
+        style={styles.button}
+      >
+        <View style={styles.buttonContent}>
+          <MailSVG width={24} height={24} style={styles.svg} />
+          <Text style={styles.buttonText}>تواصل معنا</Text>
+        </View>
       </ThemedButton>
-      <ThemedButton onPress={() => router.push('/about')} variant="primary">
-        <Text>حول التطبيق</Text>
+      <ThemedButton
+        variant="primary"
+        onPress={() => router.push('/tutorial')}
+        style={styles.button}
+      >
+        <View style={styles.buttonContent}>
+          <WelcomeSVG width={24} height={24} style={styles.svg} />
+          <Text style={styles.buttonText}>جولة تعليمة</Text>
+        </View>
+      </ThemedButton>
+      <ThemedButton
+        onPress={() => router.push('/about')}
+        variant="primary"
+        style={styles.button}
+      >
+        <View style={styles.buttonContent}>
+          <InfoSVG width={24} height={24} style={styles.svg} />
+          <Text style={styles.buttonText}>حول التطبيق</Text>
+        </View>
       </ThemedButton>
     </ThemedSafeAreaView>
   );
@@ -28,9 +72,29 @@ export default function MoreScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    display: 'flex',
     gap: 20,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  button: {
+    height: 50,
+  },
+  buttonContent: {
+    flexDirection: isRTL ? 'row-reverse' : 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: 300,
+    height: 50,
+  },
+  buttonText: {
+    marginStart: 5,
+    marginEnd: 5,
+    color: 'white',
+    fontSize: 24,
+    lineHeight: 26,
+    paddingHorizontal: 5,
+  },
+  svg: {
+    color: 'white',
   },
 });

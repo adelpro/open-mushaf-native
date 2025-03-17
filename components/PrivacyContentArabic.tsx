@@ -130,7 +130,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     paddingVertical: 20,
-    textAlign: 'right',
+    fontFamily: 'Tajawal_700Bold',
+    textAlign: isRTL ? 'right' : 'left',
   },
   subtitle: {
     fontSize: 20,

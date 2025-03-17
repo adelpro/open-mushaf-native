@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 20,
+    lineHeight: 24,
     padding: 8,
     fontWeight: '400',
     justifyContent: 'center',

@@ -76,10 +76,8 @@ export default function SettingsScreen() {
           style={[
             {
               alignItems: 'center',
-              gap: 5,
+              gap: 1,
               flexDirection: 'row',
-              width: '100%',
-              justifyContent: 'flex-start',
               backgroundColor: cardColor,
             },
           ]}
@@ -89,7 +87,7 @@ export default function SettingsScreen() {
           </ThemedText>
           <ThemedText
             type="defaultSemiBold"
-            style={[styles.sliderValue, { padding: 5 }]}
+            style={[styles.sliderValue, { padding: 2 }]}
           >
             {`(${Number(mushafContrastValue * 100).toFixed(0)}%)`}
           </ThemedText>
