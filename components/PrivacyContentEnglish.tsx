@@ -123,11 +123,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: 'flex-start',
+    writingDirection: isRTL ? 'rtl' : 'ltr',
     width: '100%',
   },
 
   englishText: {
-    textAlign: isRTL ? 'right' : 'left',
+    textAlign: 'left',
   },
 
   title: {

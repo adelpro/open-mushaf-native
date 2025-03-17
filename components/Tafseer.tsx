@@ -46,7 +46,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
       tafseerText = `<div>${ayaTafseer?.text}</div>`;
     }
     return (
-      <ThemedView style={{ flex: 1 }}>
+      <ThemedView style={{ flex: 1, direction: isRTL ? 'rtl' : 'ltr' }}>
         <HTMLView
           value={tafseerText}
           style={{
@@ -60,7 +60,9 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
               fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
-              textAlign: isRTL ? 'left' : 'right',
+              writingDirection: isRTL ? 'rtl' : 'ltr',
+              textAlign: isRTL ? 'right' : 'left',
+
               backgroundColor: 'transparent',
             },
             p: {
@@ -68,7 +70,8 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
               fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
-              textAlign: isRTL ? 'left' : 'right',
+              writingDirection: isRTL ? 'rtl' : 'ltr',
+              textAlign: isRTL ? 'right' : 'left',
               backgroundColor: 'transparent',
             },
           }}
@@ -181,6 +184,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 10,
     padding: 8,
+    fontFamily: 'Amiri_400Regular',
   },
   tabs: {
     flexDirection: 'row',

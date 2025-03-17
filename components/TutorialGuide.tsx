@@ -2,7 +2,12 @@ import { useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { usePathname, useRouter } from 'expo-router';
-import Animated, { FadeInLeft, FadeOutRight } from 'react-native-reanimated';
+import Animated, {
+  FadeInLeft,
+  FadeInRight,
+  FadeOutLeft,
+  FadeOutRight,
+} from 'react-native-reanimated';
 import { useSetRecoilState } from 'recoil';
 
 import CheckedSVG from '@/assets/svgs/checked.svg';
@@ -30,18 +35,20 @@ export default function TutorialGuide() {
 
   return (
     <Animated.ScrollView
-      entering={FadeInLeft.duration(500)}
-      exiting={FadeOutRight.duration(500)}
+      entering={isRTL ? FadeInLeft.duration(500) : FadeInRight.duration(500)}
+      exiting={isRTL ? FadeOutRight.duration(500) : FadeOutLeft.duration(500)}
       contentContainerStyle={styles.animatedContainer}
     >
-      <View style={styles.contentContainer}>
+      <View
+        style={[styles.contentContainer, { direction: isRTL ? 'rtl' : 'ltr' }]}
+      >
         <Image
           source={SLIDES[index].image}
           style={styles.image}
           resizeMode="contain"
         />
 
-        <View style={styles.textContainer}>
+        <View style={[styles.textContainer, { direction: 'rtl' }]}>
           <ThemedText style={styles.title}>{SLIDES[index].title}</ThemedText>
           {Array.isArray(SLIDES[index].description) ? (
             // Handle array of description items (for mixed content)
@@ -51,8 +58,9 @@ export default function TutorialGuide() {
                 style={[
                   styles.description,
                   item.align === 'start' && {
-                    width: '100%',
-                    textAlign: !isRTL || isRTL === undefined ? 'right' : 'left',
+                    alignSelf: 'flex-start',
+                    textAlign: 'right',
+                    writingDirection: 'rtl',
                     paddingHorizontal: 25,
                   },
                 ]}
