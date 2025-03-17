@@ -15,9 +15,9 @@ export const currentSavedPage = atom<number>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
-export const popupHeight = atom<number>({
-  key: 'PopupHeight',
-  default: 320,
+export const finishedTutorial = atom<boolean>({
+  key: 'FinishedTutorial',
+  default: undefined,
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 

@@ -7,13 +7,19 @@ import ChangeLogs from '@/components/ChangeLogs';
 import MushafPage from '@/components/MushafPage';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import TopMenu from '@/components/TopMenu';
-import { currentAppVersion, topMenuState } from '@/recoil/atoms';
+import TutorialGuide from '@/components/TutorialGuide';
+import {
+  currentAppVersion,
+  finishedTutorial,
+  topMenuState,
+} from '@/recoil/atoms';
 import { getAppVersion } from '@/utils';
 
 export default function HomeScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
   const [showChangeLogs, setShowChangeLogs] = useState<boolean>(false);
   const currentAppVersionValue = useRecoilValue(currentAppVersion);
+  const finishedTutorialValue = useRecoilValue(finishedTutorial);
 
   useEffect(() => {
     const isWeb = Platform.OS === 'web';
@@ -26,7 +32,13 @@ export default function HomeScreen() {
     <ThemedSafeAreaView style={styles.container}>
       <TopMenu />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
-        {showChangeLogs ? <ChangeLogs /> : <MushafPage />}
+        {showChangeLogs ? (
+          <ChangeLogs />
+        ) : !finishedTutorialValue ? (
+          <TutorialGuide />
+        ) : (
+          <MushafPage />
+        )}
       </Pressable>
     </ThemedSafeAreaView>
   );
