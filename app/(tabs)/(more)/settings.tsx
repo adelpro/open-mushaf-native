@@ -6,6 +6,7 @@ import Toggle from 'react-native-toggle-input';
 import { useRecoilState } from 'recoil';
 
 import SegmentedControlWithDisabled from '@/components/SegmentedControlWithDisabled';
+import SelectRiwaya from '@/components/SelectRiwaya';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -16,8 +17,7 @@ import { clearStorageAndReload } from '@/utils/clearStorage';
 const isRTL = I18nManager.isRTL;
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
-  const options = ['تعطيل', 'حزب', 'جزء'];
-
+  const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const [HizbNotificationValue, setHizbNotificationValue] =
     useRecoilState<number>(hizbNotification);
   const { textColor, primaryColor, primaryLightColor, cardColor } = useColors();
@@ -38,6 +38,7 @@ export default function SettingsScreen() {
 
     setHizbNotificationValue(0);
   };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Pressable
@@ -73,21 +74,15 @@ export default function SettingsScreen() {
       <ThemedView
         style={[
           styles.settingsSection,
-          { flexDirection: 'column', backgroundColor: cardColor },
+          styles.columnSection,
+          { backgroundColor: cardColor },
         ]}
       >
         <ThemedView
-          style={[
-            {
-              alignItems: 'center',
-              gap: 1,
-              flexDirection: 'row',
-              backgroundColor: cardColor,
-            },
-          ]}
+          style={[styles.rowContainer, { backgroundColor: cardColor }]}
         >
-          <ThemedText type="defaultSemiBold" style={[styles.itemText]}>
-            قيمة السطوع في الوضع الليلي:
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
+            سطوع الوضع الليلي:
           </ThemedText>
           <ThemedText
             type="defaultSemiBold"
@@ -115,31 +110,27 @@ export default function SettingsScreen() {
           />
         </ThemedView>
       </ThemedView>
+
       <ThemedView
         style={[
           styles.settingsSection,
-          { flexDirection: 'column', backgroundColor: cardColor },
+          styles.columnSection,
+          { backgroundColor: cardColor },
         ]}
       >
         <ThemedView
-          style={[
-            {
-              alignItems: 'center',
-              width: '100%',
-              backgroundColor: cardColor,
-            },
-          ]}
+          style={[styles.fullWidthContainer, { backgroundColor: cardColor }]}
         >
           <ThemedText
             type="defaultSemiBold"
-            style={[styles.itemText, { width: '100%' }]}
+            style={[styles.itemText, styles.fullWidth]}
           >
             تفعيل التنبيهات:
           </ThemedText>
         </ThemedView>
-        <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
+        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
           <SegmentedControlWithDisabled
-            options={options}
+            options={notificationOptions}
             initialSelectedIndex={HizbNotificationValue}
             activeColor={primaryColor}
             textColor={primaryColor}
@@ -150,11 +141,27 @@ export default function SettingsScreen() {
           />
         </Pressable>
       </ThemedView>
-      {debug ? (
+
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
+      >
+        <ThemedView
+          style={[styles.fullWidthContainer, { backgroundColor: cardColor }]}
+        >
+          <SelectRiwaya />
+        </ThemedView>
+      </ThemedView>
+
+      {debug && (
         <ThemedView
           style={[
             styles.settingsSection,
-            { flexDirection: 'column', backgroundColor: cardColor },
+            styles.columnSection,
+            { backgroundColor: cardColor },
           ]}
         >
           <ThemedButton
@@ -165,7 +172,7 @@ export default function SettingsScreen() {
             حذف كل التغييرات
           </ThemedButton>
         </ThemedView>
-      ) : null}
+      )}
     </ScrollView>
   );
 }
@@ -190,6 +197,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  columnSection: {
+    flexDirection: 'column',
+  },
+  rowContainer: {
+    alignItems: 'center',
+    gap: 1,
+    flexDirection: 'row',
+    width: '100%',
+  },
+  fullWidthContainer: {
+    alignItems: 'center',
+    width: '100%',
+  },
+  fullWidth: {
+    width: '100%',
   },
   itemText: {
     fontSize: 20,

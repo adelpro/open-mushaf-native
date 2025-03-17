@@ -5,13 +5,14 @@ import { useRecoilState } from 'recoil';
 
 import { useColors } from '@/hooks/useColors';
 import { mushafRiwaya } from '@/recoil/atoms';
+import { RiwayaArabic } from '@/types/riwaya';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
 
 import SegmentedControl from './SegmentControl';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-const riwayaOptions = ['ورش', 'حفص'];
+const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش'];
 
 export default function SelectRiwaya() {
   const [mushafRiwayaValue, setMushafRiwayaValue] =
@@ -35,6 +36,7 @@ export default function SelectRiwaya() {
             textColor={primaryColor}
             onSelectionChange={(index: number) => {
               const selectedRiwaya = RiwayaByValue(index);
+              console.log('riwaya: ', mushafRiwayaValue, 'index: ', index);
               setMushafRiwayaValue(selectedRiwaya);
             }}
           />
@@ -51,6 +53,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     paddingHorizontal: 20,
+    margin: 10,
   },
   contentContainer: {
     display: 'flex',

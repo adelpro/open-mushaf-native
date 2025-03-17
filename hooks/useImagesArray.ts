@@ -11,7 +11,7 @@ export default function useImagesArray() {
   const [error, setError] = useState<string | null>(null);
   const [asset, setAsset] = useState<Asset | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const MushafRiwayaValue = useRecoilValue(mushafRiwaya);
+  const mushafRiwayaValue = useRecoilValue(mushafRiwaya);
   const { currentPage: page } = useCurrentPage();
   const isMounted = useRef(true);
 
@@ -21,13 +21,16 @@ export default function useImagesArray() {
 
     const loadAsset = async () => {
       try {
-        if (MushafRiwayaValue === undefined) {
+        console.log('MushafRiwayaValue2:', mushafRiwayaValue);
+        if (mushafRiwayaValue === undefined) {
           return;
         }
-        console.log('MushafRiwayaValue2:', MushafRiwayaValue);
+
         const imagesMap =
-          MushafRiwayaValue === 'hafs' ? imagesMapHafs : imagesMapWarsh;
-        if (!imagesMap) throw new Error('imagesMap is undefined');
+          mushafRiwayaValue === 'hafs' ? imagesMapHafs : imagesMapWarsh;
+        if (!imagesMap) {
+          return;
+        }
 
         const image = imagesMap[page];
         if (!image) throw new Error(`الصفحة ${page} غير موجودة`);
@@ -36,8 +39,9 @@ export default function useImagesArray() {
         if (!assetToLoad.downloaded) {
           await assetToLoad.downloadAsync();
         }
+        // Only set asset if mounted
         if (isMounted.current) {
-          setAsset(assetToLoad); // Only set asset if mounted
+          setAsset(assetToLoad);
         }
       } catch (error) {
         if (isMounted.current) {
@@ -57,7 +61,7 @@ export default function useImagesArray() {
     return () => {
       isMounted.current = false; // Mark as unmounted
     };
-  }, [MushafRiwayaValue, page]);
+  }, [mushafRiwayaValue, page]);
 
   return { asset, isLoading, error };
 }

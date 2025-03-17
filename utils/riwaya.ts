@@ -11,5 +11,8 @@ export function RiwayaByIndice(value: Riwaya): number | undefined {
 
 // Function to get the Riwaya value by index
 export function RiwayaByValue(index: number): Riwaya {
+  if (index < 0 || index >= riwayaArray.length) {
+    throw new Error(`Invalid index: ${index}`);
+  }
   return riwayaArray[index];
 }
