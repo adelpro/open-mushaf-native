@@ -1,4 +1,4 @@
-import { I18nManager, Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import Slider from '@react-native-community/slider';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -12,9 +12,9 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
+import { isRTL } from '@/utils';
 import { clearStorageAndReload } from '@/utils/clearStorage';
 
-const isRTL = I18nManager.isRTL;
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];

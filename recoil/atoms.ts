@@ -22,7 +22,6 @@ export const finishedTutorial = atom<boolean>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
-//TODO manage the default undefined value by showing the riwaya modal on the index screen
 export const mushafRiwaya = atom<Riwaya>({
   key: 'MushafRiwaya',
   default: undefined,
