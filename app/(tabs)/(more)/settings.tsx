@@ -4,7 +4,7 @@ import Slider from '@react-native-community/slider';
 import Toggle from 'react-native-toggle-input';
 import { useRecoilState } from 'recoil';
 
-import SegmentedControl from '@/components/SegmentControl';
+import SegmentedControlWithDisabled from '@/components/SegmentedControlWithDisabled';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -134,7 +134,7 @@ export default function SettingsScreen() {
           </ThemedText>
         </ThemedView>
         <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
-          <SegmentedControl
+          <SegmentedControlWithDisabled
             options={options}
             initialSelectedIndex={HizbNotificationValue}
             activeColor={primaryColor}
