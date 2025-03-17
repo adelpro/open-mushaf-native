@@ -135,25 +135,25 @@ export default function TutorialGuide() {
 
 const styles = StyleSheet.create({
   animatedContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: '100%',
     padding: 5,
   },
   contentContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
     maxWidth: 800,
-    height: '100%',
-    maxHeight: 800,
     padding: 10,
   },
   image: {
     width: '100%',
     height: 300,
     marginBottom: 10,
+    alignSelf: 'center',
   },
   textContainer: {
     width: '100%',
