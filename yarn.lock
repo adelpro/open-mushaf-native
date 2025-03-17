@@ -1551,6 +1551,21 @@
     find-up "^5.0.0"
     js-yaml "^4.1.0"
 
+"@gorhom/bottom-sheet@^5.1.2":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@gorhom/bottom-sheet/-/bottom-sheet-5.1.2.tgz#509992983ce2905d5899d1c7cab1cd3950c8c238"
+  integrity sha512-5np8oL2krqAsVKLRE4YmtkZkyZeFiitoki72bEpVhZb8SRTNuAEeSbP3noq5srKpcRsboCr7uI+xmMyrWUd9kw==
+  dependencies:
+    "@gorhom/portal" "1.0.14"
+    invariant "^2.2.4"
+
+"@gorhom/portal@1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@gorhom/portal/-/portal-1.0.14.tgz#1953edb76aaba80fb24021dc774550194a18e111"
+  integrity sha512-MXyL4xvCjmgaORr/rtryDNFy3kU4qUbKlwtQqqsygd0xX3mhKjOLn6mQK8wfu0RkoE0pBE0nAasRoHua+/QZ7A==
+  dependencies:
+    nanoid "^3.3.1"
+
 "@humanwhocodes/config-array@^0.13.0":
   version "0.13.0"
   resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.13.0.tgz"
@@ -8042,6 +8057,11 @@ nanoid@3.3.7, nanoid@^3.3.7:
   version "3.3.7"
   resolved "https://registry.npmjs.org/nanoid/-/nanoid-3.3.7.tgz"
   integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
+
+nanoid@^3.3.1:
+  version "3.3.10"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.10.tgz#7bc882237698ef787d5cbba109e3b0168ba6e7b1"
+  integrity sha512-vSJJTG+t/dIKAUhUDw/dLdZ9s//5OxcHqLaDWWrW4Cdq7o6tdLIczUkMXt2MBNmk6sJRZBZRXVixs7URY1CmIg==
 
 natural-compare@^1.4.0:
   version "1.4.0"

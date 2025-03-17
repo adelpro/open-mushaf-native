@@ -1,10 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
@@ -12,6 +7,7 @@ import { useRecoilState } from 'recoil';
 import { useColors } from '@/hooks/useColors';
 import { tafseerTab } from '@/recoil/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
+import { isRTL } from '@/utils';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -26,22 +22,18 @@ const tabLabels: Record<TafseerTabs, string> = {
   qortoby: 'القرطبي',
   tabary: 'الطبري',
   saady: 'السعدي',
-  tanweer: 'التحرير و التنوير',
-  waseet: 'الوسيط',
 };
 
 type Props = {
   aya: number;
   surah: number;
-  opacity: number;
+  opacity?: number | undefined;
 };
 
-export default function Tafseer({ aya, surah, opacity }: Props) {
+export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
   const { tintColor, textColor } = useColors();
-
   const [surahName, setSurahName] = useState<string>('');
-  const [selectedTabValue, setSelectedTab] =
-    useRecoilState<TafseerTabs>(tafseerTab);
+  const [selectedTabValue, setSelectedTab] = useRecoilState(tafseerTab);
   const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
 
   const renderTafseerContent = (tafseer: TafseerAya[] | null): JSX.Element => {
@@ -51,35 +43,38 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
     if (!ayaTafseer?.text || ayaTafseer?.text === '<p></p>') {
       tafseerText = '<p>لا يوجد تفسير.</p>';
     } else {
-      tafseerText = ayaTafseer?.text;
+      tafseerText = `<div>${ayaTafseer?.text}</div>`;
     }
     return (
-      <ScrollView
-        style={{
-          backgroundColor: 'transparent',
-        }}
-        contentContainerStyle={styles.tafseerContent}
-        nestedScrollEnabled
-      >
-        <ThemedView style={{ flex: 1, height: '100%' }}>
-          <HTMLView
-            value={tafseerText}
-            style={{
+      <ThemedView style={{ flex: 1 }}>
+        <HTMLView
+          value={tafseerText}
+          style={{
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            backgroundColor: 'transparent',
+          }}
+          stylesheet={{
+            div: {
+              color: textColor,
+              fontFamily: 'Tajawal_400Regular',
+              fontSize: 16,
+              lineHeight: 24,
+              textAlign: isRTL ? 'left' : 'right',
               backgroundColor: 'transparent',
-              paddingHorizontal: 10,
-            }}
-            stylesheet={{
-              p: {
-                color: textColor,
-                fontFamily: 'Tajawal_400Regular',
-                backgroundColor: 'transparent',
-                textAlign: 'right',
-              },
-            }}
-            addLineBreaks={false}
-          />
-        </ThemedView>
-      </ScrollView>
+            },
+            p: {
+              color: textColor,
+              fontFamily: 'Tajawal_400Regular',
+              fontSize: 16,
+              lineHeight: 24,
+              textAlign: isRTL ? 'left' : 'right',
+              backgroundColor: 'transparent',
+            },
+          }}
+          addLineBreaks={false}
+        />
+      </ThemedView>
     );
   };
 
@@ -115,12 +110,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
         case 'tabary':
           tafseerJSON = await import('@/assets/tafaseer/tabary.json');
           break;
-        case 'tanweer':
-          tafseerJSON = await import('@/assets/tafaseer/tanweer.json');
-          break;
-        case 'waseet':
-          tafseerJSON = await import('@/assets/tafaseer/waseet.json');
-          break;
+
         default:
           tafseerJSON = await import('@/assets/tafaseer/katheer.json');
       }
@@ -137,7 +127,9 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
   }, [loadTafseerData]);
 
   return (
-    <ThemedView style={[styles.container, { opacity }]}>
+    <ThemedView
+      style={[styles.container, opacity !== undefined ? { opacity } : {}]}
+    >
       <ThemedText style={[styles.title, { backgroundColor: 'transparent' }]}>
         {surahName} - الآية {aya}
       </ThemedText>
@@ -170,14 +162,7 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
       </ThemedView>
 
       {tafseerData ? (
-        <ThemedView
-          style={{
-            backgroundColor: 'transparent',
-            height: '100%',
-          }}
-        >
-          {renderTafseerContent(tafseerData)}
-        </ThemedView>
+        renderTafseerContent(tafseerData)
       ) : (
         <ActivityIndicator size="large" color={tintColor} />
       )}
@@ -188,6 +173,9 @@ export default function Tafseer({ aya, surah, opacity }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: '100%',
+    backgroundColor: 'transparent',
+    padding: 5,
   },
   title: {
     fontSize: 18,
@@ -200,6 +188,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 2,
     justifyContent: 'flex-start',
+    marginBottom: 10,
   },
   tabButton: {
     paddingVertical: 10,
@@ -207,9 +196,5 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomWidth: 2,
-  },
-  tafseerContent: {
-    marginVertical: 5,
-    backgroundColor: 'transparent',
   },
 });
