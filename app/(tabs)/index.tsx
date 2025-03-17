@@ -5,12 +5,14 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import ChangeLogs from '@/components/ChangeLogs';
 import MushafPage from '@/components/MushafPage';
+import SelectRiwaya from '@/components/SelectRiwaya';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import TopMenu from '@/components/TopMenu';
 import TutorialGuide from '@/components/TutorialGuide';
 import {
   currentAppVersion,
   finishedTutorial,
+  mushafRiwaya,
   topMenuState,
 } from '@/recoil/atoms';
 import { getAppVersion } from '@/utils';
@@ -20,6 +22,7 @@ export default function HomeScreen() {
   const [showChangeLogs, setShowChangeLogs] = useState<boolean>(false);
   const currentAppVersionValue = useRecoilValue(currentAppVersion);
   const finishedTutorialValue = useRecoilValue(finishedTutorial);
+  const mushafRiwayaValue = useRecoilValue(mushafRiwaya);
 
   useEffect(() => {
     const isWeb = Platform.OS === 'web';
@@ -36,6 +39,8 @@ export default function HomeScreen() {
           <ChangeLogs />
         ) : !finishedTutorialValue ? (
           <TutorialGuide />
+        ) : mushafRiwayaValue === undefined ? (
+          <SelectRiwaya />
         ) : (
           <MushafPage />
         )}

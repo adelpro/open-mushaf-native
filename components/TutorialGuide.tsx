@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     padding: 5,
+    paddingBottom: 10,
   },
   contentContainer: {
     flex: 1,

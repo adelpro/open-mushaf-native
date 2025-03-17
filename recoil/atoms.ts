@@ -2,6 +2,7 @@ import ReactNativeRecoilPersist from 'react-native-recoil-persist';
 import { atom, AtomEffect } from 'recoil';
 
 import { TafseerTabs } from '@/types';
+import { Riwaya } from '@/types/riwaya';
 
 export const bottomMenuState = atom<boolean>({
   key: 'BottomMenuState',
@@ -22,10 +23,9 @@ export const finishedTutorial = atom<boolean>({
 });
 
 //TODO manage the default undefined value by showing the riwaya modal on the index screen
-export const mushafRiwaya = atom<'hafs' | 'warsh' | undefined>({
+export const mushafRiwaya = atom<Riwaya>({
   key: 'MushafRiwaya',
-  //default: undefined,
-  default: 'hafs',
+  default: undefined,
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
