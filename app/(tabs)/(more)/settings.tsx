@@ -5,14 +5,20 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
 import { useRecoilState } from 'recoil';
 
+import SegmentedControl from '@/components/SegmentControl';
 import SegmentedControlWithDisabled from '@/components/SegmentedControlWithDisabled';
-import SelectRiwaya from '@/components/SelectRiwaya';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
-import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
-import { isRTL } from '@/utils';
+import {
+  flipSound,
+  hizbNotification,
+  mushafContrast,
+  mushafRiwaya,
+} from '@/recoil/atoms';
+import { RiwayaArabic } from '@/types/riwaya';
+import { isRTL, RiwayaByIndice, RiwayaByValue } from '@/utils';
 import { clearStorageAndReload } from '@/utils/clearStorage';
 
 export default function SettingsScreen() {
@@ -23,13 +29,14 @@ export default function SettingsScreen() {
   const { textColor, primaryColor, primaryLightColor, cardColor } = useColors();
   const [mushafContrastValue, setMushafContrastValue] =
     useRecoilState(mushafContrast);
-
+  const [mushafRiwayaValue, setMushafRiwayaValue] =
+    useRecoilState(mushafRiwaya);
   const toggleSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
   };
 
   const debug = process.env.EXPO_PUBLIC_DEBUG === 'true' ? true : false;
-
+  const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش'];
   const handleHizbNotificationValueChange = (value: number) => {
     if (value === 1 || value === 2) {
       setHizbNotificationValue(value);
@@ -143,17 +150,28 @@ export default function SettingsScreen() {
       </ThemedView>
 
       <ThemedView
-        style={[
-          styles.settingsSection,
-          styles.columnSection,
-          { backgroundColor: cardColor },
-        ]}
+        style={[styles.fullWidthContainer, { backgroundColor: cardColor }]}
       >
-        <ThemedView
-          style={[styles.fullWidthContainer, { backgroundColor: cardColor }]}
+        <ThemedText
+          type="defaultSemiBold"
+          style={[styles.itemText, styles.fullWidth]}
         >
-          <SelectRiwaya />
-        </ThemedView>
+          تفعيل التنبيهات:
+        </ThemedText>
+
+        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
+          <SegmentedControl
+            options={riwayaOptions}
+            initialSelectedIndex={RiwayaByIndice(mushafRiwayaValue)}
+            activeColor={primaryColor}
+            textColor={primaryColor}
+            onSelectionChange={(index: number) => {
+              const selectedRiwaya = RiwayaByValue(index);
+              console.log('riwaya: ', mushafRiwayaValue, 'index: ', index);
+              setMushafRiwayaValue(selectedRiwaya);
+            }}
+          />
+        </Pressable>
       </ThemedView>
 
       {debug && (

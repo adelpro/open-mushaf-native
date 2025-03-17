@@ -7,6 +7,7 @@ import ChangeLogs from '@/components/ChangeLogs';
 import MushafPage from '@/components/MushafPage';
 import SelectRiwaya from '@/components/SelectRiwaya';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
+import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
 import TutorialGuide from '@/components/TutorialGuide';
 import {
@@ -38,7 +39,9 @@ export default function HomeScreen() {
         {showChangeLogs ? (
           <ChangeLogs />
         ) : !finishedTutorialValue ? (
-          <TutorialGuide />
+          <ThemedView style={{ width: '100%', height: '100%' }}>
+            <TutorialGuide />
+          </ThemedView>
         ) : mushafRiwayaValue === undefined ? (
           <SelectRiwaya />
         ) : (

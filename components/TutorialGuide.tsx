@@ -77,12 +77,7 @@ export default function TutorialGuide() {
         </View>
 
         <View style={styles.controlsContainer}>
-          <View
-            style={[
-              styles.dotsContainer,
-              { flexDirection: isRTL ? 'row' : 'row-reverse' },
-            ]}
-          >
+          <View style={[styles.dotsContainer, { flexDirection: 'row' }]}>
             {SLIDES.map((_, i) => (
               <View
                 key={i}
@@ -104,12 +99,7 @@ export default function TutorialGuide() {
             variant="primary"
             style={styles.button}
           >
-            <View
-              style={[
-                styles.buttonContent,
-                { flexDirection: isRTL ? 'row' : 'row-reverse' },
-              ]}
-            >
+            <View style={[styles.buttonContent, { flexDirection: 'row' }]}>
               {index < SLIDES.length - 1 ? (
                 <>
                   <NextSVG width={24} height={24} style={styles.buttonIcon} />
