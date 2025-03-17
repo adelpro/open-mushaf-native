@@ -16,7 +16,11 @@ export type ThemedButtonProps = TouchableOpacityProps & {
     | 'primary'
     | 'secondary'
     | 'outlined-primary'
-    | 'outlined-secondary';
+    | 'outlined-secondary'
+    | 'danger'
+    | 'danger-secondary'
+    | 'outlined-danger'
+    | 'outlined-danger-secondary';
 };
 
 export function ThemedButton({
@@ -27,7 +31,8 @@ export function ThemedButton({
   children,
   ...rest
 }: ThemedButtonProps) {
-  const { primaryColor, secondaryColor } = useColors();
+  const { primaryColor, secondaryColor, dangerColor, dangerLightColor } =
+    useColors();
   const [isPressed, setIsPressed] = useState<boolean>(false);
 
   const getVariantStyles = () => {
@@ -55,6 +60,30 @@ export function ThemedButton({
           backgroundColor: 'transparent',
           borderColor: secondaryColor,
           color: secondaryColor,
+        };
+      case 'danger':
+        return {
+          backgroundColor: dangerColor,
+          borderColor: dangerColor,
+          color: 'white',
+        };
+      case 'danger-secondary':
+        return {
+          backgroundColor: dangerLightColor,
+          borderColor: dangerLightColor,
+          color: 'white',
+        };
+      case 'outlined-danger':
+        return {
+          backgroundColor: 'transparent',
+          borderColor: dangerColor,
+          color: dangerColor,
+        };
+      case 'outlined-danger-secondary':
+        return {
+          backgroundColor: 'transparent',
+          borderColor: dangerLightColor,
+          color: dangerLightColor,
         };
       case 'default':
       default:

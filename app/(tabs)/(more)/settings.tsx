@@ -1,15 +1,17 @@
 import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import Slider from '@react-native-community/slider';
+import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
 import { useRecoilState } from 'recoil';
 
 import SegmentedControlWithDisabled from '@/components/SegmentedControlWithDisabled';
-import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
+import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
+import { clearStorageAndReload } from '@/utils/clearStorage';
 
 const isRTL = I18nManager.isRTL;
 export default function SettingsScreen() {
@@ -26,6 +28,8 @@ export default function SettingsScreen() {
     setIsFlipSoundEnabled((previousState) => !previousState);
   };
 
+  const debug = process.env.EXPO_PUBLIC_DEBUG === 'true' ? true : false;
+
   const handleHizbNotificationValueChange = (value: number) => {
     if (value === 1 || value === 2) {
       setHizbNotificationValue(value);
@@ -35,7 +39,7 @@ export default function SettingsScreen() {
     setHizbNotificationValue(0);
   };
   return (
-    <ThemedSafeAreaView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Pressable
         style={[
           styles.settingsSection,
@@ -146,7 +150,23 @@ export default function SettingsScreen() {
           />
         </Pressable>
       </ThemedView>
-    </ThemedSafeAreaView>
+      {debug ? (
+        <ThemedView
+          style={[
+            styles.settingsSection,
+            { flexDirection: 'column', backgroundColor: cardColor },
+          ]}
+        >
+          <ThemedButton
+            role="button"
+            variant="danger"
+            onPress={clearStorageAndReload}
+          >
+            حذف كل التغييرات
+          </ThemedButton>
+        </ThemedView>
+      ) : null}
+    </ScrollView>
   );
 }
 
