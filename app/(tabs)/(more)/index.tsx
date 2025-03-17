@@ -11,7 +11,6 @@ import WelcomeSVG from '@/assets/svgs/welcome.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { isRTL } from '@/utils';
-
 export default function MoreScreen() {
   return (
     <ThemedSafeAreaView style={styles.container}>
