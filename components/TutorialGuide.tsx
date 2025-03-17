@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+    maxWidth: '100%',
     padding: 5,
     paddingBottom: 10,
   },
