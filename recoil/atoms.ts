@@ -21,6 +21,14 @@ export const finishedTutorial = atom<boolean>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
+//TODO manage the default undefined value by showing the riwaya modal on the index screen
+export const mushafRiwaya = atom<'hafs' | 'warsh' | undefined>({
+  key: 'MushafRiwaya',
+  //default: undefined,
+  default: 'hafs',
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+
 export const tafseerTab = atom<TafseerTabs>({
   key: 'TafseerTab',
   default: 'katheer',
@@ -45,6 +53,11 @@ export const mushafContrast = atom<number>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
+/**
+ * 0 - disabled
+ * 1 - hizb
+ * 2 - juz
+ */
 export const hizbNotification = atom<number>({
   key: 'HizbNotification',
   default: 0,
