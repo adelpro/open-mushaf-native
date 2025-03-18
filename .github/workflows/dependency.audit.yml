@@ -1,0 +1,44 @@
+name: Dependency Audit
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Run weekly on Mondays
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install depcheck
+        run: npm install -g depcheck
+
+      - name: Run depcheck for unused dependencies
+        run: depcheck --json > unused-deps.json
+
+      - name: Run npm audit
+        run: npm audit --json > security-audit.json
+
+      - name: Generate report
+        run: |
+          echo "# Dependency Audit Report $(date)" > report.md
+          echo "## Unused Dependencies" >> report.md
+          cat unused-deps.json | jq -r '.dependencies[]' >> report.md
+          echo "## Security Issues" >> report.md
+          cat security-audit.json | jq '.metadata.vulnerabilities' >> report.md
+
+      - name: Create issue if problems found
+        uses: peter-evans/create-issue-from-file@v4
+        if: ${{ success() }}
+        with:
+          title: Weekly Dependency Audit
+          content-filepath: ./report.md
+          labels: maintenance, dependencies
