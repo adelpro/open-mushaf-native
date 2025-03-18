@@ -4,5 +4,8 @@
   "endOfLine": "auto",
   "printWidth": 80,
   "tabWidth": 2,
-  "sortingMethod": "lineLength"
+  "sortingMethod": "lineLength",
+  "semi": true,
+  "bracketSpacing": true,
+  "arrowParens": "always"
 }

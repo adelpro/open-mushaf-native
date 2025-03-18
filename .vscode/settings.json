@@ -2,5 +2,14 @@
   "editor.tabSize": 2,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "editor.detectIndentation": true
+  "editor.detectIndentation": true,
+  "files.insertFinalNewline": true,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "all",
+  "prettier.endOfLine": "auto",
+  "prettier.printWidth": 80,
+  "prettier.tabWidth": 2,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
 }
