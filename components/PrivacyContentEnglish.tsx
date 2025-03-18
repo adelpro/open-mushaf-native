@@ -121,9 +121,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'flex-start',
-    writingDirection: isRTL ? 'rtl' : 'ltr',
-    width: '100%',
   },
 
   englishText: {

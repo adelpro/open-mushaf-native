@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { isRTL } from '@/utils';
 
 import { ExternalLink } from './ExternalLink';
 
