@@ -5,6 +5,15 @@ on:
     tags:
       - 'v*' # Trigger on tag push that starts with 'v'
   workflow_dispatch: # Allow manual trigger for testing
+    inputs:
+      environment:
+        description: 'Environment to build for (prod or dev)'
+        required: true
+        default: 'prod'
+        type: choice
+        options:
+          - prod
+          - dev
 
 permissions:
   contents: write # Grant permissions to create and upload releases
@@ -88,7 +97,10 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Build APK and AAB
+        env:
+          EXPO_PUBLIC_DEBUG: ${{ github.event.inputs.environment == 'dev' && 'true' || 'false' }}
         run: |
+          echo "Building with EXPO_PUBLIC_DEBUG: $EXPO_PUBLIC_DEBUG"
           npx eas-cli build --platform android --profile production --local --non-interactive --output app-production.aab
           npx eas-cli build --platform android --profile preview --local --non-interactive --output app-preview.apk
 
