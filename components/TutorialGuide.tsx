@@ -39,9 +39,7 @@ export default function TutorialGuide() {
       exiting={isRTL ? FadeOutRight.duration(500) : FadeOutLeft.duration(500)}
       contentContainerStyle={styles.animatedContainer}
     >
-      <View
-        style={[styles.contentContainer, { direction: isRTL ? 'rtl' : 'ltr' }]}
-      >
+      <View style={[styles.contentContainer]}>
         <Image
           source={SLIDES[index].image}
           style={styles.image}
@@ -58,9 +56,9 @@ export default function TutorialGuide() {
                 style={[
                   styles.description,
                   item.align === 'start' && {
-                    alignSelf: 'flex-start',
+                    justifyContent: 'flex-start',
                     textAlign: 'right',
-                    writingDirection: 'rtl',
+                    flexDirection: 'row',
                     paddingHorizontal: 25,
                   },
                 ]}

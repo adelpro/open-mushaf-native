@@ -119,12 +119,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'flex-start',
-    writingDirection: isRTL ? 'rtl' : 'ltr',
   },
   arabicText: {
-    writingDirection: 'rtl',
-    textAlign: 'right',
+    flexDirection: 'row',
   },
 
   title: {
@@ -133,14 +130,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingVertical: 20,
     fontFamily: 'Tajawal_700Bold',
-    textAlign: 'right',
   },
   subtitle: {
     fontSize: 20,
     fontWeight: '600',
     marginTop: 20,
     paddingVertical: 10,
-    textAlign: 'right',
   },
   content: {
     fontSize: 16,
