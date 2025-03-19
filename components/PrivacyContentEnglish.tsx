@@ -123,28 +123,32 @@ const styles = StyleSheet.create({
   },
 
   englishText: {
-    textAlign: 'left',
+    flexDirection: 'row-reverse',
   },
 
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    flexDirection: 'row-reverse',
   },
   subtitle: {
     fontSize: 20,
     fontWeight: '600',
     marginTop: 20,
     paddingVertical: 10,
+    flexDirection: 'row-reverse',
   },
   content: {
     fontSize: 16,
     lineHeight: 22,
     marginTop: 10,
+    flexDirection: 'row',
   },
   link: {
     color: '#1e90ff',
     textDecorationLine: 'underline',
+    flexDirection: 'row-reverse',
   },
 
   linkContainer: {

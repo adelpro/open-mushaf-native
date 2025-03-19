@@ -36,8 +36,8 @@ export default function AboutScreen() {
     },
     {
       text: 'الأيقونة من ',
-      link: 'https://www.svgrepo.com/',
-      label: 'SVGRepo',
+      link: 'https://iconify.design/',
+      label: 'Iconify',
     },
     {
       text: 'صوت تغيير الصفحة',
@@ -47,7 +47,7 @@ export default function AboutScreen() {
   ];
 
   const featuresList = [
-    'برواية ورش',
+    'برواية ورش وحفص.',
     'الوصول إلى المصحف دون اتصال بالإنترنت.',
     'خيارات متعددة للتفسير.',
     'تنقل سلس بين السور والأجزاء.',

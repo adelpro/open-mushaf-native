@@ -7,7 +7,6 @@ import { useRecoilState } from 'recoil';
 import { useColors } from '@/hooks/useColors';
 import { tafseerTab } from '@/recoil/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
-import { isRTL } from '@/utils';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -46,7 +45,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
       tafseerText = `<div>${ayaTafseer?.text}</div>`;
     }
     return (
-      <ThemedView style={{ flex: 1, direction: isRTL ? 'rtl' : 'ltr' }}>
+      <ThemedView style={{ flex: 1 }}>
         <HTMLView
           value={tafseerText}
           style={{
@@ -60,7 +59,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
               fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
-              textAlign: 'right',
+              flexDirection: 'row',
               backgroundColor: 'transparent',
             },
             p: {
@@ -68,7 +67,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
               fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
-              textAlign: 'right',
+              flexDirection: 'row',
               backgroundColor: 'transparent',
             },
           }}
