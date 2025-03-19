@@ -55,10 +55,21 @@ export default function RootLayout() {
               document.documentElement.setAttribute('dir', 'rtl');
               document.documentElement.setAttribute('lang', 'ar');
             } else {
-              await Updates.reloadAsync();
+              // For Android, we need to reload the app to apply RTL changes
+              try {
+                await Updates.reloadAsync();
+              } catch (error) {
+                console.error('Failed to reload app for RTL:', error);
+              }
             }
           }
         });
+      } else {
+        // Even if RTL is already set, ensure styles are applied correctly
+        if (Platform.OS === 'web') {
+          document.documentElement.setAttribute('dir', 'rtl');
+          document.documentElement.setAttribute('lang', 'ar');
+        }
       }
     }
 

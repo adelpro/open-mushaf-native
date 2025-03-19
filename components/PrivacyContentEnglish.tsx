@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
 
   englishText: {
-    textAlign: isRTL ? 'right' : 'left',
+    textAlign: 'left', // Force left alignment for English text
   },
 
   title: {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import { useSetRecoilState } from 'recoil';
 
@@ -27,31 +27,39 @@ export default function PageOverlay({ index, dimensions }: Props) {
     index,
     dimensions,
   });
+
   return (
     <>
-      {overlay.map(({ x: top, y: left, width, aya, surah }) => (
-        <Pressable
-          key={`${surah}-${aya}-${top}-${left}-${width}`}
-          accessible={true}
-          accessibilityLabel={`aya - ${aya} sura - ${surah}`}
-          accessibilityRole="button"
-          style={[
-            styles.overlay,
-            {
-              top,
-              left,
-              width,
-              height: lineHeight,
-              backgroundColor:
-                show && selectedAya.aya === aya && selectedAya.surah === surah
-                  ? 'rgba(128, 128, 128, 0.5)'
-                  : 'transparent',
-            },
-          ]}
-          onPress={() => setShowTopMenu(true)}
-          onLongPress={() => handleAyaClick({ aya, surah })}
-        ></Pressable>
-      ))}
+      {overlay.map(({ x: top, y: left, width, aya, surah }) => {
+        // Adjust positioning for RTL layout if needed
+        const adjustedLeft = I18nManager.isRTL
+          ? dimensions.customPageWidth - left - width
+          : left;
+
+        return (
+          <Pressable
+            key={`${surah}-${aya}-${top}-${left}-${width}`}
+            accessible={true}
+            accessibilityLabel={`aya - ${aya} sura - ${surah}`}
+            accessibilityRole="button"
+            style={[
+              styles.overlay,
+              {
+                top,
+                left: adjustedLeft, // Use adjusted left position for RTL
+                width,
+                height: lineHeight,
+                backgroundColor:
+                  show && selectedAya.aya === aya && selectedAya.surah === surah
+                    ? 'rgba(128, 128, 128, 0.5)'
+                    : 'transparent',
+              },
+            ]}
+            onPress={() => setShowTopMenu(true)}
+            onLongPress={() => handleAyaClick({ aya, surah })}
+          ></Pressable>
+        );
+      })}
       <TafseerPopup
         show={show}
         setShow={setShow}

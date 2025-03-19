@@ -1,10 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  I18nManager,
-  Pressable,
-  StyleSheet,
-} from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
@@ -34,7 +29,6 @@ type Props = {
   opacity?: number | undefined;
 };
 
-const isRTL = I18nManager.isRTL;
 export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
   const { tintColor, textColor } = useColors();
   const [surahName, setSurahName] = useState<string>('');
@@ -65,16 +59,18 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
               fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
-              textAlign: isRTL ? 'left' : 'right',
+              textAlign: 'right', // Force right alignment for Arabic text
               backgroundColor: 'transparent',
+              direction: 'rtl', // Add explicit RTL direction
             },
             p: {
               color: textColor,
               fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
-              textAlign: isRTL ? 'left' : 'right',
+              textAlign: 'right', // Force right alignment for Arabic text
               backgroundColor: 'transparent',
+              direction: 'rtl', // Add explicit RTL direction
             },
           }}
           addLineBreaks={false}
