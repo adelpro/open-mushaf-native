@@ -59,7 +59,9 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
               fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
-              flexDirection: 'row',
+              //flexDirection: 'row',
+              width: '100%',
+              textAlign: 'right',
               backgroundColor: 'transparent',
             },
             p: {
@@ -67,7 +69,9 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
               fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
-              flexDirection: 'row',
+              //flexDirection: 'row',
+              width: '100%',
+              textAlign: 'right',
               backgroundColor: 'transparent',
             },
           }}

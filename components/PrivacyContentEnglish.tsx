@@ -123,7 +123,9 @@ const styles = StyleSheet.create({
   },
 
   englishText: {
-    flexDirection: 'row-reverse',
+    width: '100%',
+    textAlign: 'left',
+    //flexDirection: 'row-reverse',
   },
 
   title: {
