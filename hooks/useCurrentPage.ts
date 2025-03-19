@@ -7,7 +7,7 @@ import { defaultNumberOfPages } from '@/constants';
 import { currentSavedPage } from '@/recoil/atoms';
 
 export default function useCurrentPage() {
-  const { page: pageParam } = useLocalSearchParams();
+  const { page: pageParam, temporary } = useLocalSearchParams();
   const [currentSavedPageValue, setCurrentSavedPageValue] =
     useRecoilState(currentSavedPage);
 
@@ -26,10 +26,10 @@ export default function useCurrentPage() {
       ? parseInt(pageParam[0])
       : parseInt(pageParam);
 
-    if (!isNaN(parsedPage)) {
+    if (!isNaN(parsedPage) && temporary !== 'true') {
       setCurrentSavedPageValue(parsedPage);
     }
-  }, [pageParam, setCurrentSavedPageValue]);
+  }, [pageParam, setCurrentSavedPageValue, temporary]);
 
   return {
     currentPage: currentSavedPageValue || 1,

@@ -57,7 +57,7 @@ export default function Navigation() {
     setCurrentPage(pageNumber);
     router.push({
       pathname: '/',
-      params: { page: pageNumber.toString() },
+      params: { page: pageNumber.toString(), temporary: 'true' },
     });
   };
 

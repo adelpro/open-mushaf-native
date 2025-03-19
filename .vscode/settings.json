@@ -11,5 +11,9 @@
   "prettier.tabWidth": 2,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
-  }
+  },
+  "github-actions.workflows.pinned.workflows": [
+    ".github/workflows/android-build-release.yml",
+    ".github/workflows/android-build.yml"
+  ]
 }
