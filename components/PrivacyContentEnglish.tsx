@@ -1,11 +1,13 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import { I18nManager } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
 import { ExternalLink } from './ExternalLink';
 
+const isRTL = I18nManager.isRTL;
 export default function PrivacyContentEnglish() {
   return (
     <ThemedView style={[styles.container]}>
@@ -120,12 +122,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    justifyContent: 'flex-start',
+    width: '100%',
   },
 
   englishText: {
-    width: '100%',
-    textAlign: 'left',
-    //flexDirection: 'row-reverse',
+    textAlign: isRTL ? 'right' : 'left',
   },
 
   title: {
