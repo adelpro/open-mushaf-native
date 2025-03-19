@@ -97,7 +97,12 @@ export default function TutorialGuide() {
             variant="primary"
             style={styles.button}
           >
-            <View style={[styles.buttonContent, { flexDirection: 'row' }]}>
+            <View
+              style={[
+                styles.buttonContent,
+                { flexDirection: isRTL ? 'row' : 'row-reverse' },
+              ]}
+            >
               {index < SLIDES.length - 1 ? (
                 <>
                   <NextSVG width={24} height={24} style={styles.buttonIcon} />
