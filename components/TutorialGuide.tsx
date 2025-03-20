@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View, YellowBox } from 'react-native';
 
 import { usePathname, useRouter } from 'expo-router';
 import Animated, {
@@ -46,7 +46,7 @@ export default function TutorialGuide() {
           resizeMode="contain"
         />
 
-        <View style={[styles.textContainer, { direction: 'rtl' }]}>
+        <View style={styles.textContainer}>
           <ThemedText style={styles.title}>{SLIDES[index].title}</ThemedText>
           {Array.isArray(SLIDES[index].description) ? (
             // Handle array of description items (for mixed content)
@@ -132,7 +132,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
     maxWidth: 800,
@@ -147,6 +146,7 @@ const styles = StyleSheet.create({
   textContainer: {
     width: '100%',
     alignItems: 'center',
+    justifyContent: 'flex-start',
     marginVertical: 10,
   },
   title: {
@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingHorizontal: 15,
     width: '100%',
+    textAlign: 'center',
   },
   controlsContainer: {
     width: '100%',

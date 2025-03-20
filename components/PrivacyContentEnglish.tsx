@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { I18nManager, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { isRTL } from '@/utils';
 
 import { ExternalLink } from './ExternalLink';
 
@@ -120,39 +121,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    display: 'flex',
-    alignItems: 'flex-end',
     justifyContent: 'flex-start',
+    width: '100%',
   },
 
   englishText: {
-    textAlign: 'left',
-    width: '100%',
+    textAlign: isRTL ? 'right' : 'left',
   },
 
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    flexDirection: 'row-reverse',
   },
   subtitle: {
     fontSize: 20,
     fontWeight: '600',
     marginTop: 20,
     paddingVertical: 10,
-    flexDirection: 'row-reverse',
   },
   content: {
     fontSize: 16,
     lineHeight: 22,
     marginTop: 10,
-    flexDirection: 'row',
   },
   link: {
     color: '#1e90ff',
     textDecorationLine: 'underline',
-    flexDirection: 'row-reverse',
   },
 
   linkContainer: {

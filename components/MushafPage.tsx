@@ -238,10 +238,6 @@ export default function MushafPage() {
 const styles = StyleSheet.create({
   imageContainer: {
     position: 'relative',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
     width: '100%',
     height: '100%',
     flex: 1,
@@ -251,7 +247,6 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    //width: '100%',
   },
   errorContainer: {
     flex: 1,
