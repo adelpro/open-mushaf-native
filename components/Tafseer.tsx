@@ -38,7 +38,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
   const renderTafseerContent = (tafseer: TafseerAya[] | null): JSX.Element => {
     const ayaTafseer = tafseer?.find((t) => t.aya === aya && t.sura === surah);
 
-    let tafseerText = 'لا يوجد تفسير.';
+    let tafseerText = '';
     if (!ayaTafseer?.text || ayaTafseer?.text === '<p></p>') {
       tafseerText = '<p>لا يوجد تفسير.</p>';
     } else {
@@ -52,7 +52,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
             paddingHorizontal: 10,
             paddingVertical: 5,
             backgroundColor: 'transparent',
-            flexDirection: 'row-reverse',
+            flexDirection: 'row',
           }}
           stylesheet={{
             div: {
@@ -60,7 +60,10 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
               fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
-              textAlign: 'right',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              justifyContent: 'flex-start',
               backgroundColor: 'transparent',
             },
             p: {
@@ -68,6 +71,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
               fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
+              width: '100%',
               textAlign: 'right',
               backgroundColor: 'transparent',
             },

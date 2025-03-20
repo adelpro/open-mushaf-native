@@ -55,12 +55,11 @@ export default function TutorialGuide() {
                 key={i}
                 style={[
                   styles.description,
-                  item.align === 'start' && {
-                    justifyContent: 'flex-start',
-                    textAlign: isRTL ? 'right' : 'left',
-                    width: '100%',
-                    paddingHorizontal: 25,
-                  },
+                  item.align === 'start'
+                    ? {
+                        textAlign: 'right',
+                      }
+                    : { textAlign: 'center' },
                 ]}
               >
                 {item.text}
@@ -97,16 +96,11 @@ export default function TutorialGuide() {
             variant="primary"
             style={styles.button}
           >
-            <View
-              style={[
-                styles.buttonContent,
-                { flexDirection: isRTL ? 'row' : 'row-reverse' },
-              ]}
-            >
+            <View style={[styles.buttonContent, { flexDirection: 'row' }]}>
               {index < SLIDES.length - 1 ? (
                 <>
-                  <NextSVG width={24} height={24} style={styles.buttonIcon} />
                   <Text style={styles.buttonText}>التالي</Text>
+                  <NextSVG width={24} height={24} style={styles.buttonIcon} />
                 </>
               ) : (
                 <>
@@ -164,7 +158,6 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    textAlign: 'center',
     paddingHorizontal: 15,
     width: '100%',
   },

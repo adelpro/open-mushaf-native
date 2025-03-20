@@ -239,8 +239,9 @@ const styles = StyleSheet.create({
   imageContainer: {
     position: 'relative',
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     width: '100%',
     height: '100%',
     flex: 1,

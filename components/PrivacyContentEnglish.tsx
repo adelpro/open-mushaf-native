@@ -120,11 +120,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    flexDirection: 'row-reverse',
+    display: 'flex',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
   },
 
   englishText: {
     textAlign: 'left',
+    width: '100%',
   },
 
   title: {
