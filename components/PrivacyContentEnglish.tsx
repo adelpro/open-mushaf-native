@@ -120,12 +120,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'flex-start',
-    width: '100%',
+    flexDirection: 'row-reverse',
   },
 
   englishText: {
-    textAlign: 'left', // Force left alignment for English text
+    textAlign: 'left',
   },
 
   title: {

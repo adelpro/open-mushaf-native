@@ -57,8 +57,8 @@ export default function TutorialGuide() {
                   styles.description,
                   item.align === 'start' && {
                     justifyContent: 'flex-start',
-                    textAlign: 'right',
-                    flexDirection: 'row',
+                    textAlign: isRTL ? 'right' : 'left',
+                    width: '100%',
                     paddingHorizontal: 25,
                   },
                 ]}

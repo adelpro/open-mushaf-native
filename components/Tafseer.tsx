@@ -52,6 +52,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
             paddingHorizontal: 10,
             paddingVertical: 5,
             backgroundColor: 'transparent',
+            flexDirection: 'row-reverse',
           }}
           stylesheet={{
             div: {
@@ -59,18 +60,16 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
               fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
-              textAlign: 'right', // Force right alignment for Arabic text
+              textAlign: 'right',
               backgroundColor: 'transparent',
-              direction: 'rtl', // Add explicit RTL direction
             },
             p: {
               color: textColor,
               fontFamily: 'Tajawal_400Regular',
               fontSize: 16,
               lineHeight: 24,
-              textAlign: 'right', // Force right alignment for Arabic text
+              textAlign: 'right',
               backgroundColor: 'transparent',
-              direction: 'rtl', // Add explicit RTL direction
             },
           }}
           addLineBreaks={false}
