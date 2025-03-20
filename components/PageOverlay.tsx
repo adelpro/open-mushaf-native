@@ -27,6 +27,7 @@ export default function PageOverlay({ index, dimensions }: Props) {
     index,
     dimensions,
   });
+
   return (
     <>
       {overlay.map(({ x: top, y: left, width, aya, surah }) => (
@@ -42,10 +43,10 @@ export default function PageOverlay({ index, dimensions }: Props) {
               left,
               width,
               height: lineHeight,
-              backgroundColor:
-                show && selectedAya.aya === aya && selectedAya.surah === surah
+              backgroundColor: 'rgba(135, 77, 77, 0.5)',
+              /* show && selectedAya.aya === aya && selectedAya.surah === surah
                   ? 'rgba(128, 128, 128, 0.5)'
-                  : 'transparent',
+                  : 'transparent', */
             },
           ]}
           onPress={() => setShowTopMenu(true)}

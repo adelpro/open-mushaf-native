@@ -75,13 +75,16 @@ const usePageOverlay = ({
           ? (defaultX - defaultFirstPagesMarginX) * heightCoeff
           : (defaultX - defaultMarginX) * heightCoeff;
 
-      const Y = defaultY * widthCoeff;
+      const Y =
+        index <= 2
+          ? (defaultY - defaultFirstPagesMarginX) * widthCoeff
+          : (defaultY - defaultMarginY) * widthCoeff;
 
       // Drawing overlay for aya line (first part before the aya marker)
       overlayElements.push({
         x: X,
-        y: Y - marginY,
-        width: pageWidth + marginY - Y,
+        y: Y,
+        width: pageWidth - Y,
         aya: aya[1],
         surah: aya[0],
       });
@@ -92,7 +95,7 @@ const usePageOverlay = ({
         overlayElements.push({
           x: X,
           y: marginY,
-          width: Y - marginY * 2,
+          width: Y - marginY,
           aya: aya[1] + 1,
           surah: aya[0],
         });
