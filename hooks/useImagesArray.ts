@@ -21,7 +21,6 @@ export default function useImagesArray() {
 
     const loadAsset = async () => {
       try {
-        console.log('MushafRiwayaValue2:', mushafRiwayaValue);
         if (mushafRiwayaValue === undefined) {
           return;
         }

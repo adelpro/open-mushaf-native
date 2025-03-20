@@ -15,7 +15,7 @@ import {
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import * as Updates from 'expo-updates';
+//import * as Updates from 'expo-updates';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ReactNativeRecoilPersist, {
   ReactNativeRecoilPersistGate,
@@ -24,6 +24,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+//import { isRTL } from '@/utils';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -40,41 +41,6 @@ export default function RootLayout() {
     Tajawal_500Medium,
     Tajawal_700Bold,
   });
-
-  useEffect(() => {
-    async function applyRTL() {
-      if (!I18nManager.isRTL) {
-        I18nManager.allowRTL(true);
-        I18nManager.forceRTL(true);
-
-        InteractionManager.runAfterInteractions(async () => {
-          if (__DEV__) {
-            console.info('Reloading app to apply RTL');
-          } else {
-            if (Platform.OS === 'web') {
-              document.documentElement.setAttribute('dir', 'rtl');
-              document.documentElement.setAttribute('lang', 'ar');
-            } else {
-              // For Android, we need to reload the app to apply RTL changes
-              try {
-                await Updates.reloadAsync();
-              } catch (error) {
-                console.error('Failed to reload app for RTL:', error);
-              }
-            }
-          }
-        });
-      } else {
-        // Even if RTL is already set, ensure styles are applied correctly
-        if (Platform.OS === 'web') {
-          document.documentElement.setAttribute('dir', 'rtl');
-          document.documentElement.setAttribute('lang', 'ar');
-        }
-      }
-    }
-
-    applyRTL();
-  }, []);
 
   useEffect(() => {
     if (loaded) {
