@@ -48,6 +48,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: '100%',
+    maxWidth: 640,
     alignItems: 'center',
     padding: 10,
     marginHorizontal: 10,

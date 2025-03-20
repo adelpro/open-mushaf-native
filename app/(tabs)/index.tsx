@@ -5,6 +5,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import ChangeLogs from '@/components/ChangeLogs';
 import MushafPage from '@/components/MushafPage';
+import ReadingPositionBanner from '@/components/ReadingPositionBanner';
 import SelectRiwaya from '@/components/SelectRiwaya';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedView } from '@/components/ThemedView';
@@ -35,6 +36,7 @@ export default function HomeScreen() {
   return (
     <ThemedSafeAreaView style={styles.container}>
       <TopMenu />
+      <ReadingPositionBanner />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
         {showChangeLogs ? (
           <ChangeLogs />

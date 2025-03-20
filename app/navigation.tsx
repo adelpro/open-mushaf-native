@@ -81,7 +81,7 @@ export default function Navigation() {
       setCurrentPage(filteredAya.page_id);
       router.push({
         pathname: '/',
-        params: { page: filteredAya.page_id.toString() },
+        params: { page: filteredAya.page_id.toString(), temporary: 'true' },
       });
     }
   };

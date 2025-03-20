@@ -28,6 +28,7 @@ import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
 import { Hizb } from '@/types';
 
 import PageOverlay from './PageOverlay';
+import ReadingPositionBanner from './ReadingPositionBanner';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 import TopNotification from './TopNotification';
