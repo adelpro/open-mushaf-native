@@ -148,30 +148,37 @@ export default function SettingsScreen() {
           />
         </Pressable>
       </ThemedView>
-
       <ThemedView
-        style={[styles.fullWidthContainer, { backgroundColor: cardColor }]}
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
       >
-        <ThemedText
-          type="defaultSemiBold"
-          style={[styles.itemText, styles.fullWidth]}
+        <ThemedView
+          style={[styles.fullWidthContainer, { backgroundColor: cardColor }]}
         >
-          تفعيل التنبيهات:
-        </ThemedText>
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, styles.fullWidth]}
+          >
+            إختيار الرواية :
+          </ThemedText>
 
-        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
-          <SegmentedControl
-            options={riwayaOptions}
-            initialSelectedIndex={RiwayaByIndice(mushafRiwayaValue)}
-            activeColor={primaryColor}
-            textColor={primaryColor}
-            onSelectionChange={(index: number) => {
-              const selectedRiwaya = RiwayaByValue(index);
-              console.log('riwaya: ', mushafRiwayaValue, 'index: ', index);
-              setMushafRiwayaValue(selectedRiwaya);
-            }}
-          />
-        </Pressable>
+          <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
+            <SegmentedControl
+              options={riwayaOptions}
+              initialSelectedIndex={RiwayaByIndice(mushafRiwayaValue)}
+              activeColor={primaryColor}
+              textColor={primaryColor}
+              onSelectionChange={(index: number) => {
+                const selectedRiwaya = RiwayaByValue(index);
+                console.log('riwaya: ', mushafRiwayaValue, 'index: ', index);
+                setMushafRiwayaValue(selectedRiwaya);
+              }}
+            />
+          </Pressable>
+        </ThemedView>
       </ThemedView>
 
       {debug && (
