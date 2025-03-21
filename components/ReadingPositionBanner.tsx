@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
     maxWidth: 640,
     alignItems: 'center',
     padding: 10,
+    paddingTop: 20,
     marginHorizontal: 10,
     elevation: 2,
     gap: 20,
