@@ -57,7 +57,7 @@ export default function TutorialGuide() {
                   styles.description,
                   item.align === 'start'
                     ? {
-                        textAlign: 'right',
+                        flexDirection: 'row',
                       }
                     : { textAlign: 'center' },
                 ]}
