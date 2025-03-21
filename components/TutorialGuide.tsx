@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, StyleSheet, Text, View, YellowBox } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { usePathname, useRouter } from 'expo-router';
 import Animated, {
