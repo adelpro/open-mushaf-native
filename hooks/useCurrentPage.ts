@@ -12,6 +12,9 @@ export default function useCurrentPage() {
     useRecoilState(currentSavedPage);
 
   const setNewCurrentPage = (page: number) => {
+    if (!page) return;
+    if (temporary === 'true') return;
+
     if (page < 1) {
       setCurrentSavedPageValue(1);
     } else if (page > defaultNumberOfPages) {
@@ -46,8 +49,13 @@ export default function useCurrentPage() {
   const isTemporaryNavigation =
     temporary === 'true' && parsedPage !== currentSavedPageValue;
 
+  const currentPage = isTemporaryNavigation
+    ? parsedPage
+    : currentSavedPageValue || 1;
+
   return {
-    currentPage: currentSavedPageValue || 1,
+    currentPage,
+    currentSavedPage: currentSavedPageValue,
     setCurrentPage: setNewCurrentPage,
     isTemporaryNavigation,
   };

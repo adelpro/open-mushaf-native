@@ -20,7 +20,7 @@ export default function ChapterCard({ chapter }: Props) {
   const handlePress = () => {
     router.replace({
       pathname: '/',
-      params: { page: chapter.startingPage },
+      params: { page: chapter.startingPage, temporary: 'true' },
     });
   };
 

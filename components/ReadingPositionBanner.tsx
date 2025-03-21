@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useRouter } from 'expo-router';
 
 import BookmarkSVG from '@/assets/svgs/bookmark.svg';
@@ -11,7 +12,11 @@ import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
 export default function ReadingPositionBanner() {
-  const { isTemporaryNavigation, currentPage } = useCurrentPage();
+  const { isTemporaryNavigation, currentPage, currentSavedPage } =
+    useCurrentPage();
+  console.log('currentPage', currentPage);
+  console.log('isTemporaryNavigation', isTemporaryNavigation);
+  console.log('currentSavedPage', currentSavedPage);
   const router = useRouter();
   const { tintColor, cardColor } = useColors();
 
@@ -22,55 +27,86 @@ export default function ReadingPositionBanner() {
   const handleReturnToSavedPosition = () => {
     router.push({
       pathname: '/',
+      params: { page: currentSavedPage.toString() },
+    });
+  };
+
+  const handleSaveCurrentPosition = () => {
+    router.push({
+      pathname: '/',
       params: { page: currentPage.toString() },
     });
   };
 
   return (
     <ThemedView style={[styles.container, { backgroundColor: cardColor }]}>
-      <ThemedText style={styles.text}>
-        العودة إلى موضع القراءة (صفحة {currentPage})
+      <ThemedText style={[styles.text, { color: tintColor }]}>
+        العودة إلى موضع القراءة (صفحة {currentSavedPage})
       </ThemedText>
-      <Pressable
-        style={[styles.button, { backgroundColor: tintColor }]}
-        onPress={handleReturnToSavedPosition}
-        accessibilityLabel="العودة إلى موضع القراءة"
-        accessibilityHint={`العودة إلى الصفحة ${currentPage}`}
+      <ThemedView
+        style={[styles.buttonsContainer, { backgroundColor: cardColor }]}
       >
-        <BookmarkSVG name="bookmark" width={24} height={24} color="white" />
-        <ThemedText style={styles.buttonText}>العودة</ThemedText>
-      </Pressable>
+        <Pressable
+          style={[
+            styles.button,
+            {
+              backgroundColor: 'white',
+              borderColor: tintColor,
+              borderWidth: 2,
+            },
+          ]}
+          onPress={handleSaveCurrentPosition}
+          accessibilityLabel="حفظ موضع الحالي"
+          accessibilityHint={`حفظ موضع الحالي ${currentPage}`}
+        >
+          <FontAwesome6 name="bookmark" size={24} color={tintColor} />
+          <ThemedText style={{ color: tintColor }}>حفظ</ThemedText>
+        </Pressable>
+
+        <Pressable
+          style={[styles.button, { backgroundColor: tintColor }]}
+          onPress={handleReturnToSavedPosition}
+          accessibilityLabel="العودة إلى موضع القراءة"
+          accessibilityHint={`العودة إلى موضع القراءة ${currentSavedPage}`}
+        >
+          <BookmarkSVG name="bookmark" width={24} height={24} color="white" />
+          <ThemedText style={styles.buttonText}>العودة</ThemedText>
+        </Pressable>
+      </ThemedView>
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     width: '100%',
     maxWidth: 640,
     alignItems: 'center',
     padding: 10,
     marginHorizontal: 10,
-    marginTop: 10,
-    borderRadius: 8,
     elevation: 2,
+    gap: 20,
   },
   text: {
+    marginHorizontal: 20,
+    fontWeight: 'bold',
     fontSize: 16,
-    flex: 1,
   },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
+    padding: 6,
     borderRadius: 6,
+    gap: 5,
   },
   buttonText: {
     color: 'white',
-    marginLeft: 5,
+    marginEnd: 5,
     fontWeight: 'bold',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    gap: 20,
   },
 });

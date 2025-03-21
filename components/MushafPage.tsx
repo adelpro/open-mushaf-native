@@ -14,6 +14,7 @@ import {
   isAvailableAsync,
 } from 'expo-keep-awake';
 import { useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useRecoilValue } from 'recoil';
@@ -28,7 +29,6 @@ import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
 import { Hizb } from '@/types';
 
 import PageOverlay from './PageOverlay';
-import ReadingPositionBanner from './ReadingPositionBanner';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 import TopNotification from './TopNotification';
@@ -46,6 +46,7 @@ export default function MushafPage() {
   const { tintColor } = useColors();
   const router = useRouter();
   const { currentPage, setCurrentPage } = useCurrentPage();
+  const { temporary } = useLocalSearchParams();
   const [dimensions, setDimensions] = useState({
     customPageWidth: 0,
     customPageHeight: 0,
@@ -56,6 +57,7 @@ export default function MushafPage() {
     isLoading: assetIsLoading,
     error: assetError,
   } = useImagesArray();
+
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
     setDimensions({ customPageWidth: width, customPageHeight: height });
@@ -64,7 +66,13 @@ export default function MushafPage() {
   const handlePageChange = (page: number) => {
     if (page === currentPage) return;
     setCurrentPage(page);
-    router.replace({ pathname: '/', params: { page: page.toString() } });
+    router.replace({
+      pathname: '/',
+      params: {
+        page: page.toString(),
+        ...(temporary ? { temporary: temporary.toString() } : {}),
+      },
+    });
 
     if (isFlipSoundEnabled && sound.current) {
       sound.current.replayAsync();

@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [3.1.6]
+## [3.2.1]
+
+### Update
+
+- Add Basic bookmarking system
 
 ## [3.1.5]
 

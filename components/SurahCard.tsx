@@ -21,7 +21,7 @@ export default function SurahCard({ surah }: Props) {
   const handlePress = () => {
     router.replace({
       pathname: '/',
-      params: { page: surah.startingPage },
+      params: { page: surah.startingPage, temporary: 'true' },
     });
   };
 
