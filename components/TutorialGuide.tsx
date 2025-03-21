@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingHorizontal: 15,
     width: '100%',
+    textAlign: 'center',
   },
   controlsContainer: {
     width: '100%',
