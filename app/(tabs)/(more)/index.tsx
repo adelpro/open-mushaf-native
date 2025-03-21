@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     lineHeight: 26,
     paddingHorizontal: 5,
+    fontFamily: 'Tajawal_400Regular',
   },
   svg: {
     color: 'white',

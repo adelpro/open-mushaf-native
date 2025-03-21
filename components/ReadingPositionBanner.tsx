@@ -52,8 +52,10 @@ export default function ReadingPositionBanner() {
           accessibilityHint={`حفظ موضع الحالي ${currentPage}`}
         >
           <View style={styles.buttonContent}>
-            <FontAwesome6 name="bookmark" size={24} />
-            <Text>حفظ</Text>
+            <FontAwesome6 name="bookmark" size={24} color="white" />
+            <Text style={{ fontFamily: 'Tajawal_400Regular', color: 'white' }}>
+              حفظ
+            </Text>
           </View>
         </ThemedButton>
 
@@ -65,8 +67,16 @@ export default function ReadingPositionBanner() {
           accessibilityHint={`العودة إلى موضع القراءة ${currentSavedPage}`}
         >
           <View style={styles.buttonContent}>
-            <BookmarkSVG name="bookmark" width={24} height={24} />
-            <Text>العودة</Text>
+            <BookmarkSVG
+              name="bookmark"
+              width={24}
+              height={24}
+              fill="white"
+              style={{ color: 'white' }}
+            />
+            <Text style={{ fontFamily: 'Tajawal_400Regular', color: 'white' }}>
+              العودة
+            </Text>
           </View>
         </ThemedButton>
       </ThemedView>
