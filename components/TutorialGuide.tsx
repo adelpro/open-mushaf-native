@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
+    fontFamily: 'Tajawal_700Bold',
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
@@ -198,6 +199,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 24,
+    fontFamily: 'Tajawal_700Bold',
     paddingHorizontal: 5,
   },
   buttonIcon: {

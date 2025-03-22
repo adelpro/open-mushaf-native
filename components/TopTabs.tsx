@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 24,
     lineHeight: 32,
-
+    fontFamily: 'Tajawal_700Bold',
     fontWeight: '500',
   },
   activeTabText: {

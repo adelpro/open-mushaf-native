@@ -91,13 +91,22 @@ export default function RootLayout() {
             <ThemeProvider
               value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
             >
-              <Stack>
+              <Stack
+                screenOptions={{
+                  headerTitleStyle: {
+                    fontFamily: 'Tajawal_700Bold',
+                  },
+                }}
+              >
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
                 <Stack.Screen
                   name="search"
                   options={{
                     title: 'بحث',
+                    headerTitleStyle: {
+                      fontFamily: 'Tajawal_400Regular',
+                    },
                   }}
                 />
                 <Stack.Screen
