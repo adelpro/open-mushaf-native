@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npm run vercel-build",
+  "outputDirectory": "dist",
+  "devCommand": "npm run web",
+  "installCommand": "npm install",
+  "framework": "expo",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
