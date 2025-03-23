@@ -4,6 +4,7 @@ import {
   Platform,
   StyleSheet,
   useColorScheme,
+  useWindowDimensions,
 } from 'react-native';
 
 import { Audio } from 'expo-av';
@@ -15,7 +16,7 @@ import {
 } from 'expo-keep-awake';
 import { useRouter } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
-import { GestureDetector } from 'react-native-gesture-handler';
+import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useRecoilValue } from 'recoil';
 
@@ -45,6 +46,8 @@ export default function MushafPage() {
   const colorScheme = useColorScheme();
   const { tintColor } = useColors();
   const router = useRouter();
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
   const { currentPage, setCurrentPage } = useCurrentPage();
   const { temporary } = useLocalSearchParams();
   const [dimensions, setDimensions] = useState({
@@ -217,15 +220,37 @@ export default function MushafPage() {
       >
         {asset?.localUri ? (
           <>
-            <Image
-              style={[
-                styles.image,
-                { width: '100%' },
-                colorScheme === 'dark' && { opacity: mushafContrastValue },
-              ]}
-              source={{ uri: asset?.localUri }}
-              contentFit="fill"
-            />
+            {isLandscape ? (
+              <ScrollView
+                contentContainerStyle={{ alignItems: 'center' }}
+                alwaysBounceVertical={true}
+                nestedScrollEnabled={true}
+              >
+                <Image
+                  style={[
+                    styles.image,
+                    {
+                      width: '100%',
+                      height: undefined,
+                      aspectRatio: 0.7,
+                    },
+                    colorScheme === 'dark' && { opacity: mushafContrastValue },
+                  ]}
+                  source={{ uri: asset?.localUri }}
+                  contentFit="fill"
+                />
+              </ScrollView>
+            ) : (
+              <Image
+                style={[
+                  styles.image,
+                  { width: '100%' },
+                  colorScheme === 'dark' && { opacity: mushafContrastValue },
+                ]}
+                source={{ uri: asset?.localUri }}
+                contentFit="fill"
+              />
+            )}
             <TopNotification
               show={showNotification}
               text={

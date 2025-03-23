@@ -15,5 +15,8 @@
   "github-actions.workflows.pinned.workflows": [
     ".github/workflows/android-build-release.yml",
     ".github/workflows/android-build.yml"
-  ]
+  ],
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  }
 }
