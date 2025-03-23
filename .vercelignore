@@ -1,0 +1,12 @@
+dist
+builds
+android
+ios
+design
+screenshots
+.expo
+.git
+node_modules
+
+*-lock.json
+
