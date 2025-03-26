@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [3.2.2]
 
+- feat: add pages (images) cache preload system
+- feat: add Vercel web hosting
+
+## [3.2.2]
+
 - feat: add landscape reading mode
 
 ## [3.2.1]

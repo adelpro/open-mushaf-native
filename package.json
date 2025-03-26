@@ -31,9 +31,7 @@
     "android:build:production:local": "eas build -p android --profile production --local --output builds/app-production.aab",
     "android:submit:preview": "eas submit -p android --profile preview",
     "prepare": "husky",
-    "homepage": "https://adelpro.github.io/open-mushaf-native",
-    "predeploy": "yarn web:export",
-    "deploy:github": "gh-pages --nojekyll -d dist"
+    "homepage": "https://adelpro.github.io/open-mushaf-native"
   },
   "jest": {
     "preset": "jest-expo"

@@ -13,7 +13,7 @@ export const usePanGestureHandler = (
       translateX.value = Math.max(-100, Math.min(100, e.translationX));
     })
     .onEnd((e) => {
-      const threshold = 100;
+      const threshold = 150;
       const targetPage =
         e.translationX > threshold
           ? Math.min(currentPage + 1, maxPages) // Swipe Right

@@ -24,6 +24,7 @@ import hizbJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.j
 import { defaultNumberOfPages } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
+import useImagePreloader from '@/hooks/useImagePreloader';
 import useImagesArray from '@/hooks/useImagesArray';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
@@ -60,6 +61,9 @@ export default function MushafPage() {
     isLoading: assetIsLoading,
     error: assetError,
   } = useImagesArray();
+
+  // Preload adjacent pages for smoother navigation
+  useImagePreloader(currentPage);
 
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
