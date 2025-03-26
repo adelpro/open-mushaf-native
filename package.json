@@ -33,7 +33,7 @@
     "prepare": "husky",
     "homepage": "https://adelpro.github.io/open-mushaf-native",
     "predeploy": "yarn web:export",
-    "deploy:github": "gh-pages -d dist"
+    "deploy:github": "gh-pages --nojekyll -d dist"
   },
   "jest": {
     "preset": "jest-expo"

@@ -31,7 +31,7 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "serve",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
@@ -51,7 +51,8 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": true
+      "reactCompiler": true,
+      "baseUrl": "/open-mushaf-native"
     },
     "extra": {
       "eas": {
