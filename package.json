@@ -33,8 +33,7 @@
     "prepare": "husky",
     "homepage": "https://adelpro.github.io/open-mushaf-native",
     "predeploy": "yarn web:export",
-    "deploy:github": "gh-pages -d dist",
-    "deploy:firebase": "npm run predeploy && firebase deploy --only hosting"
+    "deploy:github": "gh-pages -d dist"
   },
   "jest": {
     "preset": "jest-expo"
@@ -45,7 +44,6 @@
     "@expo-google-fonts/amiri": "^0.2.3",
     "@expo-google-fonts/tajawal": "^0.2.3",
     "@expo/vector-icons": "^14.0.3",
-    "@expo/webpack-config": "^19.0.1",
     "@gorhom/bottom-sheet": "^5.1.2",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/slider": "4.5.5",
