@@ -31,16 +31,7 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png",
-      "name": "Open Mushaf",
-      "shortName": "Open Mushaf",
-      "lang": "ar",
-      "startUrl": "/",
-      "display": "standalone",
-      "orientation": "default",
-      "backgroundColor": "#ffffff",
-      "themeColor": "#000000"
+      "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
       [
@@ -59,7 +50,7 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": false
+      "reactCompiler": true
     },
     "extra": {
       "eas": {
