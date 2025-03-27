@@ -19,6 +19,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "web:export": "npx expo export --platform web",
+    "vercel-build": "npx expo export --platform web",
     "web:serve": "npx serve dist",
     "test": "jest --watchAll",
     "lint": "eslint .",
