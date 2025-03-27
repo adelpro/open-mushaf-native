@@ -1,13 +1,19 @@
 {
-  "buildCommand": "expo export -p web",
-  "outputDirectory": "dist",
-  "devCommand": "expo",
-  "cleanUrls": true,
-  "framework": null,
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/:path*",
-      "destination": "/"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
+  ],
+  "rewrites": [
+    { "source": "/_expo/static/(.*)", "destination": "/_expo/static/$1" },
+    { "source": "/static/(.*)", "destination": "/static/$1" },
+    { "source": "/favicon.ico", "destination": "/favicon.ico" },
+    { "source": "/manifest.json", "destination": "/manifest.json" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

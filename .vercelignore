@@ -1,28 +1,45 @@
-# Ignore node_modules since it will be installed during the build process
-node_modules/
-
-# Ignore logs and temporary files
-npm-debug.log
-yarn-error.log
+# Development files
+node_modules
+.git
+.github
+.vscode
+.idea
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Ignore local development settings
-.DS_Store
-.idea/
-.vscode/
-.env.local
-.env
-.env.development
-
-# Ignore build artifacts
-build/
-builds/
-
-# Expo generated files (you may want to ignore them if they are not needed in the build process)
-.expo/
+# Native platform files (not needed for web)
 android/
 ios/
+*.keystore
+*.jks
+*.p8
+*.p12
+*.mobileprovision
 
-# Ignore design files
-design/
-screenshots/
+# Build artifacts
+.expo/
+dist/
+web-build/
+
+# Test files
+__tests__/
+*.test.js
+*.test.ts
+*.test.tsx
+jest.config.js
+
+# Configuration files not needed for web build
+eas.json
+app.config.js
+metro.config.js
+
+# Documentation
+README.md
+LICENSE
+CHANGELOG.md
+docs/
+
+# EAS specific
+.easignore

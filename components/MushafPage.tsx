@@ -4,7 +4,6 @@ import {
   Platform,
   StyleSheet,
   useColorScheme,
-  useWindowDimensions,
 } from 'react-native';
 
 import { Audio } from 'expo-av';
@@ -26,6 +25,7 @@ import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagePreloader from '@/hooks/useImagePreloader';
 import useImagesArray from '@/hooks/useImagesArray';
+import useOrientation from '@/hooks/useOrientation';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
 import { Hizb } from '@/types';
@@ -47,8 +47,8 @@ export default function MushafPage() {
   const colorScheme = useColorScheme();
   const { tintColor } = useColors();
   const router = useRouter();
-  const { width, height } = useWindowDimensions();
-  const isLandscape = width > height;
+
+  const { isLandscape } = useOrientation();
   const { currentPage, setCurrentPage } = useCurrentPage();
   const { temporary } = useLocalSearchParams();
   const [dimensions, setDimensions] = useState({
