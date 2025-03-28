@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { Feather } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useRouter } from 'expo-router';
 
-import BookmarkSVG from '@/assets/svgs/bookmark.svg';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 
@@ -67,13 +67,7 @@ export default function ReadingPositionBanner() {
           accessibilityHint={`العودة إلى موضع القراءة ${currentSavedPage}`}
         >
           <View style={styles.buttonContent}>
-            <BookmarkSVG
-              name="bookmark"
-              width={24}
-              height={24}
-              fill="white"
-              style={{ color: primaryColor }}
-            />
+            <Feather name="arrow-up-right" size={24} color={primaryColor} />
             <Text
               style={{ fontFamily: 'Tajawal_400Regular', color: primaryColor }}
             >
@@ -104,7 +98,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    width: 120,
+    width: 150,
   },
 
   buttonsContainer: {
@@ -115,6 +109,8 @@ const styles = StyleSheet.create({
   },
   buttonContent: {
     flexDirection: 'row-reverse',
+    justifyContent: 'center',
+    alignItems: 'center',
     gap: 10,
   },
 });
