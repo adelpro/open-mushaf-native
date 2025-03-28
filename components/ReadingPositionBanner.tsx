@@ -72,9 +72,11 @@ export default function ReadingPositionBanner() {
               width={24}
               height={24}
               fill="white"
-              style={{ color: 'white' }}
+              style={{ color: tintColor }}
             />
-            <Text style={{ fontFamily: 'Tajawal_400Regular', color: 'white' }}>
+            <Text
+              style={{ fontFamily: 'Tajawal_400Regular', color: tintColor }}
+            >
               العودة
             </Text>
           </View>
