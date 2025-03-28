@@ -1,8 +1,17 @@
-import ReactNativeRecoilPersist from 'react-native-recoil-persist';
+import { Platform } from 'react-native';
+
 import { atom, AtomEffect } from 'recoil';
 
 import { TafseerTabs } from '@/types';
 import { Riwaya } from '@/types/riwaya';
+
+// Import the appropriate persistence implementation based on platform
+let ReactNativeRecoilPersist;
+if (Platform.OS === 'web') {
+  ReactNativeRecoilPersist = require('../utils/recoilPersistWeb').default;
+} else {
+  ReactNativeRecoilPersist = require('react-native-recoil-persist');
+}
 
 export const bottomMenuState = atom<boolean>({
   key: 'BottomMenuState',
