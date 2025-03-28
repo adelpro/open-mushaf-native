@@ -11,8 +11,13 @@
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff",
+      "imageResizeMode": "cover",
+      "dark": {
+        "image": "./assets/images/splash-dark.png",
+        "backgroundColor": "#121212"
+      }
     },
     "ios": {
       "supportsTablet": true,
@@ -20,6 +25,9 @@
       "requireFullScreen": true
     },
     "android": {
+      "emulator": {
+        "device": "Pixel_Tablet_API_35"
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -50,7 +58,7 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": true
+      "reactCompiler": false
     },
     "extra": {
       "eas": {
