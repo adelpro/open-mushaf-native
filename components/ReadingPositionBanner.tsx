@@ -16,7 +16,7 @@ export default function ReadingPositionBanner() {
   const { isTemporaryNavigation, currentPage, currentSavedPage } =
     useCurrentPage();
   const router = useRouter();
-  const { tintColor, cardColor } = useColors();
+  const { tintColor, cardColor, primaryColor } = useColors();
 
   if (!isTemporaryNavigation) {
     return null;
@@ -72,10 +72,10 @@ export default function ReadingPositionBanner() {
               width={24}
               height={24}
               fill="white"
-              style={{ color: tintColor }}
+              style={{ color: primaryColor }}
             />
             <Text
-              style={{ fontFamily: 'Tajawal_400Regular', color: tintColor }}
+              style={{ fontFamily: 'Tajawal_400Regular', color: primaryColor }}
             >
               العودة
             </Text>
