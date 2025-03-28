@@ -1,0 +1,36 @@
+[debug] [2025-03-28T15:24:33.403Z] ----------------------------------------------------------------------
+[debug] [2025-03-28T15:24:33.405Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy --only hosting
+[debug] [2025-03-28T15:24:33.406Z] CLI Version:   13.35.1
+[debug] [2025-03-28T15:24:33.406Z] Platform:      win32
+[debug] [2025-03-28T15:24:33.406Z] Node Version:  v20.18.1
+[debug] [2025-03-28T15:24:33.406Z] Time:          Fri Mar 28 2025 16:24:33 GMT+0100 (GMT+01:00)
+[debug] [2025-03-28T15:24:33.406Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-03-28T15:24:33.588Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-03-28T15:24:33.589Z] > authorizing via signed-in user (adelpro@gmail.com)
+[debug] [2025-03-28T15:24:33.589Z] [iam] checking project open-mushaf-native for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-03-28T15:24:33.590Z] Checked if tokens are valid: false, expires at: 1743175980611
+[debug] [2025-03-28T15:24:33.590Z] Checked if tokens are valid: false, expires at: 1743175980611
+[debug] [2025-03-28T15:24:33.591Z] > refreshing access token with scopes: []
+[debug] [2025-03-28T15:24:33.593Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-03-28T15:24:33.593Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-03-28T15:24:34.397Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-03-28T15:24:34.397Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-03-28T15:24:34.419Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/open-mushaf-native:testIamPermissions [none]
+[debug] [2025-03-28T15:24:34.420Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/open-mushaf-native:testIamPermissions x-goog-quota-user=projects/open-mushaf-native
+[debug] [2025-03-28T15:24:34.420Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/open-mushaf-native:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-03-28T15:24:35.740Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/open-mushaf-native:testIamPermissions 200
+[debug] [2025-03-28T15:24:35.740Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/open-mushaf-native:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-03-28T15:24:35.740Z] Checked if tokens are valid: true, expires at: 1743179073397
+[debug] [2025-03-28T15:24:35.740Z] Checked if tokens are valid: true, expires at: 1743179073397
+[debug] [2025-03-28T15:24:35.741Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/open-mushaf-native [none]
+[debug] [2025-03-28T15:24:36.542Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/open-mushaf-native 200
+[debug] [2025-03-28T15:24:36.542Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/open-mushaf-native {"projectId":"open-mushaf-native","projectNumber":"441543216338","displayName":"Open-mushaf-native","name":"projects/open-mushaf-native","resources":{"hostingSite":"open-mushaf-native"},"state":"ACTIVE","etag":"1_a0c0b47d-11f1-4005-8a13-34761b66436e"}
+[info] 
+[info] === Deploying to 'open-mushaf-native'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2025-03-28T15:24:36.547Z] Checked if tokens are valid: true, expires at: 1743179073397
+[debug] [2025-03-28T15:24:36.547Z] Checked if tokens are valid: true, expires at: 1743179073397
+[debug] [2025-03-28T15:24:36.547Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/open-mushaf-native/versions [none]
+[debug] [2025-03-28T15:24:36.547Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/open-mushaf-native/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
