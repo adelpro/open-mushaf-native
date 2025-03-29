@@ -20,7 +20,7 @@
     "android:build:production:local": "eas build -p android --profile production --local --output builds/app-production.aab",
     "android:submit:preview": "eas submit -p android --profile preview",
     "predeploy": "cross-env EXPO_NO_REACT_COMPILER=1 expo export -p web --clear",
-    "deploy:preview": "firebase hosting:channel:deploy preview-channel",
+    "deploy:preview": "yarn run predeploy && firebase hosting:channel:deploy preview-channel",
     "deploy:production": "yarn run predeploy && firebase deploy --only hosting",
     "test": "jest --watchAll",
     "lint": "eslint .",
