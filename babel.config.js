@@ -10,8 +10,15 @@ module.exports = function (api) {
           alias: {
             // Maps '@' to the root directory for easier imports
             '@': './',
+            '@assets': './assets',
+            '@components': './components',
+            '@constants': './constants',
+            '@utils': './utils',
+            '@hooks': './hooks',
+            '@types': './types',
+            '@recoil': './recoil',
             // Automatically converts react-native imports to react-native-web for web platform
-            'react-native$': 'react-native-web',
+            //'react-native$': 'react-native-web',
           },
         },
       ],
