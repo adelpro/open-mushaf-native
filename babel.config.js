@@ -7,11 +7,15 @@ module.exports = function (api) {
       [
         'module-resolver',
         {
+          // Set the root directory of your project
+          root: ['./src'],
           alias: {
             // Maps '@' to the root directory for easier imports
             '@': './',
-            // Automatically converts react-native imports to react-native-web for web platform
-            'react-native$': 'react-native-web',
+            '@assets': './src/assets',
+            '@components': './src/components',
+            '@recoil': './src/state',
+            '@utils': './src/utils',
           },
         },
       ],
