@@ -181,30 +181,27 @@ export default function SettingsScreen() {
         </ThemedView>
       </ThemedView>
 
-      {debug && (
-        <ThemedView
-          style={[
-            styles.settingsSection,
-            styles.columnSection,
-            { backgroundColor: cardColor },
-          ]}
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
+      >
+        <ThemedButton
+          role="button"
+          variant="danger"
+          onPress={clearStorageAndReload}
         >
-          <ThemedButton
-            role="button"
-            variant="danger"
-            onPress={clearStorageAndReload}
-          >
-            حذف كل التغييرات
-          </ThemedButton>
-        </ThemedView>
-      )}
+          حذف كل التغييرات
+        </ThemedButton>
+      </ThemedView>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 15,
     margin: 2,
     alignItems: 'center',
