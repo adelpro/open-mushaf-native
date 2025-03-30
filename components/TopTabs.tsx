@@ -70,7 +70,7 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: isRTL ? 'row' : 'row-reverse',
+    flexDirection: isRTL ? 'row-reverse' : 'row',
     justifyContent: 'space-around',
     paddingVertical: 10,
   },

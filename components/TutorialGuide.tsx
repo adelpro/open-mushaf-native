@@ -196,7 +196,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   startItem: {
-    flexDirection: isRTL ? 'row' : 'row-reverse',
+    width: '100%',
+    textAlign: 'left',
   },
   bullet: {
     marginRight: 10,
@@ -226,7 +227,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
-    flexDirection: isRTL ? 'row' : 'row-reverse',
+    flexDirection: isRTL ? 'row-reverse' : 'row',
   },
   dot: {
     width: 5,
