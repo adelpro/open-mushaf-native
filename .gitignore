@@ -31,3 +31,7 @@ ios/**/*
 
 # Firebase debug logs
 firebase-debug.*.log*
+# Firebase
+firebase.json
+google-services.json
+.firebase

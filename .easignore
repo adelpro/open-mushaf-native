@@ -30,3 +30,8 @@ ios/
 # Ignore design files
 design/
 screenshots/
+
+# Firebase
+firebase.json
+google-services.json
+.firebase

@@ -7,4 +7,9 @@ assets/
 .expo/
 node_modules/
 
+# Firebase
+firebase.json
+google-services.json
+.firebase
+
 *-lock.json 

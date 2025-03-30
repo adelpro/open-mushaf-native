@@ -8,3 +8,8 @@ assets/
 node_modules/
 
 *-lock.json 
+
+# Firebase
+firebase.json
+google-services.json
+.firebase
