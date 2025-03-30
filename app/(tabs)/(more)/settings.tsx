@@ -35,7 +35,6 @@ export default function SettingsScreen() {
     setIsFlipSoundEnabled((previousState) => !previousState);
   };
 
-  const debug = process.env.EXPO_PUBLIC_DEBUG === 'true' ? true : false;
   const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش'];
   const handleHizbNotificationValueChange = (value: number) => {
     if (value === 1 || value === 2) {
