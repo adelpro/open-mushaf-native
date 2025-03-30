@@ -214,6 +214,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   startText: {
+    width: '100%',
     textAlign: 'right',
   },
   controlsContainer: {
