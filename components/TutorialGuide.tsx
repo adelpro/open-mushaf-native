@@ -51,28 +51,19 @@ export default function TutorialGuide() {
           {Array.isArray(SLIDES[index].description) ? (
             // Handle array of description items (for mixed content)
             SLIDES[index].description.map((item, i) => (
-              <View
+              <ThemedText
                 key={i}
                 style={[
-                  styles.descriptionContainer,
-                  {
-                    alignItems:
-                      item.align === 'start' ? 'flex-start' : 'center',
-                  },
+                  styles.description,
+                  item.align === 'start'
+                    ? {
+                        flexDirection: 'row',
+                      }
+                    : { textAlign: 'center' },
                 ]}
               >
-                <ThemedText
-                  style={[
-                    styles.description,
-                    { textAlign: item.align === 'start' ? 'left' : 'center' },
-                    {
-                      backgroundColor: item.align === 'start' ? 'red' : 'green',
-                    },
-                  ]}
-                >
-                  {item.text}
-                </ThemedText>
-              </View>
+                {item.text}
+              </ThemedText>
             ))
           ) : (
             // Handle simple string description (centered)
@@ -166,13 +157,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 36,
   },
-  descriptionContainer: {
-    width: '100%',
-    paddingHorizontal: 15,
-    marginBottom: 5,
-  },
   description: {
     fontSize: 16,
+    paddingHorizontal: 15,
     width: '100%',
     textAlign: 'center',
   },
