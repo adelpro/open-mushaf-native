@@ -162,7 +162,8 @@ const styles = StyleSheet.create({
   },
   listItem: {
     marginBottom: 10,
-    flexDirection: isRTL ? 'row' : 'row-reverse',
+    flexDirection: 'row',
+    justifyContent: isRTL ? 'flex-start' : 'flex-end',
   },
   bullet: {
     marginRight: 10,
