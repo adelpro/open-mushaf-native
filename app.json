@@ -10,6 +10,16 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
 
+    "splash": {
+      "backgroundColor": "#F5F5F5",
+      "image": "./assets/images/icon.png",
+      "dark": {
+        "image": "./assets/images/icon.png",
+        "backgroundColor": "#8C8C8C"
+      },
+      "imageWidth": 200
+    },
+
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.adelpro.openmushafnative",
