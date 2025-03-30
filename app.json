@@ -9,11 +9,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.adelpro.openmushafnative",
@@ -35,6 +31,18 @@
     },
     "plugins": [
       [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#F5F5F5",
+          "image": "./assets/images/icon.png",
+          "dark": {
+            "image": "./assets/images/icon.png",
+            "backgroundColor": "#8C8C8C"
+          },
+          "imageWidth": 150
+        }
+      ],
+      [
         "expo-build-properties",
         {
           "android": {
@@ -53,6 +61,9 @@
       "reactCompiler": true
     },
     "extra": {
+      "router": {
+        "origin": false
+      },
       "eas": {
         "projectId": "2360a464-857f-4685-8c0f-be166a166847"
       }
@@ -66,6 +77,7 @@
     "runtimeVersion": {
       "policy": "fingerprint"
     },
+
     "owner": "adelpro"
   }
 }
