@@ -62,7 +62,7 @@ export default function RootLayout() {
         });
       }
     }
-
+    console.log('isRTL', isRTL);
     applyRTL();
   }, []);
 

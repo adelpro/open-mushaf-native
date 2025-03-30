@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { ExternalLink } from '@/components/ExternalLink';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { getAppVersion, getBuildVersion, isRTL } from '@/utils';
+import { getAppVersion, getBuildVersion } from '@/utils';
 
 export default function AboutScreen() {
   const appVersion = getAppVersion();
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   },
   listItem: {
     marginBottom: 10,
-    flexDirection: isRTL ? 'row' : 'row-reverse',
+    flexDirection: 'row',
   },
   bullet: {
     marginRight: 10,
