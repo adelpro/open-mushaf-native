@@ -31,18 +31,6 @@
     },
     "plugins": [
       [
-        "expo-splash-screen",
-        {
-          "backgroundColor": "#F5F5F5",
-          "image": "./assets/images/icon.png",
-          "dark": {
-            "image": "./assets/images/icon.png",
-            "backgroundColor": "#8C8C8C"
-          },
-          "imageWidth": 200
-        }
-      ],
-      [
         "expo-build-properties",
         {
           "android": {
