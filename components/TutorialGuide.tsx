@@ -196,8 +196,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   startItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: isRTL ? 'row' : 'row-reverse',
   },
   bullet: {
     marginRight: 10,
@@ -226,7 +225,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
-    flexDirection: 'row-reverse',
+    flexDirection: isRTL ? 'row' : 'row-reverse',
   },
   dot: {
     width: 5,
@@ -247,7 +246,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonContent: {
-    flexDirection: 'row',
+    flexDirection: isRTL ? 'row-reverse' : 'row',
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
