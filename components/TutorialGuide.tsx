@@ -181,7 +181,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   listContainer: {
-    width: '100%',
     marginBottom: 5,
     paddingHorizontal: 15,
     backgroundColor: 'transparent',
@@ -198,6 +197,8 @@ const styles = StyleSheet.create({
   startItem: {
     width: '100%',
     textAlign: 'left',
+    flexDirection: isRTL ? 'row' : 'row-reverse',
+    alignItems: 'flex-start',
   },
   bullet: {
     marginRight: 10,
