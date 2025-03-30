@@ -2,6 +2,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { useColors } from '@/hooks/useColors';
 import { ListTabs } from '@/types';
+import { isRTL } from '@/utils';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -69,7 +70,7 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: isRTL ? 'row' : 'row-reverse',
     justifyContent: 'space-around',
     paddingVertical: 10,
   },

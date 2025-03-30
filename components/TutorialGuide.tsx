@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { usePathname, useRouter } from 'expo-router';
 import Animated, {
@@ -14,6 +14,7 @@ import CheckedSVG from '@/assets/svgs/checked.svg';
 import NextSVG from '@/assets/svgs/next.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 import { SLIDES } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import { finishedTutorial } from '@/recoil/atoms';
@@ -48,33 +49,49 @@ export default function TutorialGuide() {
 
         <View style={styles.textContainer}>
           <ThemedText style={styles.title}>{SLIDES[index].title}</ThemedText>
-          {Array.isArray(SLIDES[index].description) ? (
-            // Handle array of description items (for mixed content)
-            SLIDES[index].description.map((item, i) => (
-              <ThemedText
-                key={i}
-                style={[
-                  styles.description,
-                  item.align === 'start'
-                    ? {
-                        flexDirection: 'row',
-                      }
-                    : { textAlign: 'center' },
-                ]}
-              >
-                {item.text}
+          <ScrollView contentContainerStyle={styles.listContainer}>
+            {Array.isArray(SLIDES[index].description) ? (
+              // Handle array of description items (for mixed content)
+              <ThemedView style={styles.listContainer}>
+                {SLIDES[index].description.map((item, i) =>
+                  item.align === 'center' ? (
+                    <ThemedView
+                      style={[styles.listItem, styles.centeredItem]}
+                      key={i}
+                      accessible={true}
+                    >
+                      <ThemedText
+                        style={[styles.listText, styles.centeredText]}
+                      >
+                        {item.text}
+                      </ThemedText>
+                    </ThemedView>
+                  ) : (
+                    // Start-aligned item (with bullet)
+                    <ThemedView
+                      style={[styles.listItem, styles.startItem]}
+                      key={i}
+                      accessible={true}
+                    >
+                      <ThemedText style={styles.bullet}>✓</ThemedText>
+                      <ThemedText style={[styles.listText, styles.startText]}>
+                        {item.text}
+                      </ThemedText>
+                    </ThemedView>
+                  ),
+                )}
+              </ThemedView>
+            ) : (
+              // Handle simple string description (centered)
+              <ThemedText style={styles.description}>
+                {SLIDES[index].description}
               </ThemedText>
-            ))
-          ) : (
-            // Handle simple string description (centered)
-            <ThemedText style={styles.description}>
-              {SLIDES[index].description}
-            </ThemedText>
-          )}
+            )}
+          </ScrollView>
         </View>
 
         <View style={styles.controlsContainer}>
-          <View style={[styles.dotsContainer, { flexDirection: 'row' }]}>
+          <View style={styles.dotsContainer}>
             {SLIDES.map((_, i) => (
               <View
                 key={i}
@@ -96,7 +113,7 @@ export default function TutorialGuide() {
             variant="primary"
             style={styles.button}
           >
-            <View style={[styles.buttonContent, { flexDirection: 'row' }]}>
+            <View style={styles.buttonContent}>
               {index < SLIDES.length - 1 ? (
                 <>
                   <Text style={styles.buttonText}>التالي</Text>
@@ -163,6 +180,42 @@ const styles = StyleSheet.create({
     width: '100%',
     textAlign: 'center',
   },
+  listContainer: {
+    width: '100%',
+    marginBottom: 5,
+    paddingHorizontal: 15,
+    backgroundColor: 'transparent',
+  },
+  listItem: {
+    marginBottom: 10,
+    alignItems: 'flex-start',
+    backgroundColor: 'transparent',
+  },
+  centeredItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  startItem: {
+    flexDirection: isRTL ? 'row' : 'row-reverse',
+  },
+  bullet: {
+    marginRight: 10,
+    marginLeft: 5,
+    fontWeight: '500',
+    fontSize: 16,
+  },
+  listText: {
+    fontSize: 16,
+    lineHeight: 22,
+    flex: 1,
+  },
+  centeredText: {
+    textAlign: 'center',
+    width: '100%',
+  },
+  startText: {
+    textAlign: 'right',
+  },
   controlsContainer: {
     width: '100%',
     alignItems: 'center',
@@ -172,6 +225,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
+    flexDirection: isRTL ? 'row' : 'row-reverse',
   },
   dot: {
     width: 5,
@@ -192,6 +246,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonContent: {
+    flexDirection: isRTL ? 'row-reverse' : 'row',
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',

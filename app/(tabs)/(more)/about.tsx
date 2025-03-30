@@ -1,19 +1,16 @@
 import { StyleSheet } from 'react-native';
 
-import * as Application from 'expo-application';
 import { Href } from 'expo-router';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { ExternalLink } from '@/components/ExternalLink';
-import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { getAppVersion, getBuildVersion } from '@/utils';
+import { getAppVersion, getBuildVersion, isRTL } from '@/utils';
 
 export default function AboutScreen() {
   const appVersion = getAppVersion();
   const buildVersion = getBuildVersion();
-  console.info(`App Version: ${appVersion} (${buildVersion})`);
 
   const sourcesList: { text: string; link: Href; label: string }[] = [
     {
@@ -165,7 +162,7 @@ const styles = StyleSheet.create({
   },
   listItem: {
     marginBottom: 10,
-    flexDirection: 'row',
+    flexDirection: isRTL ? 'row' : 'row-reverse',
   },
   bullet: {
     marginRight: 10,
