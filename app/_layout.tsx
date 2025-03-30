@@ -1,4 +1,4 @@
-import { StrictMode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { I18nManager, InteractionManager, Platform } from 'react-native';
 
 import { Amiri_400Regular, useFonts } from '@expo-google-fonts/amiri';
@@ -72,63 +72,52 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
   if (!loaded) {
     return null;
   }
 
   return (
-    <StrictMode>
-      <RecoilRoot>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <SafeAreaProvider>
-            <StatusBar style="auto" />
-            <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
-              <ThemeProvider
-                value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+    <RecoilRoot>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <StatusBar style="auto" />
+          <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
+            <ThemeProvider
+              value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+            >
+              <Stack
+                screenOptions={{
+                  headerTitleStyle: {
+                    fontFamily: 'Tajawal_700Bold',
+                  },
+                }}
               >
-                <Stack
-                  screenOptions={{
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+                <Stack.Screen
+                  name="search"
+                  options={{
+                    title: 'بحث',
                     headerTitleStyle: {
-                      fontFamily: 'Tajawal_700Bold',
+                      fontFamily: 'Tajawal_400Regular',
                     },
                   }}
-                >
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen name="+not-found" />
-                  <Stack.Screen
-                    name="search"
-                    options={{
-                      title: 'بحث',
-                      headerTitleStyle: {
-                        fontFamily: 'Tajawal_400Regular',
-                      },
-                    }}
-                  />
-                  <Stack.Screen
-                    name="navigation"
-                    options={{
-                      title: 'تنقل',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="tutorial"
-                    options={{ headerShown: true, title: 'جولة تعليمية' }}
-                  />
-                </Stack>
-              </ThemeProvider>
-            </ReactNativeRecoilPersistGate>
-          </SafeAreaProvider>
-        </GestureHandlerRootView>
-      </RecoilRoot>
-    </StrictMode>
+                />
+                <Stack.Screen
+                  name="navigation"
+                  options={{
+                    title: 'تنقل',
+                  }}
+                />
+                <Stack.Screen
+                  name="tutorial"
+                  options={{ headerShown: true, title: 'جولة تعليمية' }}
+                />
+              </Stack>
+            </ThemeProvider>
+          </ReactNativeRecoilPersistGate>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </RecoilRoot>
   );
 }
