@@ -2,15 +2,17 @@ import { StyleSheet } from 'react-native';
 
 import * as Application from 'expo-application';
 import { Href } from 'expo-router';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import { ExternalLink } from '@/components/ExternalLink';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { getAppVersion, getBuildVersion } from '@/utils';
 
 export default function AboutScreen() {
-  const appVersion = Application.nativeApplicationVersion ?? 'Unknown';
-  const buildVersion = Application.nativeBuildVersion ?? 'Unknown';
+  const appVersion = getAppVersion();
+  const buildVersion = getBuildVersion();
   console.info(`App Version: ${appVersion} (${buildVersion})`);
 
   const sourcesList: { text: string; link: Href; label: string }[] = [
@@ -55,7 +57,7 @@ export default function AboutScreen() {
   ];
 
   return (
-    <ThemedSafeAreaView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <ThemedView style={styles.mainContent}>
         <ThemedText
           type="title"
@@ -132,13 +134,12 @@ export default function AboutScreen() {
           الإصدار: {`${appVersion} (${buildVersion})`}
         </ThemedText>
       </ThemedView>
-    </ThemedSafeAreaView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  scrollContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
