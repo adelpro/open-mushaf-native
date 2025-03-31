@@ -2,18 +2,13 @@
   "expo": {
     "name": "Open Mushaf",
     "slug": "open-mushaf-native",
-    "version": "3.2.3",
+    "version": "3.2.4",
     "orientation": "default",
     "assetBundlePatterns": ["**/*"],
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.adelpro.openmushafnative",
@@ -34,6 +29,18 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#232323",
+          "image": "./assets/images/splash.png",
+          "dark": {
+            "image": "./assets/images/splash-dark.png",
+            "backgroundColor": "#000000"
+          },
+          "imageWidth": 200
+        }
+      ],
       [
         "expo-build-properties",
         {
