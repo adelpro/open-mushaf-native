@@ -163,10 +163,15 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    width: '100%',
+    maxWidth: 640,
+    padding: 1,
   },
   scrollContent: {
     paddingHorizontal: 10,
     paddingBottom: 20,
+    width: '100%',
+    maxWidth: 640,
   },
   image: {
     width: '100%',
@@ -265,10 +270,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonContent: {
-    flexDirection: isRTL ? 'row-reverse' : 'row',
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
+    flexDirection: isRTL ? 'row' : 'row-reverse',
   },
   buttonText: {
     color: 'white',
