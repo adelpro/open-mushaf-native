@@ -194,9 +194,8 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 5,
-    marginLeft: 10,
-    width: '100%',
-    textAlign: 'right',
+    marginStart: 10,
+    alignSelf: 'flex-start',
   },
   input: {
     padding: 10,

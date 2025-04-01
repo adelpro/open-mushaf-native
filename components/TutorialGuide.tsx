@@ -55,45 +55,28 @@ export default function TutorialGuide() {
 
           <View style={styles.textContainer}>
             <ThemedText style={styles.title}>{SLIDES[index].title}</ThemedText>
-            <ThemedView style={styles.listContainer}>
-              {Array.isArray(SLIDES[index].description) ? (
-                // Handle array of description items (for mixed content)
-                <ThemedView style={styles.listContainer}>
-                  {SLIDES[index].description.map((item, i) =>
-                    item.align === 'center' ? (
-                      <ThemedView
-                        style={[styles.listItem, styles.centeredItem]}
-                        key={i}
-                        accessible={true}
-                      >
-                        <ThemedText
-                          style={[styles.listText, styles.centeredText]}
-                        >
-                          {item.text}
-                        </ThemedText>
-                      </ThemedView>
-                    ) : (
-                      // Start-aligned item (with bullet)
-                      <ThemedView
-                        style={[styles.listItem, styles.startItem]}
-                        key={i}
-                        accessible={true}
-                      >
-                        <ThemedText style={styles.bullet}>✓</ThemedText>
-                        <ThemedText style={[styles.listText, styles.startText]}>
-                          {item.text}
-                        </ThemedText>
-                      </ThemedView>
-                    ),
-                  )}
-                </ThemedView>
-              ) : (
-                // Handle simple string description (centered)
-                <ThemedText style={styles.description}>
-                  {SLIDES[index].description}
+            {Array.isArray(SLIDES[index].description) ? (
+              // Handle array of description items (for mixed content)
+              SLIDES[index].description.map((item, i) => (
+                <ThemedText
+                  key={i}
+                  style={[
+                    styles.description,
+                    item.align === 'start'
+                      ? { textAlign: 'right' }
+                      : { textAlign: 'center' },
+                  ]}
+                >
+                  {item.align === 'start' ? '✓ ' : ''}
+                  {item.text}
                 </ThemedText>
-              )}
-            </ThemedView>
+              ))
+            ) : (
+              // Handle simple string description (centered)
+              <ThemedText style={styles.description}>
+                {SLIDES[index].description}
+              </ThemedText>
+            )}
           </View>
         </ScrollView>
 
@@ -195,52 +178,16 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    paddingHorizontal: 15,
-    width: '100%',
-    textAlign: 'center',
-  },
-  listContainer: {
-    marginBottom: 5,
-    paddingHorizontal: 15,
-    backgroundColor: 'transparent',
-  },
-  listItem: {
+    paddingHorizontal: 10,
+    width: '95%',
     marginBottom: 10,
-    alignItems: 'flex-start',
-    backgroundColor: 'transparent',
-  },
-  centeredItem: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  startItem: {
-    width: '100%',
-    textAlign: 'left',
-    flexDirection: 'row',
-  },
-  bullet: {
-    marginRight: 10,
-    marginLeft: 5,
-    fontWeight: '500',
-    fontSize: 16,
-  },
-  listText: {
-    fontSize: 16,
-    lineHeight: 22,
-    flex: 1,
-  },
-  centeredText: {
     textAlign: 'center',
-    width: '100%',
-  },
-  startText: {
-    width: '100%',
-    textAlign: 'right',
   },
   controlsContainer: {
     width: '100%',
     alignItems: 'center',
     paddingVertical: 15,
+    marginBottom: 10,
     borderTopWidth: 1,
     borderTopColor: 'rgba(0,0,0,0.1)',
   },
@@ -248,7 +195,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
-    flexDirection: isRTL ? 'row-reverse' : 'row',
+    flexDirection: 'row',
   },
   dot: {
     width: 5,

@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   link: {
-    fontFamily: 'Tajawal_400Regular_Italic',
+    fontFamily: 'Tajawal_400Regular',
     lineHeight: 30,
     fontSize: 16,
     color: '#0a7ea4',
