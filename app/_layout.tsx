@@ -24,6 +24,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { isRTL } from '@/utils';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -43,21 +44,23 @@ export default function RootLayout() {
 
   useEffect(() => {
     async function applyRTL() {
-      I18nManager.allowRTL(true);
-      I18nManager.forceRTL(true);
+      if (!isRTL) {
+        I18nManager.allowRTL(true);
+        I18nManager.forceRTL(true);
 
-      InteractionManager.runAfterInteractions(async () => {
-        if (__DEV__) {
-          return;
-        }
-
-        if (Platform.OS === 'web') {
-          document.documentElement.setAttribute('dir', 'rtl');
-          document.documentElement.setAttribute('lang', 'ar');
-        } else {
-          await Updates.reloadAsync();
-        }
-      });
+        InteractionManager.runAfterInteractions(async () => {
+          if (__DEV__) {
+            console.info('Reloading app to apply RTL');
+          } else {
+            if (Platform.OS === 'web') {
+              document.documentElement.setAttribute('dir', 'rtl');
+              document.documentElement.setAttribute('lang', 'ar');
+            } else {
+              await Updates.reloadAsync();
+            }
+          }
+        });
+      }
     }
 
     applyRTL();
