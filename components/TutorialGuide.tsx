@@ -62,9 +62,7 @@ export default function TutorialGuide() {
                   key={i}
                   style={[
                     styles.description,
-                    item.align === 'start'
-                      ? { textAlign: 'right' }
-                      : { textAlign: 'center' },
+                    item.align === 'start' ? null : { textAlign: 'center' },
                   ]}
                 >
                   {item.align === 'start' ? '✓ ' : ''}
@@ -219,7 +217,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
   },
   buttonText: {
     color: 'white',

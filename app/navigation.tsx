@@ -216,7 +216,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 20,
     fontFamily: 'Tajawal_700Bold',
-    fontWeight: 'bold',
     textAlign: 'right',
   },
   icon: {
