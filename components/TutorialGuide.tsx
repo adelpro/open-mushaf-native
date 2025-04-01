@@ -35,62 +35,70 @@ export default function TutorialGuide() {
   };
 
   return (
-    <Animated.ScrollView
+    <Animated.View
       entering={isRTL ? FadeInLeft.duration(500) : FadeInRight.duration(500)}
       exiting={isRTL ? FadeOutRight.duration(500) : FadeOutLeft.duration(500)}
-      contentContainerStyle={styles.animatedContainer}
+      style={styles.animatedContainer}
     >
-      <View style={[styles.contentContainer]}>
-        <Image
-          source={SLIDES[index].image}
-          style={styles.image}
-          resizeMode="contain"
-        />
+      {/* Main container with fixed height */}
+      <ThemedView style={styles.mainContainer}>
+        {/* Scrollable content area */}
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+        >
+          <Image
+            source={SLIDES[index].image}
+            style={styles.image}
+            resizeMode="contain"
+          />
 
-        <View style={styles.textContainer}>
-          <ThemedText style={styles.title}>{SLIDES[index].title}</ThemedText>
-          <ScrollView contentContainerStyle={styles.listContainer}>
-            {Array.isArray(SLIDES[index].description) ? (
-              // Handle array of description items (for mixed content)
-              <ThemedView style={styles.listContainer}>
-                {SLIDES[index].description.map((item, i) =>
-                  item.align === 'center' ? (
-                    <ThemedView
-                      style={[styles.listItem, styles.centeredItem]}
-                      key={i}
-                      accessible={true}
-                    >
-                      <ThemedText
-                        style={[styles.listText, styles.centeredText]}
+          <View style={styles.textContainer}>
+            <ThemedText style={styles.title}>{SLIDES[index].title}</ThemedText>
+            <ThemedView style={styles.listContainer}>
+              {Array.isArray(SLIDES[index].description) ? (
+                // Handle array of description items (for mixed content)
+                <ThemedView style={styles.listContainer}>
+                  {SLIDES[index].description.map((item, i) =>
+                    item.align === 'center' ? (
+                      <ThemedView
+                        style={[styles.listItem, styles.centeredItem]}
+                        key={i}
+                        accessible={true}
                       >
-                        {item.text}
-                      </ThemedText>
-                    </ThemedView>
-                  ) : (
-                    // Start-aligned item (with bullet)
-                    <ThemedView
-                      style={[styles.listItem, styles.startItem]}
-                      key={i}
-                      accessible={true}
-                    >
-                      <ThemedText style={styles.bullet}>✓</ThemedText>
-                      <ThemedText style={[styles.listText, styles.startText]}>
-                        {item.text}
-                      </ThemedText>
-                    </ThemedView>
-                  ),
-                )}
-              </ThemedView>
-            ) : (
-              // Handle simple string description (centered)
-              <ThemedText style={styles.description}>
-                {SLIDES[index].description}
-              </ThemedText>
-            )}
-          </ScrollView>
-        </View>
+                        <ThemedText
+                          style={[styles.listText, styles.centeredText]}
+                        >
+                          {item.text}
+                        </ThemedText>
+                      </ThemedView>
+                    ) : (
+                      // Start-aligned item (with bullet)
+                      <ThemedView
+                        style={[styles.listItem, styles.startItem]}
+                        key={i}
+                        accessible={true}
+                      >
+                        <ThemedText style={styles.bullet}>✓</ThemedText>
+                        <ThemedText style={[styles.listText, styles.startText]}>
+                          {item.text}
+                        </ThemedText>
+                      </ThemedView>
+                    ),
+                  )}
+                </ThemedView>
+              ) : (
+                // Handle simple string description (centered)
+                <ThemedText style={styles.description}>
+                  {SLIDES[index].description}
+                </ThemedText>
+              )}
+            </ThemedView>
+          </View>
+        </ScrollView>
 
-        <View style={styles.controlsContainer}>
+        {/* Fixed controls at bottom */}
+        <ThemedView style={styles.controlsContainer}>
           <View style={styles.dotsContainer}>
             {SLIDES.map((_, i) => (
               <View
@@ -131,28 +139,34 @@ export default function TutorialGuide() {
               )}
             </View>
           </ThemedButton>
-        </View>
-      </View>
-    </Animated.ScrollView>
+        </ThemedView>
+      </ThemedView>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   animatedContainer: {
-    flexGrow: 1,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    margin: 'auto',
     width: '100%',
-    maxWidth: '100%',
-    padding: 5,
-    paddingBottom: 10,
+    height: '100%',
+    maxWidth: 640,
   },
-  contentContainer: {
+  mainContainer: {
     flex: 1,
-    justifyContent: 'space-between',
     width: '100%',
-    maxWidth: 800,
-    padding: 10,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingHorizontal: 10,
+    paddingBottom: 20,
   },
   image: {
     width: '100%',
@@ -222,7 +236,9 @@ const styles = StyleSheet.create({
   controlsContainer: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 10,
+    paddingVertical: 15,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.1)',
   },
   dotsContainer: {
     justifyContent: 'center',
