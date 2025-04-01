@@ -216,8 +216,7 @@ const styles = StyleSheet.create({
   startItem: {
     width: '100%',
     textAlign: 'left',
-    flexDirection: isRTL ? 'row' : 'row-reverse',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
   },
   bullet: {
     marginRight: 10,
@@ -273,7 +272,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    flexDirection: isRTL ? 'row' : 'row-reverse',
+    flexDirection: 'row-reverse',
   },
   buttonText: {
     color: 'white',

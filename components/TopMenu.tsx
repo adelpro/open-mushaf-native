@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 5,
     justifyContent: 'space-between',
-    flexDirection: isRTL ? 'row' : 'row-reverse',
+    flexDirection: 'row',
     alignItems: 'center',
     position: 'relative',
     width: '100%',
