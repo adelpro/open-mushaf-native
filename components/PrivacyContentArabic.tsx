@@ -1,12 +1,11 @@
 import React from 'react';
-import { I18nManager, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
 import { ExternalLink } from './ExternalLink';
 
-const isRTL = I18nManager.isRTL;
 export default function PrivacyContentArabicNew() {
   return (
     <ThemedView style={[styles.container]}>
@@ -119,10 +118,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'flex-start',
   },
   arabicText: {
-    textAlign: isRTL ? 'left' : 'right',
+    flexDirection: 'row',
   },
 
   title: {
@@ -130,14 +128,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     paddingVertical: 20,
-    textAlign: 'right',
+    fontFamily: 'Tajawal_700Bold',
   },
   subtitle: {
     fontSize: 20,
     fontWeight: '600',
     marginTop: 20,
     paddingVertical: 10,
-    textAlign: 'right',
   },
   content: {
     fontSize: 16,

@@ -1,17 +1,16 @@
 import { StyleSheet } from 'react-native';
 
-import * as Application from 'expo-application';
 import { Href } from 'expo-router';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import { ExternalLink } from '@/components/ExternalLink';
-import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { getAppVersion, getBuildVersion, isRTL } from '@/utils';
 
 export default function AboutScreen() {
-  const appVersion = Application.nativeApplicationVersion ?? 'Unknown';
-  const buildVersion = Application.nativeBuildVersion ?? 'Unknown';
-  console.info(`App Version: ${appVersion} (${buildVersion})`);
+  const appVersion = getAppVersion();
+  const buildVersion = getBuildVersion();
 
   const sourcesList: { text: string; link: Href; label: string }[] = [
     {
@@ -35,6 +34,11 @@ export default function AboutScreen() {
       label: 'آيات',
     },
     {
+      text: 'الأيقونة من ',
+      link: 'https://iconify.design/',
+      label: 'Iconify',
+    },
+    {
       text: 'صوت تغيير الصفحة',
       link: 'https://pixabay.com',
       label: 'Pixabay',
@@ -42,7 +46,7 @@ export default function AboutScreen() {
   ];
 
   const featuresList = [
-    'برواية ورش.',
+    'برواية ورش وحفص.',
     'الوصول إلى المصحف دون اتصال بالإنترنت.',
     'خيارات متعددة للتفسير.',
     'تنقل سلس بين السور والأجزاء.',
@@ -50,7 +54,7 @@ export default function AboutScreen() {
   ];
 
   return (
-    <ThemedSafeAreaView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <ThemedView style={styles.mainContent}>
         <ThemedText
           type="title"
@@ -127,13 +131,12 @@ export default function AboutScreen() {
           الإصدار: {`${appVersion} (${buildVersion})`}
         </ThemedText>
       </ThemedView>
-    </ThemedSafeAreaView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  scrollContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
@@ -162,8 +165,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   bullet: {
-    marginRight: 10,
-    marginLeft: 5,
+    marginStart: 10,
+    marginEnd: 5,
     fontWeight: '500',
   },
   listText: {

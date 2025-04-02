@@ -29,7 +29,7 @@ export default function TabLayout() {
           margin: 5,
         },
         tabBarLabelStyle: {
-          fontFamily: 'Amiri_400Regular',
+          fontFamily: 'Tajawal_400Regular',
         },
         tabBarIconStyle: {},
         headerShown: false,

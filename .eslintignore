@@ -1,4 +1,15 @@
+dist/
+android/
+ios/
+design/
+screenshots/
+assets/
+.expo/
+node_modules/
 
-/.expo
+# Firebase
+firebase.json
+google-services.json
+.firebase
 
-node_modules
+*-lock.json 

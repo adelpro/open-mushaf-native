@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Asset } from 'expo-asset';
+import { useRecoilValue } from 'recoil';
 
-import { imagesMap } from '@/constants';
+import { imagesMapHafs, imagesMapWarsh } from '@/constants';
 import useCurrentPage from '@/hooks/useCurrentPage';
+import { mushafRiwaya } from '@/recoil/atoms';
 
 export default function useImagesArray() {
   const [error, setError] = useState<string | null>(null);
   const [asset, setAsset] = useState<Asset | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const mushafRiwayaValue = useRecoilValue(mushafRiwaya);
   const { currentPage: page } = useCurrentPage();
   const isMounted = useRef(true);
 
@@ -18,6 +21,16 @@ export default function useImagesArray() {
 
     const loadAsset = async () => {
       try {
+        if (mushafRiwayaValue === undefined) {
+          return;
+        }
+
+        const imagesMap =
+          mushafRiwayaValue === 'hafs' ? imagesMapHafs : imagesMapWarsh;
+        if (!imagesMap) {
+          return;
+        }
+
         const image = imagesMap[page];
         if (!image) throw new Error(`الصفحة ${page} غير موجودة`);
 
@@ -25,8 +38,9 @@ export default function useImagesArray() {
         if (!assetToLoad.downloaded) {
           await assetToLoad.downloadAsync();
         }
+        // Only set asset if mounted
         if (isMounted.current) {
-          setAsset(assetToLoad); // Only set asset if mounted
+          setAsset(assetToLoad);
         }
       } catch (error) {
         if (isMounted.current) {
@@ -46,7 +60,7 @@ export default function useImagesArray() {
     return () => {
       isMounted.current = false; // Mark as unmounted
     };
-  }, [page]);
+  }, [mushafRiwayaValue, page]);
 
   return { asset, isLoading, error };
 }

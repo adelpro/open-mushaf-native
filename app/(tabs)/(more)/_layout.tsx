@@ -7,7 +7,7 @@ export default function MoreLayout() {
       screenOptions={{
         headerShown: false,
         headerTitleStyle: {
-          fontFamily: 'Amiri_400Regular',
+          fontFamily: 'Tajawal_400Regular',
         },
       }}
     >

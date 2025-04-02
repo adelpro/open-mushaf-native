@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 5,
-    marginLeft: 10,
+    marginStart: 10,
     alignSelf: 'flex-start',
   },
   input: {
@@ -207,13 +207,6 @@ const styles = StyleSheet.create({
   messageInput: {
     height: 100,
     textAlignVertical: 'top',
-  },
-  buttonContent: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    gap: 10,
   },
   disabledButton: {
     backgroundColor: '#999',

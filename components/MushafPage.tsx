@@ -14,7 +14,8 @@ import {
   isAvailableAsync,
 } from 'expo-keep-awake';
 import { useRouter } from 'expo-router';
-import { GestureDetector } from 'react-native-gesture-handler';
+import { useLocalSearchParams } from 'expo-router/build/hooks';
+import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useRecoilValue } from 'recoil';
 
@@ -22,7 +23,9 @@ import hizbJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.j
 import { defaultNumberOfPages } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
+import useImagePreloader from '@/hooks/useImagePreloader';
 import useImagesArray from '@/hooks/useImagesArray';
+import useOrientation from '@/hooks/useOrientation';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
 import { Hizb } from '@/types';
@@ -44,7 +47,10 @@ export default function MushafPage() {
   const colorScheme = useColorScheme();
   const { tintColor } = useColors();
   const router = useRouter();
+
+  const { isLandscape } = useOrientation();
   const { currentPage, setCurrentPage } = useCurrentPage();
+  const { temporary } = useLocalSearchParams();
   const [dimensions, setDimensions] = useState({
     customPageWidth: 0,
     customPageHeight: 0,
@@ -55,6 +61,10 @@ export default function MushafPage() {
     isLoading: assetIsLoading,
     error: assetError,
   } = useImagesArray();
+
+  // Preload adjacent pages for smoother navigation
+  useImagePreloader(currentPage);
+
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
     setDimensions({ customPageWidth: width, customPageHeight: height });
@@ -63,7 +73,13 @@ export default function MushafPage() {
   const handlePageChange = (page: number) => {
     if (page === currentPage) return;
     setCurrentPage(page);
-    router.replace({ pathname: '/', params: { page: page.toString() } });
+    router.replace({
+      pathname: '/',
+      params: {
+        page: page.toString(),
+        ...(temporary ? { temporary: temporary.toString() } : {}),
+      },
+    });
 
     if (isFlipSoundEnabled && sound.current) {
       sound.current.replayAsync();
@@ -208,15 +224,37 @@ export default function MushafPage() {
       >
         {asset?.localUri ? (
           <>
-            <Image
-              style={[
-                styles.image,
-                { width: '100%' },
-                colorScheme === 'dark' && { opacity: mushafContrastValue },
-              ]}
-              source={{ uri: asset?.localUri }}
-              contentFit="fill"
-            />
+            {isLandscape ? (
+              <ScrollView
+                contentContainerStyle={{ alignItems: 'center' }}
+                alwaysBounceVertical={true}
+                nestedScrollEnabled={true}
+              >
+                <Image
+                  style={[
+                    styles.image,
+                    {
+                      width: '100%',
+                      height: undefined,
+                      aspectRatio: 0.7,
+                    },
+                    colorScheme === 'dark' && { opacity: mushafContrastValue },
+                  ]}
+                  source={{ uri: asset?.localUri }}
+                  contentFit="fill"
+                />
+              </ScrollView>
+            ) : (
+              <Image
+                style={[
+                  styles.image,
+                  { width: '100%' },
+                  colorScheme === 'dark' && { opacity: mushafContrastValue },
+                ]}
+                source={{ uri: asset?.localUri }}
+                contentFit="fill"
+              />
+            )}
             <TopNotification
               show={showNotification}
               text={
@@ -238,9 +276,6 @@ export default function MushafPage() {
 const styles = StyleSheet.create({
   imageContainer: {
     position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
     width: '100%',
     height: '100%',
     flex: 1,
@@ -250,7 +285,6 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    //width: '100%',
   },
   errorContainer: {
     flex: 1,

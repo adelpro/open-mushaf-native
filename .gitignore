@@ -1,5 +1,6 @@
 node_modules/
 .expo/
+.firebase/
 dist/
 npm-debug.*
 *.jks
@@ -27,4 +28,10 @@ expo-env.d.ts
 builds/**/*
 android/**/*
 ios/**/*
-.vercel
+
+# Firebase debug logs
+firebase-debug.*.log*
+# Firebase
+firebase.json
+google-services.json
+.firebase

@@ -18,7 +18,7 @@ import { QuranText } from '@/types';
 export default function Navigation() {
   const router = useRouter();
   const pages = Array.from({ length: defaultNumberOfPages }, (_, i) => i + 1);
-  const { currentPage, setCurrentPage } = useCurrentPage();
+  const { currentPage } = useCurrentPage();
   const quranText: QuranText[] = quranJson as QuranText[];
   const [currentSurah, setCurrentSurah] = useState<number>(1);
   const [currentAyaNumber, setCurrentAyaNumber] = useState<number>(1);
@@ -54,10 +54,9 @@ export default function Navigation() {
   }, [currentPage, quranText]);
 
   const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
     router.push({
       pathname: '/',
-      params: { page: pageNumber.toString() },
+      params: { page: pageNumber.toString(), temporary: 'true' },
     });
   };
 
@@ -78,10 +77,9 @@ export default function Navigation() {
       );
     });
     if (filteredAya) {
-      setCurrentPage(filteredAya.page_id);
       router.push({
         pathname: '/',
-        params: { page: filteredAya.page_id.toString() },
+        params: { page: filteredAya.page_id.toString(), temporary: 'true' },
       });
     }
   };
@@ -169,12 +167,6 @@ export default function Navigation() {
               />
             ))}
           </Picker>
-          {/*           <ThemedText
-            style={styles.separator}
-            accessibilityLabel="Separator between Surah and Aya"
-          >
-            -
-          </ThemedText> */}
           <Picker
             style={[styles.picker, styles.ayaPicker, { color: primaryColor }]}
             selectedValue={currentAyaNumber}
@@ -223,7 +215,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'Tajawal_700Bold',
     textAlign: 'right',
   },
   icon: {
@@ -252,11 +244,5 @@ const styles = StyleSheet.create({
   },
   ayaPicker: {
     marginRight: 10,
-  },
-  separator: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginHorizontal: 10,
-    width: 30,
   },
 });

@@ -4,28 +4,27 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-interface SegmentedControlProps {
+interface BaseProps {
   options: string[];
   onSelectionChange: (selectedIndex: number) => void;
   initialSelectedIndex?: number;
   activeColor?: string;
   textColor?: string;
   activeTextColor?: string;
-  disabledTextColor?: string;
-  activeDisabledColor?: string;
 }
 
 export default function SegmentedControl({
   options,
   onSelectionChange,
-  initialSelectedIndex = 0,
+  initialSelectedIndex = undefined,
   activeColor = '#007AFF',
   textColor = '#000',
   activeTextColor = '#fff',
-  activeDisabledColor = '#E0E0E0',
-  disabledTextColor = '#999',
-}: SegmentedControlProps) {
-  const [selectedIndex, setSelectedIndex] = useState(initialSelectedIndex);
+}: BaseProps) {
+  // Default to -1
+  const [selectedIndex, setSelectedIndex] = useState(
+    initialSelectedIndex !== undefined ? initialSelectedIndex : -1,
+  );
 
   const handlePress = (index: number) => {
     setSelectedIndex(index);
@@ -33,17 +32,13 @@ export default function SegmentedControl({
   };
 
   return (
-    <ThemedView style={[styles.container]}>
+    <ThemedView style={styles.container}>
       {options.map((option, index) => (
         <TouchableOpacity
           key={index}
           style={[
             styles.option,
             index === selectedIndex && { backgroundColor: activeColor },
-            index === 0 && {
-              backgroundColor: activeDisabledColor,
-            },
-            index === options.length - 1 && styles.lastOption,
           ]}
           onPress={() => handlePress(index)}
         >
@@ -51,12 +46,7 @@ export default function SegmentedControl({
             style={[
               styles.optionText,
               {
-                color:
-                  index === selectedIndex
-                    ? activeTextColor
-                    : index === 0
-                      ? disabledTextColor
-                      : textColor,
+                color: index === selectedIndex ? activeTextColor : textColor,
               },
             ]}
           >
@@ -74,7 +64,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
     borderRadius: 8,
     overflow: 'hidden',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
   },
   option: {
     flex: 1,
@@ -82,18 +71,10 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  },
-
-  lastOption: {
-    borderRightWidth: 0,
   },
   optionText: {
-    fontSize: 20,
-    padding: 8,
+    fontSize: 16,
     fontWeight: '400',
-    justifyContent: 'center',
-    alignItems: 'center',
     textAlign: 'center',
   },
 });

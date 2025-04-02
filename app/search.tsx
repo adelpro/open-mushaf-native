@@ -67,7 +67,7 @@ export default function Search() {
           onPress={() => {
             router.replace({
               pathname: '/',
-              params: { page: item.page_id.toString() },
+              params: { page: item.page_id.toString(), temporary: 'true' },
             });
           }}
         >
@@ -164,5 +164,6 @@ const styles = StyleSheet.create({
   },
   uthmani: {
     paddingVertical: 10,
+    fontFamily: 'Amiri_400Regular',
   },
 });

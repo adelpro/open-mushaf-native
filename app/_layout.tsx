@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import { I18nManager, InteractionManager, Platform } from 'react-native';
 
+import { Amiri_400Regular, useFonts } from '@expo-google-fonts/amiri';
 import {
-  Amiri_400Regular,
-  Amiri_400Regular_Italic,
-  Amiri_700Bold,
-  Amiri_700Bold_Italic,
-  useFonts,
-} from '@expo-google-fonts/amiri';
+  Tajawal_400Regular,
+  Tajawal_500Medium,
+  Tajawal_700Bold,
+} from '@expo-google-fonts/tajawal';
 import {
   DarkTheme,
   DefaultTheme,
@@ -25,6 +24,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { isRTL } from '@/utils';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -37,14 +37,14 @@ export default function RootLayout() {
 
   const [loaded] = useFonts({
     Amiri_400Regular,
-    Amiri_700Bold,
-    Amiri_400Regular_Italic,
-    Amiri_700Bold_Italic,
+    Tajawal_400Regular,
+    Tajawal_500Medium,
+    Tajawal_700Bold,
   });
 
   useEffect(() => {
     async function applyRTL() {
-      if (!I18nManager.isRTL) {
+      if (!isRTL) {
         I18nManager.allowRTL(true);
         I18nManager.forceRTL(true);
 
@@ -85,13 +85,22 @@ export default function RootLayout() {
             <ThemeProvider
               value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
             >
-              <Stack>
+              <Stack
+                screenOptions={{
+                  headerTitleStyle: {
+                    fontFamily: 'Tajawal_700Bold',
+                  },
+                }}
+              >
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
                 <Stack.Screen
                   name="search"
                   options={{
                     title: 'بحث',
+                    headerTitleStyle: {
+                      fontFamily: 'Tajawal_400Regular',
+                    },
                   }}
                 />
                 <Stack.Screen
@@ -99,6 +108,10 @@ export default function RootLayout() {
                   options={{
                     title: 'تنقل',
                   }}
+                />
+                <Stack.Screen
+                  name="tutorial"
+                  options={{ headerShown: true, title: 'جولة تعليمية' }}
                 />
               </Stack>
             </ThemeProvider>

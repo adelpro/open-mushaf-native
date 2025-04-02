@@ -2,145 +2,148 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.2.4] - 2024
+
+- feat: Added preload system to speedup mushaf navigation
+- feat: Implemented web deployment support (Firebase Hosting)
+
+## [3.2.3]
+
+- refactor: replace vercel by firebase hosting
+
+## [3.2.2]
+
+- feat: add pages (images) cache preload system
+- feat: add Vercel web hosting
+
+## [3.2.2]
+
+- feat: add landscape reading mode
+
+## [3.2.1]
+
+- feat: add basic bookmarking system
+
+## [3.1.5]
+
+- fix: revert back to recoil
+
+## [3.1.4]
+
+- perf: speed up mushaf pages navigation
+
+## [3.1.1]
+
+- refactor: update the way we handle SVGs
+
+## [3.1.0]
+
+- feat: add a reset button (behind debug flag) in the settings screen
+- feat: add tutorial screen
+
+## [3.0.1]
+
+- ci: add multiple github actions to enhance the workflow
+
+## [3.0.0]
+
+- feat: add option to choose between riwayas (warsh or hafs)
+
+## [2.8.0]
+
+- refactor: move from Recoil (End of life) to Jotai
+
+## [2.6.0]
+
+- fix: resolve tafseer popup scroll issue
+
+## [2.4.0]
+
+- a11y: improve accessibility for the app
+
 ## [2.3.0]
 
-### Updated
-
-- Unified UI over all screens.
-- Added Hizb and Juz notifications in Mushaf.
-
-### Fixed
-
-- Fixed Arabic and English privacy policies screen.
+- style: unify UI over all screens
+- feat: add Hizb and Juz notifications in Mushaf
+- fix: correct Arabic and English privacy policies screen
 
 ## [2.2.1]
 
-### Updated
-
-- Add accessibility for the app.
+- a11y: enhance accessibility for the app
 
 ## [2.2.0]
 
-### Updated
-
-- Add Contact-us screen.
-- Add Toasts.
-- Add a design system for the UI.
-- Add slider in settings to change Mushaf contrast.
-- Updated ScreenShots to match v2
-
-### Fixed
-
-- Fixed SafeAreaView dark mode.
+- feat: add contact-us screen
+- feat: implement toast notifications
+- feat: create design system for the UI
+- feat: add slider in settings to change Mushaf contrast
+- docs: update screenshots to match v2
+- fix: resolve SafeAreaView dark mode issues
 
 ## [2.1.0]
 
-### Updated
-
-- Using new react compiler (experiment).
-
-### Fixed
-
-- Fixed Mushaf opacity on dark mode.
-- More app size optimization.
-- Fixed Splash screen resizing issue.
+- perf: use new react compiler (experiment)
+- fix: correct Mushaf opacity on dark mode
+- perf: optimize app size
+- fix: resolve splash screen resizing issue
 
 ## [2.0.0]
 
-### Updated
-
-- Updated Mushaf pages to use the new images from the new madina mushaf - warsh.
-- Added new splash screen for dark mode.
-- Upgrade to new Expo SDK (52).
-
-### Fixed
-
-- Fixed keep awake functionality.
-- Reduced app size.
+- feat: update Mushaf pages to use new images from madina mushaf - warsh
+- feat: add new splash screen for dark mode
+- deps: upgrade to new Expo SDK (52)
+- fix: resolve keep awake functionality
+- perf: reduce app size
 
 ## [1.0.16]
 
-### Fixed
-
-- Fixed Tafseer scroll view.
+- fix: resolve Tafseer scroll view issues
 
 ## [1.0.15]
 
-### Updated
-
-- Updated Sura and Juz lists UI.
-
-### Fixed
-
-- Fixed assets loading error on Android.
+- style: update Sura and Juz lists UI
+- fix: resolve assets loading error on Android
 
 ## [1.0.14]
 
-### Fixed
-
-- Multiple UI fixs and updates.
+- fix: address multiple UI issues
 
 ## [1.0.13]
 
-### Fixed
-
-- Updated Tafseer JSON loading (each Tafseer JSON file is loaded individually, one by one).
-- Mushaf page images are loaded individually, one by one; only the required page is loaded, which dramatically reduces
-  memory usage.
+- perf: optimize Tafseer JSON loading (load each file individually)
+- perf: load Mushaf page images individually to reduce memory usage
 
 ## [1.0.12]
 
-### Updated
-
-- Updated Tafaseer JSON files.
-- Updated navigation screen UI.I
-
-### Added
-
-- Changed the JavaScript engine to 'Hermes'.
-
-### Fixed
-
-- Fixed Tafseer loading error on Android.
+- feat: update Tafaseer JSON files
+- style: improve navigation screen UI
+- perf: change JavaScript engine to 'Hermes'
+- fix: resolve Tafseer loading error on Android
 
 ## [1.0.10]
 
-### Added
-
-- Added mushaf navigation page.
+- feat: add mushaf navigation page
 
 ## [1.0.9]
 
-### Added
-
-- Page flip sound.
-- Add KeepAwake feature.
-- Added Search Quran page.
-
-### Fixed
-
-- Fixed search functionality.
-- Fixed Mushaf page dark mode issues.
+- feat: add page flip sound
+- feat: implement KeepAwake feature
+- feat: create Search Quran page
+- fix: resolve search functionality issues
+- fix: address Mushaf page dark mode problems
 
 ## [1.0.7]
 
-### Added
-
-- Added More tab.
-- Added privacy policy (in Arabic and English).
-
-### Fixed
-
-- Refactored Tafseer and Mushaf page code.
+- feat: add More tab
+- feat: include privacy policy (in Arabic and English)
+- refactor: improve Tafseer and Mushaf page code
 
 ## [1.0.6]
 
-### Fixed
-
-- Minor UI issues with dark mode in the Top Menu and Tafseer popup.
-- Fixed "لا يوجد تفسير" UI issues in the Tafseer popup.
-- Fixed forced reload for RTL mode at app startup.
+- fix: resolve minor UI issues with dark mode in Top Menu and Tafseer popup
+- fix: correct "لا يوجد تفسير" UI issues in Tafseer popup
+- fix: address forced reload for RTL mode at app startup
 
 ## [1.0.5]
 
-- First release.
+- feat: initial release

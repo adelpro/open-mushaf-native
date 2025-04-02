@@ -1,20 +1,54 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Platform, Pressable, StyleSheet } from 'react-native';
 
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
+import ChangeLogs from '@/components/ChangeLogs';
 import MushafPage from '@/components/MushafPage';
+import ReadingPositionBanner from '@/components/ReadingPositionBanner';
+import SelectRiwaya from '@/components/SelectRiwaya';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
+import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
-import { topMenuState } from '@/recoil/atoms';
+import TutorialGuide from '@/components/TutorialGuide';
+import {
+  currentAppVersion,
+  finishedTutorial,
+  mushafRiwaya,
+  topMenuState,
+} from '@/recoil/atoms';
+import { getAppVersion } from '@/utils';
 
 export default function HomeScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
+  const [showChangeLogs, setShowChangeLogs] = useState<boolean>(false);
+  const currentAppVersionValue = useRecoilValue(currentAppVersion);
+  const finishedTutorialValue = useRecoilValue(finishedTutorial);
+  const mushafRiwayaValue = useRecoilValue(mushafRiwaya);
+
+  useEffect(() => {
+    const isWeb = Platform.OS === 'web';
+    const appVersion = getAppVersion();
+    const show = !isWeb && currentAppVersionValue !== appVersion;
+    setShowChangeLogs(show);
+  }, [currentAppVersionValue]);
 
   return (
     <ThemedSafeAreaView style={styles.container}>
       <TopMenu />
+      <ReadingPositionBanner />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
-        <MushafPage />
+        {showChangeLogs ? (
+          <ChangeLogs />
+        ) : !finishedTutorialValue ? (
+          <ThemedView style={{ width: '100%', height: '100%' }}>
+            <TutorialGuide />
+          </ThemedView>
+        ) : mushafRiwayaValue === undefined ? (
+          <SelectRiwaya />
+        ) : (
+          <MushafPage />
+        )}
       </Pressable>
     </ThemedSafeAreaView>
   );

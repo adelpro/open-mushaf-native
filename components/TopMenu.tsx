@@ -13,6 +13,7 @@ import { useRecoilState } from 'recoil';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import { bottomMenuState, topMenuState } from '@/recoil/atoms';
+import { isRTL } from '@/utils';
 
 import { ThemedSafeAreaView } from './ThemedSafeAreaView';
 

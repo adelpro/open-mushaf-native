@@ -1,7 +1,17 @@
+//import { Platform } from 'react-native';
 import ReactNativeRecoilPersist from 'react-native-recoil-persist';
 import { atom, AtomEffect } from 'recoil';
 
 import { TafseerTabs } from '@/types';
+import { Riwaya } from '@/types/riwaya';
+
+// Import the appropriate persistence implementation based on platform
+/* let ReactNativeRecoilPersist;
+if (Platform.OS === 'web') {
+  ReactNativeRecoilPersist = require('../utils/recoilPersistWeb').default;
+} else {
+  ReactNativeRecoilPersist = require('react-native-recoil-persist');
+} */
 
 export const bottomMenuState = atom<boolean>({
   key: 'BottomMenuState',
@@ -15,9 +25,15 @@ export const currentSavedPage = atom<number>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
-export const popupHeight = atom<number>({
-  key: 'PopupHeight',
-  default: 320,
+export const finishedTutorial = atom<boolean>({
+  key: 'FinishedTutorial',
+  default: undefined,
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+
+export const mushafRiwaya = atom<Riwaya>({
+  key: 'MushafRiwaya',
+  default: undefined,
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
@@ -33,12 +49,23 @@ export const flipSound = atom<boolean>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
+export const currentAppVersion = atom<string | undefined>({
+  key: 'CurrentAppVersion',
+  default: undefined,
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+
 export const mushafContrast = atom<number>({
   key: 'MushafContrast',
   default: 0.5,
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
+/**
+ * 0 - disabled
+ * 1 - hizb
+ * 2 - juz
+ */
 export const hizbNotification = atom<number>({
   key: 'HizbNotification',
   default: 0,

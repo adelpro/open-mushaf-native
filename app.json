@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Mushaf Warsh",
+    "name": "Open Mushaf",
     "slug": "open-mushaf-native",
-    "version": "2.5.3",
+    "version": "3.2.4",
     "orientation": "default",
     "assetBundlePatterns": ["**/*"],
     "icon": "./assets/images/icon.png",
@@ -11,7 +11,7 @@
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/splash.png",
-      "resizeMode": "cover",
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
@@ -31,7 +31,6 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "server",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [

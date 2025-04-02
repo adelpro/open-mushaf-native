@@ -12,6 +12,7 @@ import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
+import { isRTL } from '@/utils';
 
 export default function PrivacyScreen() {
   const [selectedTab, setSelectedTab] = useState('arabic'); // Default to Arabic
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   tabContainer: {
-    flexDirection: 'row',
+    flexDirection: isRTL ? 'row' : 'row-reverse',
     justifyContent: 'space-around',
     marginBottom: 20,
   },

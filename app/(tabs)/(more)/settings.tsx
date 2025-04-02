@@ -1,31 +1,41 @@
-import { I18nManager, Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import Slider from '@react-native-community/slider';
+import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
 import { useRecoilState } from 'recoil';
 
 import SegmentedControl from '@/components/SegmentControl';
-import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
+import SegmentedControlWithDisabled from '@/components/SegmentedControlWithDisabled';
+import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
-import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
+import {
+  flipSound,
+  hizbNotification,
+  mushafContrast,
+  mushafRiwaya,
+} from '@/recoil/atoms';
+import { RiwayaArabic } from '@/types/riwaya';
+import { isRTL, RiwayaByIndice, RiwayaByValue } from '@/utils';
+import { clearStorageAndReload } from '@/utils/clearStorage';
 
-const isRTL = I18nManager.isRTL;
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
-  const options = ['تعطيل', 'حزب', 'جزء'];
-
+  const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const [HizbNotificationValue, setHizbNotificationValue] =
     useRecoilState<number>(hizbNotification);
   const { textColor, primaryColor, primaryLightColor, cardColor } = useColors();
   const [mushafContrastValue, setMushafContrastValue] =
     useRecoilState(mushafContrast);
-
+  const [mushafRiwayaValue, setMushafRiwayaValue] =
+    useRecoilState(mushafRiwaya);
   const toggleSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
   };
 
+  const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش'];
   const handleHizbNotificationValueChange = (value: number) => {
     if (value === 1 || value === 2) {
       setHizbNotificationValue(value);
@@ -34,8 +44,9 @@ export default function SettingsScreen() {
 
     setHizbNotificationValue(0);
   };
+
   return (
-    <ThemedSafeAreaView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Pressable
         style={[
           styles.settingsSection,
@@ -69,27 +80,19 @@ export default function SettingsScreen() {
       <ThemedView
         style={[
           styles.settingsSection,
-          { flexDirection: 'column', backgroundColor: cardColor },
+          styles.columnSection,
+          { backgroundColor: cardColor },
         ]}
       >
         <ThemedView
-          style={[
-            {
-              alignItems: 'center',
-              gap: 5,
-              flexDirection: 'row',
-              width: '100%',
-              justifyContent: 'flex-start',
-              backgroundColor: cardColor,
-            },
-          ]}
+          style={[styles.rowContainer, { backgroundColor: cardColor }]}
         >
-          <ThemedText type="defaultSemiBold" style={[styles.itemText]}>
-            قيمة السطوع في الوضع الليلي:
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
+            سطوع الوضع الليلي:
           </ThemedText>
           <ThemedText
             type="defaultSemiBold"
-            style={[styles.sliderValue, { padding: 5 }]}
+            style={[styles.sliderValue, { padding: 2 }]}
           >
             {`(${Number(mushafContrastValue * 100).toFixed(0)}%)`}
           </ThemedText>
@@ -113,31 +116,27 @@ export default function SettingsScreen() {
           />
         </ThemedView>
       </ThemedView>
+
       <ThemedView
         style={[
           styles.settingsSection,
-          { flexDirection: 'column', backgroundColor: cardColor },
+          styles.columnSection,
+          { backgroundColor: cardColor },
         ]}
       >
         <ThemedView
-          style={[
-            {
-              alignItems: 'center',
-              width: '100%',
-              backgroundColor: cardColor,
-            },
-          ]}
+          style={[styles.fullWidthContainer, { backgroundColor: cardColor }]}
         >
           <ThemedText
             type="defaultSemiBold"
-            style={[styles.itemText, { width: '100%' }]}
+            style={[styles.itemText, styles.fullWidth]}
           >
             تفعيل التنبيهات:
           </ThemedText>
         </ThemedView>
-        <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
-          <SegmentedControl
-            options={options}
+        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
+          <SegmentedControlWithDisabled
+            options={notificationOptions}
             initialSelectedIndex={HizbNotificationValue}
             activeColor={primaryColor}
             textColor={primaryColor}
@@ -148,13 +147,60 @@ export default function SettingsScreen() {
           />
         </Pressable>
       </ThemedView>
-    </ThemedSafeAreaView>
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
+      >
+        <ThemedView
+          style={[styles.fullWidthContainer, { backgroundColor: cardColor }]}
+        >
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, styles.fullWidth]}
+          >
+            إختيار الرواية :
+          </ThemedText>
+
+          <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
+            <SegmentedControl
+              options={riwayaOptions}
+              initialSelectedIndex={RiwayaByIndice(mushafRiwayaValue)}
+              activeColor={primaryColor}
+              textColor={primaryColor}
+              onSelectionChange={(index: number) => {
+                const selectedRiwaya = RiwayaByValue(index);
+                console.log('riwaya: ', mushafRiwayaValue, 'index: ', index);
+                setMushafRiwayaValue(selectedRiwaya);
+              }}
+            />
+          </Pressable>
+        </ThemedView>
+      </ThemedView>
+
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
+      >
+        <ThemedButton
+          role="button"
+          variant="danger"
+          onPress={clearStorageAndReload}
+        >
+          حذف كل التغييرات
+        </ThemedButton>
+      </ThemedView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 15,
     margin: 2,
     alignItems: 'center',
@@ -173,9 +219,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  columnSection: {
+    flexDirection: 'column',
+  },
+  rowContainer: {
+    alignItems: 'center',
+    gap: 1,
+    flexDirection: 'row',
+    width: '100%',
+  },
+  fullWidthContainer: {
+    alignItems: 'center',
+    width: '100%',
+  },
+  fullWidth: {
+    width: '100%',
+  },
   itemText: {
     fontSize: 20,
-    fontFamily: 'Amiri_700Bold',
+    fontFamily: 'Tajawal_700Bold',
     paddingVertical: 8,
     paddingHorizontal: 5,
     textAlignVertical: 'center',
@@ -183,7 +245,7 @@ const styles = StyleSheet.create({
   },
   sliderValue: {
     fontSize: 22,
-    fontFamily: 'Amiri_700Bold',
+    fontFamily: 'Tajawal_700Bold',
     textAlignVertical: 'center',
     paddingHorizontal: 10,
   },
