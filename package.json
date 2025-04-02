@@ -72,6 +72,7 @@
     "expo-system-ui": "~4.0.9",
     "expo-updates": "~0.27.4",
     "expo-web-browser": "~14.0.1",
+    "fuse.js": "^7.1.0",
     "react": "18.3.1",
     "react-compiler-runtime": "^19.0.0-beta-df7b47d-20241124",
     "react-dom": "18.3.1",

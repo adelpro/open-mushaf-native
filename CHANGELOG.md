@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [3.2.4] - 2024
+## [3.2.5]
+
+- feat: Added advanced search option using fuse.js
+
+## [3.2.4]
 
 - feat: Added preload system to speedup mushaf navigation
 - feat: Implemented web deployment support (Firebase Hosting)

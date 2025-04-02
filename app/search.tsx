@@ -8,6 +8,7 @@ import {
 
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import Toggle from 'react-native-toggle-input';
 
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
 import TafseerPopup from '@/components/TafseerPopup';
@@ -18,6 +19,11 @@ import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import useDebounce from '@/hooks/useDebounce';
 import { QuranText } from '@/types';
+import {
+  createArabicFuseSearch,
+  normalizeArabicText,
+  simpleSearch,
+} from '@/utils/searchUtils';
 
 export default function Search() {
   const quranText: QuranText[] = quranJson as QuranText[];
@@ -25,10 +31,17 @@ export default function Search() {
   const [inputText, setInputText] = useState('');
   const [filteredResults, setFilteredResults] = useState<QuranText[]>([]);
   const [show, setShow] = useState(false);
+  const [useAdvancedSearch, setUseAdvancedSearch] = useState(false);
   const { iconColor, tintColor, primaryColor } = useColors();
+
+  const [fuseInstance] = useState(() =>
+    createArabicFuseSearch(quranText, ['standard']),
+  );
+
   const handleSearch = useDebounce((text: string) => {
     setQuery(text);
   }, 200);
+
   const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
 
   useEffect(() => {
@@ -39,45 +52,51 @@ export default function Search() {
       return;
     }
 
-    const filtered = quranText.filter((item) =>
-      item.standard.toLowerCase().includes(query.toLowerCase()),
-    );
-    setFilteredResults(filtered);
-  }, [query, quranText]);
+    if (useAdvancedSearch) {
+      // Use Fuse.js for advanced search results
+      const results = fuseInstance.search(normalizeArabicText(query));
+      setFilteredResults(results.map((result) => result.item));
+    } else {
+      // Use simple search
+      setFilteredResults(simpleSearch(quranText, query, 'standard'));
+    }
+  }, [query, quranText, fuseInstance, useAdvancedSearch]);
 
   const handlePress = (aya: QuranText) => {
     setSelectedAya({ aya: aya.aya_id, surah: aya.sura_id });
     setShow(true);
   };
 
-  const renderItem = ({ item }: { item: QuranText }) => (
-    <TouchableOpacity
-      accessibilityRole="button"
-      accessibilityLabel={`فتح تفسير للآية ${item.aya_id} من سورة ${item.sura_name}`}
-      accessibilityHint="سيظهر نافذة تحتوي على تفسير الآية"
-      onPress={() => handlePress(item)}
-    >
-      <ThemedView style={[styles.item, { borderBottomColor: tintColor }]}>
-        <ThemedText type="default" style={styles.uthmani}>
-          {item.uthmani}
-        </ThemedText>
-        <Pressable
-          accessibilityRole="link"
-          accessibilityLabel={`انتقال إلى الصفحة ${item.page_id}`}
-          onPress={() => {
-            router.replace({
-              pathname: '/',
-              params: { page: item.page_id.toString(), temporary: 'true' },
-            });
-          }}
-        >
-          <ThemedText type="link">
-            {`سورة: ${item.sura_name} - الآية: ${item.aya_id}`}
+  const renderItem = ({ item }: { item: QuranText }) => {
+    return (
+      <TouchableOpacity
+        accessibilityRole="button"
+        accessibilityLabel={`فتح تفسير للآية ${item.aya_id} من سورة ${item.sura_name}`}
+        accessibilityHint="سيظهر نافذة تحتوي على تفسير الآية"
+        onPress={() => handlePress(item)}
+      >
+        <ThemedView style={[styles.item, { borderBottomColor: tintColor }]}>
+          <ThemedText type="default" style={styles.uthmani}>
+            {item.uthmani}
           </ThemedText>
-        </Pressable>
-      </ThemedView>
-    </TouchableOpacity>
-  );
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel={`انتقال إلى الصفحة ${item.page_id}`}
+            onPress={() => {
+              router.replace({
+                pathname: '/',
+                params: { page: item.page_id.toString(), temporary: 'true' },
+              });
+            }}
+          >
+            <ThemedText type="link">
+              {`سورة: ${item.sura_name} - الآية: ${item.aya_id}`}
+            </ThemedText>
+          </Pressable>
+        </ThemedView>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <ThemedSafeAreaView style={styles.container}>
@@ -99,6 +118,24 @@ export default function Search() {
           size={20}
           color={iconColor}
           style={[styles.icon, { color: primaryColor }]}
+        />
+      </ThemedView>
+
+      {/* Advanced Search Toggle */}
+      <ThemedView style={styles.toggleContainer}>
+        <ThemedText type="defaultSemiBold" style={styles.toggleLabel}>
+          البحث المتقدم
+        </ThemedText>
+        <Toggle
+          color={primaryColor}
+          size={30}
+          circleColor={primaryColor}
+          toggle={useAdvancedSearch}
+          setToggle={setUseAdvancedSearch}
+          aria-checked={useAdvancedSearch}
+          aria-label="البحث المتقدم"
+          accessibilityLabel="تبديل البحث المتقدم"
+          accessibilityState={{ checked: useAdvancedSearch }}
         />
       </ThemedView>
 
@@ -135,10 +172,27 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderWidth: 1,
     borderRadius: 8,
-    marginBottom: 20,
+    marginBottom: 10,
     alignSelf: 'center',
     maxWidth: 800,
     width: '100%',
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 15,
+    marginTop: 5,
+    gap: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+  },
+  toggleLabel: {
+    fontSize: 16,
+  },
+  checkbox: {
+    marginLeft: 8,
   },
   searchInput: {
     flex: 1,
