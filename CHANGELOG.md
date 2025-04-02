@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.2.4] - 2024
+
+- feat: Added preload system to speedup mushaf navigation
+- feat: Implemented web deployment support (Firebase Hosting)
+
 ## [3.2.3]
 
 - refactor: replace vercel by firebase hosting
