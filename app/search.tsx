@@ -31,7 +31,7 @@ export default function Search() {
   const [inputText, setInputText] = useState('');
   const [filteredResults, setFilteredResults] = useState<QuranText[]>([]);
   const [show, setShow] = useState(false);
-  const [useAdvancedSearch, setUseAdvancedSearch] = useState(false);
+  const [useAdvancedSearch, setUseAdvancedSearch] = useState(true);
   const { iconColor, tintColor, primaryColor } = useColors();
 
   const [fuseInstance] = useState(() =>
@@ -123,9 +123,6 @@ export default function Search() {
 
       {/* Advanced Search Toggle */}
       <ThemedView style={styles.toggleContainer}>
-        <ThemedText type="defaultSemiBold" style={styles.toggleLabel}>
-          البحث المتقدم
-        </ThemedText>
         <Toggle
           color={primaryColor}
           size={30}
@@ -137,6 +134,9 @@ export default function Search() {
           accessibilityLabel="تبديل البحث المتقدم"
           accessibilityState={{ checked: useAdvancedSearch }}
         />
+        <ThemedText type="defaultSemiBold" style={styles.toggleLabel}>
+          البحث المتقدم
+        </ThemedText>
       </ThemedView>
 
       {/* FlatList for search results */}

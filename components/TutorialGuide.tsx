@@ -62,7 +62,9 @@ export default function TutorialGuide() {
                   key={i}
                   style={[
                     styles.description,
-                    item.align === 'start' ? null : { textAlign: 'center' },
+                    item.align === 'start'
+                      ? { textAlign: 'right' }
+                      : { textAlign: 'center' },
                   ]}
                 >
                   {item.align === 'start' ? '✓ ' : ''}
