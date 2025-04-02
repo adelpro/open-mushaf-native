@@ -63,8 +63,11 @@ export default function TutorialGuide() {
                   style={[
                     styles.description,
                     item.align === 'start'
-                      ? { textAlign: 'right' }
-                      : { textAlign: 'center' },
+                      ? {
+                          textAlign: 'right',
+                          width: '100%',
+                        }
+                      : { textAlign: 'center', width: '100%' },
                   ]}
                 >
                   {item.align === 'start' ? '✓ ' : ''}

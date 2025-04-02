@@ -21,7 +21,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { QuranText } from '@/types';
 import {
   createArabicFuseSearch,
-  normalizeArabicText,
+  performAdvancedSearch,
   simpleSearch,
 } from '@/utils/searchUtils';
 
@@ -35,7 +35,10 @@ export default function Search() {
   const { iconColor, tintColor, primaryColor } = useColors();
 
   const [fuseInstance] = useState(() =>
-    createArabicFuseSearch(quranText, ['standard']),
+    createArabicFuseSearch(quranText, ['standard'], {
+      threshold: 0.6, // Higher threshold to catch more typos
+      minMatchCharLength: 2,
+    }),
   );
 
   const handleSearch = useDebounce((text: string) => {
@@ -52,10 +55,11 @@ export default function Search() {
       return;
     }
 
+    // In your useEffect where you perform the search:
     if (useAdvancedSearch) {
-      // Use Fuse.js for advanced search results
-      const results = fuseInstance.search(normalizeArabicText(query));
-      setFilteredResults(results.map((result) => result.item));
+      setFilteredResults(
+        performAdvancedSearch(fuseInstance, query, ['standard'], quranText),
+      );
     } else {
       // Use simple search
       setFilteredResults(simpleSearch(quranText, query, 'standard'));
@@ -178,7 +182,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   toggleContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 15,
@@ -191,9 +195,7 @@ const styles = StyleSheet.create({
   toggleLabel: {
     fontSize: 16,
   },
-  checkbox: {
-    marginLeft: 8,
-  },
+
   searchInput: {
     flex: 1,
     padding: 10,

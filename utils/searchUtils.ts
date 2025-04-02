@@ -1,4 +1,4 @@
-import Fuse from 'fuse.js';
+import Fuse, { type IFuseOptions } from 'fuse.js';
 
 /**
  * Normalizes Arabic text by removing diacritics and standardizing characters
@@ -19,19 +19,46 @@ export const normalizeArabicText = (text: string): string => {
 export const createArabicFuseSearch = <T>(
   collection: T[],
   keys: string[],
+  options: Partial<IFuseOptions<T>> = {},
 ): Fuse<T> => {
   return new Fuse(collection, {
     includeScore: true,
-    threshold: 0.3,
+    threshold: 0.9,
     ignoreLocation: true,
     useExtendedSearch: true,
     keys,
+    ...options,
   });
 };
 
-/**
- * Simple search function that filters items based on a query
- */
+export const performAdvancedSearch = <T extends Record<string, any>>(
+  fuseInstance: Fuse<T>,
+  query: string,
+  searchFields: string[] = ['uthmani', 'standard'],
+  originalCollection?: T[],
+): T[] => {
+  if (!query.trim()) return [];
+
+  // Try exact matches first using simpleSearch if we have original collection
+  if (originalCollection) {
+    const exactMatches = searchFields.flatMap((field) =>
+      simpleSearch(originalCollection, query, field as keyof T),
+    );
+
+    // Remove duplicates
+    const uniqueMatches = Array.from(
+      new Set(exactMatches.map((item) => JSON.stringify(item))),
+    ).map((item) => JSON.parse(item));
+
+    if (uniqueMatches.length > 0) return uniqueMatches;
+  }
+
+  // Fall back to fuzzy search if no exact matches
+  return fuseInstance
+    .search(normalizeArabicText(query.toLowerCase()))
+    .map((result) => result.item);
+};
+
 export const simpleSearch = <T extends Record<string, any>>(
   items: T[],
   query: string,
@@ -42,8 +69,9 @@ export const simpleSearch = <T extends Record<string, any>>(
   const normalizedQuery = normalizeArabicText(query.toLowerCase());
 
   return items.filter((item) => {
-    const fieldValue = String(item[searchField] || '');
-    const normalizedField = normalizeArabicText(fieldValue.toLowerCase());
+    const normalizedField = normalizeArabicText(
+      String(item[searchField] || '').toLowerCase(),
+    );
     return normalizedField.includes(normalizedQuery);
   });
 };
