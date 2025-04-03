@@ -11,6 +11,7 @@ import { router } from 'expo-router';
 import Toggle from 'react-native-toggle-input';
 
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
+import AdvancedSearchSVG from '@/assets/svgs/search-advanced.svg';
 import TafseerPopup from '@/components/TafseerPopup';
 import { ThemedTextInput } from '@/components/ThemedInput';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
@@ -117,12 +118,16 @@ export default function Search() {
           value={inputText}
           accessibilityRole="search"
         />
-        <Ionicons
-          name="search"
-          size={20}
-          color={iconColor}
-          style={[styles.icon, { color: primaryColor }]}
-        />
+        {useAdvancedSearch ? (
+          <AdvancedSearchSVG width={24} height={24} />
+        ) : (
+          <Ionicons
+            name="search"
+            size={20}
+            color={iconColor}
+            style={[styles.icon, { color: primaryColor }]}
+          />
+        )}
       </ThemedView>
 
       {/* Advanced Search Toggle */}
