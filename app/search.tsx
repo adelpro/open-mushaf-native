@@ -8,7 +8,7 @@ import {
 
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import Toggle from 'react-native-toggle-input';
+import { useRecoilState } from 'recoil';
 
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
 import AdvancedSearchSVG from '@/assets/svgs/search-advanced.svg';
@@ -19,6 +19,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import useDebounce from '@/hooks/useDebounce';
+import { advancedSearch } from '@/recoil/atoms';
 import { QuranText } from '@/types';
 import {
   createArabicFuseSearch,
@@ -32,15 +33,19 @@ export default function Search() {
   const [inputText, setInputText] = useState('');
   const [filteredResults, setFilteredResults] = useState<QuranText[]>([]);
   const [show, setShow] = useState(false);
-  const [useAdvancedSearch, setUseAdvancedSearch] = useState(true);
+
   const { iconColor, tintColor, primaryColor } = useColors();
 
   const [fuseInstance] = useState(() =>
     createArabicFuseSearch(quranText, ['standard'], {
-      threshold: 0.6, // Higher threshold to catch more typos
+      // Higher threshold to catch more typos
+      threshold: 0.2,
       minMatchCharLength: 2,
     }),
   );
+
+  const [advancedSearchValue, setAdvancedSearchValue] =
+    useRecoilState(advancedSearch);
 
   const handleSearch = useDebounce((text: string) => {
     setQuery(text);
@@ -57,7 +62,7 @@ export default function Search() {
     }
 
     // In your useEffect where you perform the search:
-    if (useAdvancedSearch) {
+    if (advancedSearchValue) {
       setFilteredResults(
         performAdvancedSearch(fuseInstance, query, ['standard'], quranText),
       );
@@ -65,7 +70,7 @@ export default function Search() {
       // Use simple search
       setFilteredResults(simpleSearch(quranText, query, 'standard'));
     }
-  }, [query, quranText, fuseInstance, useAdvancedSearch]);
+  }, [query, quranText, fuseInstance, advancedSearchValue]);
 
   const handlePress = (aya: QuranText) => {
     setSelectedAya({ aya: aya.aya_id, surah: aya.sura_id });
@@ -118,34 +123,29 @@ export default function Search() {
           value={inputText}
           accessibilityRole="search"
         />
-        {useAdvancedSearch ? (
-          <AdvancedSearchSVG width={24} height={24} />
+        {advancedSearchValue ? (
+          <Pressable
+            onPress={() => setAdvancedSearchValue(!advancedSearchValue)}
+          >
+            <AdvancedSearchSVG
+              width={20}
+              height={20}
+              color={primaryColor}
+              style={styles.icon}
+            />
+          </Pressable>
         ) : (
-          <Ionicons
-            name="search"
-            size={20}
-            color={iconColor}
-            style={[styles.icon, { color: primaryColor }]}
-          />
+          <Pressable
+            onPress={() => setAdvancedSearchValue(!advancedSearchValue)}
+          >
+            <Ionicons
+              name="search"
+              size={20}
+              color={iconColor}
+              style={[styles.icon, { color: primaryColor }]}
+            />
+          </Pressable>
         )}
-      </ThemedView>
-
-      {/* Advanced Search Toggle */}
-      <ThemedView style={styles.toggleContainer}>
-        <Toggle
-          color={primaryColor}
-          size={30}
-          circleColor={primaryColor}
-          toggle={useAdvancedSearch}
-          setToggle={setUseAdvancedSearch}
-          aria-checked={useAdvancedSearch}
-          aria-label="البحث المتقدم"
-          accessibilityLabel="تبديل البحث المتقدم"
-          accessibilityState={{ checked: useAdvancedSearch }}
-        />
-        <ThemedText type="defaultSemiBold" style={styles.toggleLabel}>
-          البحث المتقدم
-        </ThemedText>
       </ThemedView>
 
       {/* FlatList for search results */}
@@ -185,20 +185,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     maxWidth: 800,
     width: '100%',
-  },
-  toggleContainer: {
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 15,
-    marginTop: 5,
-    gap: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 8,
-  },
-  toggleLabel: {
-    fontSize: 16,
   },
 
   searchInput: {

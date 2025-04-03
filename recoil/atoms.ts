@@ -5,17 +5,15 @@ import { atom, AtomEffect } from 'recoil';
 import { TafseerTabs } from '@/types';
 import { Riwaya } from '@/types/riwaya';
 
-// Import the appropriate persistence implementation based on platform
-/* let ReactNativeRecoilPersist;
-if (Platform.OS === 'web') {
-  ReactNativeRecoilPersist = require('../utils/recoilPersistWeb').default;
-} else {
-  ReactNativeRecoilPersist = require('react-native-recoil-persist');
-} */
-
 export const bottomMenuState = atom<boolean>({
   key: 'BottomMenuState',
   default: true,
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+
+export const advancedSearch = atom<boolean>({
+  key: 'AdvancedSearch',
+  default: false,
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
