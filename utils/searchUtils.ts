@@ -23,7 +23,7 @@ export const createArabicFuseSearch = <T>(
 ): Fuse<T> => {
   return new Fuse(collection, {
     includeScore: true,
-    threshold: 0.9,
+    threshold: 0.6,
     ignoreLocation: true,
     useExtendedSearch: true,
     keys,

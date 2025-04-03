@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     width: '95%',
     marginBottom: 10,
+    fontFamily: 'Tajawal_400Regular',
   },
   controlsContainer: {
     width: '100%',
