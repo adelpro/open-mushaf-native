@@ -192,7 +192,7 @@ export default function SettingsScreen() {
           variant="danger"
           onPress={clearStorageAndReload}
         >
-          حذف كل التغييرات
+          إعادة ضبط التطبيق
         </ThemedButton>
       </ThemedView>
     </ScrollView>
