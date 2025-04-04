@@ -3,8 +3,8 @@ name: Firebase Manual Deploy
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Deployment environment'
+      channel:
+        description: 'Deploy to channel'
         required: true
         default: 'preview'
         type: choice
@@ -42,5 +42,6 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          channelId: ${{ github.event.inputs.environment == 'preview' && 'preview-channel' || 'live' }}
+          channelId: ${{ github.event.inputs.channel == 'preview' && 'preview' || 'live' }}
           projectId: open-mushaf-native
+          expires: 7d
