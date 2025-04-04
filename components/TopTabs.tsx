@@ -2,7 +2,6 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { useColors } from '@/hooks/useColors';
 import { ListTabs } from '@/types';
-import { isRTL } from '@/utils';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
