@@ -123,10 +123,13 @@ jobs:
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           RELEASE_NAME="Release $TAG_NAME"
+          # Get the tag message, if empty use default message
+          TAG_MESSAGE=$(git tag -l --format='%(contents)' $TAG_NAME)
+          RELEASE_NOTES="${TAG_MESSAGE:-APK and AAB for version $TAG_NAME}"
           if ! gh release view $TAG_NAME > /dev/null 2>&1; then
             gh release create "$TAG_NAME" app-preview.apk app-production.aab \
               --title "$RELEASE_NAME" \
-              --notes "APK and AAB for version $TAG_NAME"
+              --notes "$RELEASE_NOTES"
           else
             gh release upload "$TAG_NAME" app-preview.apk app-production.aab --clobber
           fi
