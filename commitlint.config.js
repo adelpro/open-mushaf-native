@@ -4,15 +4,18 @@ module.exports = {
   rules: {
     'header-max-length': [2, 'always', 200],
 
-    'subject-case': [2, 'always', 'lower-case'],
+    // Disable subject-case rule to allow any case in the subject
+    'subject-case': [0, 'never'],
 
+    // Keep type in lowercase (feat, fix, etc.)
     'type-case': [2, 'always', 'lower-case'],
+
+    // Disable scope-case rule to allow any case in scope like (Test)
+    'scope-case': [0, 'never'],
 
     'type-enum': [
       2,
-
       'always',
-
       [
         'feat', // New feature or functionality
         'fix', // Bug fix or correction

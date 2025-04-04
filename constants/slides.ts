@@ -2,7 +2,7 @@ export const SLIDES = [
   {
     title: 'مرحبا!',
     description: 'مرحبا بك في تطبيق المصحف',
-    image: require('@/assets/images/icon.png'),
+    image: require('@/assets/images/icon-large.png'),
   },
   {
     title: 'المصحف',
