@@ -4,17 +4,18 @@ on:
   workflow_dispatch:
     inputs:
       channel:
-        description: 'Deploy to channel'
+        description: 'Select deployment channel'
         required: true
         default: 'preview'
         type: choice
         options:
           - preview
-          - production
+          - live
       branch:
-        description: 'Branch to deploy'
+        description: 'Select branch to deploy'
         required: true
         default: 'main'
+        type: string
 
 jobs:
   deploy:
@@ -28,7 +29,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'yarn'
 
       - name: Install dependencies
@@ -42,6 +43,6 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          channelId: ${{ github.event.inputs.channel == 'preview' && 'preview' || 'live' }}
+          channelId: ${{ github.event.inputs.channel }}
           projectId: open-mushaf-native
-          expires: 7d
+          expires: ${{ github.event.inputs.channel == 'preview' && '7d' || '' }}
