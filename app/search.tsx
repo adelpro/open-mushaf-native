@@ -12,6 +12,7 @@ import { useRecoilState } from 'recoil';
 
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
 import AdvancedSearchSVG from '@/assets/svgs/search-advanced.svg';
+import SEO from '@/components/seo';
 import TafseerPopup from '@/components/TafseerPopup';
 import { ThemedTextInput } from '@/components/ThemedInput';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
@@ -85,6 +86,10 @@ export default function Search() {
         accessibilityHint="سيظهر نافذة تحتوي على تفسير الآية"
         onPress={() => handlePress(item)}
       >
+        <SEO
+          title="البحث - المصحف المفتوح"
+          description="البحث في آيات القرآن الكريم"
+        />
         <ThemedView style={[styles.item, { borderBottomColor: tintColor }]}>
           <ThemedText type="default" style={styles.uthmani}>
             {item.uthmani}

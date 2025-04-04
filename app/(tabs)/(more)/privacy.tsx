@@ -8,6 +8,7 @@ import {
 
 import PrivacyContentArabic from '@/components/PrivacyContentArabic';
 import PrivacyContentEnglish from '@/components/PrivacyContentEnglish';
+import SEO from '@/components/seo';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -22,6 +23,10 @@ export default function PrivacyScreen() {
 
   return (
     <ThemedSafeAreaView style={styles.container}>
+      <SEO
+        title="المصحف المفتوح - سياسة الخصوصية"
+        description="سياسة الخصوصية للمصحف المفتوح - معلومات حول كيفية جمع واستخدام وحماية بياناتك"
+      />
       {/* Tab Selection */}
       <ThemedView style={styles.tabContainer}>
         <TouchableOpacity

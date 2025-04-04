@@ -7,6 +7,7 @@ import { useRouter } from 'expo-router';
 
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
 import surahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
+import SEO from '@/components/seo';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -86,6 +87,10 @@ export default function Navigation() {
 
   return (
     <ThemedSafeAreaView style={styles.container}>
+      <SEO
+        title="المصحف المفتوح - التنقل"
+        description="تصفح صفحات وسور وآيات القرآن الكريم بسهولة باستخدام واجهة التنقل في المصحف المفتوح"
+      />
       <ThemedView
         style={[styles.navigationSection, { backgroundColor: cardColor }]}
       >
