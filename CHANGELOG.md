@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.2.6]
+
+- feat: Added SEO optimization with Open Graph and Twitter card support
+
 ## [3.2.5]
 
 - feat: Added advanced search option using fuse.js

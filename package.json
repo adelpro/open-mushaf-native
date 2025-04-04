@@ -76,6 +76,7 @@
     "react": "18.3.1",
     "react-compiler-runtime": "^19.0.0-beta-df7b47d-20241124",
     "react-dom": "18.3.1",
+    "react-helmet-async": "^2.0.5",
     "react-native": "0.76.8",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-htmlview": "^0.17.0",

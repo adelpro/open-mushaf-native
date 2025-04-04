@@ -16,6 +16,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
+import { HelmetProvider } from 'react-helmet-async';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ReactNativeRecoilPersist, {
   ReactNativeRecoilPersistGate,
@@ -23,6 +24,7 @@ import ReactNativeRecoilPersist, {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 
+import SEO from '@/components/seo';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { isRTL } from '@/utils';
 
@@ -78,46 +80,52 @@ export default function RootLayout() {
 
   return (
     <RecoilRoot>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaProvider>
-          <StatusBar style="auto" />
-          <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
-            <ThemeProvider
-              value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-            >
-              <Stack
-                screenOptions={{
-                  headerTitleStyle: {
-                    fontFamily: 'Tajawal_700Bold',
-                  },
-                }}
+      <HelmetProvider>
+        <SEO />
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <SafeAreaProvider>
+            <StatusBar style="auto" />
+            <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
+              <ThemeProvider
+                value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
               >
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="+not-found" />
-                <Stack.Screen
-                  name="search"
-                  options={{
-                    title: 'بحث',
+                <Stack
+                  screenOptions={{
                     headerTitleStyle: {
-                      fontFamily: 'Tajawal_400Regular',
+                      fontFamily: 'Tajawal_700Bold',
                     },
                   }}
-                />
-                <Stack.Screen
-                  name="navigation"
-                  options={{
-                    title: 'تنقل',
-                  }}
-                />
-                <Stack.Screen
-                  name="tutorial"
-                  options={{ headerShown: true, title: 'جولة تعليمية' }}
-                />
-              </Stack>
-            </ThemeProvider>
-          </ReactNativeRecoilPersistGate>
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
+                >
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen name="+not-found" />
+                  <Stack.Screen
+                    name="search"
+                    options={{
+                      title: 'بحث',
+                      headerTitleStyle: {
+                        fontFamily: 'Tajawal_400Regular',
+                      },
+                    }}
+                  />
+                  <Stack.Screen
+                    name="navigation"
+                    options={{
+                      title: 'تنقل',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="tutorial"
+                    options={{ headerShown: true, title: 'جولة تعليمية' }}
+                  />
+                </Stack>
+              </ThemeProvider>
+            </ReactNativeRecoilPersistGate>
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </HelmetProvider>
     </RecoilRoot>
   );
 }
