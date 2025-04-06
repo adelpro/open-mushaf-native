@@ -55,9 +55,8 @@ registerRoute(
 // This is specific to your app's Quran pages
 registerRoute(
   ({ request }) =>
-    (request.destination === 'image' &&
-      request.url.includes('/assets/images/')) ||
-    request.url.includes('/assets/mushaf-data/') ||
+    (request.destination === 'image' && request.url.includes('/images/')) ||
+    request.url.includes('/mushaf-data/') ||
     new CacheFirst({
       cacheName: 'quran-images',
       plugins: [
