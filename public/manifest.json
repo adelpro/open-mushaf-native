@@ -1,7 +1,18 @@
 {
-  "short_name": "Open Mushaf",
   "name": "Open Mushaf",
+  "short_name": "Open Mushaf",
   "description": "A modern and minimalist Quran Mushaf application",
+  "id": "f2d6a7c9-64fc-4e67-97f5-8e8f12dcb4c4",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen", "minimal-ui", "browser"],
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["books", "education", "religious"],
   "icons": [
     {
       "src": "favicon.ico",
@@ -31,13 +42,107 @@
       "purpose": "any"
     }
   ],
-  "start_url": "/",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff",
-  "orientation": "portrait",
-  "scope": "/",
-  "lang": "ar",
-  "dir": "rtl",
-  "categories": ["books", "education", "religious"]
+  "screenshots": [
+    {
+      "src": "screenshots/mushaf-page.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Mushaf Page - Quran reading view",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshots/tafseer-popup.png",
+      "sizes": "640x360",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Tafseer Popup - Quran interpretation",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshots/sura-index.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Sura Index - Navigate through chapters",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshots/settings.png",
+      "sizes": "640x360",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Settings - Customize your reading experience",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshots/navigation.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Navigation - Browse through the Quran",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshots/search.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Search - Find verses in the Quran",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "search",
+      "short_name": "Search",
+      "description": "Search Open Mushaf",
+      "url": "/search",
+      "icons": [{ "src": "icons/search.png", "sizes": "256x256" }]
+    },
+    {
+      "name": "navigation",
+      "short_name": "Navigation",
+      "description": "Navigation Open Mushaf",
+      "url": "/navigation",
+      "icons": [{ "src": "icons/navigation.png", "sizes": "256x256" }]
+    },
+    {
+      "name": "about",
+      "short_name": "About",
+      "description": "About Open Mushaf",
+      "url": "/about",
+      "icons": [{ "src": "icons/about.png", "sizes": "256x256" }]
+    },
+    {
+      "name": "settings",
+      "short_name": "Settings",
+      "description": "Open Mushaf Settings",
+      "url": "/settings",
+      "icons": [{ "src": "icons/settings.png", "sizes": "256x256" }]
+    },
+    {
+      "name": "tutorial",
+      "short_name": "Tutorial",
+      "description": "How to use Open Mushaf",
+      "url": "/tutorial",
+      "icons": [{ "src": "icons/tutorial.png", "sizes": "256x256" }]
+    }
+  ],
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.adelpro.openmushafnative",
+      "url": "https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative"
+    }
+  ],
+  "iarc_rating_id": "71298fce-0211-4f53-91fa-aeac35a14f3c",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "handle_links": "preferred",
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
 }
