@@ -20,8 +20,10 @@
   "dir": "rtl",
   "categories": ["books", "education", "religious"],
   "scope_extensions": [
-    { "origin": "https://open-mushaf-native.web.app" },
-    { "origin": "https://quran.us.kg" }
+    {
+      "type": "url_pattern",
+      "value": "https://*.open-mushaf.com/*"
+    }
   ],
   "icons": [
     {
