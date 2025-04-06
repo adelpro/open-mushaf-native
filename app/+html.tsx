@@ -115,10 +115,32 @@ const sw = `
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         // Register the service worker
-        navigator.serviceWorker.register('/service-worker.js').then(registration => {
-            console.log('Service Worker registered with scope:', registration.scope);
-        }).catch(error => {
-            console.error('Service Worker registration failed:', error);
+        const options = { type: 'classic' };
+        navigator.serviceWorker.register('/service-worker.js', options)
+            .then(registration => {
+                // Show initial loading notification
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('Open Mushaf', {
+                        body: 'Loading resources for offline use...',
+                        icon: '/icons/192x192.png'
+                    });
+                }
+            });
+            
+        // Listen for messages from the service worker
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'CACHING_COMPLETE') {
+                // Show completion notification
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('Open Mushaf', {
+                        body: 'Resources cached successfully! App is ready for offline use.',
+                        icon: '/icons/192x192.png'
+                    });
+                }
+                
+                // You could also update UI elements to show completion
+                console.log('Caching complete');
+            }
         });
     });
 }
