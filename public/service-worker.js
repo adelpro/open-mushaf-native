@@ -97,6 +97,60 @@ registerRoute(
   }),
 );
 
+// Cache UI assets
+registerRoute(
+  ({ request }) => {
+    if (request.destination !== 'image') return false;
+
+    const url = request.url;
+    return (
+      url.includes('/icons/') ||
+      url.includes('/images/') ||
+      url.includes('/tutorial/') ||
+      url.includes('/screenshots/')
+    );
+  },
+  new CacheFirst({
+    cacheName: 'ui-assets',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 50,
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+      }),
+    ],
+  }),
+);
+
+// Cache SVG and vector icons
+registerRoute(
+  ({ request, url }) => {
+    // Match SVG files
+    if (request.destination === 'image' && url.pathname.endsWith('.svg')) {
+      return true;
+    }
+
+    // Match Expo vector icons
+    if (
+      url.pathname.includes('@expo/vector-icons') ||
+      url.pathname.includes('node_modules/expo-vector-icons') ||
+      url.pathname.includes('vector-icons')
+    ) {
+      return true;
+    }
+
+    return false;
+  },
+  new CacheFirst({
+    cacheName: 'vector-icons',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 100,
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+      }),
+    ],
+  }),
+);
+
 // Cache JSON data (tafseer files)
 registerRoute(
   ({ request }) =>
@@ -118,6 +172,36 @@ registerRoute(
     request.destination === 'script' || request.destination === 'style',
   new StaleWhileRevalidate({
     cacheName: 'static-resources',
+  }),
+);
+
+// Cache app pages for offline access
+registerRoute(
+  ({ url }) => {
+    const appRoutes = [
+      '/settings',
+      '/about',
+      '/navigation',
+      '/search',
+      '/tutorial',
+      '/lists',
+      '/contact',
+      '/privacy',
+    ];
+
+    // Check if the URL path matches any of our app routes
+    return appRoutes.some(
+      (route) => url.pathname === route || url.pathname.endsWith(route),
+    );
+  },
+  new StaleWhileRevalidate({
+    cacheName: 'app-pages',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 15,
+        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+      }),
+    ],
   }),
 );
 

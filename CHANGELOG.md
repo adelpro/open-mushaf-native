@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 - feat: Added SEO optimization with Open Graph and Twitter card support
 - feat: Added PWA support
+- feat: web - improved offline capabilities
 
 ## [3.2.5]
 
