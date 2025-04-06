@@ -10,18 +10,20 @@ workbox.setConfig({
   debug: false,
 });
 
-// Track caching progress
-let cachingComplete = false;
-
 // Add proper content type headers for service worker
 self.addEventListener('install', (event) => {
+  console.log('Service Worker installing...');
   // Skip waiting and notify when complete
   self.skipWaiting();
+});
 
-  // After installation is complete, notify clients
-  setTimeout(() => {
-    if (!cachingComplete) {
-      cachingComplete = true;
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker activating...');
+
+  // After activation, notify clients about caching completion
+  event.waitUntil(
+    clients.claim().then(() => {
+      // Send message to all clients after activation
       self.clients.matchAll().then((clients) => {
         clients.forEach((client) => {
           client.postMessage({
@@ -30,12 +32,8 @@ self.addEventListener('install', (event) => {
           });
         });
       });
-    }
-  }, 3000);
-});
-
-self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim());
+    }),
+  );
 });
 
 // Add message handler for caching progress

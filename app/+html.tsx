@@ -113,35 +113,61 @@ body {
 
 const sw = `
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        // Register the service worker
-        const options = { type: 'classic' };
-        navigator.serviceWorker.register('/service-worker.js', options)
-            .then(registration => {
-                // Show initial loading notification
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification('Open Mushaf', {
-                        body: 'Loading resources for offline use...',
-                        icon: '/icons/192x192.png'
-                    });
-                }
+    let refreshing = false;
+
+    // Handle service worker updates
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!refreshing) {
+        refreshing = true;
+        window.location.reload();
+      }
+    });
+
+    // Listen for messages from service worker
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      console.log('Message from service worker:', event.data);
+      
+      if (event.data && event.data.type === 'CACHING_COMPLETE') {
+        // Show notification when caching is complete
+        if ('Notification' in window) {
+          if (Notification.permission === 'granted') {
+            new Notification('Open Mushaf', {
+              body: 'App is ready for offline use!',
+              icon: '/icons/192x192.png'
             });
-            
-        // Listen for messages from the service worker
-        navigator.serviceWorker.addEventListener('message', (event) => {
-            if (event.data && event.data.type === 'CACHING_COMPLETE') {
-                // Show completion notification
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification('Open Mushaf', {
-                        body: 'Resources cached successfully! App is ready for offline use.',
-                        icon: '/icons/192x192.png'
-                    });
-                }
-                
-                // You could also update UI elements to show completion
-                console.log('Caching complete');
+          } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+              if (permission === 'granted') {
+                new Notification('Open Mushaf', {
+                  body: 'App is ready for offline use!',
+                  icon: '/icons/192x192.png'
+                });
+              }
+            });
+          }
+        }
+      }
+    });
+
+    // Register service worker
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js').then(registration => {
+        console.log('Service Worker registered');
+        
+        // Show initial notification
+        if ('Notification' in window) {
+          Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+              new Notification('Open Mushaf', {
+                body: 'Installing app resources...',
+                icon: '/icons/192x192.png'
+              });
             }
-        });
+          });
+        }
+      }).catch(error => {
+        console.error('Service Worker registration failed:', error);
+      });
     });
 }
 `;
