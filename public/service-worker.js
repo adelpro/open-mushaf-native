@@ -15,26 +15,23 @@ let cachingComplete = false;
 
 // Add proper content type headers for service worker
 self.addEventListener('install', (event) => {
-  // Perform install steps and notify when complete
-  event.waitUntil(
-    caches.open('app-cache').then(() => {
-      self.skipWaiting();
-      // After installation is complete, notify clients
-      setTimeout(() => {
-        if (!cachingComplete) {
-          cachingComplete = true;
-          self.clients.matchAll().then((clients) => {
-            clients.forEach((client) => {
-              client.postMessage({
-                type: 'CACHING_COMPLETE',
-                message: 'All assets have been cached for offline use',
-              });
-            });
+  // Skip waiting and notify when complete
+  self.skipWaiting();
+
+  // After installation is complete, notify clients
+  setTimeout(() => {
+    if (!cachingComplete) {
+      cachingComplete = true;
+      self.clients.matchAll().then((clients) => {
+        clients.forEach((client) => {
+          client.postMessage({
+            type: 'CACHING_COMPLETE',
+            message: 'All assets have been cached for offline use',
           });
-        }
-      }, 3000);
-    }),
-  );
+        });
+      });
+    }
+  }, 3000);
 });
 
 self.addEventListener('activate', (event) => {
