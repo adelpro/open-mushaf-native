@@ -1,8 +1,7 @@
+import ayas from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/aya.json';
+import specs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json';
 import { Aya, Page } from '@/types';
 import { getDimensionCoeff } from '@/utils';
-
-import ayas from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/aya.json';
-import specs from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json';
 
 const usePageOverlay = ({
   index,

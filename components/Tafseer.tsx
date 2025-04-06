@@ -4,13 +4,13 @@ import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
 
+import surahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
 import { useColors } from '@/hooks/useColors';
 import { tafseerTab } from '@/recoil/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-import surahs from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
 
 const tabLabels: Record<TafseerTabs, string> = {
   katheer: 'ابن كثير',
@@ -46,6 +46,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
     }
     return (
       <ThemedView style={{ flex: 1 }}>
+        {/* @ts-ignore - Ignoring type error for HTMLView component */}
         <HTMLView
           value={tafseerText}
           style={{

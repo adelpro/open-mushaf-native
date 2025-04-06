@@ -7,7 +7,7 @@ module.exports = {
     'icons/*.{png,ico}',
     '*.js',
     '*.css',
-    // Add all app screens for precaching
+    // Only include UI components, not all assets
     '_expo/**/*',
     'settings/**/*',
     'lists/**/*',
@@ -16,10 +16,9 @@ module.exports = {
     'privacy/**/*',
     'contact/**/*',
     'about/**/*',
-    // Fix the assets pattern syntax and add pattern for duplicate paths
-    'assets/**/*.png',
-    'assets/assets/**/*.png',
   ],
+  // Exclude large assets from precaching
+  globIgnores: ['assets/mushaf-data/**/*', 'assets/**/*'],
   swSrc: 'public/service-worker.js',
   swDest: 'dist/service-worker.js',
   maximumFileSizeToCacheInBytes: 104857600, // 100MB
