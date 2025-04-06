@@ -13,6 +13,9 @@ export default function Root({ children }: PropsWithChildren) {
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 
+        {/* Digital Asset Links for Android App Links */}
+        <link rel="assetlinks.json" href="/.well-known/assetlinks.json" />
+
         {/*} <!-- Safari PWA specific tags -->*/}
         <meta name="mobile-web-app-capable" content="yes" />
         <meta
@@ -111,9 +114,8 @@ body {
 const sw = `
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        // Add type option to ensure proper MIME type handling
-        const options = { type: 'application/javascript' };
-        navigator.serviceWorker.register('/service-worker.js', options).then(registration => {
+        // Register the service worker
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
             console.log('Service Worker registered with scope:', registration.scope);
         }).catch(error => {
             console.error('Service Worker registration failed:', error);

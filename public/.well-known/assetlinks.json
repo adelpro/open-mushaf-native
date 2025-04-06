@@ -1,0 +1,11 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.adelpro.openmushafnative",
+      "sha256_cert_fingerprints":
+        ["24:C8:97:94:CF:51:28:87:B7:B5:E3:E8:63:02:CE:35:62:73:DB:5F:AB:BC:AE:7F:F9:70:42:80:76:CB:5D:88"]
+    }
+  }
+]
