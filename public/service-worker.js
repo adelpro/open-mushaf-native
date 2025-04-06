@@ -10,6 +10,15 @@ workbox.setConfig({
   debug: false,
 });
 
+// Add proper content type headers for service worker
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(clients.claim());
+});
+
 const { registerRoute } = workbox.routing;
 const { CacheFirst, StaleWhileRevalidate, NetworkFirst } = workbox.strategies;
 const { ExpirationPlugin } = workbox.expiration;
@@ -46,18 +55,18 @@ registerRoute(
 // This is specific to your app's Quran pages
 registerRoute(
   ({ request }) =>
-    request.destination === 'image' &&
-    (request.url.includes('/pages/') ||
-      request.url.includes('/assets/images/')),
-  new CacheFirst({
-    cacheName: 'quran-images',
-    plugins: [
-      new ExpirationPlugin({
-        maxEntries: 604, // Cache all pages
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
-      }),
-    ],
-  }),
+    (request.destination === 'image' &&
+      request.url.includes('/assets/images/')) ||
+    request.url.includes('/assets/mushaf-data/') ||
+    new CacheFirst({
+      cacheName: 'quran-images',
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 1000,
+          maxAgeSeconds: 30 * 24 * 60 * 60,
+        }),
+      ],
+    }),
 );
 
 // Cache AsyncStorage data with a StaleWhileRevalidate strategy
@@ -110,12 +119,3 @@ const navigationHandler = async (params) => {
 };
 
 registerRoute(({ request }) => request.mode === 'navigate', navigationHandler);
-
-// Skip waiting and claim clients
-self.addEventListener('install', (event) => {
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim());
-});

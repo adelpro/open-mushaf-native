@@ -103,7 +103,7 @@
     },
     {
       "src": "screenshots/search.png",
-      "sizes": "400857",
+      "sizes": "400x857",
       "type": "image/png",
       "platform": "narrow",
       "label": "Search - Find verses in the Quran",

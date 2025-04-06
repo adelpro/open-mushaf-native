@@ -14,13 +14,11 @@ export default function Root({ children }: PropsWithChildren) {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 
         {/*} <!-- Safari PWA specific tags -->*/}
-        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
-        <meta name="apple-mobile-web-app-title" content="Open Mushaf" />
-
         {/*<!-- Safari splash screens -->*/}
         <link
           rel="apple-touch-startup-image"
