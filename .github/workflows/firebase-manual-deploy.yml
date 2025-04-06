@@ -20,6 +20,11 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Add environment configuration
+    environment:
+      name: ${{ github.event.inputs.channel }}
+      url: ${{ steps.deploy-firebase.outputs.details_url }}
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,7 +34,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.11.1' # Specify exact version that's compatible with Firebase CLI
+          node-version: '20.11.1'
           cache: 'yarn'
 
       - name: Install dependencies
@@ -39,6 +44,7 @@ jobs:
         run: yarn predeploy
 
       - name: Deploy to Firebase
+        id: deploy-firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
