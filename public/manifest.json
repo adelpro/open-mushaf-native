@@ -6,13 +6,23 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "display_override": ["standalone", "fullscreen", "minimal-ui", "browser"],
+  "display_override": [
+    "standalone",
+    "fullscreen",
+    "minimal-ui",
+    "browser",
+    "window-controls-overlay"
+  ],
   "theme_color": "#000000",
   "background_color": "#ffffff",
   "orientation": "portrait",
   "lang": "ar",
   "dir": "rtl",
   "categories": ["books", "education", "religious"],
+  "scope_extensions": [
+    { "origin": "https://open-mushaf-native.web.app" },
+    { "origin": "https://quran.us.kg" }
+  ],
   "icons": [
     {
       "src": "favicon.ico",
@@ -45,7 +55,15 @@
   "screenshots": [
     {
       "src": "screenshots/mushaf-page.png",
-      "sizes": "1280x720",
+      "sizes": "400x857",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Mushaf Page - Quran reading view",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshots/mushaf-page-wide.png",
+      "sizes": "1437x916",
       "type": "image/png",
       "platform": "wide",
       "label": "Mushaf Page - Quran reading view",
@@ -53,7 +71,7 @@
     },
     {
       "src": "screenshots/tafseer-popup.png",
-      "sizes": "640x360",
+      "sizes": "400x857",
       "type": "image/png",
       "platform": "narrow",
       "label": "Tafseer Popup - Quran interpretation",
@@ -61,15 +79,15 @@
     },
     {
       "src": "screenshots/sura-index.png",
-      "sizes": "1280x720",
+      "sizes": "400x857",
       "type": "image/png",
-      "platform": "wide",
+      "platform": "narrow",
       "label": "Sura Index - Navigate through chapters",
-      "form_factor": "wide"
+      "form_factor": "narrow"
     },
     {
       "src": "screenshots/settings.png",
-      "sizes": "640x360",
+      "sizes": "400x857",
       "type": "image/png",
       "platform": "narrow",
       "label": "Settings - Customize your reading experience",
@@ -77,19 +95,19 @@
     },
     {
       "src": "screenshots/navigation.png",
-      "sizes": "1280x720",
+      "sizes": "400x857",
       "type": "image/png",
-      "platform": "wide",
+      "platform": "narrow",
       "label": "Navigation - Browse through the Quran",
-      "form_factor": "wide"
+      "form_factor": "narrow"
     },
     {
       "src": "screenshots/search.png",
-      "sizes": "1280x720",
+      "sizes": "400857",
       "type": "image/png",
-      "platform": "wide",
+      "platform": "narrow",
       "label": "Search - Find verses in the Quran",
-      "form_factor": "wide"
+      "form_factor": "narrow"
     }
   ],
   "shortcuts": [
