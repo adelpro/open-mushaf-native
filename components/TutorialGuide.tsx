@@ -62,7 +62,7 @@ export default function TutorialGuide() {
                   key={i}
                   style={[
                     styles.description,
-                    item.align === 'start' ? null : { textAlign: 'center' },
+                    item.align !== 'start' && { textAlign: 'center' },
                   ]}
                 >
                   {item.align === 'start' ? '✓ ' : ''}
@@ -71,7 +71,7 @@ export default function TutorialGuide() {
               ))
             ) : (
               // Handle simple string description (centered)
-              <ThemedText style={styles.description}>
+              <ThemedText style={[styles.description, { textAlign: 'center' }]}>
                 {SLIDES[index].description}
               </ThemedText>
             )}
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     width: '95%',
     marginBottom: 10,
-    textAlign: 'center',
+    fontFamily: 'Tajawal_400Regular',
   },
   controlsContainer: {
     width: '100%',
@@ -206,6 +206,7 @@ const styles = StyleSheet.create({
     width: 15,
     height: 15,
   },
+
   button: {
     height: 60,
     justifyContent: 'center',

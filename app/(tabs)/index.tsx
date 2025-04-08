@@ -7,6 +7,7 @@ import ChangeLogs from '@/components/ChangeLogs';
 import MushafPage from '@/components/MushafPage';
 import ReadingPositionBanner from '@/components/ReadingPositionBanner';
 import SelectRiwaya from '@/components/SelectRiwaya';
+import SEO from '@/components/seo';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
@@ -35,6 +36,10 @@ export default function HomeScreen() {
 
   return (
     <ThemedSafeAreaView style={styles.container}>
+      <SEO
+        title="المصحف المفتوح - المصحف"
+        description="قرآءة القرآن مع خيارات متعددة للقراءات والتفاسير"
+      />
       <TopMenu />
       <ReadingPositionBanner />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>

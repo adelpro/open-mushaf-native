@@ -8,8 +8,11 @@ import {
 
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useRecoilState } from 'recoil';
 
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
+import AdvancedSearchSVG from '@/assets/svgs/search-advanced.svg';
+import SEO from '@/components/seo';
 import TafseerPopup from '@/components/TafseerPopup';
 import { ThemedTextInput } from '@/components/ThemedInput';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
@@ -17,7 +20,13 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import useDebounce from '@/hooks/useDebounce';
+import { advancedSearch } from '@/recoil/atoms';
 import { QuranText } from '@/types';
+import {
+  createArabicFuseSearch,
+  performAdvancedSearch,
+  simpleSearch,
+} from '@/utils/searchUtils';
 
 export default function Search() {
   const quranText: QuranText[] = quranJson as QuranText[];
@@ -25,10 +34,24 @@ export default function Search() {
   const [inputText, setInputText] = useState('');
   const [filteredResults, setFilteredResults] = useState<QuranText[]>([]);
   const [show, setShow] = useState(false);
+
   const { iconColor, tintColor, primaryColor } = useColors();
+
+  const [fuseInstance] = useState(() =>
+    createArabicFuseSearch(quranText, ['standard'], {
+      // Higher threshold to catch more typos
+      threshold: 0.2,
+      minMatchCharLength: 2,
+    }),
+  );
+
+  const [advancedSearchValue, setAdvancedSearchValue] =
+    useRecoilState(advancedSearch);
+
   const handleSearch = useDebounce((text: string) => {
     setQuery(text);
   }, 200);
+
   const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
 
   useEffect(() => {
@@ -39,45 +62,56 @@ export default function Search() {
       return;
     }
 
-    const filtered = quranText.filter((item) =>
-      item.standard.toLowerCase().includes(query.toLowerCase()),
-    );
-    setFilteredResults(filtered);
-  }, [query, quranText]);
+    // In your useEffect where you perform the search:
+    if (advancedSearchValue) {
+      setFilteredResults(
+        performAdvancedSearch(fuseInstance, query, ['standard'], quranText),
+      );
+    } else {
+      // Use simple search
+      setFilteredResults(simpleSearch(quranText, query, 'standard'));
+    }
+  }, [query, quranText, fuseInstance, advancedSearchValue]);
 
   const handlePress = (aya: QuranText) => {
     setSelectedAya({ aya: aya.aya_id, surah: aya.sura_id });
     setShow(true);
   };
 
-  const renderItem = ({ item }: { item: QuranText }) => (
-    <TouchableOpacity
-      accessibilityRole="button"
-      accessibilityLabel={`فتح تفسير للآية ${item.aya_id} من سورة ${item.sura_name}`}
-      accessibilityHint="سيظهر نافذة تحتوي على تفسير الآية"
-      onPress={() => handlePress(item)}
-    >
-      <ThemedView style={[styles.item, { borderBottomColor: tintColor }]}>
-        <ThemedText type="default" style={styles.uthmani}>
-          {item.uthmani}
-        </ThemedText>
-        <Pressable
-          accessibilityRole="link"
-          accessibilityLabel={`انتقال إلى الصفحة ${item.page_id}`}
-          onPress={() => {
-            router.replace({
-              pathname: '/',
-              params: { page: item.page_id.toString(), temporary: 'true' },
-            });
-          }}
-        >
-          <ThemedText type="link">
-            {`سورة: ${item.sura_name} - الآية: ${item.aya_id}`}
+  const renderItem = ({ item }: { item: QuranText }) => {
+    return (
+      <TouchableOpacity
+        accessibilityRole="button"
+        accessibilityLabel={`فتح تفسير للآية ${item.aya_id} من سورة ${item.sura_name}`}
+        accessibilityHint="سيظهر نافذة تحتوي على تفسير الآية"
+        onPress={() => handlePress(item)}
+      >
+        <SEO
+          title="البحث - المصحف المفتوح"
+          description="البحث في آيات القرآن الكريم"
+        />
+        <ThemedView style={[styles.item, { borderBottomColor: tintColor }]}>
+          <ThemedText type="default" style={styles.uthmani}>
+            {item.uthmani}
           </ThemedText>
-        </Pressable>
-      </ThemedView>
-    </TouchableOpacity>
-  );
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel={`انتقال إلى الصفحة ${item.page_id}`}
+            onPress={() => {
+              router.replace({
+                pathname: '/',
+                params: { page: item.page_id.toString(), temporary: 'true' },
+              });
+            }}
+          >
+            <ThemedText type="link">
+              {`سورة: ${item.sura_name} - الآية: ${item.aya_id}`}
+            </ThemedText>
+          </Pressable>
+        </ThemedView>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <ThemedSafeAreaView style={styles.container}>
@@ -94,12 +128,29 @@ export default function Search() {
           value={inputText}
           accessibilityRole="search"
         />
-        <Ionicons
-          name="search"
-          size={20}
-          color={iconColor}
-          style={[styles.icon, { color: primaryColor }]}
-        />
+        {advancedSearchValue ? (
+          <Pressable
+            onPress={() => setAdvancedSearchValue(!advancedSearchValue)}
+          >
+            <AdvancedSearchSVG
+              width={20}
+              height={20}
+              color={primaryColor}
+              style={styles.icon}
+            />
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={() => setAdvancedSearchValue(!advancedSearchValue)}
+          >
+            <Ionicons
+              name="search"
+              size={20}
+              color={iconColor}
+              style={[styles.icon, { color: primaryColor }]}
+            />
+          </Pressable>
+        )}
       </ThemedView>
 
       {/* FlatList for search results */}
@@ -135,11 +186,12 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderWidth: 1,
     borderRadius: 8,
-    marginBottom: 20,
+    marginBottom: 10,
     alignSelf: 'center',
     maxWidth: 800,
     width: '100%',
   },
+
   searchInput: {
     flex: 1,
     padding: 10,

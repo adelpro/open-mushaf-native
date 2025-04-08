@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [3.2.4] - 2024
+## [3.2.6]
+
+- feat: Added SEO optimization with Open Graph and Twitter card support
+- feat: Added PWA support
+- feat: web - improved offline capabilities
+
+## [3.2.5]
+
+- feat: Added advanced search option using fuse.js
+
+## [3.2.4]
 
 - feat: Added preload system to speedup mushaf navigation
 - feat: Implemented web deployment support (Firebase Hosting)
@@ -15,9 +25,6 @@ All notable changes to this project will be documented in this file.
 
 - feat: add pages (images) cache preload system
 - feat: add Vercel web hosting
-
-## [3.2.2]
-
 - feat: add landscape reading mode
 
 ## [3.2.1]

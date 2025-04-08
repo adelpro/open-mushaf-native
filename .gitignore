@@ -35,3 +35,4 @@ firebase-debug.*.log*
 firebase.json
 google-services.json
 .firebase
+firebase-debug.log

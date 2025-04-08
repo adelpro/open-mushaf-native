@@ -7,6 +7,7 @@ import { useRecoilState } from 'recoil';
 
 import SegmentedControl from '@/components/SegmentControl';
 import SegmentedControlWithDisabled from '@/components/SegmentedControlWithDisabled';
+import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -47,6 +48,10 @@ export default function SettingsScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <SEO
+        title="المصحف المفتوح - الإعدادات"
+        description="إعدادات التطبيق - تخصيص المظهر والإشعارات والرواية"
+      />
       <Pressable
         style={[
           styles.settingsSection,
@@ -192,7 +197,7 @@ export default function SettingsScreen() {
           variant="danger"
           onPress={clearStorageAndReload}
         >
-          حذف كل التغييرات
+          إعادة ضبط التطبيق
         </ThemedButton>
       </ThemedView>
     </ScrollView>

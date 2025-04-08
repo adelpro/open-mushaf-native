@@ -1,0 +1,168 @@
+{
+  "name": "Open Mushaf",
+  "short_name": "Open Mushaf",
+  "description": "A modern and minimalist Quran Mushaf application",
+  "id": "f2d6a7c9-64fc-4e67-97f5-8e8f12dcb4c4",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "fullscreen",
+    "minimal-ui",
+    "browser",
+    "window-controls-overlay"
+  ],
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["books", "education", "religious"],
+  "scope_extensions": [
+    {
+      "type": "url_pattern",
+      "value": "https://*.open-mushaf.com/*"
+    }
+  ],
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "icons/192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icons/512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "icons/maskable_icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/mushaf-page.png",
+      "sizes": "400x857",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Mushaf Page - Quran reading view",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshots/mushaf-page-wide.png",
+      "sizes": "1437x916",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Mushaf Page - Quran reading view",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshots/tafseer-popup.png",
+      "sizes": "400x857",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Tafseer Popup - Quran interpretation",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshots/sura-index.png",
+      "sizes": "400x857",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Sura Index - Navigate through chapters",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshots/settings.png",
+      "sizes": "400x857",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Settings - Customize your reading experience",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshots/navigation.png",
+      "sizes": "400x857",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Navigation - Browse through the Quran",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshots/search.png",
+      "sizes": "400x857",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Search - Find verses in the Quran",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "search",
+      "short_name": "Search",
+      "description": "Search Open Mushaf",
+      "url": "/search",
+      "icons": [{ "src": "icons/search.png", "sizes": "256x256" }]
+    },
+    {
+      "name": "navigation",
+      "short_name": "Navigation",
+      "description": "Navigation Open Mushaf",
+      "url": "/navigation",
+      "icons": [{ "src": "icons/navigation.png", "sizes": "256x256" }]
+    },
+    {
+      "name": "about",
+      "short_name": "About",
+      "description": "About Open Mushaf",
+      "url": "/about",
+      "icons": [{ "src": "icons/about.png", "sizes": "256x256" }]
+    },
+    {
+      "name": "settings",
+      "short_name": "Settings",
+      "description": "Open Mushaf Settings",
+      "url": "/settings",
+      "icons": [{ "src": "icons/settings.png", "sizes": "256x256" }]
+    },
+    {
+      "name": "tutorial",
+      "short_name": "Tutorial",
+      "description": "How to use Open Mushaf",
+      "url": "/tutorial",
+      "icons": [{ "src": "icons/tutorial.png", "sizes": "256x256" }]
+    }
+  ],
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.adelpro.openmushafnative",
+      "url": "https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative"
+    }
+  ],
+  "iarc_rating_id": "71298fce-0211-4f53-91fa-aeac35a14f3c",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "handle_links": "preferred",
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}

@@ -4,17 +4,18 @@ module.exports = {
   rules: {
     'header-max-length': [2, 'always', 200],
 
-    'scope-case': [2, 'always', 'lower-case'],
+    // Disable subject-case rule to allow any case in the subject
+    'subject-case': [0, 'never'],
 
-    'subject-case': [2, 'always', 'lower-case'],
-
+    // Keep type in lowercase (feat, fix, etc.)
     'type-case': [2, 'always', 'lower-case'],
+
+    // Disable scope-case rule to allow any case in scope like (Test)
+    'scope-case': [0, 'never'],
 
     'type-enum': [
       2,
-
       'always',
-
       [
         'feat', // New feature or functionality
         'fix', // Bug fix or correction
@@ -25,6 +26,7 @@ module.exports = {
         'test', // Adding or updating tests
         'chore', // Routine tasks like build process or dependency updates
         'revert', // Reverting a previous commit
+        'ci', // Changes to our CI configuration files and scripts
       ],
     ],
   },

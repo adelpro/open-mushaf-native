@@ -2,7 +2,7 @@ export const SLIDES = [
   {
     title: 'مرحبا!',
     description: 'مرحبا بك في تطبيق المصحف',
-    image: require('@/assets/images/icon.png'),
+    image: require('@/assets/images/icon-large.png'),
   },
   {
     title: 'المصحف',
@@ -38,8 +38,20 @@ export const SLIDES = [
   },
   {
     title: 'صفحة البحث',
-    description:
-      'يمكنك الوصول إلى صفحة البحث من القائمة العلوية في المصحف، وتتيح لك البحث في نص القرآن الكريم.',
+    description: [
+      {
+        text: 'يمكنك الوصول إلى صفحة البحث من القائمة العلوية في المصحف، وتتيح لك البحث في نص القرآن الكريم.',
+        align: 'center',
+      },
+      {
+        text: 'البحث البسيط: يعرض نتائج مطابقة للنص المدخل مباشرة.',
+        align: 'start',
+      },
+      {
+        text: 'خاصية البحث المتقدم: يمكن تفعيلها بالضغط على أيقونة البحث، وتوفر خيارات بحث أكثر دقة.',
+        align: 'start',
+      },
+    ],
     image: require('@/assets/tutorial/search.png'),
   },
   {
