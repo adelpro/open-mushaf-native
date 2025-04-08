@@ -53,42 +53,51 @@ Experience the seamless navigation and features of Open-Mushaf Native in this de
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 2rem 0;">
   <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/main-screen.png" alt="Main reading interface" style="border-radius: 15px; max-width: 100%; height: auto;">
+    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/main-screen.png"
+    alt="Main reading interface" style="border-radius: 15px; max-width: 100%; height: auto;">
     <p align="center" style="margin-top: 0.5rem;">📖 Default reading view</p>
   </div>
   
   <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/landscape-mode.png" alt="Landscape reading mode" style="border-radius: 15px; max-width: 100%; height: auto;">
+    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/landscape-mode.png"
+    alt="Landscape reading mode" style="border-radius: 15px; max-width: 100%; height: auto;">
     <p align="center" style="margin-top: 0.5rem;">🔄 Landscape layout</p>
   </div>
 
   <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/dark-mode.png" alt="Dark mode interface" style="border-radius: 15px; max-width: 100%; height: auto;">
+    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/dark-mode.png"
+    alt="Dark mode interface" style="border-radius: 15px; max-width: 100%; height: auto;">
     <p align="center" style="margin-top: 0.5rem;">🌙 Dark theme</p>
   </div>
 
   <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/tafseer-popup.png" alt="Tafseer explanation" style="border-radius: 15px; max-width: 100%; height: auto;">
+    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/tafseer-popup.png"
+    alt="Tafseer explanation" style="border-radius: 15px; max-width: 100%; height: auto;">
     <p align="center" style="margin-top: 0.5rem;">📚 Resizable Tafseer</p>
   </div>
 
   <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/sura-index.png" alt="Surah index" style="border-radius: 15px; max-width: 100%; height: auto;">
+    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/sura-index.png"
+    alt="Surah index" style="border-radius: 15px; max-width: 100%; height: auto;">
     <p align="center" style="margin-top: 0.5rem;">📑 Surah navigation</p>
   </div>
 
   <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/settings-menu.png" alt="Settings panel" style="border-radius: 15px; max-width: 100%; height: auto;">
+    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/settings-menu.png"
+    alt="Settings panel" style="border-radius: 15px; max-width: 100%; height: auto;">
     <p align="center" style="margin-top: 0.5rem;">⚙️ Customization options</p>
   </div>
 
   <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/riwaya-selection.png" alt="Riwaya selection" style="border-radius: 15px; max-width: 100%; height: auto;">
+    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/riwaya-selection.png"
+    alt="Riwaya selection" style="border-radius: 15px; max-width: 100%; height: auto;">
     <p align="center" style="margin-top: 0.5rem;">🔄 Riwaya switcher</p>
   </div>
 
   <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/search-feature.png" alt="Search functionality" style="border-radius: 15px; max-width: 100%; height: auto;">
+    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/search-feature.png"
+    alt="Search functionality"
+    style="border-radius: 15px; max-width: 100%; height: auto;">
     <p align="center" style="margin-top: 0.5rem;">🔍 Advanced search</p>
   </div>
 </div>
@@ -149,11 +158,13 @@ Ready-to-use versions are available for:
 
 <div style="display: flex; gap: 20px; align-items: center; margin-top: 15px;">
   <a href="https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative" target="_blank">
-    <img src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white" alt="Google Play Store" />
+    <img src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white"
+     alt="Google Play Store" />
   </a>
   
   <a href="https://open-mushaf-native.web.app/" target="_blank">
-    <img src="https://img.shields.io/badge/Web_App-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Web App" />
+    <img src="https://img.shields.io/badge/Web_App-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white"
+    alt="Web App" />
   </a>
 </div>
 
