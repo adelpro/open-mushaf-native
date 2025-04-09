@@ -1047,15 +1047,15 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.1.tgz#de633db3ec2ef6a3c89e2f19038063e8a122e2c2"
   integrity sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==
 
-"@expo-google-fonts/amiri@^0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@expo-google-fonts/amiri/-/amiri-0.2.3.tgz#cc57424ed43247373bd0e938bfd91334f75606bb"
-  integrity sha512-kjyddy14Jvvnw0kFn5SRItu8QdEVyuPF908eOfLv6+9wWi5wVgQMpQsYz94gcoEojFsEb6suNB8M+jWId7eRCw==
+"@expo-google-fonts/amiri@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/amiri/-/amiri-0.3.0.tgz#2b39f24649f43386ae0bcde4a447e42a3c355551"
+  integrity sha512-aiOvKeTNY7cfXu3/sZV3B6YqkxSmh5hAfnw8ACwbE6i4nCCFZGeZDZDeAD7PoFqiAGciALaq0VCDhwgdA+LC8A==
 
-"@expo-google-fonts/tajawal@^0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@expo-google-fonts/tajawal/-/tajawal-0.2.3.tgz#9cc44750871ce58d6ff0b4bd693835aa4b4b7d80"
-  integrity sha512-FQZsqIBEQcWwy+33pCMaB071k8vl5ZacBfhkwN5Eopxn/22iTHt0LhQv4g9NNM6gUerZCrU6qk7N60ihFKWyHw==
+"@expo-google-fonts/tajawal@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/tajawal/-/tajawal-0.3.0.tgz#be5bd0d130a3545bd059afdd64f077afb5202ade"
+  integrity sha512-PYzp1nkLCsQ5Nv1MI1bPNx/m5Ryi9WiWa0xxumFeMmh/m5Xzp2fMz/cn99cyThkzoQ4zejORDiU5XlTKUwjJ9g==
 
 "@expo/bunyan@^4.0.0":
   version "4.0.1"
