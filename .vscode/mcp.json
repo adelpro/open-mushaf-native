@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "open-mushaf-native Docs": {
+      "type": "sse",
+      "url": "https://gitmcp.io/adelpro/open-mushaf-native"
+    }
+  }
+}
