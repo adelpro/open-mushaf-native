@@ -44,6 +44,9 @@ export default function TabLayout() {
               name={focused ? 'view-list' : 'view-list-outline'}
               size={28}
               color={color}
+              accessible={true} // Add Accessibility Properties
+              accessibilityLabel="فهرس السور والأجزاء"
+              accessibilityHint="انتقل إلى صفحة الفهرس لعرض قائمة السور والأجزاء"
             />
           ),
         }}
@@ -58,6 +61,9 @@ export default function TabLayout() {
               size={28}
               style={{ marginBottom: -3 }}
               color={color}
+              accessible={true} // Add Accessibility Properties
+              accessibilityLabel="المصحف"
+              accessibilityHint="انتقل إلى صفحة المصحف للقراءة"
             />
           ),
         }}
@@ -67,7 +73,14 @@ export default function TabLayout() {
         options={{
           title: 'المزيد',
           tabBarIcon: ({ color }) => (
-            <Feather name="more-horizontal" size={24} color={color} />
+            <Feather
+              name="more-horizontal"
+              size={24}
+              color={color}
+              accessible={true} // Add Accessibility Properties
+              accessibilityLabel="المزيد"
+              accessibilityHint="انتقل إلى صفحة المزيد للإعدادات وخيارات أخرى"
+            />
           ),
         }}
       />
