@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.3.0]
+
+- chore: update expo SDK to version 53 canary
+
 ## [3.2.6]
 
 - feat: Added SEO optimization with Open Graph and Twitter card support
