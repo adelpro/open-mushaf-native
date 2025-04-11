@@ -48,8 +48,7 @@
             "image": "./assets/images/icon-large.png",
             "backgroundColor": "#5B5B66"
           },
-          "imageResizeMode": "contain",
-          "imageWidth": 300
+          "imageWidth": 200
         }
       ],
       "expo-router",
