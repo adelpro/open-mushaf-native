@@ -1,4 +1,3 @@
-//import { Platform } from 'react-native';
 import ReactNativeRecoilPersist from 'react-native-recoil-persist';
 import { atom, AtomEffect } from 'recoil';
 
@@ -82,9 +81,8 @@ export const dailyHizbProgress = atom<number>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
-// Add these new atoms for daily tracking
-export const lastDailyReset = atom<string>({
-  key: 'lastDailyReset',
+export const lastReset = atom<string>({
+  key: 'lastReset',
   default: '', // Will store date of last reset
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
@@ -124,25 +122,4 @@ export const topMenuState = atom<boolean>({
       parseInt(process.env.EXPO_PUBLIC_TOP_MENU_HIDE_DURATION_MS || '5000', 10),
     ),
   ],
-});
-
-// Add these atoms to your existing atoms file
-export const monthlyHizbProgress = atom({
-  key: 'monthlyHizbProgress',
-  default: 0,
-});
-
-export const monthlyHizbTarget = atom({
-  key: 'monthlyHizbTarget',
-  default: 60, // Default target for a month (full Quran)
-});
-
-export const lastMonthlyReset = atom({
-  key: 'lastMonthlyReset',
-  default: '',
-});
-
-export const monthlyHizbDeviation = atom({
-  key: 'monthlyHizbDeviation',
-  default: 0, // Positive means ahead, negative means behind
 });

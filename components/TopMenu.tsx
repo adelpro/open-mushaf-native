@@ -1,23 +1,36 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View, // Import View
+} from 'react-native';
 
 import {
+  Feather,
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
 } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import * as Progress from 'react-native-progress';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
-import { bottomMenuState, topMenuState } from '@/recoil/atoms';
+import {
+  bottomMenuState,
+  dailyHizbProgress,
+  dailyHizbTarget,
+  topMenuState,
+} from '@/recoil/atoms';
 
 import { ThemedSafeAreaView } from './ThemedSafeAreaView';
 
 export default function TopMenu() {
-  const { tintColor } = useColors();
+  const { tintColor, primaryColor } = useColors();
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const insets = useSafeAreaInsets();
@@ -26,6 +39,16 @@ export default function TopMenu() {
     useRecoilState<boolean>(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] =
     useRecoilState<boolean>(topMenuState);
+
+  // --- Access Recoil State for Progress ---
+  const dailyHizbGoal = useRecoilValue(dailyHizbTarget);
+  const dailyHizbCompleted = useRecoilValue(dailyHizbProgress);
+
+  // --- Calculate Progress ---
+  const dailyProgressDecimal =
+    dailyHizbGoal > 0
+      ? Math.min(1, dailyHizbCompleted / dailyHizbGoal) // Use decimal (0 to 1)
+      : 0;
 
   const toggleMenu = () => {
     setBottomMenuState((state: boolean) => !state);
@@ -66,6 +89,31 @@ export default function TopMenu() {
           )}
         </TouchableOpacity>
         <ThemedView style={styles.leftIconsContainer}>
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => {
+              setShowTopMenuState(false);
+              router.push('/tracker');
+            }}
+          >
+            <View style={styles.progressContainer}>
+              <Progress.Circle
+                size={32}
+                progress={dailyProgressDecimal}
+                color={primaryColor}
+                showsText={false}
+                thickness={5}
+                borderWidth={0}
+                unfilledColor={'rgba(128, 128, 128, 0.4)'}
+              />
+              {dailyProgressDecimal === 1 && (
+                <View style={styles.checkmarkContainer}>
+                  <Feather name="check" size={20} color={primaryColor} />
+                </View>
+              )}
+            </View>
+          </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.icon}
             onPress={() => {
@@ -122,8 +170,19 @@ const styles = StyleSheet.create({
   },
   leftIconsContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: 'transparent',
     margin: 0,
     padding: 0,
+  },
+  progressContainer: {
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkmarkContainer: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

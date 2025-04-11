@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import {
+  Alert,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useRecoilState } from 'recoil';
 
+import hizbJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.json';
 import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
@@ -15,144 +23,102 @@ import useCurrentPage from '@/hooks/useCurrentPage';
 import {
   dailyHizbProgress,
   dailyHizbTarget,
-  lastDailyReset,
-  lastMonthlyReset,
-  monthlyHizbDeviation,
-  monthlyHizbProgress,
-  monthlyHizbTarget,
+  lastReset,
   yesterdayPage,
 } from '@/recoil/atoms';
-import {
-  calculateHizbFromPages,
-  updateHizbProgressFromPage,
-} from '@/utils/hizbProgress';
+import { Hizb } from '@/types';
+import { calculateHizbsBetweenPages } from '@/utils/hizbProgress';
 
 export default function TrackerScreen() {
   const { iconColor, cardColor, primaryColor } = useColors();
   const { currentSavedPage: savedPage } = useCurrentPage();
 
-  // Helper function for proper Arabic pluralization of hizb
+  const [dailyHizbGoal, setDailyHizbGoal] = useRecoilState(dailyHizbTarget);
+  const [dailyHizbCompleted, setDailyHizbCompleted] =
+    useRecoilState(dailyHizbProgress);
+  const [lastResetValue, setLastResetValue] = useRecoilState(lastReset);
+  const [yesterdayPageValue, setYesterdayPageValue] =
+    useRecoilState(yesterdayPage);
+
+  const hizbData = hizbJson as Hizb[];
+
+  const dailyProgress =
+    dailyHizbGoal > 0
+      ? Math.min(100, (dailyHizbCompleted / dailyHizbGoal) * 100)
+      : 0;
+
+  // Save current page to yesterdayPage at midnight and reset
+  useEffect(() => {
+    const now = new Date();
+    const msUntilMidnight =
+      new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() -
+      now.getTime();
+
+    const timeout = setTimeout(() => {
+      if (typeof savedPage === 'number' && savedPage > 0) {
+        setYesterdayPageValue(savedPage);
+      }
+      setDailyHizbCompleted(0);
+      setYesterdayPageValue(savedPage);
+    }, msUntilMidnight);
+
+    return () => clearTimeout(timeout);
+  }, [setDailyHizbCompleted, setYesterdayPageValue, savedPage]);
+
+  const incrementDailyGoal = () => setDailyHizbGoal((prev) => prev + 1);
+  const decrementDailyGoal = () =>
+    setDailyHizbGoal((prev) => Math.max(1, prev - 1));
+
+  const resetAllProgress = () => {
+    const performReset = () => {
+      if (typeof savedPage === 'number' && savedPage > 0) {
+        setYesterdayPageValue(savedPage);
+      }
+
+      setDailyHizbCompleted(0);
+      const todayStr = new Date().toISOString().split('T')[0];
+      setLastResetValue(todayStr);
+      console.log('Manual reset completed', { todayStr });
+    };
+
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm(
+        'هل أنت متأكد من رغبتك في إعادة تعيين التقدم؟',
+      );
+      if (confirmed) performReset();
+    } else {
+      Alert.alert(
+        'إعادة تعيين',
+        'هل أنت متأكد من رغبتك في إعادة تعيين التقدم؟',
+        [
+          { text: 'إلغاء', style: 'cancel' },
+          {
+            text: 'تأكيد',
+            onPress: performReset,
+          },
+        ],
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (typeof savedPage === 'number' && savedPage > 0) {
+      const numberOfHizb = calculateHizbsBetweenPages(
+        yesterdayPageValue,
+        savedPage,
+        hizbData,
+      );
+
+      setDailyHizbCompleted(numberOfHizb);
+    }
+  }, [hizbData, savedPage, setDailyHizbCompleted, yesterdayPageValue]);
+
   const getHizbText = (count: number) => {
     if (count === 0) return '0 أحزاب';
     if (count === 1) return 'حزب واحد';
     if (count === 2) return 'حزبين';
     if (count >= 3 && count <= 10) return `${count} أحزاب`;
     return `${count} حزباً`;
-  };
-
-  // Recoil states for tracking progress
-  const [dailyHizbGoal, setDailyHizbGoal] = useRecoilState(dailyHizbTarget);
-  const [dailyHizbCompleted, setDailyHizbCompleted] =
-    useRecoilState(dailyHizbProgress);
-  const [lastReset, setLastReset] = useRecoilState(lastDailyReset);
-  const [prevPage, setPrevPage] = useRecoilState(yesterdayPage);
-
-  // Monthly tracking states
-  const [monthlyHizbGoal, setMonthlyHizbGoal] =
-    useRecoilState(monthlyHizbTarget);
-  const [monthlyHizbCompleted, setMonthlyHizbCompleted] =
-    useRecoilState(monthlyHizbProgress);
-  const [lastMonthlyResetDate, setLastMonthlyResetDate] =
-    useRecoilState(lastMonthlyReset);
-  const [hizbDeviation, setHizbDeviation] =
-    useRecoilState(monthlyHizbDeviation);
-
-  // Calculate progress percentages
-  const dailyProgress =
-    dailyHizbGoal > 0
-      ? Math.min(100, (dailyHizbCompleted / dailyHizbGoal) * 100)
-      : 0;
-
-  const monthlyProgress =
-    monthlyHizbGoal > 0
-      ? Math.min(100, (monthlyHizbCompleted / monthlyHizbGoal) * 100)
-      : 0;
-
-  // Check for day change and reset daily progress if needed
-  useEffect(() => {
-    const checkDayChange = () => {
-      const today = new Date();
-      const todayStr = today.toISOString().split('T')[0]; // YYYY-MM-DD format
-
-      // If this is the first time or a new day
-      if (!lastReset || lastReset !== todayStr) {
-        // Save yesterday's page before resetting
-        if (savedPage > 0) {
-          setPrevPage(savedPage);
-        }
-
-        // Reset daily progress
-        setDailyHizbCompleted(0);
-
-        // Update last reset date
-        setLastReset(todayStr);
-      }
-    };
-
-    checkDayChange();
-
-    // Set up interval to check for day change (every 5 minutes)
-    const intervalId = setInterval(checkDayChange, 5 * 60 * 1000);
-
-    return () => clearInterval(intervalId);
-  }, [lastReset, savedPage, setDailyHizbCompleted, setLastReset, setPrevPage]);
-
-  useEffect(() => {
-    if (savedPage > 0) {
-      // Automatically update daily progress when page changes
-      if (prevPage > 0 && savedPage > prevPage) {
-        // Calculate hizb progress based on page difference
-        const hizbProgress = calculateHizbFromPages(prevPage, savedPage);
-        setDailyHizbCompleted((prev) =>
-          Math.min(prev + hizbProgress, dailyHizbGoal),
-        );
-      } else {
-        // If no previous page, just update based on current page
-        updateHizbProgressFromPage(
-          savedPage,
-          setDailyHizbCompleted,
-          dailyHizbGoal,
-        );
-      }
-    }
-  }, [savedPage, prevPage, dailyHizbGoal, setDailyHizbCompleted]);
-
-  // Force re-calculation of progress when goal changes
-  useEffect(() => {
-    if (savedPage > 0) {
-      updateHizbProgressFromPage(
-        savedPage,
-        setDailyHizbCompleted,
-        dailyHizbGoal,
-      );
-    }
-  }, [dailyHizbGoal, savedPage, setDailyHizbCompleted]);
-
-  // Handlers for adjusting goals and progress
-  const incrementDailyGoal = () => setDailyHizbGoal((prev) => prev + 1);
-  const decrementDailyGoal = () =>
-    setDailyHizbGoal((prev) => Math.max(1, prev - 1));
-
-  // Reset progress handlers
-  // resetDailyProgress function removed
-
-  // Temporary placeholder for monthly reset (will implement properly in step 3)
-  const resetMonthlyProgress = () => {
-    Alert.alert(
-      'إعادة تعيين التقدم الشهري',
-      'هل أنت متأكد من رغبتك في إعادة تعيين تقدم الورد الشهري؟',
-      [
-        { text: 'إلغاء', style: 'cancel' },
-        {
-          text: 'تأكيد',
-          onPress: () => {
-            setMonthlyHizbCompleted(0);
-            setHizbDeviation(0);
-            setLastMonthlyResetDate(new Date().toISOString().split('T')[0]);
-          },
-        },
-      ],
-    );
   };
 
   return (
@@ -164,7 +130,6 @@ export default function TrackerScreen() {
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
         >
-          {/* Daily Reading Card */}
           <ThemedView
             style={[styles.navigationSection, { backgroundColor: cardColor }]}
           >
@@ -176,15 +141,8 @@ export default function TrackerScreen() {
                 size={24}
                 color={iconColor}
                 style={[styles.icon, { color: primaryColor }]}
-                accessibilityLabel="Daily reading icon"
               />
-              <ThemedText
-                style={styles.label}
-                accessibilityLabel="Daily reading progress"
-                accessibilityRole="header"
-              >
-                الورد اليومي:
-              </ThemedText>
+              <ThemedText style={styles.label}>الورد اليومي:</ThemedText>
             </ThemedView>
 
             <ThemedView style={styles.progressContainer}>
@@ -209,32 +167,32 @@ export default function TrackerScreen() {
               {getHizbText(dailyHizbGoal)}
             </ThemedText>
 
-            {/* Add info about yesterday's page */}
-            {prevPage > 0 && (
+            {yesterdayPageValue > 0 && (
               <ThemedText style={[styles.infoText, { fontSize: 14 }]}>
-                آخر صفحة من الأمس: {prevPage}
+                آخر صفحة من الأمس: {yesterdayPageValue}
               </ThemedText>
             )}
 
-            {/* Controls for daily progress */}
             <ThemedView style={styles.controlsContainer}>
               <ThemedView style={styles.controlGroup}>
-                <ThemedText style={styles.controlLabel}>الهدف:</ThemedText>
+                {/* Updated Label */}
+                <ThemedText style={styles.controlLabel}>
+                  الهدف اليومي:
+                </ThemedText>
                 <ThemedView style={styles.controls}>
                   <TouchableOpacity
                     style={styles.controlButton}
                     onPress={decrementDailyGoal}
-                    accessibilityLabel="تقليل الهدف اليومي"
                   >
                     <Feather name="minus" size={20} color={primaryColor} />
                   </TouchableOpacity>
+                  {/* Updated Value Display */}
                   <ThemedText style={styles.controlValue}>
-                    {dailyHizbGoal}
+                    {getHizbText(dailyHizbGoal)}
                   </ThemedText>
                   <TouchableOpacity
                     style={styles.controlButton}
                     onPress={incrementDailyGoal}
-                    accessibilityLabel="زيادة الهدف اليومي"
                   >
                     <Feather name="plus" size={20} color={primaryColor} />
                   </TouchableOpacity>
@@ -243,69 +201,6 @@ export default function TrackerScreen() {
             </ThemedView>
           </ThemedView>
 
-          {/* Monthly Reading Card */}
-          <ThemedView
-            style={[styles.navigationSection, { backgroundColor: cardColor }]}
-          >
-            <ThemedView
-              style={[styles.labelContainer, { backgroundColor: cardColor }]}
-            >
-              <Feather
-                name="calendar"
-                size={24}
-                color={iconColor}
-                style={[styles.icon, { color: primaryColor }]}
-                accessibilityLabel="Monthly reading icon"
-              />
-              <ThemedText
-                style={styles.label}
-                accessibilityLabel="Monthly reading progress"
-                accessibilityRole="header"
-              >
-                الورد الشهري:
-              </ThemedText>
-            </ThemedView>
-
-            <ThemedView style={styles.progressContainer}>
-              <ThemedView
-                style={[
-                  styles.progressBar,
-                  {
-                    width: `${monthlyProgress}%`,
-                    backgroundColor: primaryColor,
-                  },
-                ]}
-              />
-              <ThemedText
-                style={[
-                  styles.progressText,
-                  { color: monthlyProgress > 50 ? 'white' : 'black' },
-                ]}
-              >
-                {monthlyProgress.toFixed(0)}%
-              </ThemedText>
-            </ThemedView>
-
-            <ThemedText style={styles.infoText}>
-              قراءة {getHizbText(monthlyHizbCompleted)} من أصل{' '}
-              {getHizbText(monthlyHizbGoal)}
-              {hizbDeviation > 0 ? (
-                <ThemedText style={{ color: 'green' }}>
-                  {' '}
-                  (متقدم بـ {getHizbText(hizbDeviation)})
-                </ThemedText>
-              ) : hizbDeviation < 0 ? (
-                <ThemedText style={{ color: 'red' }}>
-                  {' '}
-                  (متأخر بـ {getHizbText(Math.abs(hizbDeviation))})
-                </ThemedText>
-              ) : null}
-            </ThemedText>
-
-            {/* Monthly progress control removed - will be automatic */}
-          </ThemedView>
-
-          {/* Information Card */}
           <ThemedView
             style={[styles.navigationSection, { backgroundColor: cardColor }]}
           >
@@ -317,37 +212,44 @@ export default function TrackerScreen() {
                 size={24}
                 color={iconColor}
                 style={[styles.icon, { color: primaryColor }]}
-                accessibilityLabel="Information icon"
               />
-              <ThemedText
-                style={styles.label}
-                accessibilityLabel="About Hizb tracking"
-                accessibilityRole="header"
-              >
-                عن نظام الأحزاب:
-              </ThemedText>
+              <ThemedText style={styles.label}>عن نظام الأحزاب:</ThemedText>
             </ThemedView>
 
             <ThemedText style={styles.infoText}>
               القرآن الكريم مقسم إلى 60 حزباً، كل جزء يحتوي على حزبين.
             </ThemedText>
             <ThemedText style={styles.infoText}>
-              يمكنك تتبع قراءتك اليومية والشهرية بالأحزاب بدلاً من الصفحات، مما
-              يساعدك على تنظيم وردك بشكل أفضل.
+              يمكنك تتبع قراءتك اليومية بالأحزاب بدلاً من الصفحات.
             </ThemedText>
+            {/* Updated the informational text for better clarity */}
             <ThemedText style={[styles.infoText, { color: primaryColor }]}>
-              يتم حساب تقدم قراءة الأحزاب تلقائياً بناءً على آخر صفحة قمت بحفظها
-              (صفحة {savedPage}).
+              يُحسب الورد اليومي عن طريق حساب عدد الأحزاب بين آخر صفحة تمت
+              قراءتها بالأمس والصفحة الحالية (صفحة{' '}
+              {typeof savedPage === 'number' ? savedPage : 'غير محددة'}).
             </ThemedText>
 
             <ThemedView style={styles.resetButtonsContainer}>
               <ThemedButton
                 variant="outlined-primary"
                 style={styles.resetButton}
-                onPress={resetMonthlyProgress}
-                accessibilityLabel="إعادة تعيين التقدم الشهري"
+                onPress={resetAllProgress}
               >
-                إعادة تعيين الورد الشهري
+                <ThemedView
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    backgroundColor: 'transparent',
+                  }}
+                >
+                  <Feather
+                    name="refresh-cw"
+                    size={16}
+                    color={primaryColor}
+                    style={{ marginRight: 5 }}
+                  />
+                  <Text>إعادة تعيين</Text>
+                </ThemedView>
               </ThemedButton>
             </ThemedView>
           </ThemedView>
@@ -358,13 +260,6 @@ export default function TrackerScreen() {
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    width: '100%',
-  },
-  scrollContent: {
-    alignItems: 'center',
-    paddingBottom: 20,
-  },
   container: {
     flex: 1,
     padding: 15,
@@ -375,82 +270,69 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 640,
   },
+  scrollView: { width: '100%' },
+  scrollContent: { alignItems: 'center', paddingBottom: 40 },
   navigationSection: {
-    marginVertical: 15,
-    borderRadius: 10,
-    padding: 15,
-    width: '100%',
-    elevation: 3,
-    maxWidth: 640,
+    width: '90%',
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 16,
   },
   labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginBottom: 15,
+    marginBottom: 12,
   },
-  label: {
-    fontSize: 20,
-    fontFamily: 'Tajawal_700Bold',
-    textAlign: 'right',
-  },
-  icon: {
-    marginHorizontal: 5,
-  },
+  icon: { marginEnd: 10 },
+  label: { fontSize: 18, fontWeight: 'bold' },
   progressContainer: {
-    height: 25,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 12.5,
+    height: 24,
+    width: '100%',
+    borderRadius: 12,
+    backgroundColor: '#E5E7EB',
     overflow: 'hidden',
-    position: 'relative',
-    marginVertical: 10,
+    justifyContent: 'center',
+    marginBottom: 8,
   },
   progressBar: {
-    height: '100%',
     position: 'absolute',
+    height: '100%',
     left: 0,
-    top: 0,
-    borderRadius: 12.5,
+    borderRadius: 12,
   },
   progressText: {
-    position: 'absolute',
     width: '100%',
     textAlign: 'center',
-    lineHeight: 25,
-    fontSize: 14,
-    fontFamily: 'Tajawal_700Bold',
+    fontSize: 12,
+    zIndex: 1,
+    // Note: Text color logic remains simple for now. Consider dynamic contrast calculation later.
   },
-  infoText: {
-    marginTop: 10,
-    fontSize: 16,
-    fontFamily: 'Tajawal_400Regular',
-    textAlign: 'center',
-  },
+  infoText: { marginTop: 4, fontSize: 16, lineHeight: 24 }, // Added lineHeight for better readability
   controlsContainer: {
-    marginTop: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-  },
-  controlGroup: {
+    marginTop: 12,
     alignItems: 'center',
   },
-  controlLabel: {
-    fontSize: 14,
-    fontFamily: 'Tajawal_700Bold',
-    marginBottom: 5,
-  },
+  controlGroup: { flexDirection: 'row', alignItems: 'center' },
+  controlLabel: { marginEnd: 8, fontSize: 16 },
   controls: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 5,
   },
   controlButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#ccc',
+    // borderColor: '#ccc', // Use theme color instead of hardcoded grey
+    // Use primaryColor for the border - requires access to it here.
+    // Since styles are defined outside the component, we can't directly use primaryColor variable here.
+    // Option 1: Pass primaryColor as a prop to this component (complex setup).
+    // Option 2: Define styles inline within the component (less performant for frequently changing styles).
+    // Option 3: Keep a neutral color or adjust the component structure.
+    // For now, keeping a neutral grey, but ideally this would use a theme color.
+    borderColor: '#E5E7EB', // Using the progress bar background color for neutrality
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 10,
@@ -458,21 +340,14 @@ const styles = StyleSheet.create({
   controlValue: {
     fontSize: 16,
     fontFamily: 'Tajawal_700Bold',
-    minWidth: 30,
+    minWidth: 60, // Increased minWidth to accommodate longer text like "حزبين"
     textAlign: 'center',
   },
+  // Adjusted margin for better spacing consistency
   resetButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-    flexWrap: 'wrap',
     marginTop: 20,
-    width: '100%',
-    gap: 10,
+    alignItems: 'center',
+    backgroundColor: 'transparent',
   },
-  resetButton: {
-    minWidth: 140,
-    marginVertical: 5,
-  },
+  resetButton: { paddingHorizontal: 16, paddingVertical: 8 },
 });

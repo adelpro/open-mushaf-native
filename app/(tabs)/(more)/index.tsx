@@ -6,7 +6,6 @@ import { router } from 'expo-router';
 import InfoSVG from '@/assets/svgs/info.svg';
 import MailSVG from '@/assets/svgs/mail.svg';
 import PageSVG from '@/assets/svgs/page.svg';
-import ProgressSVG from '@/assets/svgs/progress.svg';
 import SettingsSVG from '@/assets/svgs/settings.svg';
 import WelcomeSVG from '@/assets/svgs/welcome.svg';
 import { ThemedButton } from '@/components/ThemedButton';
@@ -14,16 +13,6 @@ import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 export default function MoreScreen() {
   return (
     <ThemedSafeAreaView style={styles.container}>
-      <ThemedButton
-        onPress={() => router.push('/tracker')}
-        variant="primary"
-        style={styles.button}
-      >
-        <View style={styles.buttonContent}>
-          <ProgressSVG width={24} height={24} style={styles.svg} />
-          <Text style={styles.buttonText}>الورد اليومي</Text>
-        </View>
-      </ThemedButton>
       <ThemedButton
         onPress={() => router.push('/settings')}
         variant="primary"
