@@ -126,6 +126,7 @@ export const topMenuState = atom<boolean>({
   ],
 });
 
+// Add these atoms to your existing atoms file
 export const monthlyHizbProgress = atom({
   key: 'monthlyHizbProgress',
   default: 0,
@@ -133,10 +134,15 @@ export const monthlyHizbProgress = atom({
 
 export const monthlyHizbTarget = atom({
   key: 'monthlyHizbTarget',
-  default: 60, // Default target for a month
+  default: 60, // Default target for a month (full Quran)
 });
 
 export const lastMonthlyReset = atom({
   key: 'lastMonthlyReset',
-  default: null,
+  default: '',
+});
+
+export const monthlyHizbDeviation = atom({
+  key: 'monthlyHizbDeviation',
+  default: 0, // Positive means ahead, negative means behind
 });

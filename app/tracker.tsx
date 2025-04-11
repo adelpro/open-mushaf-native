@@ -16,6 +16,10 @@ import {
   dailyHizbProgress,
   dailyHizbTarget,
   lastDailyReset,
+  lastMonthlyReset,
+  monthlyHizbDeviation,
+  monthlyHizbProgress,
+  monthlyHizbTarget,
   yesterdayPage,
 } from '@/recoil/atoms';
 import {
@@ -43,9 +47,15 @@ export default function TrackerScreen() {
   const [lastReset, setLastReset] = useRecoilState(lastDailyReset);
   const [prevPage, setPrevPage] = useRecoilState(yesterdayPage);
 
-  // Temporary placeholder for monthly values (will implement properly in next step)
-  const [monthlyHizbGoal] = useState(60); // Full Quran
-  const [monthlyHizbCompleted, setMonthlyHizbCompleted] = useState(0);
+  // Monthly tracking states
+  const [monthlyHizbGoal, setMonthlyHizbGoal] =
+    useRecoilState(monthlyHizbTarget);
+  const [monthlyHizbCompleted, setMonthlyHizbCompleted] =
+    useRecoilState(monthlyHizbProgress);
+  const [lastMonthlyResetDate, setLastMonthlyResetDate] =
+    useRecoilState(lastMonthlyReset);
+  const [hizbDeviation, setHizbDeviation] =
+    useRecoilState(monthlyHizbDeviation);
 
   // Calculate progress percentages
   const dailyProgress =
@@ -124,16 +134,7 @@ export default function TrackerScreen() {
     setDailyHizbGoal((prev) => Math.max(1, prev - 1));
 
   // Reset progress handlers
-  const resetDailyProgress = () => {
-    Alert.alert(
-      'إعادة تعيين التقدم اليومي',
-      'هل أنت متأكد من رغبتك في إعادة تعيين تقدم الورد اليومي؟',
-      [
-        { text: 'إلغاء', style: 'cancel' },
-        { text: 'تأكيد', onPress: () => setDailyHizbCompleted(0) },
-      ],
-    );
-  };
+  // resetDailyProgress function removed
 
   // Temporary placeholder for monthly reset (will implement properly in step 3)
   const resetMonthlyProgress = () => {
@@ -142,7 +143,14 @@ export default function TrackerScreen() {
       'هل أنت متأكد من رغبتك في إعادة تعيين تقدم الورد الشهري؟',
       [
         { text: 'إلغاء', style: 'cancel' },
-        { text: 'تأكيد', onPress: () => setMonthlyHizbCompleted(0) },
+        {
+          text: 'تأكيد',
+          onPress: () => {
+            setMonthlyHizbCompleted(0);
+            setHizbDeviation(0);
+            setLastMonthlyResetDate(new Date().toISOString().split('T')[0]);
+          },
+        },
       ],
     );
   };
@@ -281,6 +289,17 @@ export default function TrackerScreen() {
             <ThemedText style={styles.infoText}>
               قراءة {getHizbText(monthlyHizbCompleted)} من أصل{' '}
               {getHizbText(monthlyHizbGoal)}
+              {hizbDeviation > 0 ? (
+                <ThemedText style={{ color: 'green' }}>
+                  {' '}
+                  (متقدم بـ {getHizbText(hizbDeviation)})
+                </ThemedText>
+              ) : hizbDeviation < 0 ? (
+                <ThemedText style={{ color: 'red' }}>
+                  {' '}
+                  (متأخر بـ {getHizbText(Math.abs(hizbDeviation))})
+                </ThemedText>
+              ) : null}
             </ThemedText>
 
             {/* Monthly progress control removed - will be automatic */}
@@ -322,15 +341,6 @@ export default function TrackerScreen() {
             </ThemedText>
 
             <ThemedView style={styles.resetButtonsContainer}>
-              <ThemedButton
-                variant="outlined-primary"
-                style={styles.resetButton}
-                onPress={resetDailyProgress}
-                accessibilityLabel="إعادة تعيين التقدم اليومي"
-              >
-                إعادة تعيين الورد اليومي
-              </ThemedButton>
-
               <ThemedButton
                 variant="outlined-primary"
                 style={styles.resetButton}
