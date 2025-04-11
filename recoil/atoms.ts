@@ -125,3 +125,18 @@ export const topMenuState = atom<boolean>({
     ),
   ],
 });
+
+export const monthlyHizbProgress = atom({
+  key: 'monthlyHizbProgress',
+  default: 0,
+});
+
+export const monthlyHizbTarget = atom({
+  key: 'monthlyHizbTarget',
+  default: 60, // Default target for a month
+});
+
+export const lastMonthlyReset = atom({
+  key: 'lastMonthlyReset',
+  default: null,
+});

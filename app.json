@@ -46,7 +46,7 @@
           "image": "./assets/images/icon-large.png",
           "dark": {
             "image": "./assets/images/icon-large.png",
-            "backgroundColor": "#5B5B66"
+            "backgroundColor": "#eeeee6"
           },
           "imageWidth": 200
         }

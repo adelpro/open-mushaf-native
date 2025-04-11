@@ -81,13 +81,12 @@ export default function TrackerScreen() {
 
     checkDayChange();
 
-    // Set up interval to check for day change (every minute)
-    const intervalId = setInterval(checkDayChange, 60000);
+    // Set up interval to check for day change (every 5 minutes)
+    const intervalId = setInterval(checkDayChange, 5 * 60 * 1000);
 
     return () => clearInterval(intervalId);
   }, [lastReset, savedPage, setDailyHizbCompleted, setLastReset, setPrevPage]);
 
-  // Update this useEffect to automatically calculate progress when savedPage changes
   useEffect(() => {
     if (savedPage > 0) {
       // Automatically update daily progress when page changes
@@ -108,13 +107,16 @@ export default function TrackerScreen() {
     }
   }, [savedPage, prevPage, dailyHizbGoal, setDailyHizbCompleted]);
 
-  // Remove the updateDailyProgressFromPageDiff function
-
   // Force re-calculation of progress when goal changes
   useEffect(() => {
-    // This empty effect ensures the component re-renders when dailyHizbGoal changes
-    // The dailyProgress calculation will run again with the new goal value
-  }, [dailyHizbGoal]);
+    if (savedPage > 0) {
+      updateHizbProgressFromPage(
+        savedPage,
+        setDailyHizbCompleted,
+        dailyHizbGoal,
+      );
+    }
+  }, [dailyHizbGoal, savedPage, setDailyHizbCompleted]);
 
   // Handlers for adjusting goals and progress
   const incrementDailyGoal = () => setDailyHizbGoal((prev) => prev + 1);
