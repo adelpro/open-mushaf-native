@@ -70,6 +70,31 @@ export const hizbNotification = atom<number>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
+// Tracking system atoms for Hizb-based reading goals
+export const dailyHizbTarget = atom<number>({
+  key: 'DailyHizbTarget',
+  default: 2, // Default goal of 2 Hizbs per day
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+export const dailyHizbProgress = atom<number>({
+  key: 'DailyHizbProgress',
+  default: 0,
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+
+// Add these new atoms for daily tracking
+export const lastDailyReset = atom<string>({
+  key: 'lastDailyReset',
+  default: '', // Will store date of last reset
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+
+export const yesterdayPage = atom<number>({
+  key: 'yesterdayPage',
+  default: 0, // Will store yesterday's page number
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+
 // Create a timer effect for Recoil state
 const timerEffect: (duration_ms: number) => AtomEffect<any> =
   (duration_ms: number) =>

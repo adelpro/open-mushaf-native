@@ -2,7 +2,7 @@
   "expo": {
     "name": "Open Mushaf",
     "slug": "open-mushaf-native",
-    "version": "3.2.7",
+    "version": "3.2.8",
     "orientation": "default",
     "assetBundlePatterns": ["**/*"],
     "icon": "./assets/images/icon.png",

@@ -120,6 +120,10 @@ export default function RootLayout() {
                     name="tutorial"
                     options={{ headerShown: true, title: 'جولة تعليمية' }}
                   />
+                  <Stack.Screen
+                    name="tracker"
+                    options={{ headerShown: true, title: 'الورد اليومي' }}
+                  />
                 </Stack>
               </ThemeProvider>
             </ReactNativeRecoilPersistGate>

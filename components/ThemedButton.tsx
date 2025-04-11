@@ -137,9 +137,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   text: {
-    fontFamily: 'Tajawal_400Regular',
+    fontFamily: 'Tajawal_500Medium',
     fontSize: 18,
-    fontWeight: 'bold',
   },
   center: {
     display: 'flex',

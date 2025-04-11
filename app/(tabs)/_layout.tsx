@@ -44,7 +44,7 @@ export default function TabLayout() {
               name={focused ? 'view-list' : 'view-list-outline'}
               size={28}
               color={color}
-              accessible={true} // Add Accessibility Properties
+              accessible={true}
               accessibilityLabel="فهرس السور والأجزاء"
               accessibilityHint="انتقل إلى صفحة الفهرس لعرض قائمة السور والأجزاء"
             />
