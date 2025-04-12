@@ -17,3 +17,5 @@ export * from './specs';
 export * from './hizb';
 
 export * from './overlay-element';
+
+export * from './thumn';

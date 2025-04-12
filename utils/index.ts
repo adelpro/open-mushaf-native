@@ -9,3 +9,5 @@ export * from './isRTL';
 export * from './riwaya';
 
 export * from './isDEBUG';
+
+export * from './quranMetadata';

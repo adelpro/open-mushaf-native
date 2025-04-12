@@ -12,7 +12,8 @@ import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useRecoilState } from 'recoil';
 
-import hizbJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.json';
+// Replace hizbJson with thumnJson for more granular tracking
+import thumnJson from '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/thumn.json';
 import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
@@ -23,11 +24,12 @@ import useCurrentPage from '@/hooks/useCurrentPage';
 import {
   dailyHizbProgress,
   dailyHizbTarget,
-  lastReset,
   yesterdayPage,
 } from '@/recoil/atoms';
-import { Hizb } from '@/types';
-import { calculateHizbsBetweenPages } from '@/utils/hizbProgress';
+// Update the type import to include Thumn
+import { Thumn } from '@/types';
+// Update the utility function import or create a new one for thumn calculation
+import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
 
 export default function TrackerScreen() {
   const { iconColor, cardColor, primaryColor } = useColors();
@@ -36,16 +38,24 @@ export default function TrackerScreen() {
   const [dailyHizbGoal, setDailyHizbGoal] = useRecoilState(dailyHizbTarget);
   const [dailyHizbCompleted, setDailyHizbCompleted] =
     useRecoilState(dailyHizbProgress);
-  const [lastResetValue, setLastResetValue] = useRecoilState(lastReset);
   const [yesterdayPageValue, setYesterdayPageValue] =
     useRecoilState(yesterdayPage);
 
-  const hizbData = hizbJson as Hizb[];
+  // Update to use thumn data
+  const thumnData = thumnJson as Thumn[];
 
+  // Should be converted to hizb units first
   const dailyProgress =
     dailyHizbGoal > 0
-      ? Math.min(100, (dailyHizbCompleted / dailyHizbGoal) * 100)
+      ? Math.min(100, (dailyHizbCompleted / 8 / (dailyHizbGoal / 8)) * 100)
       : 0;
+
+  // Ensure goal is always in full hizb units
+  useEffect(() => {
+    if (dailyHizbGoal % 8 !== 0) {
+      setDailyHizbGoal(Math.ceil(dailyHizbGoal / 8) * 8);
+    }
+  }, [dailyHizbGoal, setDailyHizbGoal]);
 
   // Save current page to yesterdayPage at midnight and reset
   useEffect(() => {
@@ -65,9 +75,10 @@ export default function TrackerScreen() {
     return () => clearTimeout(timeout);
   }, [setDailyHizbCompleted, setYesterdayPageValue, savedPage]);
 
-  const incrementDailyGoal = () => setDailyHizbGoal((prev) => prev + 1);
+  // Should change by full hizb (8 thumns)
+  const incrementDailyGoal = () => setDailyHizbGoal((prev) => prev + 8);
   const decrementDailyGoal = () =>
-    setDailyHizbGoal((prev) => Math.max(1, prev - 1));
+    setDailyHizbGoal((prev) => Math.max(8, prev - 8));
 
   const resetAllProgress = () => {
     const performReset = () => {
@@ -76,9 +87,6 @@ export default function TrackerScreen() {
       }
 
       setDailyHizbCompleted(0);
-      const todayStr = new Date().toISOString().split('T')[0];
-      setLastResetValue(todayStr);
-      console.log('Manual reset completed', { todayStr });
     };
 
     if (Platform.OS === 'web') {
@@ -103,22 +111,25 @@ export default function TrackerScreen() {
 
   useEffect(() => {
     if (typeof savedPage === 'number' && savedPage > 0) {
-      const numberOfHizb = calculateHizbsBetweenPages(
+      // Update to use thumn calculation instead of hizb
+      const numberOfThumn = calculateThumnsBetweenPages(
         yesterdayPageValue,
         savedPage,
-        hizbData,
+        thumnData,
       );
 
-      setDailyHizbCompleted(numberOfHizb);
+      setDailyHizbCompleted(numberOfThumn);
     }
-  }, [hizbData, savedPage, setDailyHizbCompleted, yesterdayPageValue]);
+  }, [thumnData, savedPage, setDailyHizbCompleted, yesterdayPageValue]);
 
   const getHizbText = (count: number) => {
-    if (count === 0) return '0 أحزاب';
-    if (count === 1) return 'حزب واحد';
-    if (count === 2) return 'حزبين';
-    if (count >= 3 && count <= 10) return `${count} أحزاب`;
-    return `${count} حزباً`;
+    const hizbCount = Math.floor(count / 8);
+
+    if (hizbCount === 0) return '0 أحزاب';
+    if (hizbCount === 1) return 'حزب واحد';
+    if (hizbCount === 2) return 'حزبين';
+    if (hizbCount >= 3 && hizbCount <= 10) return `${hizbCount} أحزاب`;
+    return `${hizbCount} حزباً`;
   };
 
   return (
@@ -175,7 +186,6 @@ export default function TrackerScreen() {
 
             <ThemedView style={styles.controlsContainer}>
               <ThemedView style={styles.controlGroup}>
-                {/* Updated Label */}
                 <ThemedText style={styles.controlLabel}>
                   الهدف اليومي:
                 </ThemedText>
@@ -186,7 +196,6 @@ export default function TrackerScreen() {
                   >
                     <Feather name="minus" size={20} color={primaryColor} />
                   </TouchableOpacity>
-                  {/* Updated Value Display */}
                   <ThemedText style={styles.controlValue}>
                     {getHizbText(dailyHizbGoal)}
                   </ThemedText>
@@ -213,18 +222,17 @@ export default function TrackerScreen() {
                 color={iconColor}
                 style={[styles.icon, { color: primaryColor }]}
               />
-              <ThemedText style={styles.label}>عن نظام الأحزاب:</ThemedText>
+              <ThemedText style={styles.label}>عن نظام الأثمان:</ThemedText>
             </ThemedView>
 
             <ThemedText style={styles.infoText}>
-              القرآن الكريم مقسم إلى 60 حزباً، كل جزء يحتوي على حزبين.
+              القرآن الكريم مقسم إلى 60 حزباً، وكل حزب مقسم إلى 8 أثمان.
             </ThemedText>
             <ThemedText style={styles.infoText}>
-              يمكنك تتبع قراءتك اليومية بالأحزاب بدلاً من الصفحات.
+              يمكنك تتبع قراءتك اليومية بالأثمان لتحديد أكثر دقة لتقدمك.
             </ThemedText>
-            {/* Updated the informational text for better clarity */}
             <ThemedText style={[styles.infoText, { color: primaryColor }]}>
-              يُحسب الورد اليومي عن طريق حساب عدد الأحزاب بين آخر صفحة تمت
+              يُحسب الورد اليومي عن طريق حساب عدد الأثمان بين آخر صفحة تمت
               قراءتها بالأمس والصفحة الحالية (صفحة{' '}
               {typeof savedPage === 'number' ? savedPage : 'غير محددة'}).
             </ThemedText>
@@ -317,9 +325,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 12,
     zIndex: 1,
-    // Note: Text color logic remains simple for now. Consider dynamic contrast calculation later.
   },
-  infoText: { marginTop: 4, fontSize: 16, lineHeight: 24 }, // Added lineHeight for better readability
+  infoText: { marginTop: 4, fontSize: 16, lineHeight: 24 },
   controlsContainer: {
     marginTop: 12,
     alignItems: 'center',
@@ -337,14 +344,7 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1,
-    // borderColor: '#ccc', // Use theme color instead of hardcoded grey
-    // Use primaryColor for the border - requires access to it here.
-    // Since styles are defined outside the component, we can't directly use primaryColor variable here.
-    // Option 1: Pass primaryColor as a prop to this component (complex setup).
-    // Option 2: Define styles inline within the component (less performant for frequently changing styles).
-    // Option 3: Keep a neutral color or adjust the component structure.
-    // For now, keeping a neutral grey, but ideally this would use a theme color.
-    borderColor: '#E5E7EB', // Using the progress bar background color for neutrality
+    borderColor: '#E5E7EB',
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 10,
@@ -352,10 +352,9 @@ const styles = StyleSheet.create({
   controlValue: {
     fontSize: 16,
     fontFamily: 'Tajawal_700Bold',
-    minWidth: 60, // Increased minWidth to accommodate longer text like "حزبين"
+    minWidth: 60,
     textAlign: 'center',
   },
-  // Adjusted margin for better spacing consistency
   resetButtonsContainer: {
     marginTop: 20,
     alignItems: 'center',

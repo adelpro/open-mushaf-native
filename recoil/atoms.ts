@@ -81,12 +81,6 @@ export const dailyHizbProgress = atom<number>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
-export const lastReset = atom<string>({
-  key: 'lastReset',
-  default: '', // Will store date of last reset
-  effects: [ReactNativeRecoilPersist.persistAtom],
-});
-
 export const yesterdayPage = atom<number>({
   key: 'yesterdayPage',
   default: 0, // Will store yesterday's page number

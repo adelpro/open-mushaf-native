@@ -4,7 +4,7 @@ import {
   Text,
   TouchableOpacity,
   useColorScheme,
-  View, // Import View
+  View,
 } from 'react-native';
 
 import {
@@ -13,7 +13,7 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import * as Progress from 'react-native-progress';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -26,6 +26,8 @@ import {
   dailyHizbTarget,
   topMenuState,
 } from '@/recoil/atoms';
+import { getSurahNameByPage } from '@/utils/quranMetadata';
+import { getJuzPositionByPage } from '@/utils/quranMetadata';
 
 import { ThemedSafeAreaView } from './ThemedSafeAreaView';
 
@@ -47,22 +49,20 @@ export default function TopMenu() {
   // --- Calculate Progress ---
   const dailyProgressDecimal =
     dailyHizbGoal > 0
-      ? Math.min(1, dailyHizbCompleted / dailyHizbGoal) // Use decimal (0 to 1)
+      ? Math.min(1, dailyHizbCompleted / 8 / (dailyHizbGoal / 8)) // Convert thumn counts to hizb for progress calculation
       : 0;
 
   const toggleMenu = () => {
     setBottomMenuState((state: boolean) => !state);
   };
 
+  const { page } = useLocalSearchParams<{ page: string }>();
+  const currentPage = page ? parseInt(page) : 1;
+  const currentSurahName = getSurahNameByPage(currentPage);
+  const { thumnInJuz, juzNumber } = getJuzPositionByPage(currentPage);
+
   return showTopMenuState ? (
-    <ThemedSafeAreaView
-      style={[
-        styles.container,
-        {
-          paddingTop: insets.top,
-        },
-      ]}
-    >
+    <ThemedSafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
       <ThemedView
         style={[
           styles.topMenu,
@@ -71,23 +71,43 @@ export default function TopMenu() {
             : { backgroundColor: 'rgba(255, 255, 255, 0.5)' },
         ]}
       >
-        <TouchableOpacity
-          style={styles.icon}
-          onPress={() => {
-            setShowTopMenuState(false);
-            toggleMenu();
-          }}
-        >
-          {showBottomMenuState ? (
-            <MaterialCommunityIcons
-              name="fit-to-screen-outline"
-              size={40}
-              color={tintColor}
-            />
-          ) : (
-            <MaterialIcons name="fullscreen-exit" size={40} color={tintColor} />
-          )}
-        </TouchableOpacity>
+        <ThemedView style={styles.rightSection}>
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => {
+              setShowTopMenuState(false);
+              toggleMenu();
+            }}
+          >
+            {showBottomMenuState ? (
+              <MaterialCommunityIcons
+                name="fit-to-screen-outline"
+                size={40}
+                color={tintColor}
+              />
+            ) : (
+              <MaterialIcons
+                name="fullscreen-exit"
+                size={40}
+                color={tintColor}
+              />
+            )}
+          </TouchableOpacity>
+          <Text style={[styles.surahName, { color: tintColor }]}>
+            {currentSurahName}
+          </Text>
+          <Text style={[styles.separator, { color: tintColor }]}> - </Text>
+          <View style={styles.positionContainer}>
+            <Text style={[styles.juzPosition, { color: tintColor }]}>
+              جزء {juzNumber}
+            </Text>
+            <Text style={[styles.separator, { color: tintColor }]}> - </Text>
+            <Text style={[styles.thumnPosition, { color: tintColor }]}>
+              {thumnInJuz}/16
+            </Text>
+          </View>
+        </ThemedView>
+
         <ThemedView style={styles.leftIconsContainer}>
           <TouchableOpacity
             style={styles.icon}
@@ -141,6 +161,7 @@ export default function TopMenu() {
     </ThemedSafeAreaView>
   ) : null;
 }
+
 const styles = StyleSheet.create({
   container: {
     zIndex: 2,
@@ -184,5 +205,32 @@ const styles = StyleSheet.create({
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  rightSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  surahName: {
+    fontFamily: ' Amiri_400Regular',
+    fontSize: 24,
+  },
+  juzPosition: {
+    fontFamily: 'Tajawal_400Regular',
+    fontSize: 18,
+    marginRight: 8,
+  },
+  separator: {
+    marginHorizontal: 4,
+    fontSize: 18,
+  },
+  positionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  thumnPosition: {
+    fontFamily: 'Tajawal_400Regular',
+    fontSize: 16,
   },
 });
