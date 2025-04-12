@@ -2466,5 +2466,899 @@
     "sura_number": 36,
     "starting_aya": 28,
     "starting_page": 442
+  },  {
+    "hizb_number": 45,
+    "thumn": 1,
+    "sura_number": 36,
+    "starting_aya": 28,
+    "starting_page": 442
+  },
+  {
+    "hizb_number": 45,
+    "thumn": 2,
+    "sura_number": 36,
+    "starting_aya": 46,
+    "starting_page": 443
+  },
+  {
+    "hizb_number": 45,
+    "thumn": 3,
+    "sura_number": 36,
+    "starting_aya": 60,
+    "starting_page": 444
+  },
+  {
+    "hizb_number": 45,
+    "thumn": 4,
+    "sura_number": 36,
+    "starting_aya": 80,
+    "starting_page": 445
+  },
+  {
+    "hizb_number": 45,
+    "thumn": 5,
+    "sura_number": 37,
+    "starting_aya": 22,
+    "starting_page": 446
+  },
+  {
+    "hizb_number": 45,
+    "thumn": 6,
+    "sura_number": 37,
+    "starting_aya": 51,
+    "starting_page": 447
+  },
+  {
+    "hizb_number": 45,
+    "thumn": 7,
+    "sura_number": 37,
+    "starting_aya": 73,
+    "starting_page": 449
+  },
+  {
+    "hizb_number": 45,
+    "thumn": 8,
+    "sura_number": 37,
+    "starting_aya": 114,
+    "starting_page": 450
+  },
+  {
+    "hizb_number": 46,
+    "thumn": 1,
+    "sura_number": 37,
+    "starting_aya": 145,
+    "starting_page": 451
+  },
+  {
+    "hizb_number": 46,
+    "thumn": 2,
+    "sura_number": 38,
+    "starting_aya": 1,
+    "starting_page": 453
+  },
+  {
+    "hizb_number": 46,
+    "thumn": 3,
+    "sura_number": 38,
+    "starting_aya": 21,
+    "starting_page": 454
+  },
+  {
+    "hizb_number": 46,
+    "thumn": 4,
+    "sura_number": 38,
+    "starting_aya": 31,
+    "starting_page": 455
+  },
+  {
+    "hizb_number": 46,
+    "thumn": 5,
+    "sura_number": 38,
+    "starting_aya": 52,
+    "starting_page": 465
+  },
+  {
+    "hizb_number": 46,
+    "thumn": 6,
+    "sura_number": 38,
+    "starting_aya": 84,
+    "starting_page": 458
+  },
+  {
+    "hizb_number": 46,
+    "thumn": 7,
+    "sura_number": 39,
+    "starting_aya": 8,
+    "starting_page": 459
+  },
+  {
+    "hizb_number": 46,
+    "thumn": 8,
+    "sura_number": 39,
+    "starting_aya": 21,
+    "starting_page": 60
+  },
+  {
+    "hizb_number": 47,
+    "thumn": 1,
+    "sura_number": 39,
+    "starting_aya": 32,
+    "starting_page": 462
+  },
+  {
+    "hizb_number": 47,
+    "thumn": 2,
+    "sura_number": 39,
+    "starting_aya": 42,
+    "starting_page": 463
+  },
+  {
+    "hizb_number": 47,
+    "thumn": 3,
+    "sura_number": 39,
+    "starting_aya": 54,
+    "starting_page": 464
+  },
+  {
+    "hizb_number": 47,
+    "thumn":4,
+    "sura_number": 39,
+    "starting_aya": 67,
+    "starting_page": 465
+  },
+  {
+    "hizb_number": 47,
+    "thumn": 5,
+    "sura_number": 40,
+    "starting_aya": 1,
+    "starting_page": 467
+  },
+  {
+    "hizb_number": 47,
+    "thumn": 6,
+    "sura_number": 40,
+    "starting_aya": 11,
+    "starting_page": 468
+  },
+  {
+    "hizb_number": 47,
+    "thumn": 7,
+    "sura_number": 40,
+    "starting_aya": 21,
+    "starting_page": 469
+  },
+  {
+    "hizb_number": 47,
+    "thumn":8,
+    "sura_number": 40,
+    "starting_aya": 30,
+    "starting_page": 470
+  },
+  {
+    "hizb_number": 48,
+    "thumn": 1,
+    "sura_number": 40,
+    "starting_aya": 41,
+    "starting_page": 472
+  },
+  {
+    "hizb_number": 48,
+    "thumn": 2,
+    "sura_number": 40,
+    "starting_aya": 53,
+    "starting_page": 473
+  },
+    {
+    "hizb_number": 48,
+    "thumn":3,
+    "sura_number": 40,
+    "starting_aya": 66,
+    "starting_page": 474
+  },
+    {
+    "hizb_number": 48,
+    "thumn": 4,
+    "sura_number": 40,
+    "starting_aya": 79,
+    "starting_page": 476
+  },
+  {
+    "hizb_number": 48,
+    "thumn": 5,
+    "sura_number": 41,
+    "starting_aya": 9,
+    "starting_page": 477
+  },
+  {
+    "hizb_number": 48,
+    "thumn": 6,
+    "sura_number": 41,
+    "starting_aya": 17,
+    "starting_page": 478
+  },
+  {
+    "hizb_number": 48,
+    "thumn": 7,
+    "sura_number": 41,
+    "starting_aya": 25,
+    "starting_page": 479
+  },
+  {
+    "hizb_number": 48,
+    "thumn": 8,
+    "sura_number": 41,
+    "starting_aya": 38,
+    "starting_page": 480
+  },
+  {
+    "hizb_number": 49,
+    "thumn": 1,
+    "sura_number": 41,
+    "starting_aya": 47,
+    "starting_page": 482
+  },
+  {
+    "hizb_number": 49,
+    "thumn": 2,
+    "sura_number": 42,
+    "starting_aya": 5,
+    "starting_page": 483
+  },
+  {
+    "hizb_number": 49,
+    "thumn": 3,
+    "sura_number": 42,
+    "starting_aya": 13,
+    "starting_page": 484
+  },
+  {
+    "hizb_number": 49,
+    "thumn": 4,
+    "sura_number": 42,
+    "starting_aya": 20,
+    "starting_page": 485
+  },
+  {
+    "hizb_number": 49,
+    "thumn": 5,
+    "sura_number": 42,
+    "starting_aya": 27,
+    "starting_page": 486
+  },
+  {
+    "hizb_number": 49,
+    "thumn": 6,
+    "sura_number": 42,
+    "starting_aya": 42,
+    "starting_page": 487
+  },
+  {
+    "hizb_number": 49,
+    "thumn": 7,
+    "sura_number": 42,
+    "starting_aya": 51,
+    "starting_page": 488
+  },
+  {
+    "hizb_number": 49,
+    "thumn": 8,
+    "sura_number": 43,
+    "starting_aya": 11,
+    "starting_page": 490
+  },
+  {
+    "hizb_number": 50,
+    "thumn": 1,
+    "sura_number": 43,
+    "starting_aya": 24,
+    "starting_page": 491
+  },
+  {
+    "hizb_number": 50,
+    "thumn": 2,
+    "sura_number": 43,
+    "starting_aya": 43,
+    "starting_page": 492
+  },
+  {
+    "hizb_number": 50,
+    "thumn": 3,
+    "sura_number": 43,
+    "starting_aya":63,
+    "starting_page": 494
+  },
+  {
+    "hizb_number": 50,
+    "thumn": 4,
+    "sura_number": 43,
+    "starting_aya": 85,
+    "starting_page": 495
+  },
+  {
+    "hizb_number": 50,
+    "thumn": 5,
+    "sura_number": 44,
+    "starting_aya": 25,
+    "starting_page": 497
+  },
+  {
+    "hizb_number": 50,
+    "thumn": 6,
+    "sura_number": 45,
+    "starting_aya": 1,
+    "starting_page": 499
+  },
+  {
+    "hizb_number": 50,
+    "thumn": 7,
+    "sura_number": 45,
+    "starting_aya": 14,
+    "starting_page": 450
+  },
+  {
+    "hizb_number": 50,
+    "thumn": 8,
+    "sura_number": 45,
+    "starting_aya": 25,
+    "starting_page": 501
+  },
+  {
+    "hizb_number": 51,
+    "thumn": 1,
+    "sura_number": 46,
+    "starting_aya": 1,
+    "starting_page": 502
+  },
+  {
+    "hizb_number": 51,
+    "thumn": 2,
+    "sura_number": 46,
+    "starting_aya": 15,
+    "starting_page": 504
+  },
+  {
+    "hizb_number": 51,
+    "thumn": 3,
+    "sura_number": 46,
+    "starting_aya": 21,
+    "starting_page": 505
+  },
+  {
+    "hizb_number": 51,
+    "thumn": 4,
+    "sura_number": 46,
+    "starting_aya": 33,
+    "starting_page": 506
+  },
+  {
+    "hizb_number": 51,
+    "thumn": 5,
+    "sura_number": 47,
+    "starting_aya": 10,
+    "starting_page": 507
+  },
+  {
+    "hizb_number": 51,
+    "thumn": 6,
+    "sura_number": 47,
+    "starting_aya": 20,
+    "starting_page": 509
+  },
+  {
+    "hizb_number": 51,
+    "thumn": 7,
+    "sura_number": 47,
+    "starting_aya": 33,
+    "starting_page": 510
+  },
+  {
+    "hizb_number": 51,
+    "thumn": 8,
+    "sura_number": 48,
+    "starting_aya": 8,
+    "starting_page": 511
+  },
+  {
+    "hizb_number": 52,
+    "thumn": 1,
+    "sura_number": 48,
+    "starting_aya": 18,
+    "starting_page": 513
+  },
+  {
+    "hizb_number": 52,
+    "thumn": 2,
+    "sura_number": 48,
+    "starting_aya": 27,
+    "starting_page": 514
+  },
+  {
+    "hizb_number": 52,
+    "thumn": 3,
+    "sura_number": 49,
+    "starting_aya": 1,
+    "starting_page": 515
+  },
+  {
+    "hizb_number": 52,
+    "thumn": 4,
+    "sura_number": 49,
+    "starting_aya": 9,
+    "starting_page": 516
+  },
+  {
+    "hizb_number": 52,
+    "thumn": 5,
+    "sura_number": 49,
+    "starting_aya": 14,
+    "starting_page": 517
+  },
+  {
+    "hizb_number": 52,
+    "thumn": 6,
+    "sura_number": 50,
+    "starting_aya": 9,
+    "starting_page": 518
+  },
+  {
+    "hizb_number": 52,
+    "thumn": 7,
+    "sura_number": 50,
+    "starting_aya": 27,
+    "starting_page": 519
+  },
+  {
+    "hizb_number": 52,
+    "thumn": 8,
+    "sura_number": 51,
+    "starting_aya": 1,
+    "starting_page": 520
+  },
+  {
+    "hizb_number": 53,
+    "thumn": 1,
+    "sura_number": 51,
+    "starting_aya": 31,
+    "starting_page": 522
+  },
+  {
+    "hizb_number": 53,
+    "thumn": 2,
+    "sura_number": 50,
+    "starting_aya": 51,
+    "starting_page": 523
+  },
+  {
+    "hizb_number": 53,
+    "thumn": 3,
+    "sura_number": 52,
+    "starting_aya": 24,
+    "starting_page": 524
+  },
+  {
+    "hizb_number": 53,
+    "thumn": 4,
+    "sura_number": 52,
+    "starting_aya": 44,
+    "starting_page": 525
+  },
+  {
+    "hizb_number": 53,
+    "thumn": 5,
+    "sura_number": 53,
+    "starting_aya": 26,
+    "starting_page": 526
+  },
+  {
+    "hizb_number": 53,
+    "thumn": 6,
+    "sura_number": 53,
+    "starting_aya": 47,
+    "starting_page": 528
+  },
+  {
+    "hizb_number": 53,
+    "thumn": 7,
+    "sura_number": 54,
+    "starting_aya": 10,
+    "starting_page": 529
+  },
+  {
+    "hizb_number": 53,
+    "thumn": 8,
+    "sura_number": 54,
+    "starting_aya": 37,
+    "starting_page": 530
+  },  {
+    "hizb_number": 54,
+    "thumn": 1,
+    "sura_number": 55,
+    "starting_aya": 1,
+    "starting_page": 531
+  },
+  {
+    "hizb_number": 54,
+    "thumn": 2,
+    "sura_number": 55,
+    "starting_aya": 41,
+    "starting_page": 533
+  },
+  {
+    "hizb_number": 54,
+    "thumn": 3,
+    "sura_number": 56,
+    "starting_aya": 1,
+    "starting_page": 534
+  },
+  {
+    "hizb_number": 54,
+    "thumn": 4,
+    "sura_number": 56,
+    "starting_aya": 49,
+    "starting_page": 535
+  },
+  {
+    "hizb_number": 54,
+    "thumn": 5,
+    "sura_number": 56,
+    "starting_aya": 75,
+    "starting_page": 536
+  },
+  {
+    "hizb_number": 54,
+    "thumn": 6,
+    "sura_number": 57,
+    "starting_aya": 7,
+    "starting_page": 538
+  },
+  {
+    "hizb_number": 54,
+    "thumn": 7,
+    "sura_number": 57,
+    "starting_aya": 16,
+    "starting_page": 539
+  },
+  {
+    "hizb_number": 54,
+    "thumn": 8,
+    "sura_number": 57,
+    "starting_aya": 22,
+    "starting_page": 540
+  },
+  {
+    "hizb_number": 55,
+    "thumn": 1,
+    "sura_number": 58,
+    "starting_aya": 1,
+    "starting_page": 542
+  },
+  {
+    "hizb_number": 55,
+    "thumn": 2,
+    "sura_number": 58,
+    "starting_aya": 8,
+    "starting_page": 543
+  },
+  {
+    "hizb_number": 55,
+    "thumn": 3,
+    "sura_number": 58,
+    "starting_aya": 14,
+    "starting_page": 544
+  },
+  {
+    "hizb_number": 55,
+    "thumn": 4,
+    "sura_number": 59,
+    "starting_aya": 2,
+    "starting_page": 545
+  },
+  {
+    "hizb_number": 55,
+    "thumn": 5,
+    "sura_number": 59,
+    "starting_aya": 11,
+    "starting_page": 547
+  },
+  {
+    "hizb_number": 55,
+    "thumn": 6,
+    "sura_number": 60,
+    "starting_aya": 1,
+    "starting_page": 549
+  },
+  {
+    "hizb_number": 55,
+    "thumn": 7,
+    "sura_number": 60,
+    "starting_aya": 7,
+    "starting_page": 550
+  },
+  {
+    "hizb_number": 55,
+    "thumn": 8,
+    "sura_number": 61,
+    "starting_aya": 1,
+    "starting_page": 551
+  },
+  {
+    "hizb_number": 56,
+    "thumn": 1,
+    "sura_number": 62,
+    "starting_aya": 1,
+    "starting_page": 553
+  },
+  {
+    "hizb_number": 56,
+    "thumn": 2,
+    "sura_number": 63,
+    "starting_aya": 1,
+    "starting_page": 554
+  },
+  {
+    "hizb_number": 56,
+    "thumn": 3,
+    "sura_number": 63,
+    "starting_aya": 9,
+    "starting_page": 555
+  },
+  {
+    "hizb_number": 56,
+    "thumn": 4,
+    "sura_number": 64,
+    "starting_aya": 7,
+    "starting_page": 556
+  },
+  {
+    "hizb_number": 56,
+    "thumn": 5,
+    "sura_number": 65,
+    "starting_aya": 1,
+    "starting_page": 558
+  },
+  {
+    "hizb_number": 56,
+    "thumn": 6,
+    "sura_number": 65,
+    "starting_aya": 6,
+    "starting_page": 559
+  },
+  {
+    "hizb_number": 56,
+    "thumn": 7,
+    "sura_number": 66,
+    "starting_aya": 1,
+    "starting_page": 560
+  },
+  {
+    "hizb_number": 56,
+    "thumn": 8,
+    "sura_number": 66,
+    "starting_aya": 8,
+    "starting_page": 561
+  },
+  {
+    "hizb_number": 57,
+    "thumn": 1,
+    "sura_number": 67,
+    "starting_aya": 1,
+    "starting_page": 562
+  },
+  {
+    "hizb_number": 57,
+    "thumn": 2,
+    "sura_number": 67,
+    "starting_aya": 19,
+    "starting_page": 563
+  },
+  {
+    "hizb_number": 57,
+    "thumn": 3,
+    "sura_number": 68,
+    "starting_aya": 19,
+    "starting_page": 565
+  },
+  {
+    "hizb_number": 57,
+    "thumn": 4,
+    "sura_number": 68,
+    "starting_aya": 48,
+    "starting_page": 566
+  },
+  {
+    "hizb_number": 57,
+    "thumn": 5,
+    "sura_number": 69,
+    "starting_aya": 19,
+    "starting_page": 567
+  },
+  {
+    "hizb_number": 57,
+    "thumn": 6,
+    "sura_number": 69,
+    "starting_aya": 1,
+    "starting_page": 568
+  },
+  {
+    "hizb_number": 57,
+    "thumn": 7,
+    "sura_number": 69,
+    "starting_aya": 40,
+    "starting_page": 570
+  },
+  {
+    "hizb_number": 57,
+    "thumn": 8,
+    "sura_number": 71,
+    "starting_aya": 15,
+    "starting_page": 571
+  },
+  {
+    "hizb_number": 58,
+    "thumn": 1,
+    "sura_number": 72,
+    "starting_aya": 1,
+    "starting_page": 572
+  },
+  {
+    "hizb_number": 58,
+    "thumn": 2,
+    "sura_number": 72,
+    "starting_aya": 23,
+    "starting_page": 573
+  },
+  {
+    "hizb_number": 58,
+    "thumn": 3,
+    "sura_number": 73,
+    "starting_aya": 20,
+    "starting_page": 575
+  },
+  {
+    "hizb_number": 58,
+    "thumn": 4,
+    "sura_number": 74,
+    "starting_aya": 31,
+    "starting_page": 576
+  },
+  {
+    "hizb_number": 58,
+    "thumn": 5,
+    "sura_number": 75,
+    "starting_aya": 1,
+    "starting_page": 577
+  },
+  {
+    "hizb_number": 58,
+    "thumn": 6,
+    "sura_number": 76,
+    "starting_aya": 1,
+    "starting_page": 578
+  },
+  {
+    "hizb_number": 58,
+    "thumn": 7,
+    "sura_number": 76,
+    "starting_aya": 19,
+    "starting_page": 579
+  },
+  {
+    "hizb_number": 58,
+    "thumn": 8,
+    "sura_number": 77,
+    "starting_aya": 16,
+    "starting_page": 580
+  },
+  {
+    "hizb_number": 59,
+    "thumn": 1,
+    "sura_number": 78,
+    "starting_aya": 1,
+    "starting_page": 582
+  },
+  {
+    "hizb_number": 59,
+    "thumn": 2,
+    "sura_number": 79,
+    "starting_aya": 1,
+    "starting_page": 583
+  },
+  {
+    "hizb_number": 59,
+    "thumn": 3,
+    "sura_number": 79,
+    "starting_aya": 42,
+    "starting_page": 584
+  },
+  {
+    "hizb_number": 59,
+    "thumn": 4,
+    "sura_number": 81,
+    "starting_aya": 1,
+    "starting_page": 586
+  },
+  {
+    "hizb_number": 59,
+    "thumn": 5,
+    "sura_number": 82,
+    "starting_aya": 1,
+    "starting_page": 587
+  },
+  {
+    "hizb_number": 59,
+    "thumn": 6,
+    "sura_number": 83,
+    "starting_aya": 14,
+    "starting_page": 588
+  },
+  {
+    "hizb_number": 59,
+    "thumn": 7,
+    "sura_number": 84,
+    "starting_aya": 16,
+    "starting_page": 589
+  },
+  {
+    "hizb_number": 59,
+    "thumn": 8,
+    "sura_number": 85,
+    "starting_aya": 12,
+    "starting_page": 590
+  },
+  {
+    "hizb_number": 60,
+    "thumn": 1,
+    "sura_number": 87,
+    "starting_aya": 1,
+    "starting_page": 591
+  },
+  {
+    "hizb_number": 60,
+    "thumn": 2,
+    "sura_number": 88,
+    "starting_aya": 17,
+    "starting_page": 592
+  },
+  {
+    "hizb_number": 60,
+    "thumn": 3,
+    "sura_number": 90,
+    "starting_aya": 1,
+    "starting_page": 594
+  },
+  {
+    "hizb_number": 60,
+    "thumn": 4,
+    "sura_number": 92,
+    "starting_aya": 1,
+    "starting_page": 595
+  },
+  {
+    "hizb_number": 60,
+    "thumn": 5,
+    "sura_number": 94,
+    "starting_aya": 1,
+    "starting_page": 596
+  },
+  {
+    "hizb_number": 60,
+    "thumn": 6,
+    "sura_number": 98,
+    "starting_aya": 1,
+    "starting_page": 598
+  },
+  {
+    "hizb_number": 60,
+    "thumn": 7,
+    "sura_number": 100,
+    "starting_aya": 9,
+    "starting_page": 599
+  },
+  {
+    "hizb_number": 60,
+    "thumn": 8,
+    "sura_number": 102,
+    "starting_aya": 1,
+    "starting_page": 602
   }
 ]
