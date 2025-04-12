@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
 
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
 import surahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
+import PageNavigator from '@/components/PageNavigator';
 import SEO from '@/components/seo';
+import SurahAyaNavigator from '@/components/SurahAyaNavigator';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -18,7 +19,6 @@ import { QuranText } from '@/types';
 
 export default function Navigation() {
   const router = useRouter();
-  const pages = Array.from({ length: defaultNumberOfPages }, (_, i) => i + 1);
   const { currentPage } = useCurrentPage();
   const quranText: QuranText[] = quranJson as QuranText[];
   const [currentSurah, setCurrentSurah] = useState<number>(1);
@@ -112,21 +112,13 @@ export default function Navigation() {
             الانتقال إلى الصفحة:
           </ThemedText>
         </ThemedView>
-        <Picker
-          style={[styles.pickerContainer, { color: primaryColor }]}
-          selectedValue={currentPage}
-          onValueChange={(item) => {
-            handlePageChange(item);
-          }}
-          dropdownIconColor={iconColor}
-          accessibilityLabel="Select page"
-          accessibilityHint="Choose a page number to navigate to"
-          accessibilityRole="combobox"
-        >
-          {pages.map((page) => (
-            <Picker.Item key={page} label={page.toString()} value={page} />
-          ))}
-        </Picker>
+        <PageNavigator
+          currentPage={currentPage}
+          totalPages={defaultNumberOfPages}
+          onPageChange={handlePageChange}
+          primaryColor={primaryColor}
+          iconColor={iconColor}
+        />
       </ThemedView>
 
       <ThemedView
@@ -150,44 +142,17 @@ export default function Navigation() {
             الانتقال إلى الآية:
           </ThemedText>
         </ThemedView>
-        <ThemedView
-          style={[styles.pickerContainer, { backgroundColor: cardColor }]}
-        >
-          <Picker
-            style={[styles.picker, styles.surahPicker, { color: primaryColor }]}
-            selectedValue={currentSurah}
-            onValueChange={(item) => {
-              handleSurahChange(item);
-            }}
-            dropdownIconColor={iconColor}
-            accessibilityLabel="Select Surah"
-            accessibilityHint="Choose a Surah from the list"
-            accessibilityRole="combobox"
-          >
-            {surahs.map((surah) => (
-              <Picker.Item
-                key={surah.number}
-                label={surah.name}
-                value={surah.number}
-              />
-            ))}
-          </Picker>
-          <Picker
-            style={[styles.picker, styles.ayaPicker, { color: primaryColor }]}
-            selectedValue={currentAyaNumber}
-            onValueChange={(item) => {
-              handleAyaChange(item);
-            }}
-            dropdownIconColor={iconColor}
-            accessibilityLabel="Select Aya"
-            accessibilityHint="Choose an Aya from the Surah"
-            accessibilityRole="combobox"
-          >
-            {numberOfAyas.map((aya) => (
-              <Picker.Item key={aya} label={aya.toString()} value={aya} />
-            ))}
-          </Picker>
-        </ThemedView>
+        <SurahAyaNavigator
+          surahs={surahs}
+          currentSurah={currentSurah}
+          currentAya={currentAyaNumber}
+          ayaCount={numberOfAyas}
+          onSurahChange={handleSurahChange}
+          onAyaChange={handleAyaChange}
+          primaryColor={primaryColor}
+          iconColor={iconColor}
+          cardColor={cardColor}
+        />
       </ThemedView>
     </ThemedSafeAreaView>
   );
@@ -225,29 +190,5 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginHorizontal: 5,
-  },
-  pickerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 5,
-    textAlign: 'center',
-    //color: '#1B3444',
-  },
-  picker: {
-    flex: 1,
-    height: 50,
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 22,
-    //color: '#1B3444',
-  },
-  surahPicker: {
-    marginLeft: 10,
-    minWidth: 80,
-  },
-  ayaPicker: {
-    marginRight: 10,
   },
 });

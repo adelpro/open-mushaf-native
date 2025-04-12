@@ -1,0 +1,256 @@
+import React, { useState } from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
+
+import { Feather } from '@expo/vector-icons';
+
+import { useColors } from '@/hooks/useColors';
+
+import { ThemedText } from './ThemedText';
+import { ThemedView } from './ThemedView';
+
+interface PageNavigatorProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  primaryColor: string;
+  iconColor: string;
+}
+
+export default function PageNavigator({
+  currentPage,
+  totalPages,
+  onPageChange,
+  primaryColor,
+  iconColor,
+}: PageNavigatorProps) {
+  const { width } = useWindowDimensions();
+  const range = width < 600 ? 1 : 2;
+
+  const { cardColor } = useColors();
+
+  const [inputValue, setInputValue] = useState(currentPage.toString());
+  const [showInput, setShowInput] = useState(false);
+
+  // Pagination logic: iterate all pages, show page 1, last page, and pages around currentPage.
+  // Insert ellipsis only once in gaps (and avoid ellipsis adjacent to 1 or last page).
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    for (let i = 1; i <= totalPages; i++) {
+      if (
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - range && i <= currentPage + range)
+      ) {
+        pages.push(i);
+      } else if (pages[pages.length - 1] !== '...') {
+        pages.push('...');
+      }
+    }
+    return pages;
+  };
+
+  const handlePageNumberPress = (page: number | string) => {
+    if (typeof page === 'number') {
+      onPageChange(page);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1);
+    }
+  };
+
+  const handleInputChange = (text: string) => {
+    const numericValue = text.replace(/[^0-9]/g, '');
+    setInputValue(numericValue);
+  };
+
+  const handleInputSubmit = () => {
+    const pageNumber = parseInt(inputValue, 10);
+    if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= totalPages) {
+      onPageChange(pageNumber);
+    } else {
+      setInputValue(currentPage.toString());
+    }
+    setShowInput(false);
+  };
+
+  const toggleInput = () => {
+    setShowInput(!showInput);
+    setInputValue(currentPage.toString());
+  };
+
+  return (
+    <ThemedView style={styles.container}>
+      {/* Navigation row with arrow icons and page selection/input */}
+      <ThemedView style={styles.navRow}>
+        <TouchableOpacity
+          style={styles.navIcon}
+          onPress={handlePrevPage}
+          accessibilityLabel="Previous page"
+          accessibilityHint="Navigate to the previous page"
+        >
+          <Feather name="chevron-right" size={18} color={iconColor} />
+        </TouchableOpacity>
+
+        {showInput ? (
+          <ThemedView style={[styles.inputContainer, { flex: 1 }]}>
+            <TextInput
+              style={[
+                styles.pageInput,
+                { color: primaryColor, borderColor: primaryColor },
+                width < 600 && { minWidth: 40, paddingHorizontal: 2 },
+              ]}
+              value={inputValue}
+              onChangeText={handleInputChange}
+              keyboardType="numeric"
+              maxLength={4}
+              autoFocus
+              onBlur={handleInputSubmit}
+              onSubmitEditing={handleInputSubmit}
+              accessibilityLabel="Page number input"
+            />
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleInputSubmit}
+            >
+              <Feather name="check" size={18} color={primaryColor} />
+            </TouchableOpacity>
+          </ThemedView>
+        ) : (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={[styles.pageNumbersContainer, { flex: 1 }]}
+          >
+            {getPageNumbers().map((page, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.pageNumber,
+                  { backgroundColor: cardColor },
+                  page === currentPage && { backgroundColor: primaryColor },
+                  page === '...' && styles.ellipsis,
+                ]}
+                onPress={() => handlePageNumberPress(page)}
+                disabled={page === '...'}
+              >
+                <ThemedText
+                  style={[
+                    styles.pageNumberText,
+                    page === currentPage && { color: '#fff' },
+                  ]}
+                >
+                  {page}
+                </ThemedText>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        )}
+
+        <TouchableOpacity
+          onPress={handleNextPage}
+          style={styles.navIcon}
+          accessibilityLabel="Next page"
+          accessibilityHint="Navigate to the next page"
+        >
+          <Feather name="chevron-left" size={18} color={iconColor} />
+        </TouchableOpacity>
+      </ThemedView>
+
+      {/* Edit icon below in its own container */}
+      {!showInput && (
+        <ThemedView style={styles.editContainer}>
+          <TouchableOpacity
+            style={styles.goToPageButton}
+            onPress={toggleInput}
+            accessibilityLabel="Go to specific page"
+          >
+            <Feather name="edit" size={16} color={primaryColor} />
+          </TouchableOpacity>
+        </ThemedView>
+      )}
+    </ThemedView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    paddingVertical: 10,
+    width: '95%',
+    maxWidth: 640,
+  },
+  navRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  navIcon: {
+    padding: 6,
+  },
+
+  pageNumbersContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 2,
+  },
+  pageNumber: {
+    minWidth: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 2,
+  },
+  pageNumberText: {
+    fontSize: 14,
+    fontFamily: 'Tajawal_500Medium',
+  },
+  ellipsis: {
+    backgroundColor: 'transparent',
+    minWidth: 20,
+  },
+  editContainer: {
+    marginTop: 8,
+    alignItems: 'center',
+  },
+  goToPageButton: {
+    padding: 4,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    maxWidth: '80%',
+  },
+  pageInput: {
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    minWidth: 60,
+    textAlign: 'center',
+    fontSize: 14,
+  },
+  submitButton: {
+    padding: 6,
+    marginLeft: 4,
+  },
+});

@@ -49,7 +49,7 @@ export default function TopMenu() {
   // --- Calculate Progress ---
   const dailyProgressDecimal =
     dailyHizbGoal > 0
-      ? Math.min(1, dailyHizbCompleted / 8 / (dailyHizbGoal / 8)) // Convert thumn counts to hizb for progress calculation
+      ? Math.min(1, dailyHizbCompleted / 8 / (dailyHizbGoal / 8))
       : 0;
 
   const toggleMenu = () => {
@@ -99,11 +99,10 @@ export default function TopMenu() {
           <Text style={[styles.separator, { color: tintColor }]}> - </Text>
           <View style={styles.positionContainer}>
             <Text style={[styles.juzPosition, { color: tintColor }]}>
-              جزء {juzNumber}
+              {juzNumber}
             </Text>
-            <Text style={[styles.separator, { color: tintColor }]}> - </Text>
             <Text style={[styles.thumnPosition, { color: tintColor }]}>
-              {thumnInJuz}/16
+              ({thumnInJuz}/16)
             </Text>
           </View>
         </ThemedView>
@@ -213,21 +212,19 @@ const styles = StyleSheet.create({
   },
   surahName: {
     fontFamily: ' Amiri_400Regular',
-    fontSize: 24,
+    fontSize: 18,
   },
   juzPosition: {
     fontFamily: 'Tajawal_400Regular',
     fontSize: 18,
-    marginRight: 8,
   },
   separator: {
-    marginHorizontal: 4,
     fontSize: 18,
   },
   positionContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 1,
   },
   thumnPosition: {
     fontFamily: 'Tajawal_400Regular',

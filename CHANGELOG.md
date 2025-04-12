@@ -4,9 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [3.2.6]
 
+- feat: Add reading tracker feature ( daily wird)
+- feat: Add surah name, current juz and juz progress in the top menu
+- update: Refactor the navigation lists ui/uix
+
+## [3.2.6]
+
 - feat: Added SEO optimization with Open Graph and Twitter card support
 - feat: Added PWA support
-- feat: web - improved offline capabilities
+- feat: Web improved offline capabilities
 
 ## [3.2.5]
 
