@@ -237,9 +237,12 @@ export default function TrackerScreen() {
               >
                 <ThemedView
                   style={{
-                    flexDirection: 'row',
+                    flexDirection: 'row-reverse',
                     alignItems: 'center',
                     backgroundColor: 'transparent',
+                    justifyContent: 'center',
+                    padding: 10,
+                    gap: 5,
                   }}
                 >
                   <Feather
@@ -248,7 +251,15 @@ export default function TrackerScreen() {
                     color={primaryColor}
                     style={{ marginRight: 5 }}
                   />
-                  <Text>إعادة تعيين</Text>
+                  <Text
+                    style={{
+                      color: primaryColor,
+                      fontFamily: 'Tajawal_400Regular',
+                      fontSize: 18,
+                    }}
+                  >
+                    إعادة تعيين
+                  </Text>
                 </ThemedView>
               </ThemedButton>
             </ThemedView>
@@ -281,6 +292,7 @@ const styles = StyleSheet.create({
   labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 5,
     marginBottom: 12,
   },
   icon: { marginEnd: 10 },
