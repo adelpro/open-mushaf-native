@@ -29,7 +29,7 @@ import useImagesArray from '@/hooks/useImagesArray';
 import useOrientation from '@/hooks/useOrientation';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import {
-  dailyHizbProgress,
+  dailyHizbCompleted,
   flipSound,
   hizbNotification,
   mushafContrast,
@@ -48,7 +48,7 @@ export default function MushafPage() {
   const isFlipSoundEnabled = useRecoilValue(flipSound);
   const mushafContrastValue = useRecoilValue(mushafContrast);
   const HizbNotificationValue = useRecoilValue(hizbNotification);
-  const setDailyHizbCompleted = useSetRecoilState(dailyHizbProgress);
+  const setDailyHizbCompletedValue = useSetRecoilState(dailyHizbCompleted);
   const yesterdayPageValue = useRecoilValue(yesterdayPage);
   const thumnData = thumnJson as Thumn[];
   const hizbData = hizbJson as Hizb[];
@@ -205,9 +205,9 @@ export default function MushafPage() {
       );
 
       // Update the progress state
-      setDailyHizbCompleted(numberOfThumn);
+      setDailyHizbCompletedValue(numberOfThumn / 8);
     }
-  }, [currentPage, yesterdayPageValue, thumnData, setDailyHizbCompleted]);
+  }, [currentPage, yesterdayPageValue, thumnData, setDailyHizbCompletedValue]);
 
   if (assetError) {
     return (

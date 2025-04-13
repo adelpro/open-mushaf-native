@@ -23,8 +23,8 @@ import { useColors } from '@/hooks/useColors';
 import {
   bottomMenuState,
   currentSavedPage,
-  dailyHizbProgress,
-  dailyHizbTarget,
+  dailyHizbCompleted,
+  dailyHizbGoal,
   topMenuState,
 } from '@/recoil/atoms';
 import { getSurahNameByPage } from '@/utils/quranMetadata';
@@ -46,17 +46,16 @@ export default function TopMenu() {
   const currentSavedPageValue = useRecoilValue(currentSavedPage);
 
   // --- Access Recoil State for Progress ---
-  const dailyHizbGoal = useRecoilValue(dailyHizbTarget);
-  const dailyHizbCompleted = useRecoilValue(dailyHizbProgress);
+  const dailyHizbGoalValue = useRecoilValue(dailyHizbGoal);
+  const dailyHizbCompletedValue = useRecoilValue(dailyHizbCompleted);
 
-  // Simplified progress calculation - directly use the value from Recoil state
   useEffect(() => {
     const newProgress =
-      dailyHizbGoal > 0
-        ? Math.min(1, dailyHizbCompleted / 8 / (dailyHizbGoal / 8))
+      dailyHizbGoalValue > 0
+        ? Math.min(1, dailyHizbCompletedValue / 8 / (dailyHizbGoalValue / 8))
         : 0;
     setProgressValue(newProgress);
-  }, [dailyHizbGoal, dailyHizbCompleted]);
+  }, [dailyHizbGoalValue, dailyHizbCompletedValue]);
 
   const toggleMenu = () => {
     setBottomMenuState((state: boolean) => !state);
@@ -217,8 +216,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   surahName: {
-    fontFamily: 'Amiri_700Bold',
-    fontSize: 24,
+    fontFamily: 'Amiri_400Regular',
+    fontSize: 18,
   },
   separator: {
     fontSize: 18,

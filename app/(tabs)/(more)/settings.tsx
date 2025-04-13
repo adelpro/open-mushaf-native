@@ -177,7 +177,6 @@ export default function SettingsScreen() {
               textColor={primaryColor}
               onSelectionChange={(index: number) => {
                 const selectedRiwaya = RiwayaByValue(index);
-                console.log('riwaya: ', mushafRiwayaValue, 'index: ', index);
                 setMushafRiwayaValue(selectedRiwaya);
               }}
             />

@@ -274,22 +274,22 @@ const styles = StyleSheet.create({
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center', // This ensures vertical centering
+    alignItems: 'center',
     marginBottom: 16,
     paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
-    minHeight: 40, // Adding a minimum height to ensure consistent spacing
+    minHeight: 40,
   },
   modalTitle: {
     fontSize: 18,
     fontFamily: 'Tajawal_700Bold',
-    textAlignVertical: 'center', // Ensures text is vertically centered
+    textAlignVertical: 'center',
   },
   closeButton: {
-    padding: 4, // Add padding to increase touch target
-    justifyContent: 'center', // Center the icon vertically
-    alignItems: 'center', // Center the icon horizontally
+    padding: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalItem: {
     flexDirection: 'row',
@@ -310,7 +310,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     borderRadius: 4,
     overflow: 'hidden',
-    // Islamic-inspired decorative separator
     borderLeftWidth: 1,
     borderRightWidth: 1,
     borderStyle: 'dotted',

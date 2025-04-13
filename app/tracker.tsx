@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Alert,
   Platform,
@@ -12,7 +12,6 @@ import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useRecoilState } from 'recoil';
 
-import thumnJson from '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/thumn.json';
 import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
@@ -21,34 +20,34 @@ import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import {
-  dailyHizbProgress,
-  dailyHizbTarget,
+  dailyHizbCompleted,
+  dailyHizbGoal,
   yesterdayPage,
 } from '@/recoil/atoms';
-import { Thumn } from '@/types';
-import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
 
 export default function TrackerScreen() {
   const { iconColor, cardColor, primaryColor } = useColors();
   const { currentSavedPage: savedPage } = useCurrentPage();
 
-  const [dailyHizbGoal, setDailyHizbGoal] = useRecoilState(dailyHizbTarget);
-  const [dailyHizbCompleted, setDailyHizbCompleted] =
-    useRecoilState(dailyHizbProgress);
+  const [dailyHizbGoalValue, setDailyHizbGoalValue] =
+    useRecoilState(dailyHizbGoal);
+  const [dailyHizbCompletedValue, setDailyHizbCompletedValue] =
+    useRecoilState(dailyHizbCompleted);
   const [yesterdayPageValue, setYesterdayPageValue] =
     useRecoilState(yesterdayPage);
 
-  const thumnData = thumnJson as Thumn[];
-
   const dailyProgress =
-    dailyHizbGoal > 0
-      ? Math.min(100, (dailyHizbCompleted / 8 / (dailyHizbGoal / 8)) * 100)
+    dailyHizbGoalValue > 0
+      ? Math.min(
+          100,
+          (dailyHizbCompletedValue / 8 / (dailyHizbGoalValue / 8)) * 100,
+        )
       : 0;
 
   // Should change by full hizb (8 thumns)
-  const incrementDailyGoal = () => setDailyHizbGoal((prev) => prev + 8);
+  const incrementDailyGoal = () => setDailyHizbGoalValue((prev) => prev + 1);
   const decrementDailyGoal = () =>
-    setDailyHizbGoal((prev) => Math.max(8, prev - 8));
+    setDailyHizbGoalValue((prev) => Math.max(1, prev - 1));
 
   const resetAllProgress = () => {
     const performReset = () => {
@@ -56,7 +55,7 @@ export default function TrackerScreen() {
         setYesterdayPageValue(savedPage);
       }
 
-      setDailyHizbCompleted(0);
+      setDailyHizbCompletedValue(0);
     };
 
     if (Platform.OS === 'web') {
@@ -79,21 +78,8 @@ export default function TrackerScreen() {
     }
   };
 
-  useEffect(() => {
-    if (typeof savedPage === 'number' && savedPage > 0) {
-      // Update to use thumn calculation instead of hizb
-      const numberOfThumn = calculateThumnsBetweenPages(
-        yesterdayPageValue,
-        savedPage,
-        thumnData,
-      );
-
-      setDailyHizbCompleted(numberOfThumn);
-    }
-  }, [thumnData, savedPage, setDailyHizbCompleted, yesterdayPageValue]);
-
   const getHizbText = (count: number) => {
-    const hizbCount = Math.floor(count / 8);
+    const hizbCount = count;
 
     if (hizbCount === 0) return '0 أحزاب';
     if (hizbCount === 1) return 'حزب واحد';
@@ -144,8 +130,8 @@ export default function TrackerScreen() {
             </ThemedView>
 
             <ThemedText style={styles.infoText}>
-              قراءة {getHizbText(dailyHizbCompleted)} من أصل{' '}
-              {getHizbText(dailyHizbGoal)}
+              قراءة {getHizbText(dailyHizbCompletedValue)} من أصل{' '}
+              {getHizbText(dailyHizbGoalValue)}
             </ThemedText>
 
             {yesterdayPageValue > 0 && (
@@ -167,7 +153,7 @@ export default function TrackerScreen() {
                     <Feather name="minus" size={20} color={primaryColor} />
                   </TouchableOpacity>
                   <ThemedText style={styles.controlValue}>
-                    {getHizbText(dailyHizbGoal)}
+                    {getHizbText(dailyHizbGoalValue)}
                   </ThemedText>
                   <TouchableOpacity
                     style={styles.controlButton}

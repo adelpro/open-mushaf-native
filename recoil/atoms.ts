@@ -70,9 +70,9 @@ export const hizbNotification = atom<number>({
 });
 
 // Tracking system atoms for Hizb-based reading goals
-export const dailyHizbTarget = atom<number>({
-  key: 'DailyHizbTarget',
-  default: 2, // Default goal of 2 Hizbs per day
+export const dailyHizbGoal = atom<number>({
+  key: 'DailyHizbGoal',
+  default: 1,
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 // Add this effect definition
@@ -90,8 +90,8 @@ const midnightResetEffect: AtomEffect<number> = ({ setSelf }) => {
 };
 
 // Update the dailyHizbProgress atom definition
-export const dailyHizbProgress = atom<number>({
-  key: 'DailyHizbProgress',
+export const dailyHizbCompleted = atom<number>({
+  key: 'DailyHizbCompleted',
   default: 0,
   effects: [ReactNativeRecoilPersist.persistAtom, midnightResetEffect],
 });
