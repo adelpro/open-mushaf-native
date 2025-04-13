@@ -20,6 +20,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
+import useQuranMetadata from '@/hooks/useQuranMetadata';
 import {
   bottomMenuState,
   currentSavedPage,
@@ -27,14 +28,15 @@ import {
   dailyHizbGoal,
   topMenuState,
 } from '@/recoil/atoms';
-import { getSurahNameByPage } from '@/utils/quranMetadata';
-import { getJuzPositionByPage } from '@/utils/quranMetadata';
+import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
+import { getJuzPositionByPage } from '@/utils/quranMetadataUtils';
 
 import { ThemedSafeAreaView } from './ThemedSafeAreaView';
 
 export default function TopMenu() {
   const { tintColor, primaryColor } = useColors();
   const colorScheme = useColorScheme();
+  const { surahData, thumnData } = useQuranMetadata();
   const isDarkMode = colorScheme === 'dark';
   const insets = useSafeAreaInsets();
   const [progressValue, setProgressValue] = useState<number>(0);
@@ -66,8 +68,11 @@ export default function TopMenu() {
   }>();
   const currentPage = page ? parseInt(page) : currentSavedPageValue;
   const isTemporary = temporary === 'true';
-  const currentSurahName = getSurahNameByPage(currentPage);
-  const { thumnInJuz, juzNumber } = getJuzPositionByPage(currentPage);
+  const currentSurahName = getSurahNameByPage(surahData, currentPage);
+  const { thumnInJuz, juzNumber } = getJuzPositionByPage(
+    thumnData,
+    currentPage,
+  );
 
   return showTopMenuState ? (
     <ThemedSafeAreaView style={[styles.container, { paddingTop: insets.top }]}>

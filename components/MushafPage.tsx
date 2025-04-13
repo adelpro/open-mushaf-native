@@ -20,7 +20,7 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 // Remove useRiwayaData import and add useQuranMetadata
-import { defaultNumberOfPages } from '@/constants';
+
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagePreloader from '@/hooks/useImagePreloader';
@@ -35,9 +35,11 @@ import {
   mushafContrast,
   yesterdayPage,
 } from '@/recoil/atoms';
+import { getSEOMetadataByPage } from '@/utils';
 import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
 
 import PageOverlay from './PageOverlay';
+import SEO from './seo';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 import TopNotification from './TopNotification';
@@ -53,10 +55,14 @@ export default function MushafPage() {
   // Use the new hook to get Quran metadata
   const {
     thumnData,
+    surahData,
     hizbData,
     isLoading: metadataIsLoading,
     error: metadataError,
   } = useQuranMetadata();
+
+  const { specsData } = useQuranMetadata();
+  const { defaultNumberOfPages } = specsData;
 
   const [currentHizb, setCurrentHizb] = useState<number | null>(null);
   const [showNotification, setShowNotification] = useState(false);
@@ -72,6 +78,8 @@ export default function MushafPage() {
     customPageWidth: 0,
     customPageHeight: 0,
   });
+
+  const seoMetadata = getSEOMetadataByPage(surahData, thumnData, currentPage);
 
   const {
     asset,
@@ -277,65 +285,74 @@ export default function MushafPage() {
   }
 
   return (
-    <GestureDetector gesture={panGestureHandler}>
-      <Animated.View
-        style={[
-          styles.imageContainer,
-          animatedStyle,
-          colorScheme === 'dark'
-            ? { backgroundColor: '#181818' }
-            : { backgroundColor: '#f5f1eb' },
-        ]}
-        onLayout={handleImageLayout}
-      >
-        {asset?.localUri ? (
-          <>
-            {isLandscape ? (
-              <ScrollView
-                contentContainerStyle={{ alignItems: 'center' }}
-                alwaysBounceVertical={true}
-                nestedScrollEnabled={true}
-              >
+    <>
+      <SEO
+        title={seoMetadata.title}
+        description={seoMetadata.description}
+        keywords={seoMetadata.keywords}
+      />
+      <GestureDetector gesture={panGestureHandler}>
+        <Animated.View
+          style={[
+            styles.imageContainer,
+            animatedStyle,
+            colorScheme === 'dark'
+              ? { backgroundColor: '#181818' }
+              : { backgroundColor: '#f5f1eb' },
+          ]}
+          onLayout={handleImageLayout}
+        >
+          {asset?.localUri ? (
+            <>
+              {isLandscape ? (
+                <ScrollView
+                  contentContainerStyle={{ alignItems: 'center' }}
+                  alwaysBounceVertical={true}
+                  nestedScrollEnabled={true}
+                >
+                  <Image
+                    style={[
+                      styles.image,
+                      {
+                        width: '100%',
+                        height: undefined,
+                        aspectRatio: 0.7,
+                      },
+                      colorScheme === 'dark' && {
+                        opacity: mushafContrastValue,
+                      },
+                    ]}
+                    source={{ uri: asset?.localUri }}
+                    contentFit="fill"
+                  />
+                </ScrollView>
+              ) : (
                 <Image
                   style={[
                     styles.image,
-                    {
-                      width: '100%',
-                      height: undefined,
-                      aspectRatio: 0.7,
-                    },
+                    { width: '100%' },
                     colorScheme === 'dark' && { opacity: mushafContrastValue },
                   ]}
                   source={{ uri: asset?.localUri }}
                   contentFit="fill"
                 />
-              </ScrollView>
-            ) : (
-              <Image
-                style={[
-                  styles.image,
-                  { width: '100%' },
-                  colorScheme === 'dark' && { opacity: mushafContrastValue },
-                ]}
-                source={{ uri: asset?.localUri }}
-                contentFit="fill"
+              )}
+              <TopNotification
+                show={showNotification}
+                text={
+                  currentHizb && hizbNotificationValue === 2
+                    ? `الجزء - ${(currentHizb - 1)?.toString()}`
+                    : `الحزب - ${currentHizb?.toString()}`
+                }
               />
-            )}
-            <TopNotification
-              show={showNotification}
-              text={
-                currentHizb && hizbNotificationValue === 2
-                  ? `الجزء - ${(currentHizb - 1)?.toString()}`
-                  : `الحزب - ${currentHizb?.toString()}`
-              }
-            />
-          </>
-        ) : (
-          <ActivityIndicator size="large" color={tintColor} />
-        )}
-        <PageOverlay index={currentPage} dimensions={dimensions} />
-      </Animated.View>
-    </GestureDetector>
+            </>
+          ) : (
+            <ActivityIndicator size="large" color={tintColor} />
+          )}
+          <PageOverlay index={currentPage} dimensions={dimensions} />
+        </Animated.View>
+      </GestureDetector>
+    </>
   );
 }
 

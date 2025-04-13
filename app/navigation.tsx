@@ -4,7 +4,6 @@ import { ActivityIndicator, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
-import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
 import PageNavigator from '@/components/PageNavigator';
 import SEO from '@/components/seo';
 import SurahAyaNavigator from '@/components/SurahAyaNavigator';
@@ -15,12 +14,13 @@ import { defaultNumberOfPages } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
-import { QuranText } from '@/types';
 
 export default function Navigation() {
   const router = useRouter();
+  const { quranData } = useQuranMetadata();
+
   const { currentPage } = useCurrentPage();
-  const quranText: QuranText[] = quranJson as QuranText[];
+
   const [currentSurah, setCurrentSurah] = useState<number>(1);
   const [currentAyaNumber, setCurrentAyaNumber] = useState<number>(1);
   const [numberOfAyas, setNumberOfAyas] = useState<number[]>([]);
@@ -48,14 +48,14 @@ export default function Navigation() {
     );
     setNumberOfAyas(newNumberOfAyas);
 
-    const aya = quranText.find((aya) => {
+    const aya = quranData.find((aya) => {
       return aya.sura_id === surah?.number && aya.page_id === currentPage;
     });
 
     if (aya) {
       setCurrentAyaNumber(aya.aya_id - 1);
     }
-  }, [currentPage, quranText, isLoading, error, surahData]);
+  }, [currentPage, quranData, isLoading, error, surahData]);
 
   const handlePageChange = (pageNumber: number) => {
     router.push({
@@ -77,7 +77,7 @@ export default function Navigation() {
 
   const handleAyaChange = (ayaNumber: number) => {
     setCurrentAyaNumber(ayaNumber);
-    const filteredAya = quranText.find((aya) => {
+    const filteredAya = quranData.find((aya) => {
       return (
         aya.sura_id === Number(currentSurah) && aya.aya_id === Number(ayaNumber)
       );

@@ -1,4 +1,4 @@
-import { useColorScheme } from 'react-native'; // To detect the current theme
+import { useColorScheme } from 'react-native';
 
 import {
   BaseToastProps,
