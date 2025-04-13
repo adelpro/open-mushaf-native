@@ -75,16 +75,41 @@ export const dailyHizbTarget = atom<number>({
   default: 2, // Default goal of 2 Hizbs per day
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
+// Add this effect definition
+const midnightResetEffect: AtomEffect<number> = ({ setSelf }) => {
+  const now = new Date();
+  const msUntilMidnight =
+    new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() -
+    now.getTime();
+
+  const timeout = setTimeout(() => {
+    setSelf(0); // Reset to initial value
+  }, msUntilMidnight);
+
+  return () => clearTimeout(timeout);
+};
+
+// Update the dailyHizbProgress atom definition
 export const dailyHizbProgress = atom<number>({
   key: 'DailyHizbProgress',
   default: 0,
-  effects: [ReactNativeRecoilPersist.persistAtom],
+  effects: [ReactNativeRecoilPersist.persistAtom, midnightResetEffect],
 });
 
+// Define the effect that updates yesterdayPage when currentSavedPage changes
+const updateYesterdayPageEffect: AtomEffect<number> = ({ onSet, setSelf }) => {
+  onSet((newValue) => {
+    if (typeof newValue === 'number' && newValue > 0) {
+      setSelf(newValue);
+    }
+  });
+};
+
+// Define yesterdayPage without the problematic effect for now
 export const yesterdayPage = atom<number>({
   key: 'yesterdayPage',
-  default: 0, // Will store yesterday's page number
-  effects: [ReactNativeRecoilPersist.persistAtom],
+  default: 0,
+  effects: [ReactNativeRecoilPersist.persistAtom, updateYesterdayPageEffect],
 });
 
 // Create a timer effect for Recoil state

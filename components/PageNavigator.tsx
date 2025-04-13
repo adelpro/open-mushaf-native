@@ -27,10 +27,9 @@ export default function PageNavigator({
   totalPages,
   onPageChange,
   primaryColor,
-  iconColor,
 }: PageNavigatorProps) {
   const { width } = useWindowDimensions();
-  const range = width < 600 ? 1 : 2;
+  const range = width < 600 ? 1 : 4;
 
   const { cardColor } = useColors();
 

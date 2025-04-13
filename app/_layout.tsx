@@ -1,7 +1,11 @@
 import { useEffect } from 'react';
 import { I18nManager, InteractionManager, Platform } from 'react-native';
 
-import { Amiri_400Regular, useFonts } from '@expo-google-fonts/amiri';
+import {
+  Amiri_400Regular,
+  Amiri_700Bold,
+  useFonts,
+} from '@expo-google-fonts/amiri';
 import {
   Tajawal_400Regular,
   Tajawal_500Medium,
@@ -39,6 +43,7 @@ export default function RootLayout() {
 
   const [loaded] = useFonts({
     Amiri_400Regular,
+    Amiri_700Bold,
     Tajawal_400Regular,
     Tajawal_500Medium,
     Tajawal_700Bold,

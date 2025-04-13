@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -37,6 +37,7 @@ export default function TopMenu() {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const insets = useSafeAreaInsets();
+  const [progressValue, setProgressValue] = useState<number>(0);
 
   const [showBottomMenuState, setBottomMenuState] =
     useRecoilState<boolean>(bottomMenuState);
@@ -48,11 +49,14 @@ export default function TopMenu() {
   const dailyHizbGoal = useRecoilValue(dailyHizbTarget);
   const dailyHizbCompleted = useRecoilValue(dailyHizbProgress);
 
-  // --- Calculate Progress ---
-  const dailyProgressDecimal =
-    dailyHizbGoal > 0
-      ? Math.min(1, dailyHizbCompleted / 8 / (dailyHizbGoal / 8))
-      : 0;
+  // Simplified progress calculation - directly use the value from Recoil state
+  useEffect(() => {
+    const newProgress =
+      dailyHizbGoal > 0
+        ? Math.min(1, dailyHizbCompleted / 8 / (dailyHizbGoal / 8))
+        : 0;
+    setProgressValue(newProgress);
+  }, [dailyHizbGoal, dailyHizbCompleted]);
 
   const toggleMenu = () => {
     setBottomMenuState((state: boolean) => !state);
@@ -73,14 +77,16 @@ export default function TopMenu() {
             : { backgroundColor: 'rgba(255, 255, 255, 0.5)' },
         ]}
       >
-        <ThemedView style={styles.rightSection}>
+        <ThemedView style={[styles.rightSection, { alignItems: 'center' }]}>
           <Text style={[styles.surahName, { color: tintColor }]}>
             {currentSurahName}
           </Text>
           <Text style={[styles.separator, { color: tintColor }]}> - </Text>
-          <View style={styles.positionContainer}>
+          <View style={[styles.positionContainer, { alignItems: 'center' }]}>
             <Text style={[styles.thumnPosition, { color: tintColor }]}>
-              {thumnInJuz}/16
+              {thumnInJuz}
+              <Text style={styles.thumnSeparator}>/</Text>
+              <Text style={styles.thumnTotal}>16</Text>
             </Text>
           </View>
         </ThemedView>
@@ -96,14 +102,14 @@ export default function TopMenu() {
             <View style={styles.progressContainer}>
               <Progress.Circle
                 size={32}
-                progress={dailyProgressDecimal}
+                progress={progressValue}
                 color={primaryColor}
                 showsText={false}
                 thickness={5}
                 borderWidth={0}
                 unfilledColor={'rgba(128, 128, 128, 0.4)'}
               />
-              {dailyProgressDecimal === 1 && (
+              {progressValue === 1 && (
                 <View style={styles.checkmarkContainer}>
                   <Feather name="check" size={20} color={primaryColor} />
                 </View>
@@ -211,11 +217,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   surahName: {
-    fontFamily: ' Amiri_400Regular',
-    fontSize: 18,
+    fontFamily: 'Amiri_700Bold',
+    fontSize: 24,
   },
   separator: {
     fontSize: 18,
+    marginHorizontal: 10,
   },
   positionContainer: {
     flexDirection: 'row',
@@ -223,8 +230,17 @@ const styles = StyleSheet.create({
     gap: 1,
   },
   thumnPosition: {
-    fontFamily: 'Tajawal_400Regular',
+    fontFamily: 'Tajawal_700Bold',
     fontSize: 18,
     lineHeight: 18,
+  },
+  thumnSeparator: {
+    fontSize: 18,
+    opacity: 0.6,
+    marginHorizontal: 4,
+  },
+  thumnTotal: {
+    fontSize: 18,
+    opacity: 0.7,
   },
 });

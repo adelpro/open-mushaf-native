@@ -17,8 +17,9 @@ import { useRouter } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
+import thumnJson from '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/thumn.json';
 import hizbJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.json';
 import { defaultNumberOfPages } from '@/constants';
 import { useColors } from '@/hooks/useColors';
@@ -27,8 +28,15 @@ import useImagePreloader from '@/hooks/useImagePreloader';
 import useImagesArray from '@/hooks/useImagesArray';
 import useOrientation from '@/hooks/useOrientation';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
-import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
-import { Hizb } from '@/types';
+import {
+  dailyHizbProgress,
+  flipSound,
+  hizbNotification,
+  mushafContrast,
+  yesterdayPage,
+} from '@/recoil/atoms';
+import { Hizb, Thumn } from '@/types';
+import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
 
 import PageOverlay from './PageOverlay';
 import { ThemedText } from './ThemedText';
@@ -40,6 +48,9 @@ export default function MushafPage() {
   const isFlipSoundEnabled = useRecoilValue(flipSound);
   const mushafContrastValue = useRecoilValue(mushafContrast);
   const HizbNotificationValue = useRecoilValue(hizbNotification);
+  const setDailyHizbCompleted = useSetRecoilState(dailyHizbProgress);
+  const yesterdayPageValue = useRecoilValue(yesterdayPage);
+  const thumnData = thumnJson as Thumn[];
   const hizbData = hizbJson as Hizb[];
   const [currentHizb, setCurrentHizb] = useState<number | null>(null);
   const [showNotification, setShowNotification] = useState(false);
@@ -179,6 +190,24 @@ export default function MushafPage() {
       disableKeepAwake();
     };
   }, []);
+
+  useEffect(() => {
+    if (
+      typeof currentPage === 'number' &&
+      currentPage > 0 &&
+      yesterdayPageValue > 0
+    ) {
+      // Calculate thumns read between yesterday's page and current page
+      const numberOfThumn = calculateThumnsBetweenPages(
+        yesterdayPageValue,
+        currentPage,
+        thumnData,
+      );
+
+      // Update the progress state
+      setDailyHizbCompleted(numberOfThumn);
+    }
+  }, [currentPage, yesterdayPageValue, thumnData, setDailyHizbCompleted]);
 
   if (assetError) {
     return (

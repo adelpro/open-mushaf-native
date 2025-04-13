@@ -210,7 +210,7 @@ export default function SurahAyaNavigator({
               showsVerticalScrollIndicator={false}
               numColumns={5}
               initialScrollIndex={Math.floor((currentAya - 1) / 5)}
-              getItemLayout={(data, index) => ({
+              getItemLayout={(_data, index) => ({
                 length: 50,
                 offset: 50 * Math.floor(index / 5),
                 index,

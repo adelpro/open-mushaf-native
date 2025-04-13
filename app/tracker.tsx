@@ -12,7 +12,6 @@ import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useRecoilState } from 'recoil';
 
-// Replace hizbJson with thumnJson for more granular tracking
 import thumnJson from '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/thumn.json';
 import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
@@ -26,9 +25,7 @@ import {
   dailyHizbTarget,
   yesterdayPage,
 } from '@/recoil/atoms';
-// Update the type import to include Thumn
 import { Thumn } from '@/types';
-// Update the utility function import or create a new one for thumn calculation
 import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
 
 export default function TrackerScreen() {
@@ -41,39 +38,12 @@ export default function TrackerScreen() {
   const [yesterdayPageValue, setYesterdayPageValue] =
     useRecoilState(yesterdayPage);
 
-  // Update to use thumn data
   const thumnData = thumnJson as Thumn[];
 
-  // Should be converted to hizb units first
   const dailyProgress =
     dailyHizbGoal > 0
       ? Math.min(100, (dailyHizbCompleted / 8 / (dailyHizbGoal / 8)) * 100)
       : 0;
-
-  // Ensure goal is always in full hizb units
-  useEffect(() => {
-    if (dailyHizbGoal % 8 !== 0) {
-      setDailyHizbGoal(Math.ceil(dailyHizbGoal / 8) * 8);
-    }
-  }, [dailyHizbGoal, setDailyHizbGoal]);
-
-  // Save current page to yesterdayPage at midnight and reset
-  useEffect(() => {
-    const now = new Date();
-    const msUntilMidnight =
-      new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() -
-      now.getTime();
-
-    const timeout = setTimeout(() => {
-      if (typeof savedPage === 'number' && savedPage > 0) {
-        setYesterdayPageValue(savedPage);
-      }
-      setDailyHizbCompleted(0);
-      setYesterdayPageValue(savedPage);
-    }, msUntilMidnight);
-
-    return () => clearTimeout(timeout);
-  }, [setDailyHizbCompleted, setYesterdayPageValue, savedPage]);
 
   // Should change by full hizb (8 thumns)
   const incrementDailyGoal = () => setDailyHizbGoal((prev) => prev + 8);
