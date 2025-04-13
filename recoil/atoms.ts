@@ -96,23 +96,31 @@ export const dailyHizbCompleted = atom<number>({
   effects: [ReactNativeRecoilPersist.persistAtom, midnightResetEffect],
 });
 
-// Define the effect that updates yesterdayPage when currentSavedPage changes
-const updateYesterdayPageEffect: AtomEffect<number> = ({ onSet, setSelf }) => {
-  onSet((newValue) => {
-    if (typeof newValue === 'number' && newValue > 0) {
-      setSelf(newValue);
-    }
-  });
+// Update the yesterdayPage to the currentPage at midnight
+const updateYesterdayPageEffect: AtomEffect<number> = ({
+  setSelf,
+  getPromise,
+}) => {
+  const now = new Date();
+  const msUntilMidnight =
+    new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() -
+    now.getTime();
+
+  const timeout = setTimeout(() => {
+    getPromise(currentSavedPage).then((currentPage) => {
+      setSelf(currentPage);
+    });
+  }, msUntilMidnight);
+
+  return () => clearTimeout(timeout);
 };
 
-// Define yesterdayPage without the problematic effect for now
 export const yesterdayPage = atom<number>({
   key: 'yesterdayPage',
-  default: 0,
+  default: 1,
   effects: [ReactNativeRecoilPersist.persistAtom, updateYesterdayPageEffect],
 });
 
-// Create a timer effect for Recoil state
 const timerEffect: (duration_ms: number) => AtomEffect<any> =
   (duration_ms: number) =>
   ({ setSelf, onSet }) => {

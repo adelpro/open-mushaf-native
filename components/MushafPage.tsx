@@ -206,6 +206,8 @@ export default function MushafPage() {
 
       // Update the progress state
       setDailyHizbCompletedValue(numberOfThumn / 8);
+    } else {
+      setDailyHizbCompletedValue(0);
     }
   }, [currentPage, yesterdayPageValue, thumnData, setDailyHizbCompletedValue]);
 

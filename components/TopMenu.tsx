@@ -81,7 +81,12 @@ export default function TopMenu() {
             {currentSurahName}
           </Text>
           <Text style={[styles.separator, { color: tintColor }]}> - </Text>
-          <View style={[styles.positionContainer, { alignItems: 'center' }]}>
+          <View
+            style={[
+              styles.positionContainer,
+              { alignItems: 'center', justifyContent: 'center' },
+            ]}
+          >
             <Text style={[styles.thumnPosition, { color: tintColor }]}>
               {thumnInJuz}
               <Text style={styles.thumnSeparator}>/</Text>
@@ -231,7 +236,6 @@ const styles = StyleSheet.create({
   thumnPosition: {
     fontFamily: 'Tajawal_700Bold',
     fontSize: 18,
-    lineHeight: 18,
   },
   thumnSeparator: {
     fontSize: 18,

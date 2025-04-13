@@ -15,8 +15,8 @@ type Props = {
 export default function SEO({
   title = 'Open Mushaf',
   description = 'A modern and minimalist Quran Mushaf application',
-  image = 'https://open-mushaf-native.web.app/og-image.png',
-  url = 'https://open-mushaf-native.web.app',
+  image = 'https://www.quran.us.kg/og-image.png',
+  url = 'https://www.quran.us.kg',
   canonical,
   keywords = 'quran, mushaf, islam, holy book, reading quran',
   locale = 'ar_DZ',

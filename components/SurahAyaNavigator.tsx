@@ -1,5 +1,11 @@
-import React, { useState } from 'react';
-import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  FlatList,
+  Modal,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 
@@ -33,6 +39,10 @@ export default function SurahAyaNavigator({
   const [surahModalVisible, setSurahModalVisible] = useState(false);
   const [ayaModalVisible, setAyaModalVisible] = useState(false);
 
+  // Add refs for the FlatLists
+  const surahListRef = useRef<FlatList>(null);
+  const ayaListRef = useRef<FlatList>(null);
+
   const currentSurahName =
     surahs.find((s) => s.number === currentSurah)?.name || '';
 
@@ -45,6 +55,8 @@ export default function SurahAyaNavigator({
     onAyaChange(ayaNumber);
     setAyaModalVisible(false);
   };
+
+  const isWeb = Platform.OS === 'web';
 
   const renderSurahItem = ({ item }: { item: Surah }) => (
     <TouchableOpacity
@@ -87,6 +99,17 @@ export default function SurahAyaNavigator({
       <ThemedText style={styles.ayaNumber}>{item}</ThemedText>
     </TouchableOpacity>
   );
+  useEffect(() => {
+    if (surahModalVisible && surahListRef.current) {
+      setTimeout(() => {
+        surahListRef.current?.scrollToIndex({
+          index: currentSurah - 1,
+          animated: false,
+          viewPosition: 0.3,
+        });
+      }, 100);
+    }
+  }, [surahModalVisible, currentSurah]);
 
   return (
     <ThemedView style={[styles.container, { backgroundColor: 'transparent' }]}>
@@ -162,16 +185,28 @@ export default function SurahAyaNavigator({
             </ThemedView>
 
             <FlatList
+              ref={surahListRef}
               data={surahs}
               renderItem={renderSurahItem}
               keyExtractor={(item) => item.number.toString()}
-              showsVerticalScrollIndicator={false}
+              showsVerticalScrollIndicator={isWeb}
               initialScrollIndex={currentSurah - 1}
               getItemLayout={(_data, index) => ({
                 length: 60,
                 offset: 60 * index,
                 index,
               })}
+              onScrollToIndexFailed={(info) => {
+                // Fallback for scroll failures
+                setTimeout(() => {
+                  if (surahListRef.current) {
+                    surahListRef.current.scrollToOffset({
+                      offset: info.averageItemLength * info.index,
+                      animated: true,
+                    });
+                  }
+                }, 100);
+              }}
             />
           </ThemedView>
         </TouchableOpacity>
@@ -204,18 +239,34 @@ export default function SurahAyaNavigator({
             </ThemedView>
 
             <FlatList
+              ref={ayaListRef}
               data={ayaCount}
               renderItem={renderAyaItem}
               keyExtractor={(item) => item.toString()}
-              showsVerticalScrollIndicator={false}
+              showsVerticalScrollIndicator={isWeb}
               numColumns={5}
-              initialScrollIndex={Math.floor((currentAya - 1) / 5)}
-              getItemLayout={(_data, index) => ({
-                length: 50,
-                offset: 50 * Math.floor(index / 5),
-                index,
-              })}
+              initialScrollIndex={(currentAya - 1) / 5}
+              getItemLayout={(_data, index) => {
+                // For a grid with 5 columns, each row is 5 items
+                const rowIndex = Math.floor(index / 5);
+                return {
+                  length: 50, // Height of each item
+                  offset: rowIndex * 50, // Row height * row index
+                  index,
+                };
+              }}
               contentContainerStyle={styles.ayaGrid}
+              onScrollToIndexFailed={(info) => {
+                // Fallback for scroll failures
+                setTimeout(() => {
+                  if (ayaListRef.current) {
+                    ayaListRef.current.scrollToOffset({
+                      offset: Math.floor(info.index / 5) * 50,
+                      animated: true,
+                    });
+                  }
+                }, 100);
+              }}
             />
           </ThemedView>
         </TouchableOpacity>
