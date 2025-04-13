@@ -22,6 +22,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import {
   bottomMenuState,
+  currentSavedPage,
   dailyHizbProgress,
   dailyHizbTarget,
   topMenuState,
@@ -41,6 +42,7 @@ export default function TopMenu() {
     useRecoilState<boolean>(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] =
     useRecoilState<boolean>(topMenuState);
+  const currentSavedPageValue = useRecoilValue(currentSavedPage);
 
   // --- Access Recoil State for Progress ---
   const dailyHizbGoal = useRecoilValue(dailyHizbTarget);
@@ -57,9 +59,9 @@ export default function TopMenu() {
   };
 
   const { page } = useLocalSearchParams<{ page: string }>();
-  const currentPage = page ? parseInt(page) : 1;
+  const currentPage = page ? parseInt(page) : currentSavedPageValue;
   const currentSurahName = getSurahNameByPage(currentPage);
-  const { thumnInJuz, juzNumber } = getJuzPositionByPage(currentPage);
+  const { thumnInJuz } = getJuzPositionByPage(currentPage);
 
   return showTopMenuState ? (
     <ThemedSafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
@@ -72,37 +74,13 @@ export default function TopMenu() {
         ]}
       >
         <ThemedView style={styles.rightSection}>
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() => {
-              setShowTopMenuState(false);
-              toggleMenu();
-            }}
-          >
-            {showBottomMenuState ? (
-              <MaterialCommunityIcons
-                name="fit-to-screen-outline"
-                size={40}
-                color={tintColor}
-              />
-            ) : (
-              <MaterialIcons
-                name="fullscreen-exit"
-                size={40}
-                color={tintColor}
-              />
-            )}
-          </TouchableOpacity>
           <Text style={[styles.surahName, { color: tintColor }]}>
             {currentSurahName}
           </Text>
           <Text style={[styles.separator, { color: tintColor }]}> - </Text>
           <View style={styles.positionContainer}>
-            <Text style={[styles.juzPosition, { color: tintColor }]}>
-              {juzNumber}
-            </Text>
             <Text style={[styles.thumnPosition, { color: tintColor }]}>
-              ({thumnInJuz}/16)
+              {thumnInJuz}/16
             </Text>
           </View>
         </ThemedView>
@@ -155,6 +133,27 @@ export default function TopMenu() {
           >
             <Ionicons name="search" size={40} color={tintColor} />
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => {
+              setShowTopMenuState(false);
+              toggleMenu();
+            }}
+          >
+            {showBottomMenuState ? (
+              <MaterialCommunityIcons
+                name="fit-to-screen-outline"
+                size={40}
+                color={tintColor}
+              />
+            ) : (
+              <MaterialIcons
+                name="fullscreen-exit"
+                size={40}
+                color={tintColor}
+              />
+            )}
+          </TouchableOpacity>
         </ThemedView>
       </ThemedView>
     </ThemedSafeAreaView>
@@ -186,7 +185,7 @@ const styles = StyleSheet.create({
     maxWidth: 640,
   },
   icon: {
-    padding: 10,
+    padding: 5,
   },
   leftIconsContainer: {
     flexDirection: 'row',
@@ -209,13 +208,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'transparent',
+    marginHorizontal: 10,
   },
   surahName: {
     fontFamily: ' Amiri_400Regular',
-    fontSize: 18,
-  },
-  juzPosition: {
-    fontFamily: 'Tajawal_400Regular',
     fontSize: 18,
   },
   separator: {
@@ -228,6 +224,7 @@ const styles = StyleSheet.create({
   },
   thumnPosition: {
     fontFamily: 'Tajawal_400Regular',
-    fontSize: 16,
+    fontSize: 18,
+    lineHeight: 18,
   },
 });

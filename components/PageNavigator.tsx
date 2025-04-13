@@ -61,18 +61,6 @@ export default function PageNavigator({
     }
   };
 
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
-    }
-  };
-
   const handleInputChange = (text: string) => {
     const numericValue = text.replace(/[^0-9]/g, '');
     setInputValue(numericValue);
@@ -95,17 +83,8 @@ export default function PageNavigator({
 
   return (
     <ThemedView style={styles.container}>
-      {/* Navigation row with arrow icons and page selection/input */}
+      {/* Navigation row with page selection/input */}
       <ThemedView style={styles.navRow}>
-        <TouchableOpacity
-          style={styles.navIcon}
-          onPress={handlePrevPage}
-          accessibilityLabel="Previous page"
-          accessibilityHint="Navigate to the previous page"
-        >
-          <Feather name="chevron-right" size={18} color={iconColor} />
-        </TouchableOpacity>
-
         {showInput ? (
           <ThemedView style={[styles.inputContainer, { flex: 1 }]}>
             <TextInput
@@ -134,14 +113,20 @@ export default function PageNavigator({
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={[styles.pageNumbersContainer, { flex: 1 }]}
+            contentContainerStyle={[
+              styles.pageNumbersContainer,
+              { flexGrow: 1 },
+            ]}
           >
             {getPageNumbers().map((page, index) => (
               <TouchableOpacity
                 key={index}
                 style={[
-                  styles.pageNumber,
+                  styles.pageNumber, // Default style
                   { backgroundColor: cardColor },
+                  // Apply larger style if it's the current page
+                  page === currentPage && styles.currentPageNumber,
+                  // Apply specific background color for current page
                   page === currentPage && { backgroundColor: primaryColor },
                   page === '...' && styles.ellipsis,
                 ]}
@@ -151,7 +136,8 @@ export default function PageNavigator({
                 <ThemedText
                   style={[
                     styles.pageNumberText,
-                    page === currentPage && { color: '#fff' },
+                    // Apply larger font and white color for current page text
+                    page === currentPage && styles.currentPageNumberText,
                   ]}
                 >
                   {page}
@@ -160,18 +146,8 @@ export default function PageNavigator({
             ))}
           </ScrollView>
         )}
-
-        <TouchableOpacity
-          onPress={handleNextPage}
-          style={styles.navIcon}
-          accessibilityLabel="Next page"
-          accessibilityHint="Navigate to the next page"
-        >
-          <Feather name="chevron-left" size={18} color={iconColor} />
-        </TouchableOpacity>
       </ThemedView>
 
-      {/* Edit icon below in its own container */}
       {!showInput && (
         <ThemedView style={styles.editContainer}>
           <TouchableOpacity
@@ -191,19 +167,20 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     alignSelf: 'center',
-    paddingVertical: 10,
+    // Increased vertical padding for more spacing
+    paddingVertical: 15,
     width: '95%',
     maxWidth: 640,
   },
   navRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    // Center content now that arrows are removed
+    justifyContent: 'center',
     width: '100%',
+    marginBottom: 5, // Add some space between page numbers and edit icon
   },
-  navIcon: {
-    padding: 6,
-  },
+  // Removed navIcon style as it's no longer used
 
   pageNumbersContainer: {
     flexDirection: 'row',
@@ -212,23 +189,35 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
   pageNumber: {
-    minWidth: 30,
-    height: 30,
-    borderRadius: 15,
+    // Slightly smaller default size
+    minWidth: 28,
+    height: 28,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 2,
+    marginHorizontal: 3,
   },
   pageNumberText: {
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: 'Tajawal_500Medium',
+  },
+
+  currentPageNumber: {
+    minWidth: 36,
+    height: 36,
+    borderRadius: 18,
+  },
+  currentPageNumberText: {
+    fontSize: 15,
+    color: '#fff',
   },
   ellipsis: {
     backgroundColor: 'transparent',
     minWidth: 20,
   },
   editContainer: {
-    marginTop: 8,
+    // Reduced top margin as container padding increased
+    marginTop: 5,
     alignItems: 'center',
   },
   goToPageButton: {

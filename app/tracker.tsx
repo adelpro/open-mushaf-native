@@ -222,19 +222,17 @@ export default function TrackerScreen() {
                 color={iconColor}
                 style={[styles.icon, { color: primaryColor }]}
               />
-              <ThemedText style={styles.label}>عن نظام الأثمان:</ThemedText>
+              <ThemedText style={styles.label}>عن تقسيم القرآن:</ThemedText>
             </ThemedView>
 
             <ThemedText style={styles.infoText}>
-              القرآن الكريم مقسم إلى 60 حزباً، وكل حزب مقسم إلى 8 أثمان.
+              القرآن الكريم مقسم إلى 60 حزباً لتسهيل القراءة والمراجعة.
             </ThemedText>
-            <ThemedText style={styles.infoText}>
-              يمكنك تتبع قراءتك اليومية بالأثمان لتحديد أكثر دقة لتقدمك.
-            </ThemedText>
+
             <ThemedText style={[styles.infoText, { color: primaryColor }]}>
-              يُحسب الورد اليومي عن طريق حساب عدد الأثمان بين آخر صفحة تمت
-              قراءتها بالأمس والصفحة الحالية (صفحة{' '}
-              {typeof savedPage === 'number' ? savedPage : 'غير محددة'}).
+              يُحسب الورد الْيَوْمِيُّ من خلال مقارنة الصفحة الحالية (صفحة{' '}
+              {typeof savedPage === 'number' ? savedPage : 'غير محددة'}) بآخر
+              صفحة قرأتها بالأمس، وتحديد عدد الأحزاب المقروءة.
             </ThemedText>
 
             <ThemedView style={styles.resetButtonsContainer}>
@@ -245,20 +243,14 @@ export default function TrackerScreen() {
               >
                 <ThemedView
                   style={{
-                    flexDirection: 'row-reverse',
+                    flexDirection: 'row',
                     alignItems: 'center',
                     backgroundColor: 'transparent',
                     justifyContent: 'center',
-                    padding: 10,
                     gap: 5,
                   }}
                 >
-                  <Feather
-                    name="refresh-cw"
-                    size={16}
-                    color={primaryColor}
-                    style={{ marginRight: 5 }}
-                  />
+                  <Feather name="refresh-cw" size={16} color={primaryColor} />
                   <Text
                     style={{
                       color: primaryColor,
@@ -266,7 +258,7 @@ export default function TrackerScreen() {
                       fontSize: 18,
                     }}
                   >
-                    إعادة تعيين
+                    إعادة التعيين
                   </Text>
                 </ThemedView>
               </ThemedButton>
@@ -360,5 +352,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
-  resetButton: { paddingHorizontal: 16, paddingVertical: 8 },
+  resetButton: { paddingHorizontal: 16, paddingVertical: 8 }, // This padding controls the space around the icon and text
 });

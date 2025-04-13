@@ -153,7 +153,10 @@ export default function SurahAyaNavigator({
           >
             <ThemedView style={styles.modalHeader}>
               <ThemedText style={styles.modalTitle}>اختر سورة</ThemedText>
-              <TouchableOpacity onPress={() => setSurahModalVisible(false)}>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setSurahModalVisible(false)}
+              >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
             </ThemedView>
@@ -192,7 +195,10 @@ export default function SurahAyaNavigator({
           >
             <ThemedView style={styles.modalHeader}>
               <ThemedText style={styles.modalTitle}>اختر آية</ThemedText>
-              <TouchableOpacity onPress={() => setAyaModalVisible(false)}>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setAyaModalVisible(false)}
+              >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
             </ThemedView>
@@ -246,7 +252,7 @@ const styles = StyleSheet.create({
   },
   selectorText: {
     fontSize: 16,
-    fontFamily: 'Tajawal_500Medium',
+    fontFamily: 'Amiri_400Regular',
   },
   modalOverlay: {
     flex: 1,
@@ -268,15 +274,22 @@ const styles = StyleSheet.create({
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'center', // This ensures vertical centering
     marginBottom: 16,
     paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+    minHeight: 40, // Adding a minimum height to ensure consistent spacing
   },
   modalTitle: {
     fontSize: 18,
     fontFamily: 'Tajawal_700Bold',
+    textAlignVertical: 'center', // Ensures text is vertically centered
+  },
+  closeButton: {
+    padding: 4, // Add padding to increase touch target
+    justifyContent: 'center', // Center the icon vertically
+    alignItems: 'center', // Center the icon horizontally
   },
   modalItem: {
     flexDirection: 'row',
