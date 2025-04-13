@@ -45,7 +45,6 @@ export default function TopMenu() {
     useRecoilState<boolean>(topMenuState);
   const currentSavedPageValue = useRecoilValue(currentSavedPage);
 
-  // --- Access Recoil State for Progress ---
   const dailyHizbGoalValue = useRecoilValue(dailyHizbGoal);
   const dailyHizbCompletedValue = useRecoilValue(dailyHizbCompleted);
 
@@ -64,7 +63,7 @@ export default function TopMenu() {
   const { page } = useLocalSearchParams<{ page: string }>();
   const currentPage = page ? parseInt(page) : currentSavedPageValue;
   const currentSurahName = getSurahNameByPage(currentPage);
-  const { thumnInJuz } = getJuzPositionByPage(currentPage);
+  const { thumnInJuz, juzNumber } = getJuzPositionByPage(currentPage);
 
   return showTopMenuState ? (
     <ThemedSafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
@@ -76,16 +75,65 @@ export default function TopMenu() {
             : { backgroundColor: 'rgba(255, 255, 255, 0.5)' },
         ]}
       >
+        {/* Reverted rightSection layout to keep elements grouped */}
         <ThemedView style={[styles.rightSection, { alignItems: 'center' }]}>
-          <Text style={[styles.surahName, { color: tintColor }]}>
+          <Text
+            style={[
+              styles.surahName,
+              {
+                color: tintColor,
+                includeFontPadding: false,
+                textAlignVertical: 'center',
+              },
+            ]}
+            accessibilityLabel={`السورة الحالية: ${currentSurahName}`}
+            accessibilityRole="header"
+          >
             {currentSurahName}
           </Text>
-          <Text style={[styles.separator, { color: tintColor }]}> - </Text>
+          <Text
+            style={[
+              styles.separator,
+              { color: tintColor, lineHeight: 18, textAlignVertical: 'center' },
+            ]}
+          >
+            -
+          </Text>
+          <Text
+            style={[
+              styles.juzPosition,
+              {
+                color: tintColor,
+                includeFontPadding: false,
+                textAlignVertical: 'center',
+              },
+            ]}
+          >
+            الجزء {juzNumber}
+          </Text>
+          <Text
+            style={[
+              styles.separator,
+              { color: tintColor, lineHeight: 18, textAlignVertical: 'center' },
+            ]}
+          >
+            -
+          </Text>
           <View style={[styles.positionContainer, { alignItems: 'center' }]}>
-            <Text style={[styles.thumnPosition, { color: tintColor }]}>
+            <Text
+              style={[
+                styles.thumnPosition,
+                {
+                  color: tintColor,
+                  includeFontPadding: false,
+                  textAlignVertical: 'center',
+                  lineHeight: 18,
+                },
+              ]}
+            >
               {thumnInJuz}
-              <Text style={styles.thumnSeparator}>/</Text>
-              <Text style={styles.thumnTotal}>16</Text>
+              <Text style={[styles.thumnSeparator, { lineHeight: 18 }]}>/</Text>
+              <Text style={[styles.thumnTotal, { lineHeight: 18 }]}>16</Text>
             </Text>
           </View>
         </ThemedView>
@@ -210,36 +258,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rightSection: {
+    // Reverted justifyContent and flex properties
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'transparent',
-    marginHorizontal: 10,
+    marginHorizontal: 10, // Keep some margin
   },
   surahName: {
     fontFamily: 'Amiri_400Regular',
     fontSize: 18,
   },
+  // Restore separator style
   separator: {
     fontSize: 18,
     marginHorizontal: 10,
   },
+  // Restore position container style
   positionContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 1,
   },
+  // Restore thumn related styles
   thumnPosition: {
-    fontFamily: 'Tajawal_700Bold',
+    fontFamily: 'Amiri_400Regular',
     fontSize: 18,
-    lineHeight: 18,
   },
   thumnSeparator: {
+    fontFamily: 'Amiri_400Regular',
     fontSize: 18,
     opacity: 0.6,
-    marginHorizontal: 4,
   },
   thumnTotal: {
+    fontFamily: 'Amiri_400Regular',
     fontSize: 18,
     opacity: 0.7,
+  },
+  juzPosition: {
+    fontFamily: 'Amiri_400Regular',
+    fontSize: 18,
   },
 });

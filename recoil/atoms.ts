@@ -108,7 +108,7 @@ const updateYesterdayPageEffect: AtomEffect<number> = ({ onSet, setSelf }) => {
 // Define yesterdayPage without the problematic effect for now
 export const yesterdayPage = atom<number>({
   key: 'yesterdayPage',
-  default: 0,
+  default: 1,
   effects: [ReactNativeRecoilPersist.persistAtom, updateYesterdayPageEffect],
 });
 
