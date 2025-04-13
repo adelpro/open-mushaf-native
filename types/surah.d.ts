@@ -5,5 +5,5 @@ export type Surah = {
   englishNameTranslation?: string;
   numberOfAyahs: number;
   revelationType?: string;
-  startingPage: number | undefined;
+  startingPage: number;
 };

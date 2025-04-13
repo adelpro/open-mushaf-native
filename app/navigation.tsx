@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
-import surahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
 import PageNavigator from '@/components/PageNavigator';
 import SEO from '@/components/seo';
 import SurahAyaNavigator from '@/components/SurahAyaNavigator';
@@ -15,6 +14,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { defaultNumberOfPages } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
+import useQuranMetadata from '@/hooks/useQuranMetadata';
 import { QuranText } from '@/types';
 
 export default function Navigation() {
@@ -25,13 +25,16 @@ export default function Navigation() {
   const [currentAyaNumber, setCurrentAyaNumber] = useState<number>(1);
   const [numberOfAyas, setNumberOfAyas] = useState<number[]>([]);
 
-  const { iconColor, cardColor, primaryColor } = useColors();
+  const { iconColor, cardColor, primaryColor, tintColor } = useColors();
+  const { surahData, isLoading, error } = useQuranMetadata();
 
   useEffect(() => {
-    const surah = surahs.find((surah, index) => {
+    if (isLoading || error) return;
+
+    const surah = surahData.find((surah, index) => {
       const startingPage = surah.startingPage;
       const nextSurahStartingPage =
-        surahs[index + 1]?.startingPage || defaultNumberOfPages + 1;
+        surahData[index + 1]?.startingPage || defaultNumberOfPages + 1;
       return currentPage >= startingPage && currentPage < nextSurahStartingPage;
     });
 
@@ -52,7 +55,7 @@ export default function Navigation() {
     if (aya) {
       setCurrentAyaNumber(aya.aya_id - 1);
     }
-  }, [currentPage, quranText]);
+  }, [currentPage, quranText, isLoading, error, surahData]);
 
   const handlePageChange = (pageNumber: number) => {
     router.push({
@@ -63,11 +66,13 @@ export default function Navigation() {
 
   const handleSurahChange = (surahNumber: number) => {
     setCurrentSurah(surahNumber);
-    const selectedSurah = surahs[surahNumber - 1];
-    setNumberOfAyas(
-      Array.from({ length: selectedSurah.numberOfAyahs }, (_, i) => i + 1),
-    );
-    setCurrentAyaNumber(1);
+    const selectedSurah = surahData.find((s) => s.number === surahNumber);
+    if (selectedSurah) {
+      setNumberOfAyas(
+        Array.from({ length: selectedSurah.numberOfAyahs }, (_, i) => i + 1),
+      );
+      setCurrentAyaNumber(1);
+    }
   };
 
   const handleAyaChange = (ayaNumber: number) => {
@@ -84,6 +89,26 @@ export default function Navigation() {
       });
     }
   };
+
+  if (isLoading) {
+    return (
+      <ThemedSafeAreaView style={styles.container}>
+        <ThemedView style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={tintColor} />
+        </ThemedView>
+      </ThemedSafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <ThemedSafeAreaView style={styles.container}>
+        <ThemedView style={styles.errorContainer}>
+          <ThemedText type="defaultSemiBold">{`حدث خطأ: ${error}`}</ThemedText>
+        </ThemedView>
+      </ThemedSafeAreaView>
+    );
+  }
 
   return (
     <ThemedSafeAreaView style={styles.container}>
@@ -143,7 +168,6 @@ export default function Navigation() {
           </ThemedText>
         </ThemedView>
         <SurahAyaNavigator
-          surahs={surahs}
           currentSurah={currentSurah}
           currentAya={currentAyaNumber}
           ayaCount={numberOfAyas}
@@ -168,6 +192,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
     maxWidth: 640,
+  },
+  loadingContainer: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
   navigationSection: {
     marginVertical: 15,

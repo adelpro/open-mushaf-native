@@ -19,8 +19,7 @@ import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import thumnJson from '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/thumn.json';
-import hizbJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.json';
+// Remove useRiwayaData import and add useQuranMetadata
 import { defaultNumberOfPages } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
@@ -28,6 +27,7 @@ import useImagePreloader from '@/hooks/useImagePreloader';
 import useImagesArray from '@/hooks/useImagesArray';
 import useOrientation from '@/hooks/useOrientation';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
+import useQuranMetadata from '@/hooks/useQuranMetadata';
 import {
   dailyHizbCompleted,
   flipSound,
@@ -35,7 +35,6 @@ import {
   mushafContrast,
   yesterdayPage,
 } from '@/recoil/atoms';
-import { Hizb, Thumn } from '@/types';
 import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
 
 import PageOverlay from './PageOverlay';
@@ -47,11 +46,18 @@ export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
   const isFlipSoundEnabled = useRecoilValue(flipSound);
   const mushafContrastValue = useRecoilValue(mushafContrast);
-  const HizbNotificationValue = useRecoilValue(hizbNotification);
+  const hizbNotificationValue = useRecoilValue(hizbNotification);
   const setDailyHizbCompletedValue = useSetRecoilState(dailyHizbCompleted);
   const yesterdayPageValue = useRecoilValue(yesterdayPage);
-  const thumnData = thumnJson as Thumn[];
-  const hizbData = hizbJson as Hizb[];
+
+  // Use the new hook to get Quran metadata
+  const {
+    thumnData,
+    hizbData,
+    isLoading: metadataIsLoading,
+    error: metadataError,
+  } = useQuranMetadata();
+
   const [currentHizb, setCurrentHizb] = useState<number | null>(null);
   const [showNotification, setShowNotification] = useState(false);
 
@@ -152,13 +158,13 @@ export default function MushafPage() {
     // Determine notification visibility based on multiple conditions
     const shouldShowNotification = (() => {
       // If no current Hizb or notifications are disabled, don't show
-      if (!currentHizbNumber || HizbNotificationValue === 0) return false;
+      if (!currentHizbNumber || hizbNotificationValue === 0) return false;
 
       // Always show for mode 1 (all Hizbs)
-      if (HizbNotificationValue === 1) return true;
+      if (hizbNotificationValue === 1) return true;
 
       // Show only for odd-numbered Hizbs in mode 2
-      if (HizbNotificationValue === 2) return currentHizbNumber % 2 !== 0;
+      if (hizbNotificationValue === 2) return currentHizbNumber % 2 !== 0;
 
       // Default: hide notification
       return false;
@@ -167,7 +173,7 @@ export default function MushafPage() {
     // Update states in a single effect
     setCurrentHizb(currentHizbNumber);
     setShowNotification(shouldShowNotification);
-  }, [currentPage, hizbData, HizbNotificationValue]);
+  }, [currentPage, hizbData, hizbNotificationValue]);
 
   useEffect(() => {
     const tag = 'MushafPage';
@@ -208,6 +214,38 @@ export default function MushafPage() {
     }
   }, [currentPage, yesterdayPageValue, thumnData, setDailyHizbCompletedValue]);
 
+  // Handle errors from metadata loading
+  if (metadataError) {
+    return (
+      <ThemedView
+        style={[
+          styles.errorContainer,
+          colorScheme === 'dark'
+            ? { backgroundColor: '#d5d4d2' }
+            : { backgroundColor: '#f5f1eb' },
+        ]}
+      >
+        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${metadataError}`}</ThemedText>
+      </ThemedView>
+    );
+  }
+
+  // Show loading state if either asset or metadata is loading
+  if (assetIsLoading || metadataIsLoading) {
+    return (
+      <ThemedView
+        style={[
+          styles.loadingContainer,
+          colorScheme === 'dark'
+            ? { backgroundColor: '#d5d4d2' }
+            : { backgroundColor: '#f5f1eb' },
+        ]}
+      >
+        <ActivityIndicator size="large" color={tintColor} />
+      </ThemedView>
+    );
+  }
+
   if (assetError) {
     return (
       <ThemedView
@@ -218,7 +256,7 @@ export default function MushafPage() {
             : { backgroundColor: '#f5f1eb' },
         ]}
       >
-        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${assetError}`}</ThemedText>
+        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${assetError}`}</ThemedText>
       </ThemedView>
     );
   }
@@ -286,7 +324,7 @@ export default function MushafPage() {
             <TopNotification
               show={showNotification}
               text={
-                currentHizb && HizbNotificationValue === 2
+                currentHizb && hizbNotificationValue === 2
                   ? `الجزء - ${(currentHizb - 1)?.toString()}`
                   : `الحزب - ${currentHizb?.toString()}`
               }

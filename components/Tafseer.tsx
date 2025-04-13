@@ -4,8 +4,8 @@ import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import HTMLView from 'react-native-htmlview';
 import { useRecoilState } from 'recoil';
 
-import surahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
 import { useColors } from '@/hooks/useColors';
+import useQuranMetadata from '@/hooks/useQuranMetadata';
 import { tafseerTab } from '@/recoil/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
 
@@ -31,6 +31,7 @@ type Props = {
 
 export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
   const { tintColor, textColor } = useColors();
+  const { surahData } = useQuranMetadata();
   const [surahName, setSurahName] = useState<string>('');
   const [selectedTabValue, setSelectedTab] = useRecoilState(tafseerTab);
   const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
@@ -78,8 +79,9 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
   };
 
   useEffect(() => {
-    setSurahName(surahs[surah - 1]?.name ?? '');
-  }, [surah]);
+    const currentSurah = surahData.find((s) => s.number === surah);
+    setSurahName(currentSurah?.name ?? '');
+  }, [surah, surahData]);
 
   const loadTafseerData = useCallback(async () => {
     let tafseerJSON;

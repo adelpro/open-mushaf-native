@@ -2,9 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [3.2.6]
+## [3.2.9]
 
-- feat: Add reading tracker feature ( daily wird)
+- refactor: Add a quran metadata json file managementent system
+
+## [3.2.8]
+
+- feat: Add Reading Tracker feature (daily)
 - feat: Add surah name, current juz and juz progress in the top menu
 - update: Refactor the navigation lists ui/uix
 

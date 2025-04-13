@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Pressable,
   StyleSheet,
@@ -10,7 +11,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useRecoilState } from 'recoil';
 
-import quranJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/quran.json';
 import AdvancedSearchSVG from '@/assets/svgs/search-advanced.svg';
 import SEO from '@/components/seo';
 import TafseerPopup from '@/components/TafseerPopup';
@@ -20,6 +20,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import useDebounce from '@/hooks/useDebounce';
+import useQuranMetadata from '@/hooks/useQuranMetadata';
 import { advancedSearch } from '@/recoil/atoms';
 import { QuranText } from '@/types';
 import {
@@ -29,7 +30,7 @@ import {
 } from '@/utils/searchUtils';
 
 export default function Search() {
-  const quranText: QuranText[] = quranJson as QuranText[];
+  const { quranData, isLoading, error } = useQuranMetadata();
   const [query, setQuery] = useState('');
   const [inputText, setInputText] = useState('');
   const [filteredResults, setFilteredResults] = useState<QuranText[]>([]);
@@ -38,11 +39,13 @@ export default function Search() {
   const { iconColor, tintColor, primaryColor } = useColors();
 
   const [fuseInstance] = useState(() =>
-    createArabicFuseSearch(quranText, ['standard'], {
-      // Higher threshold to catch more typos
-      threshold: 0.2,
-      minMatchCharLength: 2,
-    }),
+    quranData
+      ? createArabicFuseSearch(quranData, ['standard'], {
+          // Higher threshold to catch more typos
+          threshold: 0.2,
+          minMatchCharLength: 2,
+        })
+      : null,
   );
 
   const [advancedSearchValue, setAdvancedSearchValue] =
@@ -55,7 +58,7 @@ export default function Search() {
   const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
 
   useEffect(() => {
-    if (!quranText || quranText.length === 0) return;
+    if (!quranData || quranData.length === 0 || !fuseInstance) return;
 
     if (query.trim() === '') {
       setFilteredResults([]);
@@ -65,13 +68,13 @@ export default function Search() {
     // In your useEffect where you perform the search:
     if (advancedSearchValue) {
       setFilteredResults(
-        performAdvancedSearch(fuseInstance, query, ['standard'], quranText),
+        performAdvancedSearch(fuseInstance, query, ['standard'], quranData),
       );
     } else {
       // Use simple search
-      setFilteredResults(simpleSearch(quranText, query, 'standard'));
+      setFilteredResults(simpleSearch(quranData, query, 'standard'));
     }
-  }, [query, quranText, fuseInstance, advancedSearchValue]);
+  }, [query, quranData, fuseInstance, advancedSearchValue]);
 
   const handlePress = (aya: QuranText) => {
     setSelectedAya({ aya: aya.aya_id, surah: aya.sura_id });
@@ -112,6 +115,26 @@ export default function Search() {
       </TouchableOpacity>
     );
   };
+
+  if (isLoading) {
+    return (
+      <ThemedSafeAreaView style={styles.container}>
+        <ThemedView style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={tintColor} />
+        </ThemedView>
+      </ThemedSafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <ThemedSafeAreaView style={styles.container}>
+        <ThemedView style={styles.errorContainer}>
+          <ThemedText type="defaultSemiBold">{`حدث خطأ: ${error}`}</ThemedText>
+        </ThemedView>
+      </ThemedSafeAreaView>
+    );
+  }
 
   return (
     <ThemedSafeAreaView style={styles.container}>
@@ -198,6 +221,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'right',
     borderTopRightRadius: 8,
+  },
+  loadingContainer: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
     borderBottomRightRadius: 8,
     paddingLeft: 8,
   },

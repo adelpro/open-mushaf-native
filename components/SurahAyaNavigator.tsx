@@ -3,13 +3,13 @@ import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 
+import useQuranMetadata from '@/hooks/useQuranMetadata';
 import { Surah } from '@/types';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
 interface SurahAyaNavigatorProps {
-  surahs: Surah[];
   currentSurah: number;
   currentAya: number;
   ayaCount: number[];
@@ -20,7 +20,6 @@ interface SurahAyaNavigatorProps {
   cardColor: string;
 }
 export default function SurahAyaNavigator({
-  surahs,
   currentSurah,
   currentAya,
   ayaCount,
@@ -30,11 +29,12 @@ export default function SurahAyaNavigator({
   iconColor,
   cardColor,
 }: SurahAyaNavigatorProps) {
+  const { surahData, isLoading, error } = useQuranMetadata();
   const [surahModalVisible, setSurahModalVisible] = useState(false);
   const [ayaModalVisible, setAyaModalVisible] = useState(false);
 
   const currentSurahName =
-    surahs.find((s) => s.number === currentSurah)?.name || '';
+    surahData.find((s) => s.number === currentSurah)?.name || '';
 
   const handleSurahSelect = (surahNumber: number) => {
     onSurahChange(surahNumber);
@@ -45,6 +45,27 @@ export default function SurahAyaNavigator({
     onAyaChange(ayaNumber);
     setAyaModalVisible(false);
   };
+
+  // Show loading or error state if needed
+  if (isLoading) {
+    return (
+      <ThemedView
+        style={[styles.container, { backgroundColor: 'transparent' }]}
+      >
+        <ThemedText>جاري التحميل...</ThemedText>
+      </ThemedView>
+    );
+  }
+
+  if (error) {
+    return (
+      <ThemedView
+        style={[styles.container, { backgroundColor: 'transparent' }]}
+      >
+        <ThemedText>{`حدث خطأ: ${error}`}</ThemedText>
+      </ThemedView>
+    );
+  }
 
   const renderSurahItem = ({ item }: { item: Surah }) => (
     <TouchableOpacity
@@ -162,7 +183,7 @@ export default function SurahAyaNavigator({
             </ThemedView>
 
             <FlatList
-              data={surahs}
+              data={surahData}
               renderItem={renderSurahItem}
               keyExtractor={(item) => item.number.toString()}
               showsVerticalScrollIndicator={false}
