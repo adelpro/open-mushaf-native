@@ -274,18 +274,19 @@ export default function MushafPage() {
           style={[
             styles.imageContainer,
             animatedStyle,
-            { backgroundColor: ivoryColor },
+            {
+              backgroundColor:
+                colorScheme === 'dark'
+                  ? `rgba(26, 26, 26, ${1 - mushafContrastValue})` // Dark background with inverse contrast
+                  : ivoryColor,
+            },
           ]}
           onLayout={handleImageLayout}
         >
           {asset?.localUri ? (
             <>
               {isLandscape ? (
-                <ScrollView
-                  contentContainerStyle={{ alignItems: 'center' }}
-                  alwaysBounceVertical={true}
-                  nestedScrollEnabled={true}
-                >
+                <ScrollView>
                   <Image
                     style={[
                       styles.image,
@@ -295,7 +296,7 @@ export default function MushafPage() {
                         aspectRatio: 0.7,
                       },
                       colorScheme === 'dark' && {
-                        opacity: mushafContrastValue,
+                        opacity: mushafContrastValue, // Original contrast for image
                       },
                     ]}
                     source={{ uri: asset?.localUri }}
@@ -307,7 +308,9 @@ export default function MushafPage() {
                   style={[
                     styles.image,
                     { width: '100%' },
-                    colorScheme === 'dark' && { opacity: mushafContrastValue },
+                    colorScheme === 'dark' && {
+                      opacity: mushafContrastValue, // Original contrast for image
+                    },
                   ]}
                   source={{ uri: asset?.localUri }}
                   contentFit="fill"
