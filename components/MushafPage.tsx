@@ -19,8 +19,6 @@ import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-// Remove useRiwayaData import and add useQuranMetadata
-
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagePreloader from '@/hooks/useImagePreloader';
@@ -68,7 +66,7 @@ export default function MushafPage() {
   const [showNotification, setShowNotification] = useState(false);
 
   const colorScheme = useColorScheme();
-  const { tintColor } = useColors();
+  const { tintColor, ivoryColor } = useColors();
   const router = useRouter();
 
   const { isLandscape } = useOrientation();
@@ -226,12 +224,7 @@ export default function MushafPage() {
   if (metadataError) {
     return (
       <ThemedView
-        style={[
-          styles.errorContainer,
-          colorScheme === 'dark'
-            ? { backgroundColor: '#d5d4d2' }
-            : { backgroundColor: '#f5f1eb' },
-        ]}
+        style={[styles.errorContainer, { backgroundColor: ivoryColor }]}
       >
         <ThemedText type="defaultSemiBold">{`حدث خطأ: ${metadataError}`}</ThemedText>
       </ThemedView>
@@ -242,12 +235,7 @@ export default function MushafPage() {
   if (assetIsLoading || metadataIsLoading) {
     return (
       <ThemedView
-        style={[
-          styles.loadingContainer,
-          colorScheme === 'dark'
-            ? { backgroundColor: '#d5d4d2' }
-            : { backgroundColor: '#f5f1eb' },
-        ]}
+        style={[styles.loadingContainer, { backgroundColor: ivoryColor }]}
       >
         <ActivityIndicator size="large" color={tintColor} />
       </ThemedView>
@@ -257,12 +245,7 @@ export default function MushafPage() {
   if (assetError) {
     return (
       <ThemedView
-        style={[
-          styles.errorContainer,
-          colorScheme === 'dark'
-            ? { backgroundColor: '#d5d4d2' }
-            : { backgroundColor: '#f5f1eb' },
-        ]}
+        style={[styles.errorContainer, { backgroundColor: ivoryColor }]}
       >
         <ThemedText type="defaultSemiBold">{`حدث خطأ: ${assetError}`}</ThemedText>
       </ThemedView>
@@ -272,12 +255,7 @@ export default function MushafPage() {
   if (assetIsLoading) {
     return (
       <ThemedView
-        style={[
-          styles.loadingContainer,
-          colorScheme === 'dark'
-            ? { backgroundColor: '#d5d4d2' }
-            : { backgroundColor: '#f5f1eb' },
-        ]}
+        style={[styles.loadingContainer, { backgroundColor: ivoryColor }]}
       >
         <ActivityIndicator size="large" color={tintColor} />
       </ThemedView>
@@ -296,9 +274,7 @@ export default function MushafPage() {
           style={[
             styles.imageContainer,
             animatedStyle,
-            colorScheme === 'dark'
-              ? { backgroundColor: '#181818' }
-              : { backgroundColor: '#f5f1eb' },
+            { backgroundColor: ivoryColor },
           ]}
           onLayout={handleImageLayout}
         >

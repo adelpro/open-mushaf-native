@@ -61,7 +61,7 @@ export default function TabLayout() {
               size={28}
               style={{ marginBottom: -3 }}
               color={color}
-              accessible={true} // Add Accessibility Properties
+              accessible={true}
               accessibilityLabel="المصحف"
               accessibilityHint="انتقل إلى صفحة المصحف للقراءة"
             />
@@ -77,7 +77,7 @@ export default function TabLayout() {
               name="more-horizontal"
               size={24}
               color={color}
-              accessible={true} // Add Accessibility Properties
+              accessible={true}
               accessibilityLabel="المزيد"
               accessibilityHint="انتقل إلى صفحة المزيد للإعدادات وخيارات أخرى"
             />

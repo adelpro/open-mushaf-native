@@ -16,6 +16,7 @@ export const useColors = () => {
   const dangerColor = Colors[colorScheme ?? 'light'].danger;
   const dangerLightColor = Colors[colorScheme ?? 'light'].dangerLight;
   const cardColor = isDarkMode ? '#1E1E1E' : '#F7F7F7';
+  const ivoryColor = isDarkMode ? '#e0dcd1' : '#f8f4e8';
 
   return {
     backgroundColor,
@@ -28,5 +29,6 @@ export const useColors = () => {
     cardColor,
     dangerColor,
     dangerLightColor,
+    ivoryColor,
   };
 };

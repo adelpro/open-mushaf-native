@@ -1,5 +1,10 @@
 import { useEffect } from 'react';
-import { I18nManager, InteractionManager, Platform } from 'react-native';
+import {
+  I18nManager,
+  InteractionManager,
+  Platform,
+  useColorScheme,
+} from 'react-native';
 
 import {
   Amiri_400Regular,
@@ -29,7 +34,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 
 import SEO from '@/components/seo';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { isRTL } from '@/utils';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
