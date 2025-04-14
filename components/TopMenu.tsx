@@ -112,10 +112,6 @@ export default function TopMenu() {
             >
               الجزء {juzNumber}
             </Text>
-            <Text style={[styles.subtleSeparator, { color: tintColor }]}>
-              {' '}
-              |{' '}
-            </Text>
             <View style={styles.positionContainer}>
               <Text
                 style={[
@@ -275,17 +271,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 2,
+    marginHorizontal: 5,
   },
   juzPosition: {
     fontFamily: 'Amiri_400Regular',
     fontSize: 14,
     opacity: 0.9,
-    lineHeight: 18,
-  },
-  subtleSeparator: {
-    fontSize: 14,
-    opacity: 0.7,
-    marginHorizontal: 4,
     lineHeight: 18,
   },
   positionContainer: {
