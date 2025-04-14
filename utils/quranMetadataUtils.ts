@@ -12,8 +12,8 @@ export function getSurahNameByPage(surahs: Surah[], page: number): string {
 export function getJuzPositionByPage(thumns: Thumn[], page: number) {
   const thumn = thumns.find(
     (t, index) =>
-      page >= t.starting_page &&
-      (index === thumns.length - 1 || page < thumns[index + 1].starting_page),
+      page >= t.startingPage &&
+      (index === thumns.length - 1 || page < thumns[index + 1].startingPage),
   );
 
   if (!thumn) return { thumnInJuz: 1, juzNumber: 1 };
