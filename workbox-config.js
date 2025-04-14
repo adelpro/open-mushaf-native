@@ -6,7 +6,7 @@ module.exports = {
     'workbox-*.js',
     'assets/mushaf-data/**/*',
   ],
+  swSrc: 'public/service-worker.js',
   swDest: 'dist/service-worker.js',
-  swSrc: 'src-sw.js',
   maximumFileSizeToCacheInBytes: 50 * 1024 * 1024, // 50MB
 };
