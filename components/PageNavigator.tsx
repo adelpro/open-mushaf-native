@@ -10,6 +10,7 @@ import {
 import { Feather } from '@expo/vector-icons';
 
 import { useColors } from '@/hooks/useColors';
+import { getPaginationRange, isCompactView } from '@/utils/dimensionsUtils';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -29,7 +30,8 @@ export default function PageNavigator({
   primaryColor,
 }: PageNavigatorProps) {
   const { width } = useWindowDimensions();
-  const range = width < 600 ? 1 : 4;
+  const range = getPaginationRange(width);
+  const isCompact = isCompactView(width);
 
   const { cardColor } = useColors();
 
@@ -109,41 +111,58 @@ export default function PageNavigator({
             </TouchableOpacity>
           </ThemedView>
         ) : (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={[
-              styles.pageNumbersContainer,
-              { flexGrow: 1 },
-            ]}
-          >
-            {getPageNumbers().map((page, index) => (
-              <TouchableOpacity
-                key={index}
-                style={[
-                  styles.pageNumber, // Default style
-                  { backgroundColor: cardColor },
-                  // Apply larger style if it's the current page
-                  page === currentPage && styles.currentPageNumber,
-                  // Apply specific background color for current page
-                  page === currentPage && { backgroundColor: primaryColor },
-                  page === '...' && styles.ellipsis,
+          <>
+            {!isCompact ? (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={[
+                  styles.pageNumbersContainer,
+                  { flexGrow: 1 },
                 ]}
-                onPress={() => handlePageNumberPress(page)}
-                disabled={page === '...'}
               >
-                <ThemedText
+                {getPageNumbers().map((page, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={[
+                      styles.pageNumber,
+                      { backgroundColor: cardColor },
+                      page === currentPage && styles.currentPageNumber,
+                      page === currentPage && { backgroundColor: primaryColor },
+                      page === '...' && styles.ellipsis,
+                    ]}
+                    onPress={() => handlePageNumberPress(page)}
+                    disabled={page === '...'}
+                  >
+                    <ThemedText
+                      style={[
+                        styles.pageNumberText,
+                        page === currentPage && styles.currentPageNumberText,
+                      ]}
+                    >
+                      {page}
+                    </ThemedText>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            ) : (
+              <ThemedView style={styles.compactContainer}>
+                <TouchableOpacity
                   style={[
-                    styles.pageNumberText,
-                    // Apply larger font and white color for current page text
-                    page === currentPage && styles.currentPageNumberText,
+                    styles.compactPageIndicator,
+                    { borderColor: primaryColor },
                   ]}
+                  onPress={toggleInput}
                 >
-                  {page}
-                </ThemedText>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+                  <ThemedText
+                    style={[styles.compactPageText, { color: primaryColor }]}
+                  >
+                    {currentPage}
+                  </ThemedText>
+                </TouchableOpacity>
+              </ThemedView>
+            )}
+          </>
         )}
       </ThemedView>
 
@@ -154,7 +173,11 @@ export default function PageNavigator({
             onPress={toggleInput}
             accessibilityLabel="Go to specific page"
           >
-            <Feather name="edit" size={16} color={primaryColor} />
+            <Feather
+              name="edit"
+              size={isCompact ? 18 : 16}
+              color={primaryColor}
+            />
           </TouchableOpacity>
         </ThemedView>
       )}
@@ -188,27 +211,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
   pageNumber: {
-    // Slightly smaller default size
-    minWidth: 28,
-    height: 28,
-    borderRadius: 14,
+    // Increased size for better touch targets
+    minWidth: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 3,
+    marginHorizontal: 5, // Increased horizontal spacing
+    paddingHorizontal: 4, // Added padding for numbers with multiple digits
   },
   pageNumberText: {
-    fontSize: 13,
+    fontSize: 14, // Slightly larger font
     fontFamily: 'Tajawal_500Medium',
   },
 
   currentPageNumber: {
-    minWidth: 36,
-    height: 36,
-    borderRadius: 18,
+    minWidth: 44,
+    height: 44,
+    borderRadius: 22,
   },
   currentPageNumberText: {
-    fontSize: 15,
+    fontSize: 16,
     color: '#fff',
+    fontWeight: '500', // Added for better emphasis
   },
   ellipsis: {
     backgroundColor: 'transparent',
@@ -240,5 +265,25 @@ const styles = StyleSheet.create({
   submitButton: {
     padding: 6,
     marginLeft: 4,
+  },
+  compactContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  compactPageIndicator: {
+    minWidth: 50,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  compactPageText: {
+    fontSize: 16,
+    fontFamily: 'Tajawal_500Medium',
+    fontWeight: '500',
   },
 });

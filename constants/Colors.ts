@@ -19,6 +19,8 @@ export const Colors = {
     secondary: '#9BA1A6',
     danger: '#ff0505',
     dangerLight: '#fb8c8c',
+    ivory: '#f5f1eb',
+    card: '#F7F7F7',
   },
   dark: {
     text: '#ECEDEE',
@@ -32,5 +34,7 @@ export const Colors = {
     secondary: '#687076',
     danger: '#ff0505',
     dangerLight: '#fb8c8c',
+    ivory: '#d5d4d2',
+    card: '#1E1E1E',
   },
 };

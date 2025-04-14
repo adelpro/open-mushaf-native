@@ -10,15 +10,12 @@ import SurahAyaNavigator from '@/components/SurahAyaNavigator';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { defaultNumberOfPages } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 
 export default function Navigation() {
   const router = useRouter();
-  const { quranData } = useQuranMetadata();
-
   const { currentPage } = useCurrentPage();
 
   const [currentSurah, setCurrentSurah] = useState<number>(1);
@@ -26,8 +23,9 @@ export default function Navigation() {
   const [numberOfAyas, setNumberOfAyas] = useState<number[]>([]);
 
   const { iconColor, cardColor, primaryColor, tintColor } = useColors();
-  const { surahData, isLoading, error } = useQuranMetadata();
-
+  const { surahData, specsData, quranData, isLoading, error } =
+    useQuranMetadata();
+  const { defaultNumberOfPages } = specsData;
   useEffect(() => {
     if (isLoading || error) return;
 
@@ -55,7 +53,14 @@ export default function Navigation() {
     if (aya) {
       setCurrentAyaNumber(aya.aya_id - 1);
     }
-  }, [currentPage, quranData, isLoading, error, surahData]);
+  }, [
+    currentPage,
+    quranData,
+    isLoading,
+    error,
+    surahData,
+    defaultNumberOfPages,
+  ]);
 
   const handlePageChange = (pageNumber: number) => {
     router.push({

@@ -14,7 +14,7 @@ type QuranMetadata = {
   ayaData: Page[];
   specsData: Specs;
   chapterData: Chapter[];
-  quranData: QuranText;
+  quranData: QuranText[];
   isLoading: boolean;
   error: string | null;
 };
@@ -28,7 +28,7 @@ export default function useQuranMetadata(): QuranMetadata {
   const [ayaData, setAyaData] = useState<Page[]>([]);
   const [specsData, setSpecsData] = useState<Specs>({} as Specs);
   const [chapterData, setChapterData] = useState<Chapter[]>([]);
-  const [quranData, setQuranData] = useState<QuranText>({} as QuranText);
+  const [quranData, setQuranData] = useState<QuranText[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -116,7 +116,7 @@ export default function useQuranMetadata(): QuranMetadata {
         const [qurandata] = await Promise.all([
           import('@/assets/quran-metadata/shared/quran.json'),
         ]);
-        setQuranData(qurandata.default as QuranText);
+        setQuranData(qurandata.default as QuranText[]);
       } catch (err) {
         setError(
           `Failed to load Quran metadata: ${err instanceof Error ? err.message : String(err)}`,
