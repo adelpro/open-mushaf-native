@@ -5,6 +5,7 @@ import { Feather } from '@expo/vector-icons';
 
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 import { Surah } from '@/types';
+import { isWeb } from '@/utils';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -186,7 +187,7 @@ export default function SurahAyaNavigator({
               data={surahData}
               renderItem={renderSurahItem}
               keyExtractor={(item) => item.number.toString()}
-              showsVerticalScrollIndicator={false}
+              showsVerticalScrollIndicator={isWeb}
               initialScrollIndex={currentSurah - 1}
               getItemLayout={(_data, index) => ({
                 length: 60,
@@ -228,7 +229,7 @@ export default function SurahAyaNavigator({
               data={ayaCount}
               renderItem={renderAyaItem}
               keyExtractor={(item) => item.toString()}
-              showsVerticalScrollIndicator={false}
+              showsVerticalScrollIndicator={isWeb}
               numColumns={5}
               initialScrollIndex={Math.floor((currentAya - 1) / 5)}
               getItemLayout={(_data, index) => ({

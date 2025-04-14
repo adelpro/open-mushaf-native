@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 2,
-    marginHorizontal: 5,
+    gap: 10,
   },
   juzPosition: {
     fontFamily: 'Amiri_400Regular',

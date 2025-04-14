@@ -8,4 +8,6 @@ export * from './riwaya';
 
 export * from './isDEBUG';
 
+export * from './isWeb';
+
 export * from './quranMetadataUtils';
