@@ -45,7 +45,6 @@ export default function TopMenu() {
     useRecoilState<boolean>(topMenuState);
   const currentSavedPageValue = useRecoilValue(currentSavedPage);
 
-  // --- Access Recoil State for Progress ---
   const dailyHizbGoalValue = useRecoilValue(dailyHizbGoal);
   const dailyHizbCompletedValue = useRecoilValue(dailyHizbCompleted);
 
@@ -61,10 +60,14 @@ export default function TopMenu() {
     setBottomMenuState((state: boolean) => !state);
   };
 
-  const { page } = useLocalSearchParams<{ page: string }>();
+  const { page, temporary } = useLocalSearchParams<{
+    page: string;
+    temporary: string;
+  }>();
   const currentPage = page ? parseInt(page) : currentSavedPageValue;
+  const isTemporary = temporary === 'true';
   const currentSurahName = getSurahNameByPage(currentPage);
-  const { thumnInJuz } = getJuzPositionByPage(currentPage);
+  const { thumnInJuz, juzNumber } = getJuzPositionByPage(currentPage);
 
   return showTopMenuState ? (
     <ThemedSafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
@@ -76,50 +79,84 @@ export default function TopMenu() {
             : { backgroundColor: 'rgba(255, 255, 255, 0.5)' },
         ]}
       >
-        <ThemedView style={[styles.rightSection, { alignItems: 'center' }]}>
-          <Text style={[styles.surahName, { color: tintColor }]}>
+        <View style={styles.rightSection}>
+          <Text
+            style={[
+              styles.surahName,
+              {
+                color: tintColor,
+                includeFontPadding: false,
+                textAlignVertical: 'center',
+              },
+            ]}
+            accessibilityLabel={`السورة الحالية: ${currentSurahName}`}
+            accessibilityRole="header"
+          >
             {currentSurahName}
           </Text>
-          <Text style={[styles.separator, { color: tintColor }]}> - </Text>
-          <View
-            style={[
-              styles.positionContainer,
-              { alignItems: 'center', justifyContent: 'center' },
-            ]}
-          >
-            <Text style={[styles.thumnPosition, { color: tintColor }]}>
-              {thumnInJuz}
-              <Text style={styles.thumnSeparator}>/</Text>
-              <Text style={styles.thumnTotal}>16</Text>
+          <View style={styles.secondLineContainer}>
+            <Text
+              style={[
+                styles.juzPosition,
+                {
+                  color: tintColor,
+                  includeFontPadding: false,
+                  textAlignVertical: 'center',
+                },
+              ]}
+            >
+              الجزء {juzNumber}
             </Text>
+            <Text style={[styles.subtleSeparator, { color: tintColor }]}>
+              {' '}
+              |{' '}
+            </Text>
+            <View style={styles.positionContainer}>
+              <Text
+                style={[
+                  styles.thumnPosition,
+                  {
+                    color: tintColor,
+                    includeFontPadding: false,
+                    textAlignVertical: 'center',
+                  },
+                ]}
+              >
+                {thumnInJuz}
+                <Text style={styles.thumnSeparator}>/</Text>
+                <Text style={styles.thumnTotal}>16</Text>
+              </Text>
+            </View>
           </View>
-        </ThemedView>
+        </View>
 
         <ThemedView style={styles.leftIconsContainer}>
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() => {
-              setShowTopMenuState(false);
-              router.push('/tracker');
-            }}
-          >
-            <View style={styles.progressContainer}>
-              <Progress.Circle
-                size={32}
-                progress={progressValue}
-                color={primaryColor}
-                showsText={false}
-                thickness={5}
-                borderWidth={0}
-                unfilledColor={'rgba(128, 128, 128, 0.4)'}
-              />
-              {progressValue === 1 && (
-                <View style={styles.checkmarkContainer}>
-                  <Feather name="check" size={20} color={primaryColor} />
-                </View>
-              )}
-            </View>
-          </TouchableOpacity>
+          {!isTemporary && (
+            <TouchableOpacity
+              style={styles.icon}
+              onPress={() => {
+                setShowTopMenuState(false);
+                router.push('/tracker');
+              }}
+            >
+              <View style={styles.progressContainer}>
+                <Progress.Circle
+                  size={32}
+                  progress={progressValue}
+                  color={primaryColor}
+                  showsText={false}
+                  thickness={5}
+                  borderWidth={0}
+                  unfilledColor={'rgba(128, 128, 128, 0.4)'}
+                />
+                {progressValue === 1 && (
+                  <View style={styles.checkmarkContainer}>
+                    <Feather name="check" size={20} color={primaryColor} />
+                  </View>
+                )}
+              </View>
+            </TouchableOpacity>
+          )}
 
           <TouchableOpacity
             style={styles.icon}
@@ -216,34 +253,50 @@ const styles = StyleSheet.create({
   },
   rightSection: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
     backgroundColor: 'transparent',
-    marginHorizontal: 10,
+    marginHorizontal: 15,
+    flexShrink: 1,
+    paddingVertical: 5,
+    gap: 10,
   },
   surahName: {
     fontFamily: 'Amiri_400Regular',
     fontSize: 18,
+    lineHeight: 22,
   },
-  separator: {
-    fontSize: 18,
-    marginHorizontal: 10,
+  secondLineContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  juzPosition: {
+    fontFamily: 'Amiri_400Regular',
+    fontSize: 14,
+    opacity: 0.9,
+    lineHeight: 18,
+  },
+  subtleSeparator: {
+    fontSize: 14,
+    opacity: 0.7,
+    marginHorizontal: 4,
+    lineHeight: 18,
   },
   positionContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 1,
   },
   thumnPosition: {
-    fontFamily: 'Tajawal_700Bold',
-    fontSize: 18,
+    fontFamily: 'Amiri_400Regular',
+    fontSize: 14,
+    opacity: 0.9,
+    lineHeight: 18,
   },
   thumnSeparator: {
-    fontSize: 18,
     opacity: 0.6,
-    marginHorizontal: 4,
   },
   thumnTotal: {
-    fontSize: 18,
     opacity: 0.7,
   },
 });

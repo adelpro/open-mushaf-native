@@ -194,8 +194,7 @@ export default function MushafPage() {
   useEffect(() => {
     if (
       typeof currentPage === 'number' &&
-      currentPage > 0 &&
-      yesterdayPageValue > 0
+      typeof yesterdayPageValue === 'number'
     ) {
       // Calculate thumns read between yesterday's page and current page
       const numberOfThumn = calculateThumnsBetweenPages(
