@@ -3,14 +3,16 @@ import { useEffect } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { useRecoilState } from 'recoil';
 
-import { defaultNumberOfPages } from '@/constants';
 import { currentSavedPage } from '@/recoil/atoms';
+
+import useQuranMetadata from './useQuranMetadata';
 
 export default function useCurrentPage() {
   const { page: pageParam, temporary } = useLocalSearchParams();
   const [currentSavedPageValue, setCurrentSavedPageValue] =
     useRecoilState(currentSavedPage);
-
+  const { specsData } = useQuranMetadata();
+  const defaultNumberOfPages = specsData?.defaultNumberOfPages;
   const setNewCurrentPage = (page: number) => {
     if (!page) return;
     if (temporary === 'true') return;

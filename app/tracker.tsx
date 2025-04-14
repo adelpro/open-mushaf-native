@@ -125,13 +125,16 @@ export default function TrackerScreen() {
                   { color: dailyProgress > 50 ? 'white' : 'black' },
                 ]}
               >
-                {dailyProgress.toFixed(0)}%
+                {dailyProgress.toFixed(1)}%
               </ThemedText>
             </ThemedView>
 
             <ThemedText style={styles.infoText}>
-              قراءة {getHizbText(dailyHizbCompletedValue)} من أصل{' '}
-              {getHizbText(dailyHizbGoalValue)}
+              قراءة{' '}
+              {Number.isInteger(dailyHizbCompletedValue)
+                ? getHizbText(dailyHizbCompletedValue)
+                : `${dailyHizbCompletedValue.toFixed(1)} حزباً`}{' '}
+              من أصل {getHizbText(dailyHizbGoalValue)}
             </ThemedText>
 
             {yesterdayPageValue > 0 && (

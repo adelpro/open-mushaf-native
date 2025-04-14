@@ -33,13 +33,14 @@ import { getJuzPositionByPage } from '@/utils/quranMetadataUtils';
 
 import { ThemedSafeAreaView } from './ThemedSafeAreaView';
 
+const ICON_SIZE = 32;
 export default function TopMenu() {
   const { tintColor, primaryColor } = useColors();
-  const colorScheme = useColorScheme();
   const { surahData, thumnData } = useQuranMetadata();
-  const isDarkMode = colorScheme === 'dark';
   const insets = useSafeAreaInsets();
   const [progressValue, setProgressValue] = useState<number>(0);
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
 
   const [showBottomMenuState, setBottomMenuState] =
     useRecoilState<boolean>(bottomMenuState);
@@ -79,9 +80,11 @@ export default function TopMenu() {
       <ThemedView
         style={[
           styles.topMenu,
-          isDarkMode
-            ? { backgroundColor: 'rgba(0, 0, 0, 0.5)' }
-            : { backgroundColor: 'rgba(255, 255, 255, 0.5)' },
+          {
+            backgroundColor: isDarkMode
+              ? 'rgba(0, 0, 0, 0.9)'
+              : 'rgba(244, 244, 244, 0.9)',
+          },
         ]}
       >
         <View style={styles.rightSection}>
@@ -110,7 +113,7 @@ export default function TopMenu() {
                 },
               ]}
             >
-              الجزء-{juzNumber}
+              الجزء - {juzNumber}
             </Text>
             <View style={styles.positionContainer}>
               <Text
@@ -142,17 +145,17 @@ export default function TopMenu() {
             >
               <View style={styles.progressContainer}>
                 <Progress.Circle
-                  size={32}
+                  size={28}
                   progress={progressValue}
-                  color={primaryColor}
+                  color={tintColor}
                   showsText={false}
-                  thickness={5}
+                  thickness={4}
                   borderWidth={0}
                   unfilledColor={'rgba(128, 128, 128, 0.4)'}
                 />
                 {progressValue === 1 && (
                   <View style={styles.checkmarkContainer}>
-                    <Feather name="check" size={20} color={primaryColor} />
+                    <Feather name="check" size={16} color={tintColor} />
                   </View>
                 )}
               </View>
@@ -168,7 +171,7 @@ export default function TopMenu() {
           >
             <Ionicons
               name="navigate-circle-outline"
-              size={40}
+              size={ICON_SIZE}
               color={tintColor}
             />
           </TouchableOpacity>
@@ -179,7 +182,7 @@ export default function TopMenu() {
               router.push('/search');
             }}
           >
-            <Ionicons name="search" size={40} color={tintColor} />
+            <Ionicons name="search" size={ICON_SIZE} color={tintColor} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.icon}
@@ -191,13 +194,13 @@ export default function TopMenu() {
             {showBottomMenuState ? (
               <MaterialCommunityIcons
                 name="fit-to-screen-outline"
-                size={40}
+                size={ICON_SIZE}
                 color={tintColor}
               />
             ) : (
               <MaterialIcons
                 name="fullscreen-exit"
-                size={40}
+                size={ICON_SIZE}
                 color={tintColor}
               />
             )}
@@ -224,7 +227,6 @@ const styles = StyleSheet.create({
   },
   topMenu: {
     height: 60,
-    borderRadius: 5,
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
@@ -233,7 +235,8 @@ const styles = StyleSheet.create({
     maxWidth: 640,
   },
   icon: {
-    padding: 5,
+    padding: 2,
+    margin: 2,
   },
   leftIconsContainer: {
     flexDirection: 'row',
@@ -263,36 +266,43 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   surahName: {
-    fontFamily: 'Amiri_400Regular',
+    fontFamily: 'Amiri_700Bold',
     fontSize: 22,
     lineHeight: 24,
   },
   secondLineContainer: {
+    fontFamily: 'Tajawal_700Bold',
+    fontSize: 16,
+    lineHeight: 18,
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 2,
-    gap: 10,
+    gap: 5,
   },
   juzPosition: {
-    fontFamily: 'Amiri_400Regular',
+    fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
-
     lineHeight: 18,
   },
   positionContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 5,
+    borderRadius: 5,
+    paddingVertical: 2,
+    backgroundColor: 'rgba(128, 128, 128, 0.4)',
   },
   thumnPosition: {
-    fontFamily: 'Amiri_400Regular',
+    fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
-
     lineHeight: 18,
   },
   thumnSeparator: {
     opacity: 0.6,
   },
   thumnTotal: {
-    opacity: 1,
+    fontFamily: 'Tajawal_500Medium',
+    fontSize: 16,
+    lineHeight: 18,
   },
 });
