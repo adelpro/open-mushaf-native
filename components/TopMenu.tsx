@@ -35,7 +35,7 @@ import { ThemedSafeAreaView } from './ThemedSafeAreaView';
 
 const ICON_SIZE = 32;
 export default function TopMenu() {
-  const { tintColor, primaryColor } = useColors();
+  const { tintColor } = useColors();
   const { surahData, thumnData } = useQuranMetadata();
   const insets = useSafeAreaInsets();
   const [progressValue, setProgressValue] = useState<number>(0);
