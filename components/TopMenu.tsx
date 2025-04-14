@@ -110,7 +110,7 @@ export default function TopMenu() {
                 },
               ]}
             >
-              الجزء {juzNumber}
+              الجزء-{juzNumber}
             </Text>
             <View style={styles.positionContainer}>
               <Text
@@ -264,8 +264,8 @@ const styles = StyleSheet.create({
   },
   surahName: {
     fontFamily: 'Amiri_400Regular',
-    fontSize: 18,
-    lineHeight: 22,
+    fontSize: 22,
+    lineHeight: 24,
   },
   secondLineContainer: {
     flexDirection: 'row',
@@ -275,8 +275,8 @@ const styles = StyleSheet.create({
   },
   juzPosition: {
     fontFamily: 'Amiri_400Regular',
-    fontSize: 14,
-    opacity: 0.9,
+    fontSize: 16,
+
     lineHeight: 18,
   },
   positionContainer: {
@@ -285,14 +285,14 @@ const styles = StyleSheet.create({
   },
   thumnPosition: {
     fontFamily: 'Amiri_400Regular',
-    fontSize: 14,
-    opacity: 0.9,
+    fontSize: 16,
+
     lineHeight: 18,
   },
   thumnSeparator: {
     opacity: 0.6,
   },
   thumnTotal: {
-    opacity: 0.7,
+    opacity: 1,
   },
 });
