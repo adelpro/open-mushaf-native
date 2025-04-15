@@ -297,6 +297,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
     lineHeight: 20,
+    margin: 2,
   },
   thumnSeparator: {
     fontFamily: 'Tajawal_700Bold',
@@ -304,10 +305,12 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     opacity: 0.6,
     paddingHorizontal: 5,
+    margin: 2,
   },
   thumnTotal: {
     fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
     lineHeight: 20,
+    margin: 2,
   },
 });
