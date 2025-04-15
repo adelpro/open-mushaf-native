@@ -127,8 +127,30 @@ export default function TopMenu() {
                 ]}
               >
                 {thumnInJuz}
-                <Text style={styles.thumnSeparator}>/</Text>
-                <Text style={styles.thumnTotal}>16</Text>
+              </Text>
+              <Text
+                style={[
+                  styles.thumnSeparator,
+                  {
+                    color: tintColor,
+                    includeFontPadding: false,
+                    textAlignVertical: 'center',
+                  },
+                ]}
+              >
+                /
+              </Text>
+              <Text
+                style={[
+                  styles.thumnTotal,
+                  {
+                    color: tintColor,
+                    includeFontPadding: false,
+                    textAlignVertical: 'center',
+                  },
+                ]}
+              >
+                16
               </Text>
             </View>
           </View>
@@ -264,51 +286,47 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     marginHorizontal: 15,
     flexShrink: 1,
-    gap: 10,
-    paddingVertical: 5,
-    height: 40,
+    gap: 20,
   },
   surahName: {
-    fontFamily: 'Amiri_700Bold',
-    fontSize: 18,
+    fontFamily: 'Amiri_400Regular',
+    fontSize: 16,
     lineHeight: 20,
-    paddingHorizontal: 5,
   },
   secondLineContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-
-    gap: 5,
+    justifyContent: 'center',
+    gap: 10,
   },
   juzPosition: {
     fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
-    lineHeight: 18,
+    lineHeight: 20,
   },
   positionContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 5,
     borderRadius: 5,
-    paddingVertical: 2,
+    padding: 5,
+    gap: 5,
     backgroundColor: 'rgba(128, 128, 128, 0.4)',
-    height: 24,
   },
   thumnPosition: {
     fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
-    lineHeight: 18,
-    textAlignVertical: 'center',
-    paddingTop: 2,
+    lineHeight: 20,
   },
   thumnSeparator: {
-    paddingHorizontal: 2,
+    fontFamily: 'Tajawal_700Bold',
+    fontSize: 16,
+    lineHeight: 20,
     opacity: 0.6,
   },
   thumnTotal: {
     fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
-    lineHeight: 18,
+    lineHeight: 20,
   },
 });

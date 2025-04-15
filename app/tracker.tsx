@@ -187,7 +187,7 @@ export default function TrackerScreen() {
 
             <ThemedView style={styles.resetButtonsContainer}>
               <ThemedButton
-                variant="outlined-primary"
+                variant="primary"
                 style={styles.resetButton}
                 // Update onPress to show the modal
                 onPress={() => setConfirmModalVisible(true)}
@@ -198,13 +198,12 @@ export default function TrackerScreen() {
                     alignItems: 'center',
                     backgroundColor: 'transparent',
                     justifyContent: 'center',
-                    gap: 5,
+                    gap: 10,
                   }}
                 >
-                  <Feather name="refresh-cw" size={16} color={primaryColor} />
+                  <Feather name="refresh-cw" size={16} />
                   <Text
                     style={{
-                      color: primaryColor,
                       fontFamily: 'Tajawal_400Regular',
                       fontSize: 18,
                     }}
@@ -257,7 +256,7 @@ export default function TrackerScreen() {
                   إلغاء
                 </ThemedButton>
                 <ThemedButton
-                  variant="danger" // Using danger variant like in settings
+                  variant="primary"
                   onPress={performReset} // Call the reset logic
                   style={styles.modalButton}
                 >
