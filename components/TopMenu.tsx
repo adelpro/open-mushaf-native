@@ -54,7 +54,10 @@ export default function TopMenu() {
   useEffect(() => {
     const newProgress =
       dailyHizbGoalValue > 0
-        ? Math.min(1, dailyHizbCompletedValue.value / (dailyHizbGoalValue / 8))
+        ? Math.min(
+            1,
+            dailyHizbCompletedValue.value / 8 / (dailyHizbGoalValue / 8),
+          )
         : 0;
     setProgressValue(newProgress);
   }, [dailyHizbGoalValue, dailyHizbCompletedValue.value]);
