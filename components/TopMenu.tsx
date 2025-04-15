@@ -30,6 +30,7 @@ import {
 } from '@/recoil/atoms';
 import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
 import { getJuzPositionByPage } from '@/utils/quranMetadataUtils';
+import { removeTashkeel } from '@/utils/searchUtils';
 
 import { ThemedSafeAreaView } from './ThemedSafeAreaView';
 
@@ -96,7 +97,7 @@ export default function TopMenu() {
             accessibilityLabel={`السورة الحالية: ${currentSurahName}`}
             accessibilityRole="header"
           >
-            {currentSurahName}
+            {removeTashkeel(currentSurahName)}
           </Text>
           <View style={styles.secondLineContainer}>
             <Text style={[styles.juzPosition, { color: tintColor }]}>
@@ -175,6 +176,7 @@ export default function TopMenu() {
               color={tintColor}
             />
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.icon}
             onPress={() => {
@@ -264,10 +266,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     marginHorizontal: 15,
     flexShrink: 1,
-    gap: 20,
+    gap: 10,
   },
   surahName: {
-    fontFamily: 'Amiri_400Regular',
+    fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
     lineHeight: 20,
   },
@@ -287,33 +289,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 5,
-    paddingVertical: 4, // Increased for better vertical centering
-    paddingHorizontal: 8, // Add horizontal padding for spacing
+    paddingVertical: 4,
+    paddingHorizontal: 6,
     backgroundColor: 'rgba(128, 128, 128, 0.4)',
   },
   thumnPosition: {
     fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
     lineHeight: 20,
-    textAlignVertical: 'center',
-    includeFontPadding: false,
-    marginRight: 4, // Add spacing if gap is not supported
   },
   thumnSeparator: {
     fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
     lineHeight: 20,
     opacity: 0.6,
-    textAlignVertical: 'center',
-    includeFontPadding: false,
-    marginHorizontal: 2, // Add spacing if gap is not supported
+    paddingHorizontal: 5,
   },
   thumnTotal: {
     fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
     lineHeight: 20,
-    textAlignVertical: 'center',
-    includeFontPadding: false,
-    marginLeft: 4, // Add spacing if gap is not supported
   },
 });

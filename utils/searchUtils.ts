@@ -1,16 +1,30 @@
 import Fuse, { type IFuseOptions } from 'fuse.js';
 
 /**
+ * Removes tashkeel and additional diacritical marks from Arabic text
+ */
+export const removeTashkeel = (text: string): string => {
+  return text.replace(
+    /[\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06FC]/g,
+    '',
+  );
+};
+
+/**
  * Normalizes Arabic text by removing diacritics and standardizing characters
  */
 export const normalizeArabicText = (text: string): string => {
   if (!text) return '';
 
-  return text
-    .replace(/[\u064B-\u065F]/g, '') // Remove tashkeel
+  let normalizedText = removeTashkeel(text); // Remove tashkeel using the new function
+  normalizedText = normalizedText
     .replace(/[\u0622\u0623\u0625]/g, '\u0627') // Normalize alef
     .replace(/[\u0624\u0626]/g, '\u0621') // Normalize hamza
-    .replace(/\u0649/g, '\u064A'); // Normalize ya/alif maqsura
+    .replace(/\u0649/g, '\u064A') // Normalize ya/alif maqsura
+    .replace(/\u0640/g, '') // Remove tatweel
+    .replace(/[\u0654\u0655]/g, '\u0621'); // Normalize hamza above/below
+
+  return normalizedText;
 };
 
 /**
