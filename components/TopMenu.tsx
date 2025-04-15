@@ -54,10 +54,10 @@ export default function TopMenu() {
   useEffect(() => {
     const newProgress =
       dailyHizbGoalValue > 0
-        ? Math.min(1, dailyHizbCompletedValue / 8 / (dailyHizbGoalValue / 8))
+        ? Math.min(1, dailyHizbCompletedValue.value / (dailyHizbGoalValue / 8))
         : 0;
     setProgressValue(newProgress);
-  }, [dailyHizbGoalValue, dailyHizbCompletedValue]);
+  }, [dailyHizbGoalValue, dailyHizbCompletedValue.value]);
 
   const toggleMenu = () => {
     setBottomMenuState((state: boolean) => !state);
@@ -145,11 +145,11 @@ export default function TopMenu() {
             >
               <View style={styles.progressContainer}>
                 <Progress.Circle
-                  size={28}
+                  size={26}
                   progress={progressValue}
                   color={tintColor}
                   showsText={false}
-                  thickness={4}
+                  thickness={3.5}
                   borderWidth={0}
                   unfilledColor={'rgba(128, 128, 128, 0.4)'}
                 />
@@ -249,6 +249,8 @@ const styles = StyleSheet.create({
     position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 2,
+    margin: 2,
   },
   checkmarkContainer: {
     position: 'absolute',
@@ -264,11 +266,13 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     gap: 10,
     paddingVertical: 5,
+    height: 40,
   },
   surahName: {
     fontFamily: 'Amiri_700Bold',
     fontSize: 18,
     lineHeight: 20,
+    paddingHorizontal: 5,
   },
   secondLineContainer: {
     flexDirection: 'row',

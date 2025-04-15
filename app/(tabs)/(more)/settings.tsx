@@ -1,5 +1,7 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
 
+import { Feather } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
@@ -27,11 +29,14 @@ export default function SettingsScreen() {
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const [HizbNotificationValue, setHizbNotificationValue] =
     useRecoilState<number>(hizbNotification);
-  const { textColor, primaryColor, primaryLightColor, cardColor } = useColors();
+  const { textColor, primaryColor, primaryLightColor, cardColor, iconColor } =
+    useColors();
   const [mushafContrastValue, setMushafContrastValue] =
     useRecoilState(mushafContrast);
   const [mushafRiwayaValue, setMushafRiwayaValue] =
     useRecoilState(mushafRiwaya);
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+
   const toggleSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
   };
@@ -194,11 +199,64 @@ export default function SettingsScreen() {
         <ThemedButton
           role="button"
           variant="danger"
-          onPress={clearStorageAndReload}
+          onPress={() => setConfirmModalVisible(true)}
         >
           إعادة ضبط التطبيق
         </ThemedButton>
       </ThemedView>
+
+      {/* Confirmation Modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={confirmModalVisible}
+        onRequestClose={() => setConfirmModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setConfirmModalVisible(false)}
+        >
+          <ThemedView
+            style={[styles.modalContent, { backgroundColor: cardColor }]}
+            onStartShouldSetResponder={() => true}
+          >
+            <ThemedView style={styles.modalHeader}>
+              <ThemedText style={styles.modalTitle}>تأكيد</ThemedText>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setConfirmModalVisible(false)}
+              >
+                <Feather name="x" size={24} color={iconColor} />
+              </TouchableOpacity>
+            </ThemedView>
+
+            <ThemedText style={styles.modalMessage}>
+              هل أنت متأكد من رغبتك في إعادة ضبط التطبيق؟
+            </ThemedText>
+
+            <ThemedView style={styles.modalActions}>
+              <ThemedButton
+                variant="outlined-primary"
+                onPress={() => setConfirmModalVisible(false)}
+                style={styles.modalButton}
+              >
+                إلغاء
+              </ThemedButton>
+              <ThemedButton
+                variant="danger"
+                onPress={() => {
+                  setConfirmModalVisible(false);
+                  clearStorageAndReload();
+                }}
+                style={styles.modalButton}
+              >
+                تأكيد
+              </ThemedButton>
+            </ThemedView>
+          </ThemedView>
+        </TouchableOpacity>
+      </Modal>
     </ScrollView>
   );
 }
@@ -261,5 +319,57 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     paddingHorizontal: 5,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 20,
+  },
+  modalContent: {
+    width: '90%',
+    maxWidth: 400,
+    borderRadius: 12,
+    padding: 16,
+    elevation: 5,
+    alignSelf: 'center',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    minHeight: 40,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontFamily: 'Tajawal_700Bold',
+    textAlignVertical: 'center',
+  },
+  closeButton: {
+    padding: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalMessage: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+    fontFamily: 'Tajawal_400Regular',
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: 'transparent',
+    width: '100%',
+  },
+  modalButton: {
+    width: '40%',
+    maxWidth: 100,
   },
 });

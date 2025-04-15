@@ -75,35 +75,87 @@ export const dailyHizbGoal = atom<number>({
   default: 1,
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
-// Add this effect definition
-const midnightResetEffect: AtomEffect<number> = ({ setSelf }) => {
-  const now = new Date();
-  const msUntilMidnight =
-    new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() -
-    now.getTime();
-
-  const timeout = setTimeout(() => {
-    setSelf(0); // Reset to initial value
-  }, msUntilMidnight);
-
-  return () => clearTimeout(timeout);
-};
-
-// Update the dailyHizbProgress atom definition
-export const dailyHizbCompleted = atom<number>({
-  key: 'DailyHizbCompleted',
-  default: 0,
-  effects: [ReactNativeRecoilPersist.persistAtom, midnightResetEffect],
-});
-
-// Define yesterdayPage without the problematic effect for now
-export const yesterdayPage = atom<number>({
-  key: 'yesterdayPage',
-  default: 1,
+// Store the last date the app was used
+export const lastUsedDate = atom<string>({
+  key: 'LastUsedDate',
+  default: new Date().toDateString(),
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
-// Create a timer effect for Recoil state
+// Type for the daily hizb tracking
+type DailyHizbProgress = {
+  value: number;
+  date: string;
+};
+
+export const dailyHizbCompleted = atom<DailyHizbProgress>({
+  key: 'DailyHizbCompleted',
+  default: {
+    value: 0,
+    date: new Date().toDateString(),
+  },
+  effects: [
+    ReactNativeRecoilPersist.persistAtom,
+    ({ setSelf, onSet }) => {
+      // Check date on initialization
+      const today = new Date().toDateString();
+      onSet((newValue) => {
+        // If it's a new day but the date hasn't been updated yet
+        if (newValue.date !== today) {
+          setSelf({
+            value: 0,
+            date: today,
+          });
+        }
+      });
+    },
+  ],
+});
+
+// Type for tracking the page with date
+type PageWithDate = {
+  value: number;
+  date: string;
+};
+
+// Replace the simple yesterdayPage atom with a more sophisticated version
+export const yesterdayPage = atom<PageWithDate>({
+  key: 'yesterdayPage',
+  default: {
+    value: 1,
+    date: new Date().toDateString(),
+  },
+  effects: [
+    ReactNativeRecoilPersist.persistAtom,
+    ({ setSelf, getPromise }) => {
+      const checkDate = async () => {
+        const today = new Date();
+        const savedPage = await getPromise(currentSavedPage);
+
+        // Get the stored date from yesterdayPage
+        const storedValue = await getPromise(yesterdayPage);
+        const storedDate = new Date(storedValue.date);
+
+        // Calculate the difference in days
+        const diffTime = Math.abs(today.getTime() - storedDate.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        // If there's a two-day or more difference, update yesterdayPage to currentSavedPage
+        if (diffDays >= 2) {
+          setSelf({
+            value: savedPage,
+            date: today.toDateString(),
+          });
+        }
+      };
+
+      // Check when the effect is first applied (app starts)
+      checkDate();
+    },
+  ],
+});
+
+// Create a timer effect for TopMenu State
 const timerEffect: (duration_ms: number) => AtomEffect<any> =
   (duration_ms: number) =>
   ({ setSelf, onSet }) => {

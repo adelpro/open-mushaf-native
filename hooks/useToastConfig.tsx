@@ -21,6 +21,7 @@ export default function useToastConfig() {
             borderRadius: 8,
             margin: 10,
             height: '100%',
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
           }}
           contentContainerStyle={{
             paddingHorizontal: 20,
@@ -32,7 +33,7 @@ export default function useToastConfig() {
           }}
           text1Style={{
             fontSize: 17,
-            color: isDarkMode ? '#d1fae5' : '#155724', // Text color adjusts to theme
+            color: isDarkMode ? '#d1fae5' : '#155724',
           }}
         />
       );
@@ -48,6 +49,7 @@ export default function useToastConfig() {
             borderRadius: 8,
             margin: 10,
             height: '100%',
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
           }}
           contentContainerStyle={{
             paddingHorizontal: 20,
@@ -59,7 +61,7 @@ export default function useToastConfig() {
           }}
           text1Style={{
             fontSize: 17,
-            color: isDarkMode ? '#fee2e2' : '#721c24', // Text color adjusts to theme
+            color: isDarkMode ? '#fee2e2' : '#721c24',
           }}
           text2Style={{
             fontSize: 15,

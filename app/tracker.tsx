@@ -1,7 +1,7 @@
-import React from 'react';
+// Import useState, Modal, and Feather
+import React, { useState } from 'react';
 import {
-  Alert,
-  Platform,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -35,12 +35,14 @@ export default function TrackerScreen() {
     useRecoilState(dailyHizbCompleted);
   const [yesterdayPageValue, setYesterdayPageValue] =
     useRecoilState(yesterdayPage);
+  // Add state for modal visibility
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
   const dailyProgress =
     dailyHizbGoalValue > 0
       ? Math.min(
           100,
-          (dailyHizbCompletedValue / 8 / (dailyHizbGoalValue / 8)) * 100,
+          (dailyHizbCompletedValue.value / 8 / (dailyHizbGoalValue / 8)) * 100,
         )
       : 0;
 
@@ -49,34 +51,23 @@ export default function TrackerScreen() {
   const decrementDailyGoal = () =>
     setDailyHizbGoalValue((prev) => Math.max(1, prev - 1));
 
-  const resetAllProgress = () => {
-    const performReset = () => {
-      if (typeof savedPage === 'number' && savedPage > 0) {
-        setYesterdayPageValue(savedPage);
-      }
-
-      setDailyHizbCompletedValue(0);
-    };
-
-    if (Platform.OS === 'web') {
-      const confirmed = window.confirm(
-        'هل أنت متأكد من رغبتك في إعادة تعيين التقدم؟',
-      );
-      if (confirmed) performReset();
-    } else {
-      Alert.alert(
-        'إعادة تعيين',
-        'هل أنت متأكد من رغبتك في إعادة تعيين التقدم؟',
-        [
-          { text: 'إلغاء', style: 'cancel' },
-          {
-            text: 'تأكيد',
-            onPress: performReset,
-          },
-        ],
-      );
+  // Consolidated reset logic into one function
+  const performReset = () => {
+    if (typeof savedPage === 'number' && savedPage > 0) {
+      setYesterdayPageValue({
+        value: savedPage,
+        date: new Date().toDateString(),
+      });
     }
+
+    setDailyHizbCompletedValue({
+      value: 0,
+      date: new Date().toDateString(),
+    });
+    setConfirmModalVisible(false); // Close modal after reset
   };
+
+  // Removed the old resetAllProgress function that used Alert/confirm
 
   const getHizbText = (count: number) => {
     const hizbCount = count;
@@ -131,15 +122,15 @@ export default function TrackerScreen() {
 
             <ThemedText style={styles.infoText}>
               قراءة{' '}
-              {Number.isInteger(dailyHizbCompletedValue)
-                ? getHizbText(dailyHizbCompletedValue)
-                : `${dailyHizbCompletedValue.toFixed(1)} حزباً`}{' '}
+              {Number.isInteger(dailyHizbCompletedValue.value)
+                ? getHizbText(dailyHizbCompletedValue.value)
+                : `${dailyHizbCompletedValue.value.toFixed(1)} حزباً`}{' '}
               من أصل {getHizbText(dailyHizbGoalValue)}
             </ThemedText>
 
-            {yesterdayPageValue > 0 && (
+            {yesterdayPageValue.value > 0 && (
               <ThemedText style={[styles.infoText, { fontSize: 14 }]}>
-                آخر صفحة من الأمس: {yesterdayPageValue}
+                آخر صفحة من الأمس: {yesterdayPageValue.value}
               </ThemedText>
             )}
 
@@ -198,7 +189,8 @@ export default function TrackerScreen() {
               <ThemedButton
                 variant="outlined-primary"
                 style={styles.resetButton}
-                onPress={resetAllProgress}
+                // Update onPress to show the modal
+                onPress={() => setConfirmModalVisible(true)}
               >
                 <ThemedView
                   style={{
@@ -224,6 +216,57 @@ export default function TrackerScreen() {
             </ThemedView>
           </ThemedView>
         </ScrollView>
+
+        {/* Confirmation Modal */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={confirmModalVisible}
+          onRequestClose={() => setConfirmModalVisible(false)}
+        >
+          <TouchableOpacity
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={() => setConfirmModalVisible(false)} // Close on overlay press
+          >
+            {/* Prevent modal closing when pressing inside content */}
+            <ThemedView
+              style={[styles.modalContent, { backgroundColor: cardColor }]}
+              onStartShouldSetResponder={() => true}
+            >
+              <ThemedView style={styles.modalHeader}>
+                <ThemedText style={styles.modalTitle}>تأكيد</ThemedText>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setConfirmModalVisible(false)}
+                >
+                  <Feather name="x" size={24} color={iconColor} />
+                </TouchableOpacity>
+              </ThemedView>
+
+              <ThemedText style={styles.modalMessage}>
+                هل أنت متأكد من رغبتك في إعادة تعيين التقدم؟
+              </ThemedText>
+
+              <ThemedView style={styles.modalActions}>
+                <ThemedButton
+                  variant="outlined-primary"
+                  onPress={() => setConfirmModalVisible(false)} // Just close modal
+                  style={styles.modalButton}
+                >
+                  إلغاء
+                </ThemedButton>
+                <ThemedButton
+                  variant="danger" // Using danger variant like in settings
+                  onPress={performReset} // Call the reset logic
+                  style={styles.modalButton}
+                >
+                  تأكيد
+                </ThemedButton>
+              </ThemedView>
+            </ThemedView>
+          </TouchableOpacity>
+        </Modal>
       </ThemedSafeAreaView>
     </>
   );
@@ -312,4 +355,59 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   resetButton: { paddingHorizontal: 16, paddingVertical: 8 }, // This padding controls the space around the icon and text
+
+  // Add Modal Styles (copied from settings.tsx and adjusted slightly)
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 20,
+  },
+  modalContent: {
+    width: '90%',
+    maxWidth: 400,
+    borderRadius: 12,
+    padding: 16,
+    elevation: 5,
+    alignSelf: 'center',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee', // Consider using a theme color here
+    minHeight: 40,
+    backgroundColor: 'transparent', // Ensure header background is transparent if content has color
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontFamily: 'Tajawal_700Bold',
+    textAlignVertical: 'center',
+  },
+  closeButton: {
+    padding: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalMessage: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+    fontFamily: 'Tajawal_400Regular',
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    backgroundColor: 'transparent', // Ensure actions background is transparent
+  },
+  modalButton: {
+    width: '40%', // Use percentage for better responsiveness
+    maxWidth: 120, // Add maxWidth to prevent buttons getting too large
+  },
 });

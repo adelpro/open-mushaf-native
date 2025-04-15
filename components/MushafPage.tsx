@@ -50,7 +50,6 @@ export default function MushafPage() {
   const setDailyHizbCompletedValue = useSetRecoilState(dailyHizbCompleted);
   const yesterdayPageValue = useRecoilValue(yesterdayPage);
 
-  // Use the new hook to get Quran metadata
   const {
     thumnData,
     surahData,
@@ -204,19 +203,19 @@ export default function MushafPage() {
   }, []);
 
   useEffect(() => {
-    if (
-      typeof currentPage === 'number' &&
-      typeof yesterdayPageValue === 'number'
-    ) {
+    if (typeof currentPage === 'number') {
       // Calculate thumns read between yesterday's page and current page
       const numberOfThumn = calculateThumnsBetweenPages(
-        yesterdayPageValue,
+        yesterdayPageValue.value,
         currentPage,
         thumnData,
       );
 
-      // Update the progress state
-      setDailyHizbCompletedValue(numberOfThumn / 8);
+      // Update the progress state with new object format
+      setDailyHizbCompletedValue((prev) => ({
+        value: numberOfThumn / 8,
+        date: new Date().toDateString(),
+      }));
     }
   }, [currentPage, yesterdayPageValue, thumnData, setDailyHizbCompletedValue]);
 
