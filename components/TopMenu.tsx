@@ -89,43 +89,18 @@ export default function TopMenu() {
       >
         <View style={styles.rightSection}>
           <Text
-            style={[
-              styles.surahName,
-              {
-                color: tintColor,
-                includeFontPadding: false,
-                textAlignVertical: 'center',
-              },
-            ]}
+            style={[styles.surahName, { color: tintColor }]}
             accessibilityLabel={`السورة الحالية: ${currentSurahName}`}
             accessibilityRole="header"
           >
             {currentSurahName}
           </Text>
           <View style={styles.secondLineContainer}>
-            <Text
-              style={[
-                styles.juzPosition,
-                {
-                  color: tintColor,
-                  includeFontPadding: false,
-                  textAlignVertical: 'center',
-                },
-              ]}
-            >
+            <Text style={[styles.juzPosition, { color: tintColor }]}>
               الجزء - {juzNumber}
             </Text>
             <View style={styles.positionContainer}>
-              <Text
-                style={[
-                  styles.thumnPosition,
-                  {
-                    color: tintColor,
-                    includeFontPadding: false,
-                    textAlignVertical: 'center',
-                  },
-                ]}
-              >
+              <Text style={[styles.thumnPosition, { color: tintColor }]}>
                 {thumnInJuz}
               </Text>
               <Text
