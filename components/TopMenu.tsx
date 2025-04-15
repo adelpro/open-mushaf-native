@@ -287,24 +287,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 5,
-    padding: 5,
-    gap: 5,
+    paddingVertical: 4, // Increased for better vertical centering
+    paddingHorizontal: 8, // Add horizontal padding for spacing
     backgroundColor: 'rgba(128, 128, 128, 0.4)',
   },
   thumnPosition: {
     fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
     lineHeight: 20,
+    textAlignVertical: 'center',
+    includeFontPadding: false,
+    marginRight: 4, // Add spacing if gap is not supported
   },
   thumnSeparator: {
     fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
     lineHeight: 20,
     opacity: 0.6,
+    textAlignVertical: 'center',
+    includeFontPadding: false,
+    marginHorizontal: 2, // Add spacing if gap is not supported
   },
   thumnTotal: {
     fontFamily: 'Tajawal_700Bold',
     fontSize: 16,
     lineHeight: 20,
+    textAlignVertical: 'center',
+    includeFontPadding: false,
+    marginLeft: 4, // Add spacing if gap is not supported
   },
 });
