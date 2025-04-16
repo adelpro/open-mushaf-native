@@ -86,8 +86,8 @@ export default function TopMenu() {
           styles.topMenu,
           {
             backgroundColor: isDarkMode
-              ? 'rgba(0, 0, 0, 0.9)'
-              : 'rgba(244, 244, 244, 0.9)',
+              ? 'rgba(0, 0, 0, 0.4)'
+              : 'rgba(244, 244, 244, 0.8)',
           },
         ]}
       >
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     position: 'absolute',
-    top: 0,
+    top: 1,
     left: 0,
     right: 0,
     backgroundColor: 'transparent',

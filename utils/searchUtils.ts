@@ -4,9 +4,15 @@ import Fuse, { type IFuseOptions } from 'fuse.js';
  * Removes tashkeel and additional diacritical marks from Arabic text
  */
 export const removeTashkeel = (text: string): string => {
-  return text.replace(
-    /[\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06FC]/g,
-    '',
+  return (
+    text
+      // Replace wasl sign (ٱ) with regular alef (ا)
+      .replace(/\u0671/g, '\u0627')
+      // Remove all tashkeel (harakat) and extra diacritics
+      .replace(
+        /[\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06FC]/g,
+        '',
+      )
   );
 };
 
