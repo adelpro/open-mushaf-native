@@ -15,7 +15,6 @@ import {
 } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as Progress from 'react-native-progress';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { ThemedView } from '@/components/ThemedView';
@@ -38,7 +37,6 @@ const ICON_SIZE = 32;
 export default function TopMenu() {
   const { tintColor } = useColors();
   const { surahData, thumnData } = useQuranMetadata();
-  const insets = useSafeAreaInsets();
   const [progressValue, setProgressValue] = useState<number>(0);
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
@@ -80,7 +78,7 @@ export default function TopMenu() {
   );
 
   return showTopMenuState ? (
-    <ThemedSafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+    <ThemedSafeAreaView style={[styles.container]}>
       <ThemedView
         style={[
           styles.topMenu,
