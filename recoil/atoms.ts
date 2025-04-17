@@ -96,18 +96,32 @@ export const dailyHizbCompleted = atom<DailyHizbProgress>({
   },
   effects: [
     ReactNativeRecoilPersist.persistAtom,
-    ({ setSelf, onSet }) => {
-      // Check date on initialization
-      const today = new Date().toDateString();
-      onSet((newValue) => {
-        // If it's a new day but the date hasn't been updated yet
-        if (newValue.date !== today) {
-          setSelf({
-            value: 0,
-            date: today,
-          });
+    // Effect to reset the value if the date changes (new day) on initialization
+    ({ setSelf, getPromise }) => {
+      const initializeOrReset = async () => {
+        const todayString = new Date().toDateString();
+        try {
+          // Get the potentially persisted value first
+          const persistedValue = await getPromise(dailyHizbCompleted);
+
+          // Check if the stored date is not today
+          if (persistedValue.date !== todayString) {
+            // Reset the value to 0 and update the date to today
+            setSelf({
+              value: 0,
+              date: todayString,
+            });
+          }
+          // If the date is already today, Recoil will use the persisted value automatically.
+        } catch (error) {
+          // Handle potential errors during async storage read, maybe set default
+          console.error('Error reading persisted dailyHizbCompleted:', error);
+          setSelf({ value: 0, date: todayString }); // Fallback to default reset
         }
-      });
+      };
+
+      // Run this check when the atom is initialized/app starts
+      initializeOrReset();
     },
   ],
 });
@@ -122,35 +136,44 @@ type PageWithDate = {
 export const yesterdayPage = atom<PageWithDate>({
   key: 'yesterdayPage',
   default: {
-    value: 1,
-    date: new Date().toDateString(),
+    value: 1, // Default to page 1
+    date: new Date().toDateString(), // Initialize with today's date
   },
   effects: [
     ReactNativeRecoilPersist.persistAtom,
+    // Effect to update the 'yesterday page' value when a new day starts on initialization
     ({ setSelf, getPromise }) => {
-      const checkDate = async () => {
-        const today = new Date();
-        const savedPage = await getPromise(currentSavedPage);
+      const initializeOrUpdate = async () => {
+        const todayString = new Date().toDateString();
+        try {
+          // Get the potentially persisted value for yesterdayPage
+          const persistedYesterdayPage = await getPromise(yesterdayPage);
+          // Get the actual last saved page from the previous session
+          const lastSavedPage = await getPromise(currentSavedPage);
 
-        // Get the stored date from yesterdayPage
-        const storedValue = await getPromise(yesterdayPage);
-        const storedDate = new Date(storedValue.date);
-
-        // Calculate the difference in days
-        const diffTime = Math.abs(today.getTime() - storedDate.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        // If there's a two-day or more difference, update yesterdayPage to currentSavedPage
-        if (diffDays >= 2) {
-          setSelf({
-            value: savedPage,
-            date: today.toDateString(),
-          });
+          // If the stored date is not today, it means a new day has started.
+          if (persistedYesterdayPage.date !== todayString) {
+            // Update yesterdayPage's value to the last page saved *before* today,
+            // and set the date to today.
+            setSelf({
+              value: lastSavedPage, // Use the page saved from the previous session
+              date: todayString,
+            });
+          }
+          // If the date is already today, Recoil uses the persisted value.
+        } catch (error) {
+          // Handle potential errors during async storage read
+          console.error(
+            'Error reading persisted yesterdayPage/currentSavedPage:',
+            error,
+          );
+          // Fallback: Set yesterday's page to 1 and date to today
+          setSelf({ value: 1, date: todayString });
         }
       };
 
-      // Check when the effect is first applied (app starts)
-      checkDate();
+      // Run this check when the atom is initialized/app starts
+      initializeOrUpdate();
     },
   ],
 });
