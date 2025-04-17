@@ -48,4 +48,10 @@
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
+    <url>
+    <loc>https://quran.us.kg/tracker</loc>
+    <lastmod>2024-06-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>
