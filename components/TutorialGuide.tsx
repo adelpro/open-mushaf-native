@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 'auto',
+    padding: 2,
     width: '100%',
     height: '100%',
     maxWidth: 640,
@@ -147,6 +148,7 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 640,
     padding: 1,
+    marginTop: 10,
   },
   scrollContent: {
     paddingHorizontal: 10,

@@ -1,5 +1,3 @@
-//TODO add commun files like quran.josn
-
 import { useEffect, useState } from 'react';
 
 import { useRecoilValue } from 'recoil';
