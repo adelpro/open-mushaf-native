@@ -1,0 +1,7 @@
+- name: Delete all workflow runs
+  uses: christosgalano/delete-gh-workflow-runs@v1.0.0
+  with:
+    owner: adelpro
+    repo: open-mushaf-native
+    workflow: all
+    token: ${{ secrets.GITHUB_TOKEN }}
