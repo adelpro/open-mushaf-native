@@ -33,8 +33,11 @@ import ReactNativeRecoilPersist, {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 
+import Notification from '@/components/Notification';
 import SEO from '@/components/seo';
 import { isRTL } from '@/utils';
+
+import { NotificationProvider } from '../components/NotificationProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -89,56 +92,59 @@ export default function RootLayout() {
 
   return (
     <RecoilRoot>
-      <HelmetProvider>
-        <SEO />
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <SafeAreaProvider>
-            <StatusBar style="auto" />
-            <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
-              <ThemeProvider
-                value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-              >
-                <Stack
-                  screenOptions={{
-                    headerTitleStyle: {
-                      fontFamily: 'Tajawal_700Bold',
-                    },
-                  }}
+      <NotificationProvider>
+        <HelmetProvider>
+          <SEO />
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaProvider>
+              <StatusBar style="auto" />
+              <ReactNativeRecoilPersistGate store={ReactNativeRecoilPersist}>
+                <ThemeProvider
+                  value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
                 >
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen name="+not-found" />
-                  <Stack.Screen
-                    name="search"
-                    options={{
-                      title: 'بحث',
+                  <Stack
+                    screenOptions={{
                       headerTitleStyle: {
-                        fontFamily: 'Tajawal_400Regular',
+                        fontFamily: 'Tajawal_700Bold',
                       },
                     }}
-                  />
-                  <Stack.Screen
-                    name="navigation"
-                    options={{
-                      title: 'تنقل',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="tutorial"
-                    options={{ headerShown: true, title: 'جولة تعليمية' }}
-                  />
-                  <Stack.Screen
-                    name="tracker"
-                    options={{ headerShown: true, title: 'الورد اليومي' }}
-                  />
-                </Stack>
-              </ThemeProvider>
-            </ReactNativeRecoilPersistGate>
-          </SafeAreaProvider>
-        </GestureHandlerRootView>
-      </HelmetProvider>
+                  >
+                    <Stack.Screen
+                      name="(tabs)"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen name="+not-found" />
+                    <Stack.Screen
+                      name="search"
+                      options={{
+                        title: 'بحث',
+                        headerTitleStyle: {
+                          fontFamily: 'Tajawal_400Regular',
+                        },
+                      }}
+                    />
+                    <Stack.Screen
+                      name="navigation"
+                      options={{
+                        title: 'تنقل',
+                      }}
+                    />
+                    <Stack.Screen
+                      name="tutorial"
+                      options={{ headerShown: true, title: 'جولة تعليمية' }}
+                    />
+                    <Stack.Screen
+                      name="tracker"
+                      options={{ headerShown: true, title: 'الورد اليومي' }}
+                    />
+                  </Stack>
+                  <Notification />
+                </ThemeProvider>
+              </ReactNativeRecoilPersistGate>
+            </SafeAreaProvider>
+          </GestureHandlerRootView>
+        </HelmetProvider>
+      </NotificationProvider>
     </RecoilRoot>
   );
 }

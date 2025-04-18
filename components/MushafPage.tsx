@@ -38,11 +38,11 @@ import {
 import { getSEOMetadataByPage } from '@/utils';
 import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
 
+import { useNotification } from './NotificationProvider';
 import PageOverlay from './PageOverlay';
 import SEO from './seo';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-import TopNotification from './TopNotification';
 
 export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
@@ -68,6 +68,7 @@ export default function MushafPage() {
 
   const { specsData } = useQuranMetadata();
   const { defaultNumberOfPages } = specsData;
+  const { notify } = useNotification();
 
   const [currentHizb, setCurrentHizb] = useState<number | null>(null);
   const [showNotification, setShowNotification] = useState(false);
@@ -239,6 +240,22 @@ export default function MushafPage() {
   }, []);
 
   useEffect(() => {
+    if (showNotification && currentHizb) {
+      notify(
+        hizbNotificationValue === 2
+          ? `الجزء - ${(currentHizb - 1)?.toString()}`
+          : `الحزب - ${currentHizb?.toString()}`,
+      );
+    }
+  }, [showNotification, currentHizb, hizbNotificationValue, notify]);
+
+  useEffect(() => {
+    if (showDailyHizbCompletedBorderValue && showGoalBorder) {
+      notify('تم إكمال الورد اليومي بنجاح');
+    }
+  }, [showDailyHizbCompletedBorderValue, showGoalBorder, notify]);
+
+  useEffect(() => {
     if (typeof currentPage === 'number') {
       // Calculate thumns read between yesterday's page and current page
       const numberOfThumn = calculateThumnsBetweenPages(
@@ -312,25 +329,12 @@ export default function MushafPage() {
             {
               backgroundColor:
                 colorScheme === 'dark'
-                  ? `rgba(26, 26, 26, ${1 - mushafContrastValue})` // Dark background with inverse contrast
+                  ? `rgba(26, 26, 26, ${1 - mushafContrastValue})`
                   : ivoryColor,
             },
           ]}
           onLayout={handleImageLayout}
         >
-          {showDailyHizbCompletedBorderValue && showGoalBorder && (
-            <Animated.View
-              style={[
-                styles.borderOverlay,
-                {
-                  borderColor: tintColor,
-                  borderWidth: 3,
-                  backgroundColor: `${tintColor}5`, // Very subtle background tint
-                  boxShadow: `0 0 16px ${tintColor}66`, // Using boxShadow with alpha transparency
-                },
-              ]}
-            />
-          )}
           {asset?.localUri ? (
             <>
               {isLandscape ? (
@@ -344,7 +348,7 @@ export default function MushafPage() {
                         aspectRatio: 0.7,
                       },
                       colorScheme === 'dark' && {
-                        opacity: mushafContrastValue, // Original contrast for image
+                        opacity: mushafContrastValue,
                       },
                     ]}
                     source={{ uri: asset?.localUri }}
@@ -357,22 +361,14 @@ export default function MushafPage() {
                     styles.image,
                     { width: '100%' },
                     colorScheme === 'dark' && {
-                      opacity: mushafContrastValue, // Original contrast for image
+                      opacity: mushafContrastValue,
                     },
                   ]}
                   source={{ uri: asset?.localUri }}
                   contentFit="fill"
                 />
               )}
-              {/* Existing Hizb Notification */}
-              <TopNotification
-                show={showNotification}
-                text={
-                  currentHizb && hizbNotificationValue === 2
-                    ? `الجزء - ${(currentHizb - 1)?.toString()}`
-                    : `الحزب - ${currentHizb?.toString()}`
-                }
-              />
+              {/* Remove these notification calls from JSX */}
             </>
           ) : (
             <ActivityIndicator size="large" color={tintColor} />
@@ -410,15 +406,5 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  borderOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    borderWidth: 3,
-    zIndex: 10,
-    pointerEvents: 'none', // allows touches to pass through
   },
 });
