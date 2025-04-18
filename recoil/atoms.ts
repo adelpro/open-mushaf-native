@@ -1,5 +1,5 @@
 import ReactNativeRecoilPersist from 'react-native-recoil-persist';
-import { atom, AtomEffect } from 'recoil';
+import { atom } from 'recoil';
 
 import { TafseerTabs } from '@/types';
 import { Riwaya } from '@/types/riwaya';
@@ -79,6 +79,12 @@ export const dailyHizbGoal = atom<number>({
 export const lastUsedDate = atom<string>({
   key: 'LastUsedDate',
   default: new Date().toDateString(),
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});
+
+export const showDailyHizbCompletedBorder = atom<boolean>({
+  key: 'ShowDailyHizbCompletedBorder',
+  default: false,
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
@@ -178,33 +184,30 @@ export const yesterdayPage = atom<PageWithDate>({
   ],
 });
 
-// Create a timer effect for TopMenu State
-const timerEffect: (duration_ms: number) => AtomEffect<any> =
-  (duration_ms: number) =>
-  ({ setSelf, onSet }) => {
-    let timerId: NodeJS.Timeout;
-    const setTimer = () => {
-      timerId = setTimeout(() => {
-        setSelf(false);
-      }, duration_ms);
-    };
-
-    onSet(() => {
-      setTimer();
-    });
-
-    return () => {
-      clearTimeout(timerId);
-    };
-  };
-
 // Define a top menu state atom with a timer effect
 export const topMenuState = atom<boolean>({
   key: 'TopMenuState',
   default: false,
   effects: [
-    timerEffect(
-      parseInt(process.env.EXPO_PUBLIC_TOP_MENU_HIDE_DURATION_MS || '5000', 10),
-    ),
+    ({ setSelf, onSet }) => {
+      const duration_ms = parseInt(
+        process.env.EXPO_PUBLIC_TOP_MENU_HIDE_DURATION_MS || '5000',
+        10,
+      );
+      let timerId: NodeJS.Timeout;
+      const setTimer = () => {
+        timerId = setTimeout(() => {
+          setSelf(false);
+        }, duration_ms);
+      };
+
+      onSet(() => {
+        setTimer();
+      });
+
+      return () => {
+        clearTimeout(timerId);
+      };
+    },
   ],
 });

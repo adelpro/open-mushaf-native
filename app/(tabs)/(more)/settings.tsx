@@ -19,6 +19,7 @@ import {
   hizbNotification,
   mushafContrast,
   mushafRiwaya,
+  showDailyHizbCompletedBorder,
 } from '@/recoil/atoms';
 import { RiwayaArabic } from '@/types/riwaya';
 import { isRTL, RiwayaByIndice, RiwayaByValue } from '@/utils';
@@ -26,6 +27,10 @@ import { clearStorageAndReload } from '@/utils/clearStorage';
 
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
+  const [
+    showDailyHizbCompletedBorderValue,
+    setShowDailyHizbCompletedBorderValue,
+  ] = useRecoilState(showDailyHizbCompletedBorder);
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const [HizbNotificationValue, setHizbNotificationValue] =
     useRecoilState<number>(hizbNotification);
@@ -39,6 +44,10 @@ export default function SettingsScreen() {
 
   const toggleSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
+  };
+
+  const toggleBorderSwitch = () => {
+    setShowDailyHizbCompletedBorderValue((previousState) => !previousState);
   };
 
   const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش'];
@@ -84,6 +93,37 @@ export default function SettingsScreen() {
           aria-label="صوت قلب الصفحة"
           accessibilityLabel="تبديل صوت قلب الصفحة"
           accessibilityState={{ checked: isFlipSoundEnabled }}
+        />
+      </Pressable>
+
+      {/* New Toggle for showDailyHizbCompletedBorder */}
+      <Pressable
+        style={[
+          styles.settingsSection,
+          { borderColor: textColor, backgroundColor: cardColor },
+        ]}
+        onPress={toggleBorderSwitch}
+        accessibilityRole="button"
+        accessibilityLabel="تفعيل حد إتمام الحزب اليومي"
+        accessibilityHint="اضغط لتفعيل أو تعطيل حد إتمام الحزب اليومي"
+        accessibilityState={{ selected: showDailyHizbCompletedBorderValue }}
+      >
+        <ThemedText
+          type="defaultSemiBold"
+          style={[styles.itemText, { backgroundColor: cardColor }]}
+        >
+          إظهار تنبيه إتمام الحزب اليومي:
+        </ThemedText>
+        <Toggle
+          color={primaryColor}
+          size={40}
+          circleColor={primaryColor}
+          toggle={showDailyHizbCompletedBorderValue}
+          setToggle={toggleBorderSwitch}
+          aria-checked={showDailyHizbCompletedBorderValue}
+          aria-label="إظهار تنبيه إتمام الحزب اليومي"
+          accessibilityLabel="تبديل إظهار تنبيه إتمام الحزب اليومي"
+          accessibilityState={{ checked: showDailyHizbCompletedBorderValue }}
         />
       </Pressable>
 

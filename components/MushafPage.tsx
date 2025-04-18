@@ -32,6 +32,7 @@ import {
   flipSound,
   hizbNotification,
   mushafContrast,
+  showDailyHizbCompletedBorder,
   yesterdayPage,
 } from '@/recoil/atoms';
 import { getSEOMetadataByPage } from '@/utils';
@@ -49,6 +50,9 @@ export default function MushafPage() {
   const mushafContrastValue = useRecoilValue(mushafContrast);
   const hizbNotificationValue = useRecoilValue(hizbNotification);
   const setDailyHizbCompletedValue = useSetRecoilState(dailyHizbCompleted);
+  const showDailyHizbCompletedBorderValue = useRecoilValue(
+    showDailyHizbCompletedBorder,
+  );
   const yesterdayPageValue = useRecoilValue(yesterdayPage);
   const [progressValue, setProgressValue] = useState(0);
   const dailyHizbGoalValue = useRecoilValue(dailyHizbGoal);
@@ -71,14 +75,21 @@ export default function MushafPage() {
 
   // Add this effect to handle border visibility
   useEffect(() => {
-    if (progressValue >= 1) {
-      setShowGoalBorder(true);
-      const timer = setTimeout(() => {
-        setShowGoalBorder(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
+    progressValue === 1 && setShowGoalBorder(true);
   }, [progressValue]);
+
+  // Disable showGoalBorder after 3sec
+  useEffect(() => {
+    if (!showGoalBorder) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setShowGoalBorder(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [showGoalBorder]);
 
   // Progress calculation effect
   useEffect(() => {
@@ -303,7 +314,8 @@ export default function MushafPage() {
                 colorScheme === 'dark'
                   ? `rgba(26, 26, 26, ${1 - mushafContrastValue})` // Dark background with inverse contrast
                   : ivoryColor,
-              borderWidth: showGoalBorder ? 4 : 0,
+              borderWidth:
+                showDailyHizbCompletedBorderValue && showGoalBorder ? 4 : 0,
               borderColor: tintColor,
             },
           ]}
