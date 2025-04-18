@@ -28,6 +28,7 @@ import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 import {
   dailyHizbCompleted,
+  dailyHizbGoal,
   flipSound,
   hizbNotification,
   mushafContrast,
@@ -49,6 +50,9 @@ export default function MushafPage() {
   const hizbNotificationValue = useRecoilValue(hizbNotification);
   const setDailyHizbCompletedValue = useSetRecoilState(dailyHizbCompleted);
   const yesterdayPageValue = useRecoilValue(yesterdayPage);
+  const [progressValue, setProgressValue] = useState(0);
+  const dailyHizbGoalValue = useRecoilValue(dailyHizbGoal);
+  const dailyHizbCompletedValue = useRecoilValue(dailyHizbCompleted);
 
   const {
     thumnData,
@@ -63,6 +67,27 @@ export default function MushafPage() {
 
   const [currentHizb, setCurrentHizb] = useState<number | null>(null);
   const [showNotification, setShowNotification] = useState(false);
+  const [showGoalBorder, setShowGoalBorder] = useState(false);
+
+  // Add this effect to handle border visibility
+  useEffect(() => {
+    if (progressValue >= 1) {
+      setShowGoalBorder(true);
+      const timer = setTimeout(() => {
+        setShowGoalBorder(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [progressValue]);
+
+  // Progress calculation effect
+  useEffect(() => {
+    const newProgress =
+      dailyHizbGoalValue > 0
+        ? dailyHizbCompletedValue.value / dailyHizbGoalValue
+        : 0;
+    setProgressValue(newProgress);
+  }, [dailyHizbGoalValue, dailyHizbCompletedValue.value]);
 
   const colorScheme = useColorScheme();
   const { tintColor, ivoryColor } = useColors();
@@ -212,7 +237,7 @@ export default function MushafPage() {
       );
 
       // Update the progress state with new object format
-      setDailyHizbCompletedValue((prev) => ({
+      setDailyHizbCompletedValue(() => ({
         value: numberOfThumn / 8,
         date: new Date().toDateString(),
       }));
@@ -278,6 +303,8 @@ export default function MushafPage() {
                 colorScheme === 'dark'
                   ? `rgba(26, 26, 26, ${1 - mushafContrastValue})` // Dark background with inverse contrast
                   : ivoryColor,
+              borderWidth: showGoalBorder ? 4 : 0,
+              borderColor: tintColor,
             },
           ]}
           onLayout={handleImageLayout}
@@ -315,6 +342,7 @@ export default function MushafPage() {
                   contentFit="fill"
                 />
               )}
+              {/* Existing Hizb Notification */}
               <TopNotification
                 show={showNotification}
                 text={
