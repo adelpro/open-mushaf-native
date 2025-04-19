@@ -121,6 +121,7 @@ export default function MushafPage() {
       setShowHizbNotification(true);
     }
   }, [currentPage, hizbData, hizbNotificationValue]);
+
   // Disable showHizbNotification after 3sec
   useEffect(() => {
     if (!showHizbNotification) {
