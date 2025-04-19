@@ -104,15 +104,15 @@ export default function SettingsScreen() {
         ]}
         onPress={toggleBorderSwitch}
         accessibilityRole="button"
-        accessibilityLabel="تفعيل حد إتمام الحزب اليومي"
-        accessibilityHint="اضغط لتفعيل أو تعطيل حد إتمام الحزب اليومي"
+        accessibilityLabel="تفعيل تنبيه إتمام الورد اليومي"
+        accessibilityHint="اضغط لتفعيل أو تعطيل تنبه إتمام الورد اليومي"
         accessibilityState={{ selected: showDailyHizbCompletedBorderValue }}
       >
         <ThemedText
           type="defaultSemiBold"
           style={[styles.itemText, { backgroundColor: cardColor }]}
         >
-          إظهار تنبيه إتمام الحزب اليومي:
+          تنبيه الورد اليومي:
         </ThemedText>
         <Toggle
           color={primaryColor}
@@ -122,7 +122,7 @@ export default function SettingsScreen() {
           setToggle={toggleBorderSwitch}
           aria-checked={showDailyHizbCompletedBorderValue}
           aria-label="إظهار تنبيه إتمام الحزب اليومي"
-          accessibilityLabel="تبديل إظهار تنبيه إتمام الحزب اليومي"
+          accessibilityLabel="تنبيه إتمام الحزب اليومي"
           accessibilityState={{ checked: showDailyHizbCompletedBorderValue }}
         />
       </Pressable>

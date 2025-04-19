@@ -314,13 +314,23 @@ export default function MushafPage() {
                 colorScheme === 'dark'
                   ? `rgba(26, 26, 26, ${1 - mushafContrastValue})` // Dark background with inverse contrast
                   : ivoryColor,
-              borderWidth:
-                showDailyHizbCompletedBorderValue && showGoalBorder ? 4 : 0,
-              borderColor: tintColor,
             },
           ]}
           onLayout={handleImageLayout}
         >
+          {showDailyHizbCompletedBorderValue && showGoalBorder && (
+            <Animated.View
+              style={[
+                styles.borderOverlay,
+                {
+                  borderColor: tintColor,
+                  borderWidth: 3,
+                  backgroundColor: `${tintColor}5`, // Very subtle background tint
+                  boxShadow: `0 0 16px ${tintColor}66`, // Using boxShadow with alpha transparency
+                },
+              ]}
+            />
+          )}
           {asset?.localUri ? (
             <>
               {isLandscape ? (
@@ -400,5 +410,15 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  borderOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderWidth: 3,
+    zIndex: 10,
+    pointerEvents: 'none', // allows touches to pass through
   },
 });
