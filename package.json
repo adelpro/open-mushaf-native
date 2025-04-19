@@ -29,7 +29,7 @@
     "android:build-submit:production:local": "yarn run android:build:production:local && yarn run android:submit:production",
     "predeploy": "cross-env EXPO_NO_REACT_COMPILER=1 expo export -p web --clear && npx workbox-cli injectManifest workbox-config.js",
     "deploy:local": "firebase emulators:start --only hosting",
-    "deploy:preview": "yarn run predeploy && firebase hosting:channel:deploy preview-channel",
+    "deploy:preview": "yarn run predeploy && firebase hosting:channel:deploy preview",
     "deploy:live": "yarn run predeploy && firebase deploy --only hosting",
     "test": "jest --watchAll",
     "lint": "eslint .",
