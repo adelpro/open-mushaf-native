@@ -238,7 +238,7 @@ export default function MushafPage() {
   }, []);
 
   useEffect(() => {
-    if (showNotification && currentHizb) {
+    if (showNotification && currentHizb !== null) {
       notify(
         hizbNotificationValue === 2
           ? `الجزء - ${(currentHizb - 1)?.toString()}`
