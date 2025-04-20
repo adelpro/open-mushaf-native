@@ -19,7 +19,7 @@ import {
   hizbNotification,
   mushafContrast,
   mushafRiwaya,
-  showDailyHizbCompletedBorder,
+  showTrackerNotification,
 } from '@/recoil/atoms';
 import { RiwayaArabic } from '@/types/riwaya';
 import { isRTL, RiwayaByIndice, RiwayaByValue } from '@/utils';
@@ -27,10 +27,8 @@ import { clearStorageAndReload } from '@/utils/clearStorage';
 
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
-  const [
-    showDailyHizbCompletedBorderValue,
-    setShowDailyHizbCompletedBorderValue,
-  ] = useRecoilState(showDailyHizbCompletedBorder);
+  const [showTrackerNotificationValue, setShowTrackerNotificationValue] =
+    useRecoilState(showTrackerNotification);
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const [HizbNotificationValue, setHizbNotificationValue] =
     useRecoilState<number>(hizbNotification);
@@ -42,12 +40,12 @@ export default function SettingsScreen() {
     useRecoilState(mushafRiwaya);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
-  const toggleSwitch = () => {
+  const toggleFlipSoundSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
   };
 
-  const toggleBorderSwitch = () => {
-    setShowDailyHizbCompletedBorderValue((previousState) => !previousState);
+  const toggleTrackerSwitch = () => {
+    setShowTrackerNotificationValue((previousState) => !previousState);
   };
 
   const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش'];
@@ -71,7 +69,7 @@ export default function SettingsScreen() {
           styles.settingsSection,
           { borderColor: textColor, backgroundColor: cardColor },
         ]}
-        onPress={toggleSwitch}
+        onPress={toggleFlipSoundSwitch}
         accessibilityRole="button"
         accessibilityLabel="تفعيل صوت قلب الصفحة"
         accessibilityHint="اضغط لتفعيل أو تعطيل صوت قلب الصفحة"
@@ -88,7 +86,7 @@ export default function SettingsScreen() {
           size={40}
           circleColor={primaryColor}
           toggle={isFlipSoundEnabled}
-          setToggle={toggleSwitch}
+          setToggle={toggleTrackerSwitch}
           aria-checked={isFlipSoundEnabled}
           aria-label="صوت قلب الصفحة"
           accessibilityLabel="تبديل صوت قلب الصفحة"
@@ -102,11 +100,13 @@ export default function SettingsScreen() {
           styles.settingsSection,
           { borderColor: textColor, backgroundColor: cardColor },
         ]}
-        onPress={toggleBorderSwitch}
+        onPress={toggleTrackerSwitch}
         accessibilityRole="button"
         accessibilityLabel="تفعيل تنبيه إتمام الورد اليومي"
         accessibilityHint="اضغط لتفعيل أو تعطيل تنبه إتمام الورد اليومي"
-        accessibilityState={{ selected: showDailyHizbCompletedBorderValue }}
+        accessibilityState={{
+          selected: showTrackerNotificationValue,
+        }}
       >
         <ThemedText
           type="defaultSemiBold"
@@ -118,12 +118,12 @@ export default function SettingsScreen() {
           color={primaryColor}
           size={40}
           circleColor={primaryColor}
-          toggle={showDailyHizbCompletedBorderValue}
-          setToggle={toggleBorderSwitch}
-          aria-checked={showDailyHizbCompletedBorderValue}
+          toggle={showTrackerNotificationValue}
+          setToggle={toggleTrackerSwitch}
+          aria-checked={showTrackerNotificationValue}
           aria-label="إظهار تنبيه إتمام الحزب اليومي"
           accessibilityLabel="تنبيه إتمام الحزب اليومي"
-          accessibilityState={{ checked: showDailyHizbCompletedBorderValue }}
+          accessibilityState={{ checked: showTrackerNotificationValue }}
         />
       </Pressable>
 

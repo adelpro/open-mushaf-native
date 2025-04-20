@@ -32,7 +32,7 @@ import {
   flipSound,
   hizbNotification,
   mushafContrast,
-  showDailyHizbCompletedBorder,
+  showTrackerNotification,
   yesterdayPage,
 } from '@/recoil/atoms';
 import { getSEOMetadataByPage } from '@/utils';
@@ -50,9 +50,7 @@ export default function MushafPage() {
   const mushafContrastValue = useRecoilValue(mushafContrast);
   const hizbNotificationValue = useRecoilValue(hizbNotification);
   const setDailyHizbCompletedValue = useSetRecoilState(dailyHizbCompleted);
-  const showDailyHizbCompletedBorderValue = useRecoilValue(
-    showDailyHizbCompletedBorder,
-  );
+  const showTrackerNotificationValue = useRecoilValue(showTrackerNotification);
   const yesterdayPageValue = useRecoilValue(yesterdayPage);
   const [progressValue, setProgressValue] = useState(0);
   const dailyHizbGoalValue = useRecoilValue(dailyHizbGoal);
@@ -72,25 +70,25 @@ export default function MushafPage() {
 
   const [currentHizb, setCurrentHizb] = useState<number | null>(null);
   const [showNotification, setShowNotification] = useState(false);
-  const [showGoalBorder, setShowGoalBorder] = useState(false);
+  const [showGoalNotification, setshowGoalNotification] = useState(false);
 
   // Add this effect to handle border visibility
   useEffect(() => {
-    progressValue === 1 && setShowGoalBorder(true);
+    progressValue === 1 && setshowGoalNotification(true);
   }, [progressValue]);
 
-  // Disable showGoalBorder after 3sec
+  // Disable showGoalNotification after 3sec
   useEffect(() => {
-    if (!showGoalBorder) {
+    if (!showGoalNotification) {
       return;
     }
 
     const timer = setTimeout(() => {
-      setShowGoalBorder(false);
+      setshowGoalNotification(false);
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [showGoalBorder]);
+  }, [showGoalNotification]);
 
   // Progress calculation effect
   useEffect(() => {
@@ -245,15 +243,16 @@ export default function MushafPage() {
         hizbNotificationValue === 2
           ? `الجزء - ${(currentHizb - 1)?.toString()}`
           : `الحزب - ${currentHizb?.toString()}`,
+        'hizb_notification',
       );
     }
   }, [showNotification, currentHizb, hizbNotificationValue, notify]);
 
   useEffect(() => {
-    if (showDailyHizbCompletedBorderValue && showGoalBorder) {
-      notify('تم إكمال الورد اليومي بنجاح');
+    if (showTrackerNotificationValue && showGoalNotification) {
+      notify('تم إكمال الورد اليومي بنجاح', 'tracker_goal_notification');
     }
-  }, [showDailyHizbCompletedBorderValue, showGoalBorder, notify]);
+  }, [showTrackerNotificationValue, showGoalNotification, notify]);
 
   useEffect(() => {
     if (typeof currentPage === 'number') {

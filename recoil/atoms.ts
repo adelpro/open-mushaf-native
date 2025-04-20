@@ -82,8 +82,8 @@ export const lastUsedDate = atom<string>({
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
 
-export const showDailyHizbCompletedBorder = atom<boolean>({
-  key: 'ShowDailyHizbCompletedBorder',
+export const showTrackerNotification = atom<boolean>({
+  key: 'ShowTrackerNotification',
   default: false,
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
