@@ -48,9 +48,15 @@ export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
   const isFlipSoundEnabled = useRecoilValue(flipSound);
   const mushafContrastValue = useRecoilValue(mushafContrast);
+
   const hizbNotificationValue = useRecoilValue(hizbNotification);
+  const [showHizbNotification, setShowHizbNotification] = useState(false);
+
   const setDailyHizbCompletedValue = useSetRecoilState(dailyHizbCompleted);
+
   const showTrackerNotificationValue = useRecoilValue(showTrackerNotification);
+  const [showGoalNotification, setShowGoalNotification] = useState(false);
+
   const yesterdayPageValue = useRecoilValue(yesterdayPage);
   const [progressValue, setProgressValue] = useState(0);
   const dailyHizbGoalValue = useRecoilValue(dailyHizbGoal);
@@ -68,35 +74,6 @@ export default function MushafPage() {
   const { defaultNumberOfPages } = specsData;
   const { notify } = useNotification();
 
-  const [showGoalNotification, setshowGoalNotification] = useState(false);
-
-  // Add this effect to handle border visibility
-  useEffect(() => {
-    progressValue === 1 && setshowGoalNotification(true);
-  }, [progressValue]);
-
-  // Disable showGoalNotification after 3sec
-  useEffect(() => {
-    if (!showGoalNotification) {
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setshowGoalNotification(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [showGoalNotification]);
-
-  // Progress calculation effect
-  useEffect(() => {
-    const newProgress =
-      dailyHizbGoalValue > 0
-        ? dailyHizbCompletedValue.value / dailyHizbGoalValue
-        : 0;
-    setProgressValue(newProgress);
-  }, [dailyHizbGoalValue, dailyHizbCompletedValue.value]);
-
   const colorScheme = useColorScheme();
   const { tintColor, ivoryColor } = useColors();
   const router = useRouter();
@@ -110,6 +87,61 @@ export default function MushafPage() {
   });
 
   const seoMetadata = getSEOMetadataByPage(surahData, thumnData, currentPage);
+
+  // Add this effect to handle tracker notification visibility
+  useEffect(() => {
+    progressValue === 1 && setShowGoalNotification(true);
+  }, [progressValue]);
+
+  // Disable showGoalNotification after 3sec
+  useEffect(() => {
+    if (!showGoalNotification) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setShowGoalNotification(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [showGoalNotification]);
+
+  useEffect(() => {
+    const hizb = hizbData.find((hizb) => hizb.startingPage === currentPage);
+    const currentHizbNumber = hizb && hizb.number !== 1 ? hizb.number : null;
+
+    const shouldShowHizbNotification = (() => {
+      if (!currentHizbNumber || hizbNotificationValue === 0) return false;
+      if (hizbNotificationValue === 1) return true;
+      if (hizbNotificationValue === 2) return currentHizbNumber % 2 !== 0;
+      return false;
+    })();
+
+    if (shouldShowHizbNotification) {
+      setShowHizbNotification(true);
+    }
+  }, [currentPage, hizbData, hizbNotificationValue]);
+  // Disable showHizbNotification after 3sec
+  useEffect(() => {
+    if (!showHizbNotification) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setShowHizbNotification(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [showHizbNotification]);
+
+  // Progress calculation effect
+  useEffect(() => {
+    const newProgress =
+      dailyHizbGoalValue > 0
+        ? dailyHizbCompletedValue.value / dailyHizbGoalValue
+        : 0;
+    setProgressValue(newProgress);
+  }, [dailyHizbGoalValue, dailyHizbCompletedValue.value]);
 
   const {
     asset,
@@ -213,15 +245,8 @@ export default function MushafPage() {
     const hizb = hizbData.find((hizb) => hizb.startingPage === currentPage);
     const currentHizbNumber = hizb && hizb.number !== 1 ? hizb.number : null;
 
-    const shouldShowHizbNotification = (() => {
-      if (!currentHizbNumber || hizbNotificationValue === 0) return false;
-      if (hizbNotificationValue === 1) return true;
-      if (hizbNotificationValue === 2) return currentHizbNumber % 2 !== 0;
-      return false;
-    })();
-
     // Show Hizb notification if needed
-    if (shouldShowHizbNotification && currentHizbNumber !== null) {
+    if (showHizbNotification && currentHizbNumber !== null) {
       notify(
         hizbNotificationValue === 2
           ? `الجزء - ${(currentHizbNumber - 1)?.toString()}`
@@ -229,7 +254,13 @@ export default function MushafPage() {
         'hizb_notification',
       );
     }
-  }, [currentPage, hizbData, hizbNotificationValue, notify]);
+  }, [
+    currentPage,
+    hizbData,
+    hizbNotificationValue,
+    notify,
+    showHizbNotification,
+  ]);
 
   useEffect(() => {
     // Show tracker goal notification if needed
