@@ -229,19 +229,14 @@ export default function MushafPage() {
         'hizb_notification',
       );
     }
+  }, [currentPage, hizbData, hizbNotificationValue, notify]);
 
+  useEffect(() => {
     // Show tracker goal notification if needed
     if (showTrackerNotificationValue && showGoalNotification) {
       notify('تم إكمال الورد اليومي بنجاح', 'tracker_goal_notification');
     }
-  }, [
-    currentPage,
-    hizbData,
-    hizbNotificationValue,
-    notify,
-    showTrackerNotificationValue,
-    showGoalNotification,
-  ]);
+  }, [notify, showGoalNotification, showTrackerNotificationValue]);
 
   useEffect(() => {
     if (typeof currentPage === 'number') {
