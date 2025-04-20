@@ -1,15 +1,20 @@
 import { StyleSheet, View } from 'react-native';
 
 import Animated, { SlideInUp, SlideOutUp } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useNotification } from './NotificationProvider';
 import { ThemedText } from './ThemedText';
 
 export default function Notification() {
   const { notifications } = useNotification();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.container} pointerEvents="box-none">
+    <View
+      style={[styles.container, { paddingTop: insets.top }]}
+      pointerEvents="box-none"
+    >
       {notifications.map((notification, index) => (
         <Animated.View
           key={notification.id}
@@ -17,7 +22,7 @@ export default function Notification() {
           exiting={SlideOutUp}
           style={[
             styles.notification,
-            { top: 10 + index * 60 }, // Stack notifications with 60px spacing
+            { top: 10 + index * 60 }, // Stack notifications with 40px spacing
           ]}
         >
           <ThemedText style={styles.notificationText}>
@@ -41,8 +46,8 @@ const styles = StyleSheet.create({
   notification: {
     position: 'absolute',
     alignSelf: 'center',
-    maxWidth: 300,
-    width: '50%',
+    maxWidth: 320,
+    width: '90%',
     minHeight: 50,
     padding: 10,
     alignItems: 'center',
