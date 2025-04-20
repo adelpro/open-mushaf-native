@@ -20,8 +20,8 @@ import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import {
-  dailyHizbCompleted,
-  dailyHizbGoal,
+  dailyTrackerCompleted,
+  dailyTrackerGoal,
   yesterdayPage,
 } from '@/recoil/atoms';
 
@@ -29,27 +29,28 @@ export default function TrackerScreen() {
   const { iconColor, cardColor, primaryColor } = useColors();
   const { currentSavedPage: savedPage } = useCurrentPage();
 
-  const [dailyHizbGoalValue, setDailyHizbGoalValue] =
-    useRecoilState(dailyHizbGoal);
-  const [dailyHizbCompletedValue, setDailyHizbCompletedValue] =
-    useRecoilState(dailyHizbCompleted);
+  const [dailyTrackerGoalValue, setdailyTrackerGoalValue] =
+    useRecoilState(dailyTrackerGoal);
+  const [dailyTrackerCompletedValue, setdailyTrackerCompletedValue] =
+    useRecoilState(dailyTrackerCompleted);
   const [yesterdayPageValue, setYesterdayPageValue] =
     useRecoilState(yesterdayPage);
   // Add state for modal visibility
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
   const dailyProgress =
-    dailyHizbGoalValue > 0
+    dailyTrackerGoalValue > 0
       ? Math.min(
           100,
-          (dailyHizbCompletedValue.value / 8 / (dailyHizbGoalValue / 8)) * 100,
+          (dailyTrackerCompletedValue.value / 8 / (dailyTrackerGoalValue / 8)) *
+            100,
         )
       : 0;
 
   // Should change by full hizb (8 thumns)
-  const incrementDailyGoal = () => setDailyHizbGoalValue((prev) => prev + 1);
+  const incrementDailyGoal = () => setdailyTrackerGoalValue((prev) => prev + 1);
   const decrementDailyGoal = () =>
-    setDailyHizbGoalValue((prev) => Math.max(1, prev - 1));
+    setdailyTrackerGoalValue((prev) => Math.max(1, prev - 1));
 
   // Consolidated reset logic into one function
   const performReset = () => {
@@ -60,7 +61,7 @@ export default function TrackerScreen() {
       });
     }
 
-    setDailyHizbCompletedValue({
+    setdailyTrackerCompletedValue({
       value: 0,
       date: new Date().toDateString(),
     });
@@ -122,10 +123,10 @@ export default function TrackerScreen() {
 
             <ThemedText style={styles.infoText}>
               قراءة{' '}
-              {Number.isInteger(dailyHizbCompletedValue.value)
-                ? getHizbText(dailyHizbCompletedValue.value)
-                : `${dailyHizbCompletedValue.value.toFixed(1)} حزباً`}{' '}
-              من أصل {getHizbText(dailyHizbGoalValue)}
+              {Number.isInteger(dailyTrackerCompletedValue.value)
+                ? getHizbText(dailyTrackerCompletedValue.value)
+                : `${dailyTrackerCompletedValue.value.toFixed(1)} حزباً`}{' '}
+              من أصل {getHizbText(dailyTrackerGoalValue)}
             </ThemedText>
 
             {yesterdayPageValue.value > 0 && (
@@ -147,7 +148,7 @@ export default function TrackerScreen() {
                     <Feather name="minus" size={20} color={primaryColor} />
                   </TouchableOpacity>
                   <ThemedText style={styles.controlValue}>
-                    {getHizbText(dailyHizbGoalValue)}
+                    {getHizbText(dailyTrackerGoalValue)}
                   </ThemedText>
                   <TouchableOpacity
                     style={styles.controlButton}

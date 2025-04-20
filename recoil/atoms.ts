@@ -70,8 +70,8 @@ export const hizbNotification = atom<number>({
 });
 
 // Tracking system atoms for Hizb-based reading goals
-export const dailyHizbGoal = atom<number>({
-  key: 'DailyHizbGoal',
+export const dailyTrackerGoal = atom<number>({
+  key: 'DailyTrackerGoal',
   default: 1,
   effects: [ReactNativeRecoilPersist.persistAtom],
 });
@@ -89,13 +89,13 @@ export const showTrackerNotification = atom<boolean>({
 });
 
 // Type for the daily hizb tracking
-type DailyHizbProgress = {
+type DailyTrackerProgress = {
   value: number;
   date: string;
 };
 
-export const dailyHizbCompleted = atom<DailyHizbProgress>({
-  key: 'DailyHizbCompleted',
+export const dailyTrackerCompleted = atom<DailyTrackerProgress>({
+  key: 'DailyTrackerbCompleted',
   default: {
     value: 0,
     date: new Date().toDateString(),
@@ -153,7 +153,7 @@ type PageWithDate = {
 
 // Replace the simple yesterdayPage atom with a more sophisticated version
 export const yesterdayPage = atom<PageWithDate>({
-  key: 'yesterdayPage',
+  key: 'YesterdayPage',
   default: {
     value: 1, // Default to page 1
     date: new Date().toDateString(), // Initialize with today's date

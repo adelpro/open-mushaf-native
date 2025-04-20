@@ -27,8 +27,8 @@ import useOrientation from '@/hooks/useOrientation';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 import {
-  dailyHizbCompleted,
-  dailyHizbGoal,
+  dailyTrackerCompleted,
+  dailyTrackerGoal,
   flipSound,
   hizbNotification,
   mushafContrast,
@@ -52,15 +52,17 @@ export default function MushafPage() {
   const hizbNotificationValue = useRecoilValue(hizbNotification);
   const [showHizbNotification, setShowHizbNotification] = useState(false);
 
-  const setDailyHizbCompletedValue = useSetRecoilState(dailyHizbCompleted);
+  const setdailyTrackerCompletedValue = useSetRecoilState(
+    dailyTrackerCompleted,
+  );
 
   const showTrackerNotificationValue = useRecoilValue(showTrackerNotification);
   const [showGoalNotification, setShowGoalNotification] = useState(false);
 
   const yesterdayPageValue = useRecoilValue(yesterdayPage);
   const [progressValue, setProgressValue] = useState(0);
-  const dailyHizbGoalValue = useRecoilValue(dailyHizbGoal);
-  const dailyHizbCompletedValue = useRecoilValue(dailyHizbCompleted);
+  const dailyTrackerGoalValue = useRecoilValue(dailyTrackerGoal);
+  const dailyTrackerCompletedValue = useRecoilValue(dailyTrackerCompleted);
 
   const {
     thumnData,
@@ -138,11 +140,11 @@ export default function MushafPage() {
   // Progress calculation effect
   useEffect(() => {
     const newProgress =
-      dailyHizbGoalValue > 0
-        ? dailyHizbCompletedValue.value / dailyHizbGoalValue
+      dailyTrackerGoalValue > 0
+        ? dailyTrackerCompletedValue.value / dailyTrackerGoalValue
         : 0;
     setProgressValue(newProgress);
-  }, [dailyHizbGoalValue, dailyHizbCompletedValue.value]);
+  }, [dailyTrackerGoalValue, dailyTrackerCompletedValue.value]);
 
   const {
     asset,
@@ -285,12 +287,17 @@ export default function MushafPage() {
       );
 
       // Update the progress state with new object format
-      setDailyHizbCompletedValue(() => ({
+      setdailyTrackerCompletedValue(() => ({
         value: numberOfThumn / 8,
         date: new Date().toDateString(),
       }));
     }
-  }, [currentPage, yesterdayPageValue, thumnData, setDailyHizbCompletedValue]);
+  }, [
+    currentPage,
+    yesterdayPageValue,
+    thumnData,
+    setdailyTrackerCompletedValue,
+  ]);
 
   // Handle errors from metadata loading
   if (metadataError) {

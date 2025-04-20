@@ -24,8 +24,8 @@ import useQuranMetadata from '@/hooks/useQuranMetadata';
 import {
   bottomMenuState,
   currentSavedPage,
-  dailyHizbCompleted,
-  dailyHizbGoal,
+  dailyTrackerCompleted,
+  dailyTrackerGoal,
   topMenuState,
 } from '@/recoil/atoms';
 import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
@@ -49,19 +49,19 @@ export default function TopMenu() {
     useRecoilState<boolean>(topMenuState);
   const currentSavedPageValue = useRecoilValue(currentSavedPage);
 
-  const dailyHizbGoalValue = useRecoilValue(dailyHizbGoal);
-  const dailyHizbCompletedValue = useRecoilValue(dailyHizbCompleted);
+  const dailyTrackerGoalValue = useRecoilValue(dailyTrackerGoal);
+  const dailyTrackerCompletedValue = useRecoilValue(dailyTrackerCompleted);
 
   useEffect(() => {
     const newProgress =
-      dailyHizbGoalValue > 0
+      dailyTrackerGoalValue > 0
         ? Math.min(
             1,
-            dailyHizbCompletedValue.value / 8 / (dailyHizbGoalValue / 8),
+            dailyTrackerCompletedValue.value / 8 / (dailyTrackerGoalValue / 8),
           )
         : 0;
     setProgressValue(newProgress);
-  }, [dailyHizbGoalValue, dailyHizbCompletedValue.value]);
+  }, [dailyTrackerGoalValue, dailyTrackerCompletedValue.value]);
 
   const toggleMenu = () => {
     setBottomMenuState((state: boolean) => !state);
