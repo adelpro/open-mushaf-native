@@ -189,33 +189,6 @@ export default function MushafPage() {
   }, [isFlipSoundEnabled]);
 
   useEffect(() => {
-    // Find the current Hizb and handle notification logic in a single effect
-    const hizb = hizbData.find((hizb) => hizb.startingPage === currentPage);
-
-    // Determine current Hizb
-    const currentHizbNumber = hizb && hizb.number !== 1 ? hizb.number : null;
-
-    // Determine notification visibility based on multiple conditions
-    const shouldShowNotification = (() => {
-      // If no current Hizb or notifications are disabled, don't show
-      if (!currentHizbNumber || hizbNotificationValue === 0) return false;
-
-      // Always show for mode 1 (all Hizbs)
-      if (hizbNotificationValue === 1) return true;
-
-      // Show only for odd-numbered Hizbs in mode 2
-      if (hizbNotificationValue === 2) return currentHizbNumber % 2 !== 0;
-
-      // Default: hide notification
-      return false;
-    })();
-
-    // Update states in a single effect
-    setCurrentHizb(currentHizbNumber);
-    setShowNotification(shouldShowNotification);
-  }, [currentPage, hizbData, hizbNotificationValue]);
-
-  useEffect(() => {
     const tag = 'MushafPage';
     const enableKeepAwake = async () => {
       const isAvailable = await isAvailableAsync();
@@ -249,10 +222,42 @@ export default function MushafPage() {
   }, [showNotification, currentHizb, hizbNotificationValue, notify]);
 
   useEffect(() => {
+    // Hizb notification logic
+    const hizb = hizbData.find((hizb) => hizb.startingPage === currentPage);
+    const currentHizbNumber = hizb && hizb.number !== 1 ? hizb.number : null;
+
+    const shouldShowHizbNotification = (() => {
+      if (!currentHizbNumber || hizbNotificationValue === 0) return false;
+      if (hizbNotificationValue === 1) return true;
+      if (hizbNotificationValue === 2) return currentHizbNumber % 2 !== 0;
+      return false;
+    })();
+
+    setCurrentHizb(currentHizbNumber);
+    setShowNotification(shouldShowHizbNotification);
+
+    // Show Hizb notification if needed
+    if (shouldShowHizbNotification && currentHizbNumber !== null) {
+      notify(
+        hizbNotificationValue === 2
+          ? `الجزء - ${(currentHizbNumber - 1)?.toString()}`
+          : `الحزب - ${currentHizbNumber?.toString()}`,
+        'hizb_notification',
+      );
+    }
+
+    // Show tracker goal notification if needed
     if (showTrackerNotificationValue && showGoalNotification) {
       notify('تم إكمال الورد اليومي بنجاح', 'tracker_goal_notification');
     }
-  }, [showTrackerNotificationValue, showGoalNotification, notify]);
+  }, [
+    currentPage,
+    hizbData,
+    hizbNotificationValue,
+    notify,
+    showTrackerNotificationValue,
+    showGoalNotification,
+  ]);
 
   useEffect(() => {
     if (typeof currentPage === 'number') {
