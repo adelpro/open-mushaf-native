@@ -68,8 +68,6 @@ export default function MushafPage() {
   const { defaultNumberOfPages } = specsData;
   const { notify } = useNotification();
 
-  const [currentHizb, setCurrentHizb] = useState<number | null>(null);
-  const [showNotification, setShowNotification] = useState(false);
   const [showGoalNotification, setshowGoalNotification] = useState(false);
 
   // Add this effect to handle border visibility
@@ -211,17 +209,6 @@ export default function MushafPage() {
   }, []);
 
   useEffect(() => {
-    if (showNotification && currentHizb !== null) {
-      notify(
-        hizbNotificationValue === 2
-          ? `الجزء - ${(currentHizb - 1)?.toString()}`
-          : `الحزب - ${currentHizb?.toString()}`,
-        'hizb_notification',
-      );
-    }
-  }, [showNotification, currentHizb, hizbNotificationValue, notify]);
-
-  useEffect(() => {
     // Hizb notification logic
     const hizb = hizbData.find((hizb) => hizb.startingPage === currentPage);
     const currentHizbNumber = hizb && hizb.number !== 1 ? hizb.number : null;
@@ -232,9 +219,6 @@ export default function MushafPage() {
       if (hizbNotificationValue === 2) return currentHizbNumber % 2 !== 0;
       return false;
     })();
-
-    setCurrentHizb(currentHizbNumber);
-    setShowNotification(shouldShowHizbNotification);
 
     // Show Hizb notification if needed
     if (shouldShowHizbNotification && currentHizbNumber !== null) {
