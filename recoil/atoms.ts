@@ -95,7 +95,7 @@ type DailyTrackerProgress = {
 };
 
 export const dailyTrackerCompleted = atom<DailyTrackerProgress>({
-  key: 'DailyTrackerbCompleted',
+  key: 'DailyTrackerCompleted',
   default: {
     value: 0,
     date: new Date().toDateString(),
