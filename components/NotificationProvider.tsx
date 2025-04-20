@@ -1,8 +1,8 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
-type Notification = { id: number; text: string };
+type Notification = { id: string; text: string };
 type NotificationContextType = {
-  notify: (text: string) => void;
+  notify: (text: string, label?: string) => void;
   notifications: Notification[];
 };
 
@@ -13,11 +13,13 @@ const NotificationContext = createContext<NotificationContextType | undefined>(
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  const notify = (text: string) => {
-    const id = Date.now();
-    setNotifications((prev) => [...prev, { id, text }]);
+  const notify = (text: string, label?: string) => {
+    const id = label || text;
+    setNotifications((prev) => {
+      if (prev.some((n) => n.id === id)) return prev;
+      return [...prev, { id, text }];
+    });
 
-    // Auto-remove notification after 3 seconds
     setTimeout(() => {
       setNotifications((prev) => prev.filter((n) => n.id !== id));
     }, 3000);
