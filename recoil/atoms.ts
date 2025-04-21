@@ -102,32 +102,45 @@ export const dailyHizbCompleted = atom<DailyHizbProgress>({
   },
   effects: [
     ReactNativeRecoilPersist.persistAtom,
-    // Effect to reset the value if the date changes (new day) on initialization
-    ({ setSelf, getPromise }) => {
-      const initializeOrReset = async () => {
-        const todayString = new Date().toDateString();
-        try {
-          // Get the potentially persisted value first
-          const persistedValue = await getPromise(dailyHizbCompleted);
+    // Effect to reset the value if the date changes (new day)
+    ({ setSelf, onSet }) => {
+      const todayString = new Date().toDateString();
 
-          // Check if the stored date is not today
-          if (persistedValue.date !== todayString) {
-            // Reset the value to 0 and update the date to today
+      // This runs immediately during initialization
+      setSelf((currentValue) => {
+        // Check if it's a DefaultValue (initial state)
+        if (!(currentValue instanceof Object) || !('date' in currentValue)) {
+          return {
+            value: 0,
+            date: todayString,
+          };
+        }
+
+        // If the stored date is not today, reset the value
+        if (currentValue.date !== todayString) {
+          return {
+            value: 0,
+            date: todayString,
+          };
+        }
+        // Otherwise keep the current value
+        return currentValue;
+      });
+
+      // Also check date on every set operation
+      onSet((newValue) => {
+        const currentDate = new Date().toDateString();
+        // Make sure newValue is not a DefaultValue
+        if (newValue instanceof Object && 'date' in newValue) {
+          // If the date in the new value is outdated, force an update
+          if (newValue.date !== currentDate) {
             setSelf({
               value: 0,
-              date: todayString,
+              date: currentDate,
             });
           }
-          // If the date is already today, Recoil will use the persisted value automatically.
-        } catch (error) {
-          // Handle potential errors during async storage read, maybe set default
-          console.error('Error reading persisted dailyHizbCompleted:', error);
-          setSelf({ value: 0, date: todayString }); // Fallback to default reset
         }
-      };
-
-      // Run this check when the atom is initialized/app starts
-      initializeOrReset();
+      });
     },
   ],
 });
