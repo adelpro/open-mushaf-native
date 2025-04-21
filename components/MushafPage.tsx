@@ -253,6 +253,7 @@ export default function MushafPage() {
           ? `الجزء - ${(currentHizbNumber - 1)?.toString()}`
           : `الحزب - ${currentHizbNumber?.toString()}`,
         'hizb_notification',
+        'neutral',
       );
     }
   }, [
@@ -266,7 +267,11 @@ export default function MushafPage() {
   useEffect(() => {
     // Show tracker goal notification if needed
     if (showTrackerNotificationValue && showGoalNotification) {
-      notify('تم إكمال الورد اليومي بنجاح', 'tracker_goal_notification');
+      notify(
+        'تم إكمال الورد اليومي بنجاح',
+        'tracker_goal_notification',
+        'neutral',
+      );
     }
   }, [notify, showGoalNotification, showTrackerNotificationValue]);
 
