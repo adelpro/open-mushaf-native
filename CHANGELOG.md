@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [3.2.9]
 
+- feat: Add collapsible functionality to Reading Position Banner
+
+## [3.2.9]
+
 - refactor: Add a quran metadata json file managementent system
 - refactor: Remove the rract-native-toast-message package and replace by a built-in one
 -

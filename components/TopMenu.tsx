@@ -19,6 +19,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { ThemedView } from '@/components/ThemedView';
+import {
+  READING_BANNER_HEIGHT_CLOSED,
+  READING_BANNER_HEIGHT_OPEN,
+} from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 import {
@@ -26,6 +30,7 @@ import {
   currentSavedPage,
   dailyTrackerCompleted,
   dailyTrackerGoal,
+  readingBannerCollapsedState,
   topMenuState,
 } from '@/recoil/atoms';
 import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
@@ -48,6 +53,13 @@ export default function TopMenu() {
   const [showTopMenuState, setShowTopMenuState] =
     useRecoilState<boolean>(topMenuState);
   const currentSavedPageValue = useRecoilValue(currentSavedPage);
+  const readingBannerOpenStateValue = useRecoilValue(
+    readingBannerCollapsedState,
+  );
+
+  const BANNER_HEIGHT = readingBannerOpenStateValue
+    ? READING_BANNER_HEIGHT_CLOSED
+    : READING_BANNER_HEIGHT_OPEN;
 
   const dailyTrackerGoalValue = useRecoilValue(dailyTrackerGoal);
   const dailyTrackerCompletedValue = useRecoilValue(dailyTrackerCompleted);
@@ -80,7 +92,17 @@ export default function TopMenu() {
   );
 
   return showTopMenuState ? (
-    <ThemedSafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+    <ThemedSafeAreaView
+      style={[
+        styles.container,
+        {
+          top: isTemporary ? BANNER_HEIGHT + insets.top : insets.top + 1,
+          backgroundColor: isDarkMode
+            ? 'rgba(0, 0, 0, 0.4)'
+            : 'rgba(244, 244, 244, 0.8)',
+        },
+      ]}
+    >
       <ThemedView
         style={[
           styles.topMenu,

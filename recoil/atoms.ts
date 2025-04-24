@@ -224,3 +224,10 @@ export const topMenuState = atom<boolean>({
     },
   ],
 });
+
+// ReadingPositionBanner open/closed state
+export const readingBannerCollapsedState = atom<boolean>({
+  key: 'ReadingBannerCollapsedState',
+  default: false,
+  effects: [ReactNativeRecoilPersist.persistAtom],
+});

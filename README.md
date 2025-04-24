@@ -5,7 +5,7 @@ This mobile-friendly app offers **offline Quran reading**, **gesture navigation*
 designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macOS** platforms.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/design/bannier/bannier.png"
+  <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/design/banner/banner.png"
   alt="Open-Mushaf Logo"  width="1000" height="500" />
 </p>
 
