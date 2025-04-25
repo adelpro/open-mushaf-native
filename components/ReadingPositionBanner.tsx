@@ -58,22 +58,23 @@ export default function ReadingPositionBanner() {
     <ThemedView
       style={[styles.container, { height: HEIGHT, backgroundColor: cardColor }]}
     >
-      <View style={styles.headerContainer}>
-        <ThemedText style={[styles.text, { color: tintColor }]}>
-          العودة إلى موضع القراءة (صفحة {currentSavedPage})
-        </ThemedText>
-        <TouchableOpacity
-          style={styles.toggleIcon}
-          onPress={toggleCollapse}
-          accessibilityLabel={isCollapsed ? 'Expand banner' : 'Collapse banner'}
-        >
+      <TouchableOpacity
+        style={styles.toggleIcon}
+        onPress={toggleCollapse}
+        accessibilityLabel={isCollapsed ? 'Expand banner' : 'Collapse banner'}
+      >
+        {' '}
+        <View style={styles.headerContainer}>
+          <ThemedText style={[styles.text, { color: tintColor }]}>
+            العودة إلى موضع القراءة (صفحة {currentSavedPage})
+          </ThemedText>
           <Feather
             name={isCollapsed ? 'chevron-down' : 'chevron-up'}
             size={32}
             color={tintColor}
           />
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
 
       {!isCollapsed && (
         <ThemedView
