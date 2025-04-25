@@ -94,10 +94,8 @@ export default function TopMenu() {
       style={[
         styles.container,
         {
-          top: isTemporary ? BANNER_HEIGHT + 1 : 1,
-          backgroundColor: isDarkMode
-            ? 'rgba(0, 0, 0, 0.4)'
-            : 'rgba(244, 244, 244, 0.8)',
+          top: isTemporary ? BANNER_HEIGHT : 0,
+          backgroundColor: 'transparent',
         },
       ]}
     >
@@ -242,13 +240,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     position: 'absolute',
-    top: 1,
+
     left: 0,
     right: 0,
     backgroundColor: 'transparent',
+    maxWidth: 640,
   },
   topMenu: {
     height: 60,
+    marginTop: 10,
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
