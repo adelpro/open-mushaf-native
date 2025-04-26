@@ -12,7 +12,7 @@
 
 يوفر تطبيق المصحف المفتوح عدة طرق سهلة وسريعة للتنقل بين السور والآيات والصفحات في القرآن الكريم. تم تصميم هذه الطرق لتسهيل الوصول إلى أي جزء من القرآن الكريم بأقل عدد من الخطوات.
 
-![واجهة التنقل](../screenshots/navigation-screen.png)
+![واجهة التنقل](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/navigation-screen.png)
 
 ## التنقل بين الصفحات
 

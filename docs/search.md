@@ -12,7 +12,7 @@
 
 يوفر تطبيق المصحف المفتوح ميزات بحث متقدمة تمكنك من البحث في القرآن الكريم بسهولة وسرعة. يمكنك البحث عن كلمات أو عبارات محددة والعثور على جميع الآيات التي تحتوي عليها.
 
-![واجهة البحث](../screenshots/search-screen.png)
+![واجهة البحث](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/search-screen.png)
 
 ## كيفية استخدام البحث
 

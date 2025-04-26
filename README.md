@@ -105,27 +105,27 @@ Experience the seamless navigation and features of Open-Mushaf Native in this de
 
 - **Mushaf Page**: A minimalist Quran page layout for immersive reading.
 
-  ![Mushaf Page](/screenshots/main-screen.png)
+  ![Mushaf Page](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/main-screen.png)
 
 - **Tafseer Popup**: Resizeable Tafseer popups for deeper understanding.
 
-  ![Tafseer Popup](./screenshots/tafseer-popup.png)
+  ![Tafseer Popup](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/tafseer-popup.png)
 
 - **Sura Index**: Navigate through the Quran using the Sura Index.
 
-  ![Sura Index](./screenshots/sura-index.png)
+  ![Sura Index](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/sura-index.png)
 
 - **Settings**: Customize your reading experience.
 
-  ![Settings](./screenshots/settings-screen.png)
+  ![Settings](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/settings-screen.png)
 
 - **Navigation**: Swipe left or right to navigate the Quran.
 
-  ![Navigation](./screenshots/navigation-screen.png)
+  ![Navigation](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/navigation-screen.png)
 
 - **Search**: Search for specific Quranic content.
 
-  ![Search](./screenshots/search-screen.png)
+  ![Search](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/search-screen.png)
 
 ## Installation
 

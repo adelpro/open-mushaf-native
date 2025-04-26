@@ -12,7 +12,7 @@
 
 واجهة المصحف الرئيسية هي الشاشة الأساسية في التطبيق حيث يمكنك قراءة القرآن الكريم وتصفح صفحاته. تم تصميم هذه الواجهة لتكون سهلة الاستخدام وتوفر تجربة قراءة مريحة.
 
-![واجهة المصحف الرئيسية](../screenshots/main-screen.png)
+![واجهة المصحف الرئيسية](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/main-screen.png)
 
 ## التنقل بين الصفحات
 
@@ -30,14 +30,14 @@
 
 يوفر التطبيق وضع القراءة الليلي لراحة العين أثناء القراءة في الظلام:
 
-![الوضع الليلي](../screenshots/dark-mode.png)
+![الوضع الليلي](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/dark-mode.png)
 
 - تفعيل الوضع الليلي يتبع تلقائيا إعدادات نظام التشغيل الخاص بك.
 - يمكنك ضبط سطوع الوضع الليلي حسب تفضيلاتك من خلال شريط التمرير في صفحة الإعدادات.
 
 ## الوضع الأفقي
 
-![وضع الشاشة الأفقي](../screenshots/landscape-mode.png)
+![وضع الشاشة الأفقي](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/landscape-mode.png)
 
 يدعم التطبيق الوضع الأفقي (Landscape) لعرض المصحف بشكل أوسع، يتيح لك هذا الوضع تصفح المصحف بحجم أكبر من أجل قرآءة مريحة لكبار السن أو ضعيفي البصر
 

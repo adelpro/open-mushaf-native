@@ -12,7 +12,7 @@
 
 توفر ميزة التفسير في تطبيق المصحف المفتوح إمكانية الوصول إلى تفاسير متعددة للقرآن الكريم، مما يساعدك على فهم معاني الآيات بشكل أفضل. يمكنك الاطلاع على تفاسير من علماء مختلفين.
 
-![واجهة التفسير](../screenshots/tafseer-popup.png)
+![واجهة التفسير](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/tafseer-popup.png)
 
 ## الوصول إلى التفسير
 

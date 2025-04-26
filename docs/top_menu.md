@@ -12,7 +12,7 @@
 
 القائمة العلوية هي جزء أساسي من واجهة التطبيق وتحتوي على معلومات مهمة ووظائف متعددة تساعدك على استخدام التطبيق بكفاءة.
 
-![شاشة التنقل](../assets/tutorial/top-menu.png)
+![شاشة التنقل](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/assets/tutorial/top-menu.png)
 
 ## مكونات القائمة العلوية
 

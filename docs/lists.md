@@ -12,7 +12,7 @@
 
 توفر ميزة القوائم في تطبيق المصحف المفتوح طريقة سهلة للوصول إلى قوائم السور والأجزاء والصفحات والعلامات المرجعية. تساعدك هذه الميزة على التنقل بسرعة بين أجزاء القرآن الكريم المختلفة.
 
-![واجهة القوائم](../screenshots/lists-screen.png)
+![واجهة القوائم](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/lists-screen.png)
 
 ## قائمة السور
 
