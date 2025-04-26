@@ -88,7 +88,7 @@
       "form_factor": "narrow"
     },
     {
-      "src": "screenshots/settings.png",
+      "src": "screenshots/settings-screen.png",
       "sizes": "400x857",
       "type": "image/png",
       "platform": "narrow",
@@ -96,7 +96,7 @@
       "form_factor": "narrow"
     },
     {
-      "src": "screenshots/navigation.png",
+      "src": "screenshots/navigation-screen.png",
       "sizes": "400x857",
       "type": "image/png",
       "platform": "narrow",
@@ -112,7 +112,7 @@
       "form_factor": "narrow"
     },
     {
-      "src": "screenshots/tracker.png",
+      "src": "screenshots/settings-screen.png",
       "sizes": "400x857",
       "type": "image/png",
       "platform": "narrow",
@@ -133,7 +133,7 @@
       "short_name": "تصفح",
       "description": "تصفح المصحف المفتوح",
       "url": "/navigation",
-      "icons": [{ "src": "icons/navigation.png", "sizes": "256x256" }]
+      "icons": [{ "src": "icons/navigation-screen.png", "sizes": "256x256" }]
     },
     {
       "name": "حول",
@@ -147,7 +147,7 @@
       "short_name": "إعدادات",
       "description": "إعدادات المصحف المفتوح",
       "url": "/settings",
-      "icons": [{ "src": "icons/settings.png", "sizes": "256x256" }]
+      "icons": [{ "src": "icons/settings-screen.png", "sizes": "256x256" }]
     },
     {
       "name": "تعليمات",

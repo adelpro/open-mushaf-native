@@ -96,7 +96,7 @@ Experience the seamless navigation and features of Open-Mushaf Native in this de
   </div>
 
   <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/search-feature.png"
+    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/search-screen.png"
     alt="Search functionality"
     style="border-radius: 15px; max-width: 100%; height: auto;">
     <p align="center" style="margin-top: 0.5rem;">🔍 Advanced search</p>
@@ -117,15 +117,15 @@ Experience the seamless navigation and features of Open-Mushaf Native in this de
 
 - **Settings**: Customize your reading experience.
 
-  ![Settings](./screenshots/settings.png)
+  ![Settings](./screenshots/settings-screen.png)
 
 - **Navigation**: Swipe left or right to navigate the Quran.
 
-  ![Navigation](./screenshots/navigation.png)
+  ![Navigation](./screenshots/navigation-screen.png)
 
 - **Search**: Search for specific Quranic content.
 
-  ![Search](./screenshots/search-feature.png)
+  ![Search](./screenshots/search-screen.png)
 
 ## Installation
 

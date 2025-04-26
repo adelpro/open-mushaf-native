@@ -1,4 +1,19 @@
+<style>
+  body { direction: rtl; text-align: right; }
+  img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+
 # دليل استخدام تطبيق المصحف المفتوح
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/design/banner/banner.png"
+  alt="Open-Mushaf Logo"  width="800" height="300" />
+</p>
 
 مرحبًا بك في دليل استخدام تطبيق المصحف المفتوح! هذا الدليل سيساعدك على فهم جميع ميزات التطبيق واستخدامها بكفاءة.
 
@@ -20,7 +35,7 @@
 
 ## الدعم والمساعدة
 
-إذا واجهت أي مشكلة أو كان لديك أي استفسار لم يتم تغطيته في هذا الدليل، يرجى التواصل معنا من خلال [صفحة الاتصال](https://open-mushaf.com/contact) في التطبيق.
+إذا واجهت أي مشكلة أو كان لديك أي استفسار لم يتم تغطيته في هذا الدليل، يرجى التواصل معنا من خلال [صفحة الاتصال](https://quran.us.kg/contact) في التطبيق.
 
 ---
 

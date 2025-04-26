@@ -2,9 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [3.2.9]
+## [3.3.0]
 
 - feat: Add collapsible functionality to Reading Position Banner
+- feat: Add documentations website
 
 ## [3.2.9]
 

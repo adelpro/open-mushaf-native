@@ -1,8 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 
+import HelpSVG from '@/assets/svgs/help.svg';
 import InfoSVG from '@/assets/svgs/info.svg';
 import MailSVG from '@/assets/svgs/mail.svg';
 import PageSVG from '@/assets/svgs/page.svg';
@@ -51,6 +53,22 @@ export default function MoreScreen() {
         <View style={styles.buttonContent}>
           <WelcomeSVG width={24} height={24} style={styles.svg} />
           <Text style={styles.buttonText}>جولة تعليمة</Text>
+        </View>
+      </ThemedButton>
+      <ThemedButton
+        onPress={async () => {
+          const url = 'https://docs.quran.us.kg';
+          const supported = await Linking.canOpenURL(url);
+          if (supported) {
+            await Linking.openURL(url);
+          }
+        }}
+        variant="primary"
+        style={styles.button}
+      >
+        <View style={styles.buttonContent}>
+          <HelpSVG width={24} height={24} style={styles.svg} />
+          <Text style={styles.buttonText}>المساعدة</Text>
         </View>
       </ThemedButton>
       <ThemedButton
