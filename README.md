@@ -26,8 +26,6 @@ designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macO
 
 [![Android Build](https://github.com/adelpro/open-mushaf-native/actions/workflows/android-build.yml/badge.svg)](https://github.com/adelpro/open-mushaf-native/actions/workflows/android-build.yml)
 
-![Visitors](https://visitor-badge.laobi.icu/badge?page_id=adelpro.open-mushaf-native)
-
 ## About
 
 **Open-Mushaf Native** is a modern and minimalist Quran Mushaf application built with
