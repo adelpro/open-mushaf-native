@@ -5,7 +5,7 @@ This mobile-friendly app offers **offline Quran reading**, **gesture navigation*
 designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macOS** platforms.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/design/bannier/bannier.png"
+  <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/design/banner/banner.png"
   alt="Open-Mushaf Logo"  width="1000" height="500" />
 </p>
 
@@ -22,6 +22,7 @@ designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macO
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/270e870a48f342ef9ba384229681db23)](https://app.codacy.com/gh/adelpro/check-hadith-native/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![CodeQL](https://github.com/adelpro/open-mushaf-native/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/adelpro/open-mushaf-native/actions/workflows/github-code-scanning/codeql)
+[![codebeat badge](https://codebeat.co/badges/60e335a3-d534-4cdb-9441-15a5b259e0bb)](https://codebeat.co/projects/github-com-adelpro-open-mushaf-native-main)
 
 [![Android Build](https://github.com/adelpro/open-mushaf-native/actions/workflows/android-build.yml/badge.svg)](https://github.com/adelpro/open-mushaf-native/actions/workflows/android-build.yml)
 

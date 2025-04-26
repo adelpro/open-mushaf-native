@@ -4,7 +4,6 @@ import { Colors } from '@/constants';
 
 export const useColors = () => {
   const colorScheme = useColorScheme();
-  const isDarkMode = colorScheme === 'dark';
 
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
   const tintColor = Colors[colorScheme ?? 'light'].tint;
@@ -15,7 +14,8 @@ export const useColors = () => {
   const secondaryColor = Colors[colorScheme ?? 'light'].secondary;
   const dangerColor = Colors[colorScheme ?? 'light'].danger;
   const dangerLightColor = Colors[colorScheme ?? 'light'].dangerLight;
-  const cardColor = isDarkMode ? '#1E1E1E' : '#F7F7F7';
+  const cardColor = Colors[colorScheme ?? 'light'].card;
+  const ivoryColor = Colors[colorScheme ?? 'light'].ivory;
 
   return {
     backgroundColor,
@@ -28,5 +28,6 @@ export const useColors = () => {
     cardColor,
     dangerColor,
     dangerLightColor,
+    ivoryColor,
   };
 };

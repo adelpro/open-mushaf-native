@@ -2,11 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.2.9]
+
+- feat: Add collapsible functionality to Reading Position Banner
+
+## [3.2.9]
+
+- refactor: Add a quran metadata json file managementent system
+- refactor: Remove the rract-native-toast-message package and replace by a built-in one
+-
+
+## [3.2.8]
+
+- feat: Add Reading Tracker feature (daily)
+- feat: Add surah name, current juz and juz progress in the top menu
+- update: Refactor the navigation lists ui/uix
+
 ## [3.2.6]
 
 - feat: Added SEO optimization with Open Graph and Twitter card support
 - feat: Added PWA support
-- feat: web - improved offline capabilities
+- feat: Web improved offline capabilities
 
 ## [3.2.5]
 

@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     paddingHorizontal: 5,
     fontFamily: 'Tajawal_400Regular',
+    textAlignVertical: 'center', // Add this for Android text vertical alignment
   },
   svg: {
     color: 'white',

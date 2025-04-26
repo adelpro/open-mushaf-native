@@ -10,6 +10,7 @@ type Props = {
   canonical?: string;
   keywords?: string;
   locale?: string;
+  structuredData?: Record<string, any>; // Add structured data support
 };
 
 export default function SEO({
@@ -20,6 +21,7 @@ export default function SEO({
   canonical,
   keywords = 'quran, mushaf, islam, holy book, reading quran',
   locale = 'ar_DZ',
+  structuredData,
 }: Props) {
   return (
     <Helmet>
@@ -48,6 +50,13 @@ export default function SEO({
 
       {/* Mobile viewport optimization */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+      {/* Add structured data if provided */}
+      {structuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      )}
     </Helmet>
   );
 }

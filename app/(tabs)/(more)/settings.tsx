@@ -1,5 +1,7 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
 
+import { Feather } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
@@ -17,6 +19,7 @@ import {
   hizbNotification,
   mushafContrast,
   mushafRiwaya,
+  showTrackerNotification,
 } from '@/recoil/atoms';
 import { RiwayaArabic } from '@/types/riwaya';
 import { isRTL, RiwayaByIndice, RiwayaByValue } from '@/utils';
@@ -24,16 +27,25 @@ import { clearStorageAndReload } from '@/utils/clearStorage';
 
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
+  const [showTrackerNotificationValue, setShowTrackerNotificationValue] =
+    useRecoilState(showTrackerNotification);
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const [HizbNotificationValue, setHizbNotificationValue] =
     useRecoilState<number>(hizbNotification);
-  const { textColor, primaryColor, primaryLightColor, cardColor } = useColors();
+  const { textColor, primaryColor, primaryLightColor, cardColor, iconColor } =
+    useColors();
   const [mushafContrastValue, setMushafContrastValue] =
     useRecoilState(mushafContrast);
   const [mushafRiwayaValue, setMushafRiwayaValue] =
     useRecoilState(mushafRiwaya);
-  const toggleSwitch = () => {
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+
+  const toggleFlipSoundSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
+  };
+
+  const toggleTrackerSwitch = () => {
+    setShowTrackerNotificationValue((previousState) => !previousState);
   };
 
   const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش'];
@@ -57,7 +69,7 @@ export default function SettingsScreen() {
           styles.settingsSection,
           { borderColor: textColor, backgroundColor: cardColor },
         ]}
-        onPress={toggleSwitch}
+        onPress={toggleFlipSoundSwitch}
         accessibilityRole="button"
         accessibilityLabel="تفعيل صوت قلب الصفحة"
         accessibilityHint="اضغط لتفعيل أو تعطيل صوت قلب الصفحة"
@@ -74,11 +86,44 @@ export default function SettingsScreen() {
           size={40}
           circleColor={primaryColor}
           toggle={isFlipSoundEnabled}
-          setToggle={toggleSwitch}
+          setToggle={toggleTrackerSwitch}
           aria-checked={isFlipSoundEnabled}
           aria-label="صوت قلب الصفحة"
           accessibilityLabel="تبديل صوت قلب الصفحة"
           accessibilityState={{ checked: isFlipSoundEnabled }}
+        />
+      </Pressable>
+
+      {/* New Toggle for showDailyHizbCompletedBorder */}
+      <Pressable
+        style={[
+          styles.settingsSection,
+          { borderColor: textColor, backgroundColor: cardColor },
+        ]}
+        onPress={toggleTrackerSwitch}
+        accessibilityRole="button"
+        accessibilityLabel="تفعيل تنبيه إتمام الورد اليومي"
+        accessibilityHint="اضغط لتفعيل أو تعطيل تنبه إتمام الورد اليومي"
+        accessibilityState={{
+          selected: showTrackerNotificationValue,
+        }}
+      >
+        <ThemedText
+          type="defaultSemiBold"
+          style={[styles.itemText, { backgroundColor: cardColor }]}
+        >
+          تنبيه الورد اليومي:
+        </ThemedText>
+        <Toggle
+          color={primaryColor}
+          size={40}
+          circleColor={primaryColor}
+          toggle={showTrackerNotificationValue}
+          setToggle={toggleTrackerSwitch}
+          aria-checked={showTrackerNotificationValue}
+          aria-label="إظهار تنبيه إتمام الحزب اليومي"
+          accessibilityLabel="تنبيه إتمام الحزب اليومي"
+          accessibilityState={{ checked: showTrackerNotificationValue }}
         />
       </Pressable>
 
@@ -177,7 +222,6 @@ export default function SettingsScreen() {
               textColor={primaryColor}
               onSelectionChange={(index: number) => {
                 const selectedRiwaya = RiwayaByValue(index);
-                console.log('riwaya: ', mushafRiwayaValue, 'index: ', index);
                 setMushafRiwayaValue(selectedRiwaya);
               }}
             />
@@ -195,11 +239,64 @@ export default function SettingsScreen() {
         <ThemedButton
           role="button"
           variant="danger"
-          onPress={clearStorageAndReload}
+          onPress={() => setConfirmModalVisible(true)}
         >
           إعادة ضبط التطبيق
         </ThemedButton>
       </ThemedView>
+
+      {/* Confirmation Modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={confirmModalVisible}
+        onRequestClose={() => setConfirmModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setConfirmModalVisible(false)}
+        >
+          <ThemedView
+            style={[styles.modalContent, { backgroundColor: cardColor }]}
+            onStartShouldSetResponder={() => true}
+          >
+            <ThemedView style={styles.modalHeader}>
+              <ThemedText style={styles.modalTitle}>تأكيد</ThemedText>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setConfirmModalVisible(false)}
+              >
+                <Feather name="x" size={24} color={iconColor} />
+              </TouchableOpacity>
+            </ThemedView>
+
+            <ThemedText style={styles.modalMessage}>
+              هل أنت متأكد من رغبتك في إعادة ضبط التطبيق؟
+            </ThemedText>
+
+            <ThemedView style={styles.modalActions}>
+              <ThemedButton
+                variant="outlined-primary"
+                onPress={() => setConfirmModalVisible(false)}
+                style={styles.modalButton}
+              >
+                إلغاء
+              </ThemedButton>
+              <ThemedButton
+                variant="danger"
+                onPress={() => {
+                  setConfirmModalVisible(false);
+                  clearStorageAndReload();
+                }}
+                style={styles.modalButton}
+              >
+                تأكيد
+              </ThemedButton>
+            </ThemedView>
+          </ThemedView>
+        </TouchableOpacity>
+      </Modal>
     </ScrollView>
   );
 }
@@ -262,5 +359,57 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     paddingHorizontal: 5,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 20,
+  },
+  modalContent: {
+    width: '90%',
+    maxWidth: 400,
+    borderRadius: 12,
+    padding: 16,
+    elevation: 5,
+    alignSelf: 'center',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    minHeight: 40,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontFamily: 'Tajawal_700Bold',
+    textAlignVertical: 'center',
+  },
+  closeButton: {
+    padding: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalMessage: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+    fontFamily: 'Tajawal_400Regular',
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: 'transparent',
+    width: '100%',
+  },
+  modalButton: {
+    width: '40%',
+    maxWidth: 100,
   },
 });

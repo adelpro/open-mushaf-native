@@ -1,7 +1,7 @@
 {
-  "name": "Open Mushaf",
-  "short_name": "Open Mushaf",
-  "description": "A modern and minimalist Quran Mushaf application",
+  "name": "المصحف المفتوح",
+  "short_name": "المصحف المفتوح",
+  "description": "تطبيق مصحف قرآني حديث وبسيط",
   "id": "f2d6a7c9-64fc-4e67-97f5-8e8f12dcb4c4",
   "start_url": "/",
   "scope": "/",
@@ -110,43 +110,58 @@
       "platform": "narrow",
       "label": "Search - Find verses in the Quran",
       "form_factor": "narrow"
+    },
+    {
+      "src": "screenshots/tracker.png",
+      "sizes": "400x857",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Tracker - Track your progress in the Quran",
+      "form_factor": "narrow"
     }
   ],
   "shortcuts": [
     {
-      "name": "search",
-      "short_name": "Search",
-      "description": "Search Open Mushaf",
+      "name": "بحث",
+      "short_name": "بحث",
+      "description": "البحث في المصحف المفتوح",
       "url": "/search",
       "icons": [{ "src": "icons/search.png", "sizes": "256x256" }]
     },
     {
-      "name": "navigation",
-      "short_name": "Navigation",
-      "description": "Navigation Open Mushaf",
+      "name": "تصفح",
+      "short_name": "تصفح",
+      "description": "تصفح المصحف المفتوح",
       "url": "/navigation",
       "icons": [{ "src": "icons/navigation.png", "sizes": "256x256" }]
     },
     {
-      "name": "about",
-      "short_name": "About",
-      "description": "About Open Mushaf",
+      "name": "حول",
+      "short_name": "حول",
+      "description": "حول المصحف المفتوح",
       "url": "/about",
       "icons": [{ "src": "icons/about.png", "sizes": "256x256" }]
     },
     {
-      "name": "settings",
-      "short_name": "Settings",
-      "description": "Open Mushaf Settings",
+      "name": "إعدادات",
+      "short_name": "إعدادات",
+      "description": "إعدادات المصحف المفتوح",
       "url": "/settings",
       "icons": [{ "src": "icons/settings.png", "sizes": "256x256" }]
     },
     {
-      "name": "tutorial",
-      "short_name": "Tutorial",
-      "description": "How to use Open Mushaf",
+      "name": "تعليمات",
+      "short_name": "تعليمات",
+      "description": "كيفية استخدام المصحف المفتوح",
       "url": "/tutorial",
       "icons": [{ "src": "icons/tutorial.png", "sizes": "256x256" }]
+    },
+    {
+      "name": "تتبع",
+      "short_name": "تتبع",
+      "description": "تتبع تقدمك في قراءة القرآن",
+      "url": "/tracker",
+      "icons": [{ "src": "icons/checked.png", "sizes": "256x256" }]
     }
   ],
   "prefer_related_applications": true,

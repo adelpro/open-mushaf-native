@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text } from 'react-native';
 
 import { FontAwesome } from '@expo/vector-icons';
-import Toast from 'react-native-toast-message';
 
 import { useColors } from '@/hooks/useColors';
-import useToastConfig from '@/hooks/useToastConfig';
 
+import { useNotification } from './NotificationProvider';
 import { ThemedButton } from './ThemedButton';
 import { ThemedTextInput } from './ThemedInput';
 import { ThemedText } from './ThemedText';
@@ -14,7 +13,7 @@ import { ThemedView } from './ThemedView';
 
 export default function ContactForm() {
   const { textColor, secondaryColor } = useColors();
-  const { toastConfig } = useToastConfig();
+  const { notify } = useNotification();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -36,33 +35,29 @@ export default function ContactForm() {
 
   const isFormValid = () => {
     const { name, email, message } = formData;
+    let isValid = true;
 
+    // Check all fields and show notifications for each error
     if (name.trim().length < 3 || name.trim().length > 50) {
-      Toast.show({
-        type: 'error',
-        text1: 'خطأ في الإدخال',
-        text2: 'الإسم يجب أن يكون بين 3 و 50 حرفًا.',
-      });
-      return false;
+      notify('الإسم يجب أن يكون بين 3 و 50 حرفًا.', 'name_validation', 'error');
+      isValid = false;
     }
-    if (isValidEmail(email) === false) {
-      Toast.show({
-        type: 'error',
-        text1: 'خطأ في الإدخال',
-        text2: 'البريد الألكتروني غير صحيح.',
-      });
 
-      return false;
+    if (isValidEmail(email) === false) {
+      notify('البريد الألكتروني غير صحيح.', 'email_validation', 'error');
+      isValid = false;
     }
+
     if (message.trim().length < 10 || message.trim().length > 500) {
-      Toast.show({
-        type: 'error',
-        text1: 'خطأ في الإدخال',
-        text2: 'الرسالة يجب أن تكون بين 10 و 500 حرفًا.',
-      });
-      return false;
+      notify(
+        'الرسالة يجب أن تكون بين 10 و 500 حرفًا.',
+        'message_validation',
+        'error',
+      );
+      isValid = false;
     }
-    return true;
+
+    return isValid;
   };
 
   const sendToTelegram = async (text: string) => {
@@ -95,16 +90,13 @@ export default function ContactForm() {
       await sendToTelegram(messageText);
       setFormData({ name: '', email: '', message: '' });
 
-      Toast.show({
-        type: 'success',
-        text1: 'تم الإرسال بنجاح!',
-      });
+      notify('تم الإرسال بنجاح!', 'form_success', 'success');
     } catch {
-      Toast.show({
-        type: 'error',
-        text1: 'فشل في إرسال الرسالة!',
-        text2: 'يرجى المحاولة مرة أخرى لاحقًا.',
-      });
+      notify(
+        'فشل في إرسال الرسالة! يرجى المحاولة مرة أخرى لاحقًا.',
+        'form_error',
+        'error',
+      );
     } finally {
       setIsLoading(false);
     }
@@ -175,7 +167,7 @@ export default function ContactForm() {
           </Text>
         )}
       </ThemedButton>
-      <Toast config={toastConfig} />
+      {/* Remove Toast component */}
     </ThemedView>
   );
 }

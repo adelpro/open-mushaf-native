@@ -17,35 +17,67 @@ import { useRouter } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import hizbJson from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.json';
-import { defaultNumberOfPages } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagePreloader from '@/hooks/useImagePreloader';
 import useImagesArray from '@/hooks/useImagesArray';
 import useOrientation from '@/hooks/useOrientation';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
-import { flipSound, hizbNotification, mushafContrast } from '@/recoil/atoms';
-import { Hizb } from '@/types';
+import useQuranMetadata from '@/hooks/useQuranMetadata';
+import {
+  dailyTrackerCompleted,
+  dailyTrackerGoal,
+  flipSound,
+  hizbNotification,
+  mushafContrast,
+  showTrackerNotification,
+  yesterdayPage,
+} from '@/recoil/atoms';
+import { getSEOMetadataByPage } from '@/utils';
+import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
 
+import { useNotification } from './NotificationProvider';
 import PageOverlay from './PageOverlay';
+import SEO from './seo';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-import TopNotification from './TopNotification';
 
 export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
   const isFlipSoundEnabled = useRecoilValue(flipSound);
   const mushafContrastValue = useRecoilValue(mushafContrast);
-  const HizbNotificationValue = useRecoilValue(hizbNotification);
-  const hizbData = hizbJson as Hizb[];
-  const [currentHizb, setCurrentHizb] = useState<number | null>(null);
-  const [showNotification, setShowNotification] = useState(false);
+
+  const hizbNotificationValue = useRecoilValue(hizbNotification);
+  const [showHizbNotification, setShowHizbNotification] = useState(false);
+
+  const setdailyTrackerCompletedValue = useSetRecoilState(
+    dailyTrackerCompleted,
+  );
+
+  const showTrackerNotificationValue = useRecoilValue(showTrackerNotification);
+  const [showGoalNotification, setShowGoalNotification] = useState(false);
+
+  const yesterdayPageValue = useRecoilValue(yesterdayPage);
+  const [progressValue, setProgressValue] = useState(0);
+  const dailyTrackerGoalValue = useRecoilValue(dailyTrackerGoal);
+  const dailyTrackerCompletedValue = useRecoilValue(dailyTrackerCompleted);
+
+  const {
+    thumnData,
+    surahData,
+    hizbData,
+    isLoading: metadataIsLoading,
+    error: metadataError,
+  } = useQuranMetadata();
+
+  const { specsData } = useQuranMetadata();
+  const { defaultNumberOfPages } = specsData;
+  const { notify } = useNotification();
 
   const colorScheme = useColorScheme();
-  const { tintColor } = useColors();
+  const { tintColor, ivoryColor } = useColors();
   const router = useRouter();
 
   const { isLandscape } = useOrientation();
@@ -55,6 +87,64 @@ export default function MushafPage() {
     customPageWidth: 0,
     customPageHeight: 0,
   });
+
+  const seoMetadata = getSEOMetadataByPage(surahData, thumnData, currentPage);
+
+  // Add this effect to handle tracker notification visibility
+  useEffect(() => {
+    progressValue === 1 && setShowGoalNotification(true);
+  }, [progressValue]);
+
+  // Disable showGoalNotification after 3sec
+  useEffect(() => {
+    if (!showGoalNotification) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setShowGoalNotification(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [showGoalNotification]);
+
+  useEffect(() => {
+    const hizb = hizbData.find((hizb) => hizb.startingPage === currentPage);
+    const currentHizbNumber = hizb && hizb.number !== 1 ? hizb.number : null;
+
+    const shouldShowHizbNotification = (() => {
+      if (!currentHizbNumber || hizbNotificationValue === 0) return false;
+      if (hizbNotificationValue === 1) return true;
+      if (hizbNotificationValue === 2) return currentHizbNumber % 2 !== 0;
+      return false;
+    })();
+
+    if (shouldShowHizbNotification) {
+      setShowHizbNotification(true);
+    }
+  }, [currentPage, hizbData, hizbNotificationValue]);
+
+  // Disable showHizbNotification after 3sec
+  useEffect(() => {
+    if (!showHizbNotification) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setShowHizbNotification(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [showHizbNotification]);
+
+  // Progress calculation effect
+  useEffect(() => {
+    const newProgress =
+      dailyTrackerGoalValue > 0
+        ? dailyTrackerCompletedValue.value / dailyTrackerGoalValue
+        : 0;
+    setProgressValue(newProgress);
+  }, [dailyTrackerGoalValue, dailyTrackerCompletedValue.value]);
 
   const {
     asset,
@@ -132,33 +222,6 @@ export default function MushafPage() {
   }, [isFlipSoundEnabled]);
 
   useEffect(() => {
-    // Find the current Hizb and handle notification logic in a single effect
-    const hizb = hizbData.find((hizb) => hizb.startingPage === currentPage);
-
-    // Determine current Hizb
-    const currentHizbNumber = hizb && hizb.number !== 1 ? hizb.number : null;
-
-    // Determine notification visibility based on multiple conditions
-    const shouldShowNotification = (() => {
-      // If no current Hizb or notifications are disabled, don't show
-      if (!currentHizbNumber || HizbNotificationValue === 0) return false;
-
-      // Always show for mode 1 (all Hizbs)
-      if (HizbNotificationValue === 1) return true;
-
-      // Show only for odd-numbered Hizbs in mode 2
-      if (HizbNotificationValue === 2) return currentHizbNumber % 2 !== 0;
-
-      // Default: hide notification
-      return false;
-    })();
-
-    // Update states in a single effect
-    setCurrentHizb(currentHizbNumber);
-    setShowNotification(shouldShowNotification);
-  }, [currentPage, hizbData, HizbNotificationValue]);
-
-  useEffect(() => {
     const tag = 'MushafPage';
     const enableKeepAwake = async () => {
       const isAvailable = await isAvailableAsync();
@@ -180,17 +243,90 @@ export default function MushafPage() {
     };
   }, []);
 
+  useEffect(() => {
+    // Hizb notification logic
+    const hizb = hizbData.find((hizb) => hizb.startingPage === currentPage);
+    const currentHizbNumber = hizb && hizb.number !== 1 ? hizb.number : null;
+
+    // Show Hizb notification if needed
+    if (showHizbNotification && currentHizbNumber !== null) {
+      notify(
+        hizbNotificationValue === 2
+          ? `الجزء - ${(currentHizbNumber - 1)?.toString()}`
+          : `الحزب - ${currentHizbNumber?.toString()}`,
+        'hizb_notification',
+        'neutral',
+      );
+    }
+  }, [
+    currentPage,
+    hizbData,
+    hizbNotificationValue,
+    notify,
+    showHizbNotification,
+  ]);
+
+  useEffect(() => {
+    // Show tracker goal notification if needed
+    if (showTrackerNotificationValue && showGoalNotification) {
+      notify(
+        'تم إكمال الورد اليومي بنجاح',
+        'tracker_goal_notification',
+        'neutral',
+      );
+    }
+  }, [notify, showGoalNotification, showTrackerNotificationValue]);
+
+  useEffect(() => {
+    if (typeof currentPage === 'number') {
+      // Calculate thumns read between yesterday's page and current page
+      const numberOfThumn = calculateThumnsBetweenPages(
+        yesterdayPageValue.value,
+        currentPage,
+        thumnData,
+      );
+
+      // Update the progress state with new object format
+      setdailyTrackerCompletedValue(() => ({
+        value: numberOfThumn / 8,
+        date: new Date().toDateString(),
+      }));
+    }
+  }, [
+    currentPage,
+    yesterdayPageValue,
+    thumnData,
+    setdailyTrackerCompletedValue,
+  ]);
+
+  // Handle errors from metadata loading
+  if (metadataError) {
+    return (
+      <ThemedView
+        style={[styles.errorContainer, { backgroundColor: ivoryColor }]}
+      >
+        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${metadataError}`}</ThemedText>
+      </ThemedView>
+    );
+  }
+
+  // Show loading state if either asset or metadata is loading
+  if (assetIsLoading || metadataIsLoading) {
+    return (
+      <ThemedView
+        style={[styles.loadingContainer, { backgroundColor: ivoryColor }]}
+      >
+        <ActivityIndicator size="large" color={tintColor} />
+      </ThemedView>
+    );
+  }
+
   if (assetError) {
     return (
       <ThemedView
-        style={[
-          styles.errorContainer,
-          colorScheme === 'dark'
-            ? { backgroundColor: '#d5d4d2' }
-            : { backgroundColor: '#f5f1eb' },
-        ]}
+        style={[styles.errorContainer, { backgroundColor: ivoryColor }]}
       >
-        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${assetError}`}</ThemedText>
+        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${assetError}`}</ThemedText>
       </ThemedView>
     );
   }
@@ -198,12 +334,7 @@ export default function MushafPage() {
   if (assetIsLoading) {
     return (
       <ThemedView
-        style={[
-          styles.loadingContainer,
-          colorScheme === 'dark'
-            ? { backgroundColor: '#d5d4d2' }
-            : { backgroundColor: '#f5f1eb' },
-        ]}
+        style={[styles.loadingContainer, { backgroundColor: ivoryColor }]}
       >
         <ActivityIndicator size="large" color={tintColor} />
       </ThemedView>
@@ -211,65 +342,68 @@ export default function MushafPage() {
   }
 
   return (
-    <GestureDetector gesture={panGestureHandler}>
-      <Animated.View
-        style={[
-          styles.imageContainer,
-          animatedStyle,
-          colorScheme === 'dark'
-            ? { backgroundColor: '#181818' }
-            : { backgroundColor: '#f5f1eb' },
-        ]}
-        onLayout={handleImageLayout}
-      >
-        {asset?.localUri ? (
-          <>
-            {isLandscape ? (
-              <ScrollView
-                contentContainerStyle={{ alignItems: 'center' }}
-                alwaysBounceVertical={true}
-                nestedScrollEnabled={true}
-              >
+    <>
+      <SEO
+        title={seoMetadata.title}
+        description={seoMetadata.description}
+        keywords={seoMetadata.keywords}
+      />
+      <GestureDetector gesture={panGestureHandler}>
+        <Animated.View
+          style={[
+            styles.imageContainer,
+            animatedStyle,
+            {
+              backgroundColor:
+                colorScheme === 'dark'
+                  ? `rgba(26, 26, 26, ${1 - mushafContrastValue})`
+                  : ivoryColor,
+            },
+          ]}
+          onLayout={handleImageLayout}
+        >
+          {asset?.localUri ? (
+            <>
+              {isLandscape ? (
+                <ScrollView>
+                  <Image
+                    style={[
+                      styles.image,
+                      {
+                        width: '100%',
+                        height: undefined,
+                        aspectRatio: 0.7,
+                      },
+                      colorScheme === 'dark' && {
+                        opacity: mushafContrastValue,
+                      },
+                    ]}
+                    source={{ uri: asset?.localUri }}
+                    contentFit="fill"
+                  />
+                </ScrollView>
+              ) : (
                 <Image
                   style={[
                     styles.image,
-                    {
-                      width: '100%',
-                      height: undefined,
-                      aspectRatio: 0.7,
+                    { width: '100%' },
+                    colorScheme === 'dark' && {
+                      opacity: mushafContrastValue,
                     },
-                    colorScheme === 'dark' && { opacity: mushafContrastValue },
                   ]}
                   source={{ uri: asset?.localUri }}
                   contentFit="fill"
                 />
-              </ScrollView>
-            ) : (
-              <Image
-                style={[
-                  styles.image,
-                  { width: '100%' },
-                  colorScheme === 'dark' && { opacity: mushafContrastValue },
-                ]}
-                source={{ uri: asset?.localUri }}
-                contentFit="fill"
-              />
-            )}
-            <TopNotification
-              show={showNotification}
-              text={
-                currentHizb && HizbNotificationValue === 2
-                  ? `الجزء - ${(currentHizb - 1)?.toString()}`
-                  : `الحزب - ${currentHizb?.toString()}`
-              }
-            />
-          </>
-        ) : (
-          <ActivityIndicator size="large" color={tintColor} />
-        )}
-        <PageOverlay index={currentPage} dimensions={dimensions} />
-      </Animated.View>
-    </GestureDetector>
+              )}
+              {/* Remove these notification calls from JSX */}
+            </>
+          ) : (
+            <ActivityIndicator size="large" color={tintColor} />
+          )}
+          <PageOverlay index={currentPage} dimensions={dimensions} />
+        </Animated.View>
+      </GestureDetector>
+    </>
   );
 }
 

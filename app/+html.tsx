@@ -72,7 +72,7 @@ export default function Root({ children }: PropsWithChildren) {
         {/*<!-- Apple touch icon -->*/}
         <link
           rel="apple-touch-icon"
-          href="apple-touch-icon.png"
+          href="icons/apple-touch-icon.png"
           sizes="180x180"
         />
         <meta

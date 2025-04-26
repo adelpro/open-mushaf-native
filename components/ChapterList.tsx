@@ -1,16 +1,36 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 
-import { Chapter } from '@/types';
+import { useColors } from '@/hooks/useColors';
+import useQuranMetadata from '@/hooks/useQuranMetadata';
 
 import ChapterCard from './ChapterCard';
+import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-import chaptersJSON from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/chapter.json';
 
 export default function ChapterList() {
+  const { tintColor } = useColors();
+  const { chapterData, isLoading, error } = useQuranMetadata();
+
+  if (isLoading) {
+    return (
+      <ThemedView style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={tintColor} />
+      </ThemedView>
+    );
+  }
+
+  if (error) {
+    return (
+      <ThemedView style={styles.errorContainer}>
+        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${error}`}</ThemedText>
+      </ThemedView>
+    );
+  }
+
   return (
     <ThemedView style={styles.container}>
-      {chaptersJSON.map((chapter: Chapter) => (
+      {chapterData.map((chapter) => (
         <ChapterCard key={chapter.number} chapter={chapter} />
       ))}
     </ThemedView>
@@ -28,5 +48,19 @@ const styles = StyleSheet.create({
     //maxWidth: 430,
     rowGap: 10,
     paddingHorizontal: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
 });

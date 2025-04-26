@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Platform, Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
@@ -18,7 +18,7 @@ import {
   mushafRiwaya,
   topMenuState,
 } from '@/recoil/atoms';
-import { getAppVersion } from '@/utils';
+import { getAppVersion, isWeb } from '@/utils';
 
 export default function HomeScreen() {
   const setShowTopMenu = useSetRecoilState(topMenuState);
@@ -28,7 +28,6 @@ export default function HomeScreen() {
   const mushafRiwayaValue = useRecoilValue(mushafRiwaya);
 
   useEffect(() => {
-    const isWeb = Platform.OS === 'web';
     const appVersion = getAppVersion();
     const show = !isWeb && currentAppVersionValue !== appVersion;
     setShowChangeLogs(show);
