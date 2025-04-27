@@ -9,22 +9,36 @@ designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macO
   alt="Open-Mushaf Logo"  width="1000" height="500" />
 </p>
 
+<!-- GitHub & Social Badges -->
 ![GitHub Stars](https://img.shields.io/github/stars/adelpro/open-mushaf-native?style=social)
-![Forks](https://img.shields.io/github/forks/adelpro/open-mushaf-native?style=social)
+![GitHub Forks](https://img.shields.io/github/forks/adelpro/open-mushaf-native?style=social)
+![GitHub Watchers](https://img.shields.io/github/watchers/adelpro/open-mushaf-native?style=social)
 [![Twitter Follow](https://img.shields.io/twitter/follow/adelpro?style=social)](https://twitter.com/adelpro)
 
+<!-- Build & CI Badges -->
+[![Android Build](https://github.com/adelpro/open-mushaf-native/actions/workflows/android-build.yml/badge.svg)](https://github.com/adelpro/open-mushaf-native/actions/workflows/android-build.yml)
+[![CodeQL](https://github.com/adelpro/open-mushaf-native/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/adelpro/open-mushaf-native/actions/workflows/github-code-scanning/codeql)
+
+<!-- Quality & Code Analysis -->
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/270e870a48f342ef9ba384229681db23)](https://app.codacy.com/gh/adelpro/check-hadith-native/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![codebeat badge](https://codebeat.co/badges/60e335a3-d534-4cdb-9441-15a5b259e0bb)](https://codebeat.co/projects/github-com-adelpro-open-mushaf-native-main)
+
+<!-- Release & Issue Tracking -->
+[![Release Notes](https://img.shields.io/github/release/adelpro/open-mushaf-native?style=flat-square)](https://github.com/adelpro/open-mushaf-native/releases)
+[![Open Issues](https://img.shields.io/github/issues/adelpro/open-mushaf-native?style=flat-square)](https://github.com/adelpro/open-mushaf-native/issues)
+![License](https://img.shields.io/github/license/adelpro/open-mushaf-native?style=flat-square)
+
+<!-- Tech & Platform -->
 ![npm](https://img.shields.io/badge/npm-v20%2B-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff)
 ![Expo](https://img.shields.io/badge/Expo-1B1F23?logo=expo&logoColor=fff&style=flat)
 ![React Native](https://img.shields.io/badge/React%20Native-20232A?logo=react&logoColor=61DAFB)
-
 ![Supports Android, iOS, web, macOS and Windows](https://img.shields.io/badge/platforms-android%20%7C%20ios%20%7C%20web%20%7C%20macos%20%7C%20windows-lightgrey.svg)
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/270e870a48f342ef9ba384229681db23)](https://app.codacy.com/gh/adelpro/check-hadith-native/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![CodeQL](https://github.com/adelpro/open-mushaf-native/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/adelpro/open-mushaf-native/actions/workflows/github-code-scanning/codeql)
-[![codebeat badge](https://codebeat.co/badges/60e335a3-d534-4cdb-9441-15a5b259e0bb)](https://codebeat.co/projects/github-com-adelpro-open-mushaf-native-main)
+<!-- Other/Integrations -->
+[<img src="./assets/svgs/explore-in-deepwiki.svg" title="Explore in DeepWiki" width="150" height="20">](https://deepwiki.com/adelpro/open-mushaf-native)
 
-[![Android Build](https://github.com/adelpro/open-mushaf-native/actions/workflows/android-build.yml/badge.svg)](https://github.com/adelpro/open-mushaf-native/actions/workflows/android-build.yml)
+[<img src="https://github.com/codespaces/badge.svg" title="Open in Github Codespace" width="150" height="20">](https://codespaces.new/adelpro/open-mushaf-native)
 
 ## About
 
@@ -166,12 +180,6 @@ Ready-to-use versions are available for:
     alt="Web App" />
   </a>
 </div>
-
-## Explore Our Code Base
-
-Want to dive deeper into how Open-Mushaf Native works? Check out our interactive code documentation on DeepWiki! It provides an easy-to-navigate view of our project structure, helping you understand how everything fits together.
-
-[<img src="./assets/images/deepwiki.png" alt="DeepWiki Documentation" width="20" style="vertical-align:middle; margin-right:8px;" /> Browse Our Code Documentation](https://deepwiki.com/adelpro/open-mushaf-native)
 
 ## Contributing
 
