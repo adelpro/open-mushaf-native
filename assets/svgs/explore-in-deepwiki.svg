@@ -4,8 +4,8 @@
   <desc id="desc">
     Button prompting users to explore in DeepWiki.
   </desc>
-  <rect x="0" y="0" width="280" height="32" fill="#666666" stroke="#444d56" rx="4" ry="4" />
-  <rect x="0" y="0" width="32" height="32" fill="#bdbdbd" stroke="#bdbdbd" rx="4" ry="4" />
+  <rect x="0" y="0" width="230" height="32" fill="#24292e" stroke="#24292e" rx="4" ry="4" />
+  <rect x="0" y="0" width="32" height="32" fill="#444d56" stroke="#444d56" rx="4" ry="4" />
   <svg x="4" y="4" width="24" height="24"
     class="size-4 transform transition-transform duration-700 group-hover:rotate-180" viewBox="110 110 460 500">
     <path style="fill:#21c19a"
