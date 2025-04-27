@@ -167,11 +167,17 @@ Ready-to-use versions are available for:
   </a>
 </div>
 
+## Explore Our Code Base
+
+Want to dive deeper into how Open-Mushaf Native works? Check out our interactive code documentation on DeepWiki! It provides an easy-to-navigate view of our project structure, helping you understand how everything fits together.
+
+[<img src="./assets/images/deepwiki.png" alt="DeepWiki Documentation" width="20" style="vertical-align:middle; margin-right:8px;" /> Browse Our Code Documentation](https://deepwiki.com/adelpro/open-mushaf-native)
+
 ## Contributing
 
 Contributions are welcome to Open-Mushaf Native! Please see the [contribution guidelines](https://github.com/adelpro/open-mushaf-native/blob/main/CONTRIBUTING.md)
 
-## Like the Project? ⭐
+## Like the Project?
 
 If you find this project helpful, please give it a star to show your support!
 
