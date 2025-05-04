@@ -21,6 +21,7 @@ const tabLabels: Record<TafseerTabs, string> = {
   qortoby: 'القرطبي',
   tabary: 'الطبري',
   saady: 'السعدي',
+  wahidy: 'الواحدي',
 };
 
 type Props = {
@@ -110,6 +111,9 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
           break;
         case 'tabary':
           tafseerJSON = await import('@/assets/tafaseer/tabary.json');
+          break;
+        case 'wahidy':
+          tafseerJSON = await import('@/assets/tafaseer/nozool-wahidy.json');
           break;
 
         default:
