@@ -27,6 +27,7 @@ module.exports = {
         'chore', // Routine tasks like build process or dependency updates
         'revert', // Reverting a previous commit
         'ci', // Changes to our CI configuration files and scripts
+        'wip', // Work in progress
       ],
     ],
   },
