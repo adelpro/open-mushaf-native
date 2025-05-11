@@ -6,6 +6,10 @@ import { useRecoilState } from 'recoil';
 
 import { useColors } from '@/hooks/useColors';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
+import {
+  hasNoTafseerContent,
+  useTafseerContent,
+} from '@/hooks/useTafseerContent';
 import { tafseerTab } from '@/recoil/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
 
@@ -36,53 +40,101 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
   const [surahName, setSurahName] = useState<string>('');
   const [selectedTabValue, setSelectedTab] = useRecoilState(tafseerTab);
   const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
+  const [tabsWithContent, setTabsWithContent] = useState<
+    Record<TafseerTabs, boolean>
+  >({} as Record<TafseerTabs, boolean>);
 
-  const renderTafseerContent = (tafseer: TafseerAya[] | null): JSX.Element => {
-    const ayaTafseer = tafseer?.find((t) => t.aya === aya && t.sura === surah);
-
-    let tafseerText = '';
-    if (!ayaTafseer?.text || ayaTafseer?.text === '<p></p>') {
-      tafseerText = '<p>لا يوجد تفسير.</p>';
-    } else {
-      tafseerText = `<div>${ayaTafseer?.text}</div>`;
-    }
-    return (
-      <ThemedView style={{ flex: 1 }}>
-        {/* @ts-ignore - Ignoring type error for HTMLView component */}
-        <HTMLView
-          value={tafseerText}
-          style={{
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            backgroundColor: 'transparent',
-          }}
-          stylesheet={{
-            div: {
-              color: textColor,
-              fontFamily: 'Tajawal_400Regular',
-              fontSize: 16,
-              lineHeight: 24,
-              backgroundColor: 'transparent',
-            },
-            p: {
-              color: textColor,
-              fontFamily: 'Tajawal_400Regular',
-              fontSize: 16,
-              lineHeight: 24,
-              flexDirection: 'row',
-              backgroundColor: 'transparent',
-            },
-          }}
-          addLineBreaks={false}
-        />
-      </ThemedView>
-    );
-  };
+  const formattedTafseerHtml = useTafseerContent({ tafseerData, surah, aya });
+  const isCurrentTabEmpty = hasNoTafseerContent({ tafseerData, surah, aya });
 
   useEffect(() => {
     const currentSurah = surahData.find((s) => s.number === surah);
     setSurahName(currentSurah?.name ?? '');
   }, [surah, surahData]);
+
+  // Add a state to track if we've loaded all tafseer data
+  const [allTafseersLoaded, setAllTafseersLoaded] = useState(false);
+
+  // Reset tabsWithContent when surah or aya changes
+  useEffect(() => {
+    // Reset the content availability state when surah or aya changes
+    setTabsWithContent({} as Record<TafseerTabs, boolean>);
+    setAllTafseersLoaded(false);
+  }, [surah, aya]);
+
+  // Load all tafseer data to check content availability
+  useEffect(() => {
+    if (!allTafseersLoaded) {
+      const loadAllTafseers = async () => {
+        const tabsToCheck = Object.keys(tabLabels) as TafseerTabs[];
+
+        for (const tab of tabsToCheck) {
+          try {
+            let tafseerJSON;
+
+            // Use the same import logic as in loadTafseerData
+            switch (tab) {
+              case 'baghawy':
+                tafseerJSON = await import('@/assets/tafaseer/baghawy.json');
+                break;
+              case 'earab':
+                tafseerJSON = await import('@/assets/tafaseer/earab.json');
+                break;
+              case 'katheer':
+                tafseerJSON = await import('@/assets/tafaseer/katheer.json');
+                break;
+              case 'maany':
+                tafseerJSON = await import('@/assets/tafaseer/maany.json');
+                break;
+              case 'muyassar':
+                tafseerJSON = await import('@/assets/tafaseer/muyassar.json');
+                break;
+              case 'qortoby':
+                tafseerJSON = await import('@/assets/tafaseer/qortoby.json');
+                break;
+              case 'saady':
+                tafseerJSON = await import('@/assets/tafaseer/saady.json');
+                break;
+              case 'tabary':
+                tafseerJSON = await import('@/assets/tafaseer/tabary.json');
+                break;
+              case 'wahidy':
+                tafseerJSON = await import(
+                  '@/assets/tafaseer/nozool-wahidy.json'
+                );
+                break;
+              default:
+                continue;
+            }
+
+            const data =
+              (tafseerJSON.default as TafseerAya[]) ||
+              (tafseerJSON as TafseerAya[]);
+            const hasContent = !hasNoTafseerContent({
+              tafseerData: data,
+              surah,
+              aya,
+            });
+
+            setTabsWithContent((prev) => ({
+              ...prev,
+              [tab]: hasContent,
+            }));
+          } catch {
+            // If there's an error loading the tafseer, mark it as not having content
+            setTabsWithContent((prev) => ({
+              ...prev,
+              [tab]: false,
+            }));
+          }
+        }
+
+        setAllTafseersLoaded(true);
+      };
+
+      loadAllTafseers();
+    }
+  }, [surah, aya, allTafseersLoaded]);
 
   const loadTafseerData = useCallback(async () => {
     let tafseerJSON;
@@ -141,6 +193,16 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
       <ThemedView style={[styles.tabs, { backgroundColor: 'transparent' }]}>
         {Object.keys(tabLabels).map((key) => {
           const tabKey = key as TafseerTabs;
+
+          // Use tabsWithContent to check if the tab has content
+          // For the current tab, use isCurrentTabEmpty as a fallback if not yet in tabsWithContent
+          const isCurrentTab = tabKey === selectedTabValue;
+          const hasNoContent =
+            tabsWithContent[tabKey] === false ||
+            (isCurrentTab &&
+              isCurrentTabEmpty &&
+              tabsWithContent[tabKey] === undefined);
+
           return (
             <Pressable
               key={tabKey}
@@ -150,6 +212,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
                 selectedTabValue === tabKey && {
                   borderColor: tintColor,
                 },
+                hasNoContent && styles.disabledTab,
                 { backgroundColor: 'transparent' },
               ]}
               onPress={() => setSelectedTab(tabKey)}
@@ -157,7 +220,10 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
               accessibilityHint={`Tap to see the tafseer for Surah ${surahName}, Aya ${aya} from ${tabLabels[tabKey]}`}
             >
               <ThemedText
-                style={{ color: tintColor, backgroundColor: 'transparent' }}
+                style={[
+                  { color: tintColor, backgroundColor: 'transparent' },
+                  hasNoContent && styles.disabledTabText,
+                ]}
               >
                 {tabLabels[tabKey]}
               </ThemedText>
@@ -167,7 +233,35 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
       </ThemedView>
 
       {tafseerData ? (
-        renderTafseerContent(tafseerData)
+        <ThemedView style={{ flex: 1 }}>
+          {/* @ts-ignore - Ignoring type error for HTMLView component */}
+          <HTMLView
+            value={formattedTafseerHtml}
+            style={{
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              backgroundColor: 'transparent',
+            }}
+            stylesheet={{
+              div: {
+                color: textColor,
+                fontFamily: 'Tajawal_400Regular',
+                fontSize: 16,
+                lineHeight: 24,
+                backgroundColor: 'transparent',
+              },
+              p: {
+                color: textColor,
+                fontFamily: 'Tajawal_400Regular',
+                fontSize: 16,
+                lineHeight: 24,
+                flexDirection: 'row',
+                backgroundColor: 'transparent',
+              },
+            }}
+            addLineBreaks={false}
+          />
+        </ThemedView>
       ) : (
         <ActivityIndicator size="large" color={tintColor} />
       )}
@@ -202,5 +296,11 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomWidth: 2,
+  },
+  disabledTab: {
+    opacity: 0.5,
+  },
+  disabledTabText: {
+    textDecorationLine: 'line-through',
   },
 });
