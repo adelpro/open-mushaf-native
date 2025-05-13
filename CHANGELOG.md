@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.4.0]
+
+- feat: Add 'Asbab Nozool from el-wahidi'
+- feat: Add 'tafseer wasseet'
+- feat: Add 'tafseer tanweer'
+
 ## [3.3.0]
 
 - feat: Add collapsible functionality to Reading Position Banner

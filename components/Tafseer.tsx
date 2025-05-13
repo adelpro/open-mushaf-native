@@ -16,8 +16,8 @@ import { TafseerAya, TafseerTabs } from '@/types';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-const tabLabels: Record<TafseerTabs, string> = {
-  katheer: 'ابن كثير',
+const tabLabels: Partial<Record<TafseerTabs, string>> = {
+  katheer: 'إبن كثير',
   maany: 'معاني القرآن',
   earab: 'إعراب القرآن',
   baghawy: 'البغوي',
@@ -25,7 +25,9 @@ const tabLabels: Record<TafseerTabs, string> = {
   qortoby: 'القرطبي',
   tabary: 'الطبري',
   saady: 'السعدي',
-  wahidy: 'الواحدي',
+  wahidy: 'أسباب النزول',
+  tanweer: 'التحرير و التنوير',
+  waseet: 'الوسيط',
 };
 
 type Props = {
@@ -103,12 +105,18 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
                   '@/assets/tafaseer/nozool-wahidy.json'
                 );
                 break;
+              case 'tanweer':
+                tafseerJSON = await import('@/assets/tafaseer/tanweer.json');
+                break;
+              case 'waseet':
+                tafseerJSON = await import('@/assets/tafaseer/waseet.json');
+                break;
               default:
                 continue;
             }
 
             const data =
-              (tafseerJSON.default as TafseerAya[]) ||
+              (tafseerJSON?.default as TafseerAya[]) ||
               (tafseerJSON as TafseerAya[]);
             const hasContent = !hasNoTafseerContent({
               tafseerData: data,
@@ -167,8 +175,16 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
         case 'wahidy':
           tafseerJSON = await import('@/assets/tafaseer/nozool-wahidy.json');
           break;
-
+        case 'tanweer':
+          tafseerJSON = await import('@/assets/tafaseer/tanweer.json');
+          break;
+        case 'waseet':
+          tafseerJSON = await import('@/assets/tafaseer/waseet.json');
+          break;
         default:
+          // Fallback to katheer if the selected tab is somehow not in the list
+          // or if it's one of the newly added ones and something went wrong.
+          // However, with the fixes, this default should ideally not be hit for tanweer/waseet.
           tafseerJSON = await import('@/assets/tafaseer/katheer.json');
       }
       setTafseerData(
