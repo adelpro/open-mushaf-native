@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [3.4.0]
 
+- feat: Add Yandex verification file for domain ownership
 - feat: Add IndexNow protocol to the web version
 - feat: Add 'Asbab Nozool from el-wahidi'
 - feat: Add 'tafseer wasseet'
