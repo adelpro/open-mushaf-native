@@ -395,7 +395,6 @@ export default function MushafPage() {
                   contentFit="fill"
                 />
               )}
-              {/* Remove these notification calls from JSX */}
             </>
           ) : (
             <ActivityIndicator size="large" color={tintColor} />
@@ -409,7 +408,6 @@ export default function MushafPage() {
 
 const styles = StyleSheet.create({
   imageContainer: {
-    position: 'relative',
     width: '100%',
     height: '100%',
     flex: 1,

@@ -96,7 +96,71 @@ export default function Root({ children }: PropsWithChildren) {
         <style dangerouslySetInnerHTML={{ __html: responsiveBackground }} />
         {/* Add any additional <head> elements that you want globally available on web... */}
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+
+        {/* Enhanced Floating Notification Area */}
+        <div
+          id="sw-notification"
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            backgroundColor: '#2c3e50' /* Dark blue-gray */,
+            color: 'white',
+            padding: '16px 24px',
+            borderRadius: '8px',
+            zIndex: 10000 /* Ensure it's on top */,
+            display: 'none' /* Initially hidden */,
+            fontFamily:
+              'Tajawal_400Regular, Arial, sans-serif' /* Match app font */,
+            fontSize: '16px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+            textAlign: 'center',
+            minWidth: '250px',
+            maxWidth: '90%',
+            transition: 'opacity 0.3s ease-in-out',
+            opacity: '1',
+          }}
+        >
+          {/* Add loading spinner */}
+          <div
+            id="sw-spinner"
+            style={{
+              display: 'inline-block',
+              width: '20px',
+              height: '20px',
+              marginRight: '10px',
+              borderRadius: '50%',
+              border: '3px solid rgba(255,255,255,0.3)',
+              borderTopColor: 'white',
+              animation: 'spin 1s linear infinite',
+              verticalAlign: 'middle',
+            }}
+          ></div>
+          <span
+            id="sw-status-message"
+            style={{
+              verticalAlign: 'middle',
+            }}
+          ></span>
+        </div>
+
+        {/* Add animation keyframes */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `,
+          }}
+        />
+
+        {/* Enhanced Script to handle Service Worker messages for the notification */}
+        <script dangerouslySetInnerHTML={{ __html: notificationHandler }} />
+      </body>
     </html>
   );
 }
@@ -114,10 +178,119 @@ body {
 const sw = `
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
+      // Show initial loading message
+      const notificationElement = document.getElementById('sw-notification');
+      const statusMessageElement = document.getElementById('sw-status-message');
+      const spinnerElement = document.getElementById('sw-spinner');
+      
+      if (notificationElement && statusMessageElement) {
+        statusMessageElement.textContent = 'جاري تحميل التطبيق...';
+        notificationElement.style.display = 'block';
+      }
+      
       navigator.serviceWorker.register('/service-worker.js')
+        .then(registration => {
+          console.log('Service Worker registered with scope:', registration.scope);
+          
+          // Check if there's an update available
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            
+            if (newWorker) {
+              newWorker.addEventListener('statechange', () => {
+                if (notificationElement && statusMessageElement) {
+                  if (newWorker.state === 'installing') {
+                    statusMessageElement.textContent = 'جاري تثبيت التحديث...';
+                    notificationElement.style.display = 'block';
+                  } else if (newWorker.state === 'installed') {
+                    if (navigator.serviceWorker.controller) {
+                      statusMessageElement.textContent = 'تم تثبيت التحديث! سيتم تحديث الصفحة قريبًا.';
+                      notificationElement.style.display = 'block';
+                      
+                      // Offer to update immediately
+                      setTimeout(() => {
+                        if (confirm('تم تثبيت تحديث جديد. هل تريد تحديث الصفحة الآن؟')) {
+                          window.location.reload();
+                        }
+                      }, 1000);
+                    }
+                  }
+                }
+              });
+            }
+          });
+        })
         .catch(error => {
           console.error('Service Worker registration failed:', error);
+          if (notificationElement && statusMessageElement) {
+            statusMessageElement.textContent = 'فشل تسجيل Service Worker';
+            spinnerElement.style.display = 'none';
+            setTimeout(() => {
+              notificationElement.style.display = 'none';
+            }, 3000);
+          }
         });
     });
 }
+`;
+
+const notificationHandler = `
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', event => {
+    const notificationElement = document.getElementById('sw-notification');
+    const statusMessageElement = document.getElementById('sw-status-message');
+    const spinnerElement = document.getElementById('sw-spinner');
+
+    if (notificationElement && statusMessageElement && spinnerElement && event.data) {
+      if (event.data.type === 'SW_STATE_UPDATE') {
+        statusMessageElement.textContent = event.data.message || 'جاري التحديث...';
+        notificationElement.style.display = 'block';
+        
+        // Show or hide spinner based on state
+        if (event.data.state === 'activated') {
+          spinnerElement.style.display = 'none';
+        } else {
+          spinnerElement.style.display = 'inline-block';
+        }
+
+        // If a duration is provided, auto-hide the notification
+        if (typeof event.data.duration === 'number' && event.data.duration > 0) {
+          setTimeout(() => {
+            notificationElement.style.opacity = '0';
+            setTimeout(() => {
+              notificationElement.style.display = 'none';
+              notificationElement.style.opacity = '1';
+            }, 300);
+          }, event.data.duration);
+        }
+        
+        // Explicitly hide if requested
+        if (event.data.hide === true) {
+           notificationElement.style.display = 'none';
+        }
+      }
+    }
+  });
+  
+  // Check service worker status on page load
+  if (navigator.serviceWorker.controller) {
+    // Create a message channel
+    const messageChannel = new MessageChannel();
+    
+    // Handler for messages coming back from the service worker
+    messageChannel.port1.onmessage = (event) => {
+      console.log('Service Worker Status:', event.data);
+    };
+    
+    // Ask the service worker for its current state
+    navigator.serviceWorker.controller.postMessage({
+      type: 'GET_SW_STATE'
+    }, [messageChannel.port2]);
+  }
+}
+
+// Example: To test this from your browser's developer console (after the page loads):
+// navigator.serviceWorker.controller.postMessage({ type: 'SW_STATE_UPDATE', message: 'Test notification!', duration: 3000 });
+// navigator.serviceWorker.controller.postMessage({ type: 'SW_STATE_UPDATE', message: 'Another message, stays until hidden.' });
+// navigator.serviceWorker.controller.postMessage({ type: 'SW_STATE_UPDATE', hide: true });
 `;

@@ -13,11 +13,43 @@ workbox.setConfig({
 // Add better install handling
 self.addEventListener('install', (event) => {
   console.log('Service Worker installing...');
+
+  // Notify clients that installation has started
+  self.clients.matchAll().then((clients) => {
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'SW_STATE_UPDATE',
+        message: 'جاري تثبيت التطبيق...',
+        state: 'installing',
+      });
+    });
+  });
+
+  // Force the waiting service worker to become the active service worker
   self.skipWaiting();
+
+  // Pre-cache the offline page during installation
+  event.waitUntil(
+    caches.open('offline-cache').then((cache) => {
+      return cache.add('/offline.html');
+    }),
+  );
 });
 
 self.addEventListener('activate', (event) => {
   console.log('Service Worker activating...');
+
+  // Notify clients that activation has started
+  self.clients.matchAll().then((clients) => {
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'SW_STATE_UPDATE',
+        message: 'جاري تفعيل التطبيق...',
+        state: 'activating',
+      });
+    });
+  });
+
   // Clean up old caches
   event.waitUntil(
     caches
@@ -39,8 +71,33 @@ self.addEventListener('activate', (event) => {
             }),
         );
       })
-      .then(() => clients.claim()),
+      .then(() => {
+        // Claim clients and notify them that the service worker is ready
+        return clients.claim().then(() => {
+          self.clients.matchAll().then((clients) => {
+            clients.forEach((client) => {
+              client.postMessage({
+                type: 'SW_STATE_UPDATE',
+                message: 'تم تحديث التطبيق بنجاح!',
+                state: 'activated',
+                duration: 3000,
+              });
+            });
+          });
+        });
+      }),
   );
+});
+
+// Add a message handler to respond to client messages
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'GET_SW_STATE') {
+    // Respond with the current state
+    event.ports[0].postMessage({
+      state: 'active',
+      version: '1.0.0', // You could store and return the actual version
+    });
+  }
 });
 
 const { registerRoute } = workbox.routing;
@@ -217,3 +274,34 @@ registerRoute(
     ],
   }),
 );
+
+// Add a fallback for navigation requests when offline
+workbox.routing.setCatchHandler(async ({ event }) => {
+  // Return the offline page for navigation requests
+  if (event.request.mode === 'navigate') {
+    try {
+      // Try to get the offline page from cache
+      const offlineCache = await caches.open('offline-cache');
+      const offlinePage = await offlineCache.match('/offline.html');
+
+      if (offlinePage) {
+        // Send notification to the client that we're offline
+        const clients = await self.clients.matchAll();
+        clients.forEach((client) => {
+          client.postMessage({
+            type: 'SW_STATE_UPDATE',
+            message: 'أنت غير متصل بالإنترنت',
+            duration: 5000,
+          });
+        });
+
+        return offlinePage;
+      }
+    } catch (error) {
+      console.error('Error serving offline page:', error);
+    }
+  }
+
+  // If we don't have a fallback, return a generic response
+  return Response.error();
+});

@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   },
   topMenu: {
     height: 60,
-    marginTop: 10,
+    //marginTop: 10,
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',

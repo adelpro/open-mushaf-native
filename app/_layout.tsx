@@ -35,6 +35,7 @@ import { RecoilRoot } from 'recoil';
 
 import Notification from '@/components/Notification';
 import SEO from '@/components/seo';
+import { ThemedView } from '@/components/ThemedView';
 import { isRTL } from '@/utils';
 
 import { NotificationProvider } from '../components/NotificationProvider';
@@ -102,42 +103,51 @@ export default function RootLayout() {
                 <ThemeProvider
                   value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
                 >
-                  <Stack
-                    screenOptions={{
-                      headerTitleStyle: {
-                        fontFamily: 'Tajawal_700Bold',
-                      },
+                  <ThemedView
+                    style={{
+                      height: '100%',
+                      width: '100%',
+                      maxWidth: 640,
+                      margin: 'auto',
                     }}
                   >
-                    <Stack.Screen
-                      name="(tabs)"
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen name="+not-found" />
-                    <Stack.Screen
-                      name="search"
-                      options={{
-                        title: 'بحث',
+                    <Stack
+                      screenOptions={{
                         headerTitleStyle: {
-                          fontFamily: 'Tajawal_400Regular',
+                          fontFamily: 'Tajawal_700Bold',
                         },
                       }}
-                    />
-                    <Stack.Screen
-                      name="navigation"
-                      options={{
-                        title: 'تنقل',
-                      }}
-                    />
-                    <Stack.Screen
-                      name="tutorial"
-                      options={{ headerShown: true, title: 'جولة تعليمية' }}
-                    />
-                    <Stack.Screen
-                      name="tracker"
-                      options={{ headerShown: true, title: 'الورد اليومي' }}
-                    />
-                  </Stack>
+                    >
+                      <Stack.Screen
+                        name="(tabs)"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen name="+not-found" />
+                      <Stack.Screen
+                        name="search"
+                        options={{
+                          title: 'بحث',
+                          headerTitleStyle: {
+                            fontFamily: 'Tajawal_400Regular',
+                          },
+                        }}
+                      />
+                      <Stack.Screen
+                        name="navigation"
+                        options={{
+                          title: 'تنقل',
+                        }}
+                      />
+                      <Stack.Screen
+                        name="tutorial"
+                        options={{ headerShown: true, title: 'جولة تعليمية' }}
+                      />
+                      <Stack.Screen
+                        name="tracker"
+                        options={{ headerShown: true, title: 'الورد اليومي' }}
+                      />
+                    </Stack>
+                  </ThemedView>
                   <Notification />
                 </ThemeProvider>
               </ReactNativeRecoilPersistGate>

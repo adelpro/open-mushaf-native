@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.4.1]
+
+- style: Add a max width to the bottom menu
+- fix: minor errors in the bottom menu icons
+- fix: minor manifest.json validation issues
+
 ## [3.4.0]
 
 - feat: Add Yandex verification file for domain ownership

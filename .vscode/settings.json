@@ -17,6 +17,6 @@
     ".github/workflows/android-build.yml"
   ],
   "[markdown]": {
-    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

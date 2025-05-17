@@ -39,7 +39,7 @@ export default function HomeScreen() {
         title="المصحف المفتوح - المصحف"
         description="قرآءة القرآن مع خيارات متعددة للقراءات والتفاسير"
       />
-      <TopMenu />
+
       <ReadingPositionBanner />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
         {showChangeLogs ? (
@@ -51,7 +51,10 @@ export default function HomeScreen() {
         ) : mushafRiwayaValue === undefined ? (
           <SelectRiwaya />
         ) : (
-          <MushafPage />
+          <>
+            <TopMenu />
+            <MushafPage />
+          </>
         )}
       </Pressable>
     </ThemedSafeAreaView>
@@ -63,6 +66,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative',
     width: '100%',
     height: '100%',
   },

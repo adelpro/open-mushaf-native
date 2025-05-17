@@ -86,7 +86,7 @@ export default function SettingsScreen() {
           size={40}
           circleColor={primaryColor}
           toggle={isFlipSoundEnabled}
-          setToggle={toggleTrackerSwitch}
+          setToggle={toggleFlipSoundSwitch}
           aria-checked={isFlipSoundEnabled}
           aria-label="صوت قلب الصفحة"
           accessibilityLabel="تبديل صوت قلب الصفحة"

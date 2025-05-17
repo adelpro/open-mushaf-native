@@ -15,8 +15,10 @@ export default function Notification() {
 
   return (
     <View
-      style={[styles.container, { paddingTop: insets.top }]}
-      pointerEvents="box-none"
+      style={[
+        styles.container,
+        { paddingTop: insets.top, pointerEvents: 'box-none' },
+      ]}
     >
       {notifications.map((notification, index) => {
         // Get the style for this notification type

@@ -22,7 +22,7 @@
   "scope_extensions": [
     {
       "type": "url_pattern",
-      "value": "https://*.open-mushaf.com/*"
+      "value": "https://*.quran.us.kg/*"
     }
   ],
   "icons": [
