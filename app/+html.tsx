@@ -13,6 +13,36 @@ export default function Root({ children }: PropsWithChildren) {
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 
+        {/* Preload Amiri and Tajawal fonts */}
+        <link
+          rel="preload"
+          href="https://fonts.gstatic.com/s/amiri/v24/J7aRnpd8CGxBHpUrtLMA7w.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="https://fonts.gstatic.com/s/amiri/v24/J7acnpd8CGxBHp2VkaY6zp5yGw.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="https://fonts.gstatic.com/s/tajawal/v9/Iura6YBj_oCad4k1nzSBC45I.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="https://fonts.gstatic.com/s/tajawal/v9/Iurf6YBj_oCad4k1l5qjHrRpiYlJ.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+
         {/* Digital Asset Links for Android App Links */}
         <link rel="assetlinks.json" href="/.well-known/assetlinks.json" />
 
@@ -132,6 +162,7 @@ export default function Root({ children }: PropsWithChildren) {
               width: '20px',
               height: '20px',
               marginRight: '10px',
+              marginLeft: '10px',
               borderRadius: '50%',
               border: '3px solid rgba(255,255,255,0.3)',
               borderTopColor: 'white',
@@ -182,15 +213,33 @@ if ('serviceWorker' in navigator) {
       const notificationElement = document.getElementById('sw-notification');
       const statusMessageElement = document.getElementById('sw-status-message');
       const spinnerElement = document.getElementById('sw-spinner');
-      
+
       if (notificationElement && statusMessageElement) {
         statusMessageElement.textContent = 'جاري تحميل التطبيق...';
         notificationElement.style.display = 'block';
       }
       
+      // Add timeout fallback to ensure the app continues loading even if service worker registration takes too long
+      let swRegistrationTimeout = setTimeout(() => {
+        console.warn('Service worker registration timed out');
+        if (notificationElement) {
+          notificationElement.style.display = 'none';
+        }
+      }, 20000); // 20 second timeout
+      
       navigator.serviceWorker.register('/service-worker.js')
         .then(registration => {
-          console.log('Service Worker registered with scope:', registration.scope);
+          // console.log('Service Worker registered with scope:', registration.scope);
+          
+          // Clear the timeout since registration was successful
+          clearTimeout(swRegistrationTimeout);
+          
+          // Hide the loading notification after successful registration
+          if (notificationElement) { 
+            setTimeout(() => { 
+              notificationElement.style.display = 'none'; 
+            }, 1000); // Give a short delay so user can see it was successful 
+          }
           
           // Check if there's an update available
           registration.addEventListener('updatefound', () => {
