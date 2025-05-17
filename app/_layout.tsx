@@ -49,7 +49,7 @@ SplashScreen.setOptions({ fade: true, duration: 1000 });
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
-  const [loaded] = useFonts({
+  const [fontLoaded, fontError] = useFonts({
     Amiri_400Regular,
     Amiri_700Bold,
     Tajawal_400Regular,
@@ -82,12 +82,12 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    if (loaded) {
+    if (fontLoaded || fontError) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [fontError, fontLoaded]);
 
-  if (!loaded) {
+  if (!fontLoaded && !fontError) {
     return null;
   }
 

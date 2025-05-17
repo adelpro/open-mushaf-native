@@ -221,11 +221,11 @@ if ('serviceWorker' in navigator) {
       
       // Add timeout fallback to ensure the app continues loading even if service worker registration takes too long
       let swRegistrationTimeout = setTimeout(() => {
-        console.warn('Service worker registration timed out');
+        // console.warn('Service worker registration timed out');
         if (notificationElement) {
           notificationElement.style.display = 'none';
         }
-      }, 20000); // 20 second timeout
+      }, 30000); // hide after 30 seconds
       
       navigator.serviceWorker.register('/service-worker.js')
         .then(registration => {
@@ -272,7 +272,7 @@ if ('serviceWorker' in navigator) {
         .catch(error => {
           console.error('Service Worker registration failed:', error);
           if (notificationElement && statusMessageElement) {
-            statusMessageElement.textContent = 'فشل تسجيل Service Worker';
+            statusMessageElement.textContent = 'حدث خطأ أثناء تحميل التطبيق.';
             spinnerElement.style.display = 'none';
             setTimeout(() => {
               notificationElement.style.display = 'none';

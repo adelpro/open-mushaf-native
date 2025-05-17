@@ -106,9 +106,9 @@ const { ExpirationPlugin } = workbox.expiration;
 const { precacheAndRoute } = workbox.precaching;
 
 // Only precache essential UI assets, not all Quran pages
-if (typeof self.__WB_MANIFEST === 'undefined') {
+/* if (typeof self.__WB_MANIFEST === 'undefined') {
   self.__WB_MANIFEST = [];
-}
+} */
 // Now safe to call
 precacheAndRoute(self.__WB_MANIFEST);
 

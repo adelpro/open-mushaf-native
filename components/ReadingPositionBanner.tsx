@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useRouter } from 'expo-router';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import {
   READING_BANNER_HEIGHT_CLOSED,
@@ -12,7 +12,7 @@ import {
 } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
-import { readingBannerCollapsedState } from '@/recoil/atoms';
+import { readingBannerCollapsedState, yesterdayPage } from '@/recoil/atoms';
 
 import { ThemedButton } from './ThemedButton';
 import { ThemedText } from './ThemedText';
@@ -22,6 +22,7 @@ export default function ReadingPositionBanner() {
   const [isCollapsed, setIsCollapsed] = useRecoilState(
     readingBannerCollapsedState,
   );
+  const setYesterdayPageValue = useSetRecoilState(yesterdayPage);
 
   const HEIGHT = isCollapsed
     ? READING_BANNER_HEIGHT_CLOSED
@@ -51,6 +52,10 @@ export default function ReadingPositionBanner() {
     router.push({
       pathname: '/',
       params: { page: currentPage.toString() },
+    });
+    setYesterdayPageValue({
+      value: currentPage,
+      date: new Date().toDateString(),
     });
   };
 
