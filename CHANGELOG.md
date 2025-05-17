@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [3.4.1]
 
+- fix: minor UI and logics fix in the service-worker
 - style: Add a max width to the bottom menu
 - fix: minor errors in the bottom menu icons
-- fix: minor manifest.json validation issues
 
 ## [3.4.0]
 
