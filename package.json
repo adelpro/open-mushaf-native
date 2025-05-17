@@ -6,7 +6,7 @@
   "repository": "https://github.com/adelpro/open-mushaf-native.git",
   "main": "expo-router/entry",
   "scripts": {
-    "start": "set NODE_OPTIONS=--max-old-space-size=16384 && expo start",
+    "start": "expo start",
     "start:atlas": "cross-env EXPO_UNSTABLE_ATLAS=true expo start",
     "start:prod": "expo start --no-dev --minify",
     "start:clear": "expo start --reset-cache",
