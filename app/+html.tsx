@@ -137,14 +137,11 @@ export default function Root({ children }: PropsWithChildren) {
             bottom: '20px',
             left: '50%',
             transform: 'translateX(-50%)',
-            backgroundColor: '#2c3e50' /* Dark blue-gray */,
-            color: 'white',
             padding: '16px 24px',
             borderRadius: '8px',
-            zIndex: 10000 /* Ensure it's on top */,
-            display: 'none' /* Initially hidden */,
-            fontFamily:
-              'Tajawal_400Regular, Arial, sans-serif' /* Match app font */,
+            zIndex: 10000,
+            display: 'none',
+            fontFamily: 'Tajawal_400Regular, Arial, sans-serif',
             fontSize: '16px',
             boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
             textAlign: 'center',
@@ -152,6 +149,9 @@ export default function Root({ children }: PropsWithChildren) {
             maxWidth: '90%',
             transition: 'opacity 0.3s ease-in-out',
             opacity: '1',
+            borderColor: '#CCC',
+            backgroundColor: '#333',
+            color: '#FFF',
           }}
         >
           {/* Add loading spinner */}
