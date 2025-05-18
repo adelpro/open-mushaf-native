@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { useSetRecoilState } from 'recoil';
+import { useSetAtom } from 'jotai/react';
 
-import { currentAppVersion } from '@/recoil/atoms';
+import { currentAppVersion } from '@/jotai/atoms';
 import { getAppVersion } from '@/utils';
 
 import { ThemedButton } from './ThemedButton';
@@ -12,7 +12,7 @@ import { ThemedView } from './ThemedView';
 import changeLogsJSON from '../assets/changelogs.json';
 
 export default function ChangeLogs() {
-  const setCurrentVersionValue = useSetRecoilState(currentAppVersion);
+  const setCurrentVersionValue = useSetAtom(currentAppVersion);
   const appVersion = useMemo(() => getAppVersion(), []);
 
   const changeLogs = changeLogsJSON.logs;

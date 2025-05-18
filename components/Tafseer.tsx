@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
+import { useAtom } from 'jotai/react';
 import HTMLView from 'react-native-htmlview';
-import { useRecoilState } from 'recoil';
 
 import { useColors } from '@/hooks/useColors';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
@@ -10,7 +10,7 @@ import {
   hasNoTafseerContent,
   useTafseerContent,
 } from '@/hooks/useTafseerContent';
-import { tafseerTab } from '@/recoil/atoms';
+import { tafseerTab } from '@/jotai/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
 
 import { ThemedText } from './ThemedText';
@@ -40,7 +40,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
   const { tintColor, textColor } = useColors();
   const { surahData } = useQuranMetadata();
   const [surahName, setSurahName] = useState<string>('');
-  const [selectedTabValue, setSelectedTab] = useRecoilState(tafseerTab);
+  const [selectedTabValue, setSelectedTab] = useAtom(tafseerTab);
   const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
   const [tabsWithContent, setTabsWithContent] = useState<
     Record<TafseerTabs, boolean>

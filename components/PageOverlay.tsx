@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
-import { useSetRecoilState } from 'recoil';
+import { useSetAtom } from 'jotai';
 
 import usePageOverlay from '@/hooks/usePageOverLay';
-import { topMenuState } from '@/recoil/atoms';
+import { topMenuState } from '@/jotai/atoms';
 
 import TafseerPopup from './TafseerPopup';
 
@@ -16,7 +16,7 @@ type Props = {
 export default function PageOverlay({ index, dimensions }: Props) {
   const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
   const [show, setShow] = useState<boolean>(false);
-  const setShowTopMenu = useSetRecoilState(topMenuState);
+  const setShowTopMenu = useSetAtom(topMenuState);
 
   const handleAyaClick = ({ aya, surah }: { aya: number; surah: number }) => {
     setSelectedAya({ aya, surah });

@@ -78,6 +78,8 @@
     "expo-updates": "~0.28.13",
     "expo-web-browser": "~14.1.6",
     "fuse.js": "^7.1.0",
+    "jotai": "^2.12.4",
+    "jotai-devtools": "^0.12.0",
     "react": "19.0.0",
     "react-compiler-runtime": "^19.0.0-beta-df7b47d-20241124",
     "react-dom": "19.0.0",
@@ -87,13 +89,11 @@
     "react-native-htmlview": "^0.17.0",
     "react-native-progress": "^5.0.1",
     "react-native-reanimated": "~3.17.4",
-    "react-native-recoil-persist": "^0.0.6",
     "react-native-safe-area-context": "^5.4.0",
     "react-native-screens": "~4.10.0",
     "react-native-svg": "15.11.2",
     "react-native-toggle-input": "^1.0.12",
-    "react-native-web": "^0.20.0",
-    "recoil": "^0.7.7"
+    "react-native-web": "^0.20.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -1,22 +1,22 @@
 import { useEffect, useRef } from 'react';
 
 import { Asset } from 'expo-asset';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai/react';
 
-import {
-  defaultNumberOfPages,
-  imagesMapHafs,
-  imagesMapWarsh,
-} from '@/constants';
-import { mushafRiwaya } from '@/recoil/atoms';
+import { imagesMapHafs, imagesMapWarsh } from '@/constants';
+import { mushafRiwaya } from '@/jotai/atoms';
+
+import useQuranMetadata from './useQuranMetadata';
 
 /**
  * Hook to preload images for smoother page navigation
  * Preloads the current page, next two pages, and previous page
  */
 export default function useImagePreloader(currentPage: number) {
-  const mushafRiwayaValue = useRecoilValue(mushafRiwaya);
+  const mushafRiwayaValue = useAtomValue(mushafRiwaya);
   const preloadedPagesRef = useRef<Set<number>>(new Set());
+  const { specsData } = useQuranMetadata();
+  const { defaultNumberOfPages } = specsData;
 
   useEffect(() => {
     // Skip if riwaya is not defined
@@ -83,7 +83,7 @@ export default function useImagePreloader(currentPage: number) {
     };
 
     preloadImages();
-  }, [currentPage, mushafRiwayaValue]);
+  }, [currentPage, defaultNumberOfPages, mushafRiwayaValue]);
 
   return null; // This hook doesn't return anything
 }

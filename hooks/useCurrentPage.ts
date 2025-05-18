@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
 
 import { useLocalSearchParams } from 'expo-router';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai/react';
 
-import { currentSavedPage } from '@/recoil/atoms';
+import { currentSavedPage } from '@/jotai/atoms';
 
 import useQuranMetadata from './useQuranMetadata';
 
 export default function useCurrentPage() {
   const { page: pageParam, temporary } = useLocalSearchParams();
   const [currentSavedPageValue, setCurrentSavedPageValue] =
-    useRecoilState(currentSavedPage);
+    useAtom(currentSavedPage);
   const { specsData } = useQuranMetadata();
   const defaultNumberOfPages = specsData?.defaultNumberOfPages;
   const setNewCurrentPage = (page: number) => {

@@ -10,7 +10,7 @@ import {
 
 import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai/react';
 
 import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
@@ -23,18 +23,18 @@ import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
   yesterdayPage,
-} from '@/recoil/atoms';
+} from '@/jotai/atoms';
 
 export default function TrackerScreen() {
   const { iconColor, cardColor, primaryColor } = useColors();
   const { currentSavedPage: savedPage } = useCurrentPage();
 
   const [dailyTrackerGoalValue, setdailyTrackerGoalValue] =
-    useRecoilState(dailyTrackerGoal);
-  const [dailyTrackerCompletedValue, setdailyTrackerCompletedValue] =
-    useRecoilState(dailyTrackerCompleted);
-  const [yesterdayPageValue, setYesterdayPageValue] =
-    useRecoilState(yesterdayPage);
+    useAtom(dailyTrackerGoal);
+  const [dailyTrackerCompletedValue, setdailyTrackerCompletedValue] = useAtom(
+    dailyTrackerCompleted,
+  );
+  const [yesterdayPageValue, setYesterdayPageValue] = useAtom(yesterdayPage);
   // Add state for modal visibility
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 

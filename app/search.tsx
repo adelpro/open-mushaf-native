@@ -9,7 +9,7 @@ import {
 
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai/react';
 
 import AdvancedSearchSVG from '@/assets/svgs/search-advanced.svg';
 import SEO from '@/components/seo';
@@ -21,7 +21,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import useDebounce from '@/hooks/useDebounce';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
-import { advancedSearch } from '@/recoil/atoms';
+import { advancedSearch } from '@/jotai/atoms';
 import { QuranText } from '@/types';
 import {
   createArabicFuseSearch,
@@ -48,8 +48,7 @@ export default function Search() {
       : null,
   );
 
-  const [advancedSearchValue, setAdvancedSearchValue] =
-    useRecoilState(advancedSearch);
+  const [advancedSearchValue, setAdvancedSearchValue] = useAtom(advancedSearch);
 
   const handleSearch = useDebounce((text: string) => {
     setQuery(text);

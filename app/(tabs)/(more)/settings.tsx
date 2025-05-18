@@ -3,9 +3,9 @@ import { Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
+import { useAtom } from 'jotai/react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
-import { useRecoilState } from 'recoil';
 
 import SegmentedControl from '@/components/SegmentControl';
 import SegmentedControlWithDisabled from '@/components/SegmentedControlWithDisabled';
@@ -20,24 +20,22 @@ import {
   mushafContrast,
   mushafRiwaya,
   showTrackerNotification,
-} from '@/recoil/atoms';
+} from '@/jotai/atoms';
 import { RiwayaArabic } from '@/types/riwaya';
 import { isRTL, RiwayaByIndice, RiwayaByValue } from '@/utils';
 import { clearStorageAndReload } from '@/utils/clearStorage';
 
 export default function SettingsScreen() {
-  const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useRecoilState(flipSound);
+  const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useAtom(flipSound);
   const [showTrackerNotificationValue, setShowTrackerNotificationValue] =
-    useRecoilState(showTrackerNotification);
+    useAtom(showTrackerNotification);
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const [HizbNotificationValue, setHizbNotificationValue] =
-    useRecoilState<number>(hizbNotification);
+    useAtom<number>(hizbNotification);
   const { textColor, primaryColor, primaryLightColor, cardColor, iconColor } =
     useColors();
-  const [mushafContrastValue, setMushafContrastValue] =
-    useRecoilState(mushafContrast);
-  const [mushafRiwayaValue, setMushafRiwayaValue] =
-    useRecoilState(mushafRiwaya);
+  const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
+  const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
   const toggleFlipSoundSwitch = () => {

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai/react';
 
-import { mushafRiwaya } from '@/recoil/atoms';
+import { mushafRiwaya } from '@/jotai/atoms';
 import { Chapter, Hizb, Page, QuranText, Specs, Surah, Thumn } from '@/types';
 
 type QuranMetadata = {
@@ -18,7 +18,7 @@ type QuranMetadata = {
 };
 
 export default function useQuranMetadata(): QuranMetadata {
-  const mushafRiwayaValue = useRecoilValue(mushafRiwaya);
+  const mushafRiwayaValue = useAtomValue(mushafRiwaya);
 
   const [thumnData, setThumnData] = useState<Thumn[]>([]);
   const [hizbData, setHizbData] = useState<Hizb[]>([]);

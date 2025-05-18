@@ -1,10 +1,10 @@
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai/react';
 
 import { useColors } from '@/hooks/useColors';
-import { mushafRiwaya } from '@/recoil/atoms';
+import { mushafRiwaya } from '@/jotai/atoms';
 import { RiwayaArabic } from '@/types/riwaya';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
 
@@ -15,8 +15,7 @@ import { ThemedView } from './ThemedView';
 const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش'];
 
 export default function SelectRiwaya() {
-  const [mushafRiwayaValue, setMushafRiwayaValue] =
-    useRecoilState(mushafRiwaya);
+  const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const { primaryColor } = useColors();
 
   return (

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtomValue, useSetAtom } from 'jotai/react';
 
 import ChangeLogs from '@/components/ChangeLogs';
 import MushafPage from '@/components/MushafPage';
@@ -17,15 +17,15 @@ import {
   finishedTutorial,
   mushafRiwaya,
   topMenuState,
-} from '@/recoil/atoms';
+} from '@/jotai/atoms';
 import { getAppVersion, isWeb } from '@/utils';
 
 export default function HomeScreen() {
-  const setShowTopMenu = useSetRecoilState(topMenuState);
+  const setShowTopMenu = useSetAtom(topMenuState);
   const [showChangeLogs, setShowChangeLogs] = useState<boolean>(false);
-  const currentAppVersionValue = useRecoilValue(currentAppVersion);
-  const finishedTutorialValue = useRecoilValue(finishedTutorial);
-  const mushafRiwayaValue = useRecoilValue(mushafRiwaya);
+  const currentAppVersionValue = useAtomValue(currentAppVersion);
+  const finishedTutorialValue = useAtomValue(finishedTutorial);
+  const mushafRiwayaValue = useAtomValue(mushafRiwaya);
 
   useEffect(() => {
     const appVersion = getAppVersion();

@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useRouter } from 'expo-router';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useAtom, useSetAtom } from 'jotai';
 
 import {
   READING_BANNER_HEIGHT_CLOSED,
@@ -12,17 +12,15 @@ import {
 } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
-import { readingBannerCollapsedState, yesterdayPage } from '@/recoil/atoms';
+import { readingBannerCollapsedState, yesterdayPage } from '@/jotai/atoms';
 
 import { ThemedButton } from './ThemedButton';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
 export default function ReadingPositionBanner() {
-  const [isCollapsed, setIsCollapsed] = useRecoilState(
-    readingBannerCollapsedState,
-  );
-  const setYesterdayPageValue = useSetRecoilState(yesterdayPage);
+  const [isCollapsed, setIsCollapsed] = useAtom(readingBannerCollapsedState);
+  const setYesterdayPageValue = useSetAtom(yesterdayPage);
 
   const HEIGHT = isCollapsed
     ? READING_BANNER_HEIGHT_CLOSED

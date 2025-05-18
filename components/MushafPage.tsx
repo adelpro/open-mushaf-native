@@ -15,9 +15,9 @@ import {
 } from 'expo-keep-awake';
 import { useRouter } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
+import { useAtomValue, useSetAtom } from 'jotai/react';
 import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
@@ -34,7 +34,7 @@ import {
   mushafContrast,
   showTrackerNotification,
   yesterdayPage,
-} from '@/recoil/atoms';
+} from '@/jotai/atoms';
 import { getSEOMetadataByPage } from '@/utils';
 import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
 
@@ -46,23 +46,21 @@ import { ThemedView } from './ThemedView';
 
 export default function MushafPage() {
   const sound = useRef<Audio.Sound | null>(null);
-  const isFlipSoundEnabled = useRecoilValue(flipSound);
-  const mushafContrastValue = useRecoilValue(mushafContrast);
+  const isFlipSoundEnabled = useAtomValue(flipSound);
+  const mushafContrastValue = useAtomValue(mushafContrast);
 
-  const hizbNotificationValue = useRecoilValue(hizbNotification);
+  const hizbNotificationValue = useAtomValue(hizbNotification);
   const [showHizbNotification, setShowHizbNotification] = useState(false);
 
-  const setdailyTrackerCompletedValue = useSetRecoilState(
-    dailyTrackerCompleted,
-  );
+  const setdailyTrackerCompletedValue = useSetAtom(dailyTrackerCompleted);
 
-  const showTrackerNotificationValue = useRecoilValue(showTrackerNotification);
+  const showTrackerNotificationValue = useAtomValue(showTrackerNotification);
   const [showGoalNotification, setShowGoalNotification] = useState(false);
 
-  const yesterdayPageValue = useRecoilValue(yesterdayPage);
+  const yesterdayPageValue = useAtomValue(yesterdayPage);
   const [progressValue, setProgressValue] = useState(0);
-  const dailyTrackerGoalValue = useRecoilValue(dailyTrackerGoal);
-  const dailyTrackerCompletedValue = useRecoilValue(dailyTrackerCompleted);
+  const dailyTrackerGoalValue = useAtomValue(dailyTrackerGoal);
+  const dailyTrackerCompletedValue = useAtomValue(dailyTrackerCompleted);
 
   const {
     thumnData,
@@ -287,10 +285,10 @@ export default function MushafPage() {
       );
 
       // Update the progress state with new object format
-      setdailyTrackerCompletedValue(() => ({
+      setdailyTrackerCompletedValue({
         value: numberOfThumn / 8,
         date: new Date().toDateString(),
-      }));
+      });
     }
   }, [
     currentPage,

@@ -14,8 +14,8 @@ import {
   MaterialIcons,
 } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useAtom, useAtomValue } from 'jotai/react';
 import * as Progress from 'react-native-progress';
-import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { ThemedView } from '@/components/ThemedView';
 import {
@@ -31,7 +31,7 @@ import {
   dailyTrackerGoal,
   readingBannerCollapsedState,
   topMenuState,
-} from '@/recoil/atoms';
+} from '@/jotai/atoms';
 import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
 import { getJuzPositionByPage } from '@/utils/quranMetadataUtils';
 import { removeTashkeel } from '@/utils/searchUtils';
@@ -47,20 +47,18 @@ export default function TopMenu() {
   const isDarkMode = colorScheme === 'dark';
 
   const [showBottomMenuState, setBottomMenuState] =
-    useRecoilState<boolean>(bottomMenuState);
+    useAtom<boolean>(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] =
-    useRecoilState<boolean>(topMenuState);
-  const currentSavedPageValue = useRecoilValue(currentSavedPage);
-  const readingBannerOpenStateValue = useRecoilValue(
-    readingBannerCollapsedState,
-  );
+    useAtom<boolean>(topMenuState);
+  const currentSavedPageValue = useAtomValue(currentSavedPage);
+  const readingBannerOpenStateValue = useAtomValue(readingBannerCollapsedState);
 
   const BANNER_HEIGHT = readingBannerOpenStateValue
     ? READING_BANNER_HEIGHT_CLOSED
     : READING_BANNER_HEIGHT_OPEN;
 
-  const dailyTrackerGoalValue = useRecoilValue(dailyTrackerGoal);
-  const dailyTrackerCompletedValue = useRecoilValue(dailyTrackerCompleted);
+  const dailyTrackerGoalValue = useAtomValue(dailyTrackerGoal);
+  const dailyTrackerCompletedValue = useAtomValue(dailyTrackerCompleted);
 
   useEffect(() => {
     const newProgress =
