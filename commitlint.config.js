@@ -13,6 +13,9 @@ module.exports = {
     // Disable scope-case rule to allow any case in scope like (Test)
     'scope-case': [0, 'never'],
 
+    // Allow longer body messages for detailed descriptions
+    'body-max-line-length': [0, 'always'],
+
     'type-enum': [
       2,
       'always',
