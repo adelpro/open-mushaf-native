@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
-import Slider from '@react-native-community/slider';
 import { useAtom } from 'jotai/react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
 
+import AwesomeSlider from '@/components/awesomeSlider';
 import SegmentedControl from '@/components/SegmentControl';
 import SegmentedControlWithDisabled from '@/components/SegmentedControlWithDisabled';
 import SEO from '@/components/seo';
@@ -22,7 +22,7 @@ import {
   showTrackerNotification,
 } from '@/jotai/atoms';
 import { RiwayaArabic } from '@/types/riwaya';
-import { isRTL, RiwayaByIndice, RiwayaByValue } from '@/utils';
+import { RiwayaByIndice, RiwayaByValue } from '@/utils';
 import { clearStorageAndReload } from '@/utils/clearStorage';
 
 export default function SettingsScreen() {
@@ -32,8 +32,7 @@ export default function SettingsScreen() {
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const [HizbNotificationValue, setHizbNotificationValue] =
     useAtom<number>(hizbNotification);
-  const { textColor, primaryColor, primaryLightColor, cardColor, iconColor } =
-    useColors();
+  const { textColor, primaryColor, cardColor, iconColor } = useColors();
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
@@ -149,18 +148,10 @@ export default function SettingsScreen() {
         <ThemedView
           style={[styles.sliderContainer, { backgroundColor: cardColor }]}
         >
-          <Slider
-            style={[styles.slider, !isRTL && { transform: [{ scaleX: -1 }] }]}
-            minimumValue={0.3}
-            maximumValue={1}
-            step={0.1}
+          <AwesomeSlider
             value={mushafContrastValue}
-            onValueChange={(value) => {
-              setMushafContrastValue(value);
-            }}
-            minimumTrackTintColor={primaryLightColor}
-            maximumTrackTintColor="#d3d3d3"
-            thumbTintColor={primaryColor}
+            onValueChange={setMushafContrastValue}
+            primaryColor={primaryColor}
           />
         </ThemedView>
       </ThemedView>
@@ -352,11 +343,6 @@ const styles = StyleSheet.create({
   sliderContainer: {
     width: '100%',
     position: 'relative',
-  },
-  slider: {
-    width: '100%',
-    height: 60,
-    paddingHorizontal: 5,
   },
   modalOverlay: {
     flex: 1,

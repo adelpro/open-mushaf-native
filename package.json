@@ -84,6 +84,7 @@
     "react-dom": "19.0.0",
     "react-helmet-async": "^2.0.5",
     "react-native": "0.79.2",
+    "react-native-awesome-slider": "^2.9.0",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-htmlview": "^0.17.0",
     "react-native-progress": "^5.0.1",
