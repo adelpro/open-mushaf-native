@@ -66,7 +66,6 @@ export default function ReadingPositionBanner() {
         onPress={toggleCollapse}
         accessibilityLabel={isCollapsed ? 'Expand banner' : 'Collapse banner'}
       >
-        {' '}
         <View style={styles.headerContainer}>
           <ThemedText style={[styles.text, { color: tintColor }]}>
             العودة إلى موضع القراءة (صفحة {currentSavedPage})

@@ -2,12 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.5.0]
+
+- chore: Migrate to Expo SDK 53
+- chore: Migrate from Recoil to Jotai (end of support)
+- chore: Migrate from @react-native-community/slider to react-native-awesome-slider
+- chore: Update @gorhom/bottom-sheet
+- chore: Update react-native-safe-area-context
+
 ## [3.4.1]
 
-- fix: minor UI and logics fix in the service-worker
+- fix: Minor UI and logics fix in the service-worker
 - style: Add a max width to the bottom menu
-- fix: minor errors in the bottom menu icons
-- fix: minor errors in the reading top banner save button
+- fix: Minor errors in the bottom menu icons
+- fix: Minor errors in the reading top banner save button
 
 ## [3.4.0]
 

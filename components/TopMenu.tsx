@@ -18,10 +18,7 @@ import { useAtom, useAtomValue } from 'jotai/react';
 import * as Progress from 'react-native-progress';
 
 import { ThemedView } from '@/components/ThemedView';
-import {
-  READING_BANNER_HEIGHT_CLOSED,
-  READING_BANNER_HEIGHT_OPEN,
-} from '@/constants';
+import {} from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 import {
@@ -29,7 +26,6 @@ import {
   currentSavedPage,
   dailyTrackerCompleted,
   dailyTrackerGoal,
-  readingBannerCollapsedState,
   topMenuState,
 } from '@/jotai/atoms';
 import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
@@ -51,11 +47,6 @@ export default function TopMenu() {
   const [showTopMenuState, setShowTopMenuState] =
     useAtom<boolean>(topMenuState);
   const currentSavedPageValue = useAtomValue(currentSavedPage);
-  const readingBannerOpenStateValue = useAtomValue(readingBannerCollapsedState);
-
-  const BANNER_HEIGHT = readingBannerOpenStateValue
-    ? READING_BANNER_HEIGHT_CLOSED
-    : READING_BANNER_HEIGHT_OPEN;
 
   const dailyTrackerGoalValue = useAtomValue(dailyTrackerGoal);
   const dailyTrackerCompletedValue = useAtomValue(dailyTrackerCompleted);
@@ -92,7 +83,7 @@ export default function TopMenu() {
       style={[
         styles.container,
         {
-          top: isTemporary ? BANNER_HEIGHT : 0,
+          top: 0,
           backgroundColor: 'transparent',
         },
       ]}

@@ -1,6 +1,7 @@
 // store/state.ts
 import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
+import { observe } from 'jotai-effect';
 
 import { TafseerTabs } from '@/types';
 import { Riwaya } from '@/types/riwaya';
@@ -69,49 +70,39 @@ type PageWithDate = {
   date: string;
 };
 
-const baseYesterdayPage = atomWithStorage<PageWithDate>('YesterdayPage', {
+export const yesterdayPage = atomWithStorage<PageWithDate>('YesterdayPage', {
   value: 1,
   date: new Date().toDateString(),
 });
 
-export const yesterdayPage = atom(
-  async (get) => {
-    const today = new Date().toDateString();
-    const saved = get(baseYesterdayPage);
-    const lastPage = get(currentSavedPage);
+// Yesterday page reset logic
+observe((get, set) => {
+  const today = new Date().toDateString();
+  const saved = get(yesterdayPage);
+  const lastPage = get(currentSavedPage);
 
-    if (saved.date !== today) {
-      return { value: lastPage, date: today };
-    }
-    return saved;
-  },
-  (get, set, _update?: unknown) => {
-    const today = new Date().toDateString();
-    const lastPage = get(currentSavedPage);
-    set(baseYesterdayPage, { value: lastPage, date: today });
-  },
-);
+  if (saved.date !== today) {
+    set(yesterdayPage, { value: lastPage, date: today });
+  }
+});
 
-// Top menu auto-hide atom with timer
-export const topMenuState = atom<boolean>(false);
+// Top menu persist atom
+export const topMenuState = atomWithStorage<boolean>('TopMenuState', false);
 
-export const topMenuStateWithTimer = atom(
-  (get) => get(topMenuState),
-  (get, set, show: boolean) => {
-    const duration = parseInt(
-      process.env.EXPO_PUBLIC_TOP_MENU_HIDE_DURATION_MS || '5000',
-      10,
-    );
+// Top menu auto-hide effect
+observe((get, set) => {
+  const duration = parseInt(
+    process.env.EXPO_PUBLIC_TOP_MENU_HIDE_DURATION_MS || '5000',
+    10,
+  );
+  if (get(topMenuState)) {
+    const timerId = setTimeout(() => {
+      set(topMenuState, false);
+    }, duration);
 
-    set(topMenuState, show);
-
-    if (show) {
-      setTimeout(() => {
-        set(topMenuState, false);
-      }, duration);
-    }
-  },
-);
+    return () => clearTimeout(timerId);
+  }
+});
 
 // ReadingPositionBanner
 export const readingBannerCollapsedState = atomWithStorage<boolean>(
