@@ -1,36 +1,52 @@
-// store/state.ts
-import { atom } from 'jotai';
-import { atomWithStorage } from 'jotai/utils';
 import { observe } from 'jotai-effect';
 
 import { TafseerTabs } from '@/types';
 import { Riwaya } from '@/types/riwaya';
 
-// Basic persisted atoms
-export const bottomMenuState = atomWithStorage<boolean>(
+import { createAtomWithStorage } from './createAtomWithStorage';
+
+export const bottomMenuState = createAtomWithStorage<boolean>(
   'BottomMenuState',
   true,
 );
-export const advancedSearch = atomWithStorage<boolean>('AdvancedSearch', false);
-export const currentSavedPage = atomWithStorage<number>('CurrentSavedPage', 1);
-export const finishedTutorial = atomWithStorage<boolean | undefined>(
+export const advancedSearch = createAtomWithStorage<boolean>(
+  'AdvancedSearch',
+  false,
+);
+export const currentSavedPage = createAtomWithStorage<number>(
+  'CurrentSavedPage',
+  1,
+);
+export const finishedTutorial = createAtomWithStorage<boolean | undefined>(
   'FinishedTutorial',
   undefined,
 );
-export const mushafRiwaya = atomWithStorage<Riwaya | undefined>(
+export const mushafRiwaya = createAtomWithStorage<Riwaya | undefined>(
   'MushafRiwaya',
   undefined,
 );
-export const tafseerTab = atomWithStorage<TafseerTabs>('TafseerTab', 'katheer');
-export const flipSound = atomWithStorage<boolean>('FlipSound', false);
-export const currentAppVersion = atomWithStorage<string | undefined>(
+export const tafseerTab = createAtomWithStorage<TafseerTabs>(
+  'TafseerTab',
+  'katheer',
+);
+export const flipSound = createAtomWithStorage<boolean>('FlipSound', false);
+export const currentAppVersion = createAtomWithStorage<string | undefined>(
   'CurrentAppVersion',
   undefined,
 );
-export const mushafContrast = atomWithStorage<number>('MushafContrast', 0.5);
-export const hizbNotification = atomWithStorage<number>('HizbNotification', 0);
-export const dailyTrackerGoal = atomWithStorage<number>('DailyTrackerGoal', 1);
-export const showTrackerNotification = atomWithStorage<boolean>(
+export const mushafContrast = createAtomWithStorage<number>(
+  'MushafContrast',
+  0.5,
+);
+export const hizbNotification = createAtomWithStorage<number>(
+  'HizbNotification',
+  0,
+);
+export const dailyTrackerGoal = createAtomWithStorage<number>(
+  'DailyTrackerGoal',
+  1,
+);
+export const showTrackerNotification = createAtomWithStorage<boolean>(
   'ShowTrackerNotification',
   false,
 );
@@ -42,27 +58,26 @@ type DailyTrackerProgress = {
 };
 
 // Daily tracker with reset if date changed
-const baseDailyTrackerCompleted = atomWithStorage<DailyTrackerProgress>(
-  'DailyTrackerCompleted',
-  { value: 0, date: new Date().toDateString() },
-);
+export const dailyTrackerCompleted =
+  createAtomWithStorage<DailyTrackerProgress>('DailyTrackerCompleted', {
+    value: 0,
+    date: new Date().toDateString(),
+  });
 
-export const dailyTrackerCompleted = atom(
-  (get) => {
-    const stored = get(baseDailyTrackerCompleted);
-    const today = new Date().toDateString();
+observe((get, set) => {
+  const storedPromise = get(dailyTrackerCompleted);
+  const today = new Date().toDateString();
 
-    return stored.date === today ? stored : { value: 0, date: today };
-  },
-  (get, set, next: DailyTrackerProgress) => {
-    const today = new Date().toDateString();
+  const stored = (
+    storedPromise instanceof Promise
+      ? storedPromise.then((value) => value)
+      : storedPromise
+  ) as PageWithDate;
 
-    set(
-      baseDailyTrackerCompleted,
-      next.date === today ? next : { value: 0, date: today },
-    );
-  },
-);
+  if (stored.date !== today) {
+    set(dailyTrackerCompleted, { value: 0, date: today });
+  }
+});
 
 // Yesterday page logic with async init and sync to currentSavedPage
 type PageWithDate = {
@@ -70,16 +85,30 @@ type PageWithDate = {
   date: string;
 };
 
-export const yesterdayPage = atomWithStorage<PageWithDate>('YesterdayPage', {
-  value: 1,
-  date: new Date().toDateString(),
-});
+export const yesterdayPage = createAtomWithStorage<PageWithDate>(
+  'YesterdayPage',
+  {
+    value: 1,
+    date: new Date().toDateString(),
+  },
+);
 
 // Yesterday page reset logic
 observe((get, set) => {
   const today = new Date().toDateString();
-  const saved = get(yesterdayPage);
-  const lastPage = get(currentSavedPage);
+  const savedPromise = get(yesterdayPage);
+  const lastPagePromize = get(currentSavedPage);
+
+  const saved = (
+    savedPromise instanceof Promise
+      ? savedPromise.then((value) => value)
+      : savedPromise
+  ) as PageWithDate;
+  const lastPage = (
+    lastPagePromize instanceof Promise
+      ? lastPagePromize.then((value) => value)
+      : lastPagePromize
+  ) as number;
 
   if (saved.date !== today) {
     set(yesterdayPage, { value: lastPage, date: today });
@@ -87,7 +116,10 @@ observe((get, set) => {
 });
 
 // Top menu persist atom
-export const topMenuState = atomWithStorage<boolean>('TopMenuState', false);
+export const topMenuState = createAtomWithStorage<boolean>(
+  'TopMenuState',
+  false,
+);
 
 // Top menu auto-hide effect
 observe((get, set) => {
@@ -105,7 +137,7 @@ observe((get, set) => {
 });
 
 // ReadingPositionBanner
-export const readingBannerCollapsedState = atomWithStorage<boolean>(
+export const readingBannerCollapsedState = createAtomWithStorage<boolean>(
   'ReadingBannerCollapsedState',
   false,
 );
