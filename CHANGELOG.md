@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [3.5.0]
 
 - chore: Migrate to Expo SDK 53
+- chore: Migrate from expo-av to expo-audio (End of support)
 - chore: Migrate from Recoil to Jotai (end of support)
 - chore: Migrate from @react-native-community/slider to react-native-awesome-slider
 - chore: Update @gorhom/bottom-sheet

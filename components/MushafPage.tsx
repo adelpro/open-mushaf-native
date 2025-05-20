@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
@@ -6,7 +6,7 @@ import {
   useColorScheme,
 } from 'react-native';
 
-import { Audio } from 'expo-av';
+import { useAudioPlayer } from 'expo-audio';
 import { Image } from 'expo-image';
 import {
   activateKeepAwakeAsync,
@@ -44,8 +44,10 @@ import SEO from './seo';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+const audioSource = require('@/assets/sounds/page-flip-sound.mp3');
+
 export default function MushafPage() {
-  const sound = useRef<Audio.Sound | null>(null);
+  const player = useAudioPlayer(audioSource);
   const isFlipSoundEnabled = useAtomValue(flipSound);
   const mushafContrastValue = useAtomValue(mushafContrast);
 
@@ -169,8 +171,8 @@ export default function MushafPage() {
       },
     });
 
-    if (isFlipSoundEnabled && sound.current) {
-      sound.current.replayAsync();
+    if (isFlipSoundEnabled) {
+      player.play();
     }
   };
 
@@ -201,23 +203,6 @@ export default function MushafPage() {
       opacity,
     };
   });
-
-  useEffect(() => {
-    if (!isFlipSoundEnabled) return;
-
-    const loadSound = async () => {
-      const { sound: soundObject } = await Audio.Sound.createAsync(
-        require('@/assets/sounds/page-flip-sound.mp3'),
-      );
-      sound.current = soundObject;
-    };
-
-    loadSound();
-
-    return () => {
-      sound.current?.unloadAsync().then(() => (sound.current = null));
-    };
-  }, [isFlipSoundEnabled]);
 
   useEffect(() => {
     const tag = 'MushafPage';

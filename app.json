@@ -54,7 +54,7 @@
       "expo-web-browser",
       "expo-router",
       "expo-font",
-      "expo-av",
+      "expo-audio",
       "expo-secure-store"
     ],
     "experiments": {
