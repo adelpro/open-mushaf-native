@@ -65,6 +65,7 @@
     "expo": "^53.0.9",
     "expo-application": "~6.1.4",
     "expo-audio": "~0.4.5",
+    "expo-av": "~15.1.4",
     "expo-build-properties": "~0.14.6",
     "expo-font": "~13.3.1",
     "expo-image": "~2.1.7",
@@ -90,11 +91,13 @@
     "react-native-htmlview": "^0.17.0",
     "react-native-progress": "^5.0.1",
     "react-native-reanimated": "~3.17.4",
+    "react-native-recoil-persist": "^0.0.6",
     "react-native-safe-area-context": "^5.4.0",
     "react-native-screens": "~4.10.0",
     "react-native-svg": "15.11.2",
     "react-native-toggle-input": "^1.0.12",
-    "react-native-web": "^0.20.0"
+    "react-native-web": "^0.20.0",
+    "recoil": "^0.7.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
