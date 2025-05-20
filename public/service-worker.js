@@ -106,17 +106,7 @@ try {
   const { ExpirationPlugin } = workbox.expiration;
   const { precacheAndRoute } = workbox.precaching;
 
-  // Check if __WB_MANIFEST exists before using it
-  if (self.__WB_MANIFEST) {
-    // Only precache essential UI assets, not all Quran pages
-    precacheAndRoute(self.__WB_MANIFEST);
-  } else {
-    console.error(
-      '__WB_MANIFEST is not defined. Workbox CLI may not be processing this file correctly.',
-    );
-    // Fallback to empty array to prevent errors
-    precacheAndRoute([]);
-  }
+  precacheAndRoute(self.__WB_MANIFEST);
 
   // Cache the Google Fonts stylesheets with a stale-while-revalidate strategy
   registerRoute(
