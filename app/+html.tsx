@@ -322,7 +322,7 @@ if ('serviceWorker' in navigator) {
   });
   
   // Check service worker status on page load
-  if (navigator.serviceWorker.controller) 
+  if (navigator.serviceWorker.controller) {
     // Create a message channel
     const messageChannel = new MessageChannel();
     
