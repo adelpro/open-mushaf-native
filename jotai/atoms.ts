@@ -38,7 +38,7 @@ export const mushafContrast = createAtomWithStorage<number>(
   'MushafContrast',
   0.5,
 );
-export const hizbNotification = createAtomWithStorage<number>(
+export const hizbNotification = createAtomWithStorage<number | undefined>(
   'HizbNotification',
   0,
 );

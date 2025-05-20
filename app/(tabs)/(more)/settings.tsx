@@ -31,7 +31,7 @@ export default function SettingsScreen() {
     useAtom(showTrackerNotification);
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const [HizbNotificationValue, setHizbNotificationValue] =
-    useAtom<number>(hizbNotification);
+    useAtom(hizbNotification);
   const { textColor, primaryColor, cardColor, iconColor } = useColors();
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);

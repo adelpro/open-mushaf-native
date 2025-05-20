@@ -225,7 +225,7 @@ if ('serviceWorker' in navigator) {
         if (notificationElement) {
           notificationElement.style.display = 'none';
         }
-      }, 30000); // hide after 30 seconds
+      }, 10000); // hide after 10 seconds
       
       navigator.serviceWorker.register('/service-worker.js')
         .then(registration => {
