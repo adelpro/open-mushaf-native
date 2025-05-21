@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.5.1]
+
+- chore: clean-up multiple unused packages
+- fix: Update metro.config to fix build error from b3.5.0
+
 ## [3.5.0]
 
 - chore: Migrate to Expo SDK 53
