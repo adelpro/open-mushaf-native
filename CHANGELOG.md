@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [3.5.1]
 
+- chore: Migrate from @react-native-async-storage/async-storage to react-native-mmkv
+
+## [3.5.1]
+
 - chore: clean-up multiple unused packages
 - fix: Update metro.config to fix build error from b3.5.0
 

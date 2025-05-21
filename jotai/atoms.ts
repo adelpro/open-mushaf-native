@@ -65,18 +65,14 @@ export const dailyTrackerCompleted =
   });
 
 observe((get, set) => {
-  const storedPromise = get(dailyTrackerCompleted);
-  const today = new Date().toDateString();
+  (async () => {
+    const stored = await get(dailyTrackerCompleted);
+    const today = new Date().toDateString();
 
-  const stored = (
-    storedPromise instanceof Promise
-      ? storedPromise.then((value) => value)
-      : storedPromise
-  ) as PageWithDate;
-
-  if (stored.date !== today) {
-    set(dailyTrackerCompleted, { value: 0, date: today });
-  }
+    if (stored.date !== today) {
+      set(dailyTrackerCompleted, { value: 0, date: today });
+    }
+  })();
 });
 
 // Yesterday page logic with async init and sync to currentSavedPage
@@ -95,24 +91,15 @@ export const yesterdayPage = createAtomWithStorage<PageWithDate>(
 
 // Yesterday page reset logic
 observe((get, set) => {
-  const today = new Date().toDateString();
-  const savedPromise = get(yesterdayPage);
-  const lastPagePromize = get(currentSavedPage);
+  (async () => {
+    const today = new Date().toDateString();
+    const saved = await get(yesterdayPage);
+    const lastPage = await get(currentSavedPage);
 
-  const saved = (
-    savedPromise instanceof Promise
-      ? savedPromise.then((value) => value)
-      : savedPromise
-  ) as PageWithDate;
-  const lastPage = (
-    lastPagePromize instanceof Promise
-      ? lastPagePromize.then((value) => value)
-      : lastPagePromize
-  ) as number;
-
-  if (saved.date !== today) {
-    set(yesterdayPage, { value: lastPage, date: today });
-  }
+    if (saved.date !== today) {
+      set(yesterdayPage, { value: lastPage, date: today });
+    }
+  })();
 });
 
 // Top menu persist atom

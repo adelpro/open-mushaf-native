@@ -23,7 +23,7 @@ import {
 } from '@/jotai/atoms';
 import { RiwayaArabic } from '@/types/riwaya';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
-import { clearStorageAndReload } from '@/utils/clearStorage';
+import { clearStorageAndReload } from '@/utils/storage/clearStorage';
 
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useAtom(flipSound);
