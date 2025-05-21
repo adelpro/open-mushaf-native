@@ -17,6 +17,12 @@ config.resolver = {
   sourceExts: [...resolver.sourceExts, 'svg'],
 };
 
+config.resolver.unstable_conditionNames = [
+  'require',
+  'react-native',
+  'default',
+];
+
 config.cacheStores = [
   new FileStore({
     root: path.join(os.tmpdir(), 'metro-cache'),
