@@ -42,10 +42,8 @@ export default function TopMenu() {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
-  const [showBottomMenuState, setBottomMenuState] =
-    useAtom<boolean>(bottomMenuState);
-  const [showTopMenuState, setShowTopMenuState] =
-    useAtom<boolean>(topMenuState);
+  const [showBottomMenuState, setBottomMenuState] = useAtom(bottomMenuState);
+  const [showTopMenuState, setShowTopMenuState] = useAtom(topMenuState);
   const currentSavedPageValue = useAtomValue(currentSavedPage);
 
   const dailyTrackerGoalValue = useAtomValue(dailyTrackerGoal);
@@ -63,7 +61,7 @@ export default function TopMenu() {
   }, [dailyTrackerGoalValue, dailyTrackerCompletedValue.value]);
 
   const toggleMenu = () => {
-    setBottomMenuState((state: boolean) => !state);
+    setBottomMenuState((state) => !state);
   };
 
   const { page, temporary } = useLocalSearchParams<{
