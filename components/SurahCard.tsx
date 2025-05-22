@@ -34,9 +34,23 @@ export default function SurahCard({ surah }: Props) {
         <ThemedText style={[styles.number, { color: textColor }]}>
           {surah.number}
         </ThemedText>
-        <ThemedText style={[styles.name, { color: textColor }]}>
-          {surah.name}
-        </ThemedText>
+
+        <ThemedView style={styles.surahContainer}>
+          <ThemedText style={[styles.name, { color: textColor }]}>
+            {surah.name}
+          </ThemedText>
+          <ThemedView style={styles.infoWrapper}>
+            <ThemedText style={[styles.infoText, { color: textColor }]}>
+              {surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}
+            </ThemedText>
+            <ThemedText style={[styles.infoText, { color: textColor }]}>
+              {` - `}
+            </ThemedText>
+            <ThemedText style={[styles.infoText, { color: textColor }]}>
+              {`آياتها: ${surah.numberOfAyahs}`}
+            </ThemedText>
+          </ThemedView>
+        </ThemedView>
       </ThemedView>
     </Pressable>
   );
@@ -52,8 +66,8 @@ const styles = StyleSheet.create({
     borderColor: '#e0e0e0',
     elevation: 3,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
   },
 
   content: {
@@ -77,5 +91,23 @@ const styles = StyleSheet.create({
     fontFamily: 'Amiri_400Regular',
     lineHeight: 24,
     padding: 10,
+  },
+  surahContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1,
+  },
+  infoWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 10,
+    textAlign: 'center',
+    minWidth: 40,
+    marginHorizontal: 10,
+  },
+  infoText: {
+    fontSize: 14,
+    fontFamily: 'Tajawal_400Regular',
   },
 });
