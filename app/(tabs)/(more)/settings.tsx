@@ -373,12 +373,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     textAlignVertical: 'center',
   },
-  sliderValue: {
-    fontSize: 22,
-    fontFamily: 'Tajawal_700Bold',
-    textAlignVertical: 'center',
-    paddingHorizontal: 10,
-  },
   sliderContainer: {
     width: '100%',
     position: 'relative',
