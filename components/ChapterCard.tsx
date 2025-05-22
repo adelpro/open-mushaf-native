@@ -39,10 +39,10 @@ export default function ChapterCard({ chapter }: Props) {
             strokeWidth={24}
             fill={primaryColor}
             stroke={secondaryColor}
+            number={chapter.number}
+            fontFamily="Tajawal_400Regular"
+            fontSize={16}
           />
-          <ThemedText style={[styles.number, { color: secondaryColor }]}>
-            {chapter.number}
-          </ThemedText>
         </ThemedView>
 
         <ThemedView style={styles.chapterContainer}>
@@ -82,17 +82,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     position: 'relative',
   },
-  number: {
-    fontSize: 16,
-    fontFamily: 'Tajawal_400Regular',
-    padding: 2,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
-  },
+
   name: {
     fontSize: 22,
     fontFamily: 'Amiri_400Regular',

@@ -40,10 +40,10 @@ export default function SurahCard({ surah }: Props) {
             strokeWidth={24}
             fill={primaryColor}
             stroke={secondaryColor}
+            number={surah.number}
+            fontFamily="Tajawal_400Regular"
+            fontSize={16}
           />
-          <ThemedText style={[styles.number, { color: secondaryColor }]}>
-            {surah.number}
-          </ThemedText>
         </ThemedView>
 
         <ThemedView style={styles.surahContainer}>
@@ -94,17 +94,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     position: 'relative',
   },
-  number: {
-    fontSize: 16,
-    fontFamily: 'Tajawal_400Regular',
-    padding: 2,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
-  },
+  // The 'number' style is no longer needed as IslamicMark handles it.
   name: {
     fontSize: 22,
     fontFamily: 'Amiri_400Regular',

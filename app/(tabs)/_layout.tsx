@@ -32,6 +32,7 @@ export default function TabLayout() {
         },
         tabBarLabelStyle: {
           fontFamily: 'Tajawal_400Regular',
+          margin: 5,
         },
         tabBarIconStyle: {},
         headerShown: false,
