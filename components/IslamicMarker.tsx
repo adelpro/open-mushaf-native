@@ -37,6 +37,7 @@ export const IslamicMark = ({
       viewBox="0 0 512 512"
       width={width}
       height={height}
+      preserveAspectRatio="xMidYMid meet"
     >
       <path
         strokeLinecap="round"
