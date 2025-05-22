@@ -154,15 +154,14 @@ export default function SettingsScreen() {
             { backgroundColor: cardColor },
           ]}
         >
-          <Entypo name="light-up" size={24} color={iconColor} />
+          <Entypo
+            name="light-up"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
           <ThemedText type="defaultSemiBold" style={styles.itemText}>
-            سطوع الوضع الليلي:
-          </ThemedText>
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.sliderValue, { padding: 2 }]}
-          >
-            {`(${Number(mushafContrastValue * 100).toFixed(0)}%)`}
+            {` سطوع الوضع الليلي: (${Number(mushafContrastValue * 100).toFixed(0)}%)`}
           </ThemedText>
         </ThemedView>
 
@@ -191,7 +190,12 @@ export default function SettingsScreen() {
             { backgroundColor: cardColor },
           ]}
         >
-          <Feather name="bell" size={24} color={iconColor} />
+          <Feather
+            name="bell"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
           <ThemedText
             type="defaultSemiBold"
             style={[styles.itemText, styles.fullWidth]}
@@ -212,6 +216,7 @@ export default function SettingsScreen() {
           />
         </Pressable>
       </ThemedView>
+
       <ThemedView
         style={[
           styles.settingsSection,
@@ -221,44 +226,36 @@ export default function SettingsScreen() {
       >
         <ThemedView
           style={[
-            styles.settingsSection,
-            styles.columnSection,
+            styles.fullWidthContainer,
+            styles.iconTextContainer,
             { backgroundColor: cardColor },
           ]}
         >
-          <ThemedView
-            style={[
-              styles.fullWidthContainer,
-              styles.iconTextContainer,
-              { backgroundColor: cardColor },
-            ]}
+          <Feather
+            name="book-open"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, styles.fullWidth]}
           >
-            <Feather
-              name="book-open"
-              size={24}
-              color={iconColor}
-              style={styles.iconStyle}
-            />
-            <ThemedText
-              type="defaultSemiBold"
-              style={[styles.itemText, styles.fullWidth]}
-            >
-              إختيار الرواية :
-            </ThemedText>
-          </ThemedView>
-          <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
-            <SegmentedControl
-              options={riwayaOptions}
-              initialSelectedIndex={RiwayaByIndice(mushafRiwayaValue)}
-              activeColor={primaryColor}
-              textColor={primaryColor}
-              onSelectionChange={(index: number) => {
-                const selectedRiwaya = RiwayaByValue(index);
-                setMushafRiwayaValue(selectedRiwaya);
-              }}
-            />
-          </Pressable>
+            إختيار الرواية :
+          </ThemedText>
         </ThemedView>
+        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
+          <SegmentedControl
+            options={riwayaOptions}
+            initialSelectedIndex={RiwayaByIndice(mushafRiwayaValue)}
+            activeColor={primaryColor}
+            textColor={primaryColor}
+            onSelectionChange={(index: number) => {
+              const selectedRiwaya = RiwayaByValue(index);
+              setMushafRiwayaValue(selectedRiwaya);
+            }}
+          />
+        </Pressable>
       </ThemedView>
 
       <ThemedView
@@ -375,7 +372,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 5,
     textAlignVertical: 'center',
-    marginBottom: 5,
   },
   sliderValue: {
     fontSize: 22,
@@ -443,9 +439,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'transparent',
-    marginRight: 8,
+    margin: 2,
+    marginBottom: 5,
   },
   iconStyle: {
-    marginHorizontal: 4,
+    paddingVertical: 8,
   },
 });

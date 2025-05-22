@@ -83,9 +83,9 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   number: {
-    fontSize: 18,
-    fontFamily: 'Tajawal_500Medium',
-    padding: 10,
+    fontSize: 16,
+    fontFamily: 'Tajawal_400Regular',
+    padding: 2,
     textAlign: 'center',
     textAlignVertical: 'center',
     position: 'absolute',
