@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [3.5.2]
 
 - chore: Migrate from @react-native-async-storage/async-storage to react-native-mmkv
+- feat: Add share button
 
 ## [3.5.1]
 
