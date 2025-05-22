@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { Feather } from '@expo/vector-icons';
+import { Entypo, Feather } from '@expo/vector-icons';
 import { useAtom } from 'jotai/react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
@@ -72,12 +72,15 @@ export default function SettingsScreen() {
         accessibilityHint="اضغط لتفعيل أو تعطيل صوت قلب الصفحة"
         accessibilityState={{ selected: isFlipSoundEnabled }}
       >
-        <ThemedText
-          type="defaultSemiBold"
-          style={[styles.itemText, { backgroundColor: cardColor }]}
-        >
-          صوت قلب الصفحة:
-        </ThemedText>
+        <ThemedView style={styles.iconTextContainer}>
+          <Feather name="volume-2" size={24} color={iconColor} />
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, { backgroundColor: cardColor }]}
+          >
+            صوت قلب الصفحة:
+          </ThemedText>
+        </ThemedView>
         <Toggle
           color={primaryColor}
           size={40}
@@ -105,12 +108,15 @@ export default function SettingsScreen() {
           selected: showTrackerNotificationValue,
         }}
       >
-        <ThemedText
-          type="defaultSemiBold"
-          style={[styles.itemText, { backgroundColor: cardColor }]}
-        >
-          تنبيه الورد اليومي:
-        </ThemedText>
+        <ThemedView style={styles.iconTextContainer}>
+          <Feather name="bell" size={24} color={iconColor} />
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, { backgroundColor: cardColor }]}
+          >
+            تنبيه الورد اليومي:
+          </ThemedText>
+        </ThemedView>
         <Toggle
           color={primaryColor}
           size={40}
@@ -132,8 +138,13 @@ export default function SettingsScreen() {
         ]}
       >
         <ThemedView
-          style={[styles.rowContainer, { backgroundColor: cardColor }]}
+          style={[
+            styles.rowContainer,
+            styles.iconTextContainer,
+            { backgroundColor: cardColor },
+          ]}
         >
+          <Entypo name="light-up" size={24} color={iconColor} />
           <ThemedText type="defaultSemiBold" style={styles.itemText}>
             سطوع الوضع الليلي:
           </ThemedText>
@@ -164,8 +175,13 @@ export default function SettingsScreen() {
         ]}
       >
         <ThemedView
-          style={[styles.fullWidthContainer, { backgroundColor: cardColor }]}
+          style={[
+            styles.fullWidthContainer,
+            styles.iconTextContainer,
+            { backgroundColor: cardColor },
+          ]}
         >
+          <Feather name="bell" size={24} color={iconColor} />
           <ThemedText
             type="defaultSemiBold"
             style={[styles.itemText, styles.fullWidth]}
@@ -194,15 +210,27 @@ export default function SettingsScreen() {
         ]}
       >
         <ThemedView
-          style={[styles.fullWidthContainer, { backgroundColor: cardColor }]}
+          style={[
+            styles.settingsSection,
+            styles.columnSection,
+            { backgroundColor: cardColor },
+          ]}
         >
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.itemText, styles.fullWidth]}
+          <ThemedView
+            style={[
+              styles.fullWidthContainer,
+              styles.iconTextContainer,
+              { backgroundColor: cardColor },
+            ]}
           >
-            إختيار الرواية :
-          </ThemedText>
-
+            <Feather name="book-open" size={24} color={iconColor} />
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.itemText, styles.fullWidth]}
+            >
+              إختيار الرواية :
+            </ThemedText>
+          </ThemedView>
           <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
             <SegmentedControl
               options={riwayaOptions}
@@ -395,5 +423,10 @@ const styles = StyleSheet.create({
   modalButton: {
     width: '40%',
     maxWidth: 100,
+  },
+  iconTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
   },
 });

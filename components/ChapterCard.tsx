@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { Chapter } from '@/types';
 
+import { IslamicMark } from './IslamicMarker';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
@@ -15,7 +16,8 @@ type Props = {
 
 export default function ChapterCard({ chapter }: Props) {
   const router = useRouter();
-  const { backgroundColor, textColor } = useColors();
+  const { backgroundColor, textColor, primaryColor, secondaryColor } =
+    useColors();
 
   const handlePress = () => {
     router.replace({
@@ -30,12 +32,24 @@ export default function ChapterCard({ chapter }: Props) {
       style={[styles.container, { backgroundColor }]}
     >
       <ThemedView style={styles.content}>
-        <ThemedText style={[styles.number, { color: textColor }]}>
-          {chapter.number}
-        </ThemedText>
-        <ThemedText style={[styles.name, { color: textColor }]}>
-          {chapter.name}
-        </ThemedText>
+        <ThemedView style={styles.numberContainer}>
+          <IslamicMark
+            width={50}
+            height={50}
+            strokeWidth={24}
+            fill={primaryColor}
+            stroke={secondaryColor}
+          />
+          <ThemedText style={[styles.number, { color: secondaryColor }]}>
+            {chapter.number}
+          </ThemedText>
+        </ThemedView>
+
+        <ThemedView style={styles.chapterContainer}>
+          <ThemedText style={[styles.name, { color: textColor }]}>
+            {chapter.name}
+          </ThemedText>
+        </ThemedView>
       </ThemedView>
     </Pressable>
   );
@@ -51,8 +65,8 @@ const styles = StyleSheet.create({
     borderColor: '#e0e0e0',
     elevation: 3,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
   },
 
   content: {
@@ -62,19 +76,32 @@ const styles = StyleSheet.create({
     height: 80,
     width: '100%',
   },
+  numberContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 10,
+    position: 'relative',
+  },
   number: {
-    fontSize: 20,
-    fontFamily: 'Tajawal_700Bold',
-    fontStyle: 'italic',
+    fontSize: 18,
+    fontFamily: 'Tajawal_500Medium',
     padding: 10,
     textAlign: 'center',
-    minWidth: 40,
-    marginHorizontal: 10,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
   },
   name: {
-    fontSize: 20,
-    fontFamily: 'Tajawal_700Bold',
-    lineHeight: 22,
+    fontSize: 22,
+    fontFamily: 'Amiri_400Regular',
+    lineHeight: 26,
     padding: 10,
+  },
+  chapterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1,
   },
 });

@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { Surah } from '@/types';
 
+import { IslamicMark } from './IslamicMarker';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
@@ -16,7 +17,8 @@ type Props = {
 export default function SurahCard({ surah }: Props) {
   const router = useRouter();
 
-  const { backgroundColor, textColor } = useColors();
+  const { backgroundColor, textColor, primaryColor, secondaryColor } =
+    useColors();
 
   const handlePress = () => {
     router.replace({
@@ -31,9 +33,18 @@ export default function SurahCard({ surah }: Props) {
       style={[styles.container, { backgroundColor }]}
     >
       <ThemedView style={styles.content}>
-        <ThemedText style={[styles.number, { color: textColor }]}>
-          {surah.number}
-        </ThemedText>
+        <ThemedView style={styles.numberContainer}>
+          <IslamicMark
+            width={50}
+            height={50}
+            strokeWidth={24}
+            fill={primaryColor}
+            stroke={secondaryColor}
+          />
+          <ThemedText style={[styles.number, { color: secondaryColor }]}>
+            {surah.number}
+          </ThemedText>
+        </ThemedView>
 
         <ThemedView style={styles.surahContainer}>
           <ThemedText style={[styles.name, { color: textColor }]}>
@@ -77,19 +88,26 @@ const styles = StyleSheet.create({
     height: 80,
     width: '100%',
   },
+  numberContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 10,
+    position: 'relative',
+  },
   number: {
-    fontSize: 20,
-    fontFamily: 'Tajawal_700Bold',
-    fontStyle: 'italic',
+    fontSize: 18,
+    fontFamily: 'Tajawal_500Medium',
     padding: 10,
     textAlign: 'center',
-    minWidth: 40,
-    marginHorizontal: 10,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
   },
   name: {
-    fontSize: 20,
+    fontSize: 22,
     fontFamily: 'Amiri_400Regular',
-    lineHeight: 24,
+    lineHeight: 26,
     padding: 10,
   },
   surahContainer: {
@@ -101,13 +119,15 @@ const styles = StyleSheet.create({
   infoWrapper: {
     flexDirection: 'row',
     justifyContent: 'center',
-    padding: 10,
-    textAlign: 'center',
-    minWidth: 40,
-    marginHorizontal: 10,
+    alignItems: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    marginHorizontal: 20,
   },
   infoText: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: 'Tajawal_400Regular',
+
+    marginHorizontal: 2,
   },
 });

@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import {
   Feather,
@@ -32,15 +26,11 @@ import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
 import { getJuzPositionByPage } from '@/utils/quranMetadataUtils';
 import { removeTashkeel } from '@/utils/searchUtils';
 
-import { ThemedSafeAreaView } from './ThemedSafeAreaView';
-
 const ICON_SIZE = 32;
 export default function TopMenu() {
-  const { tintColor } = useColors();
+  const { tintColor, backgroundColor } = useColors();
   const { surahData, thumnData } = useQuranMetadata();
   const [progressValue, setProgressValue] = useState<number>(0);
-  const colorScheme = useColorScheme();
-  const isDarkMode = colorScheme === 'dark';
 
   const [showBottomMenuState, setBottomMenuState] = useAtom(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] = useAtom(topMenuState);
@@ -77,22 +67,12 @@ export default function TopMenu() {
   );
 
   return showTopMenuState ? (
-    <ThemedSafeAreaView
-      style={[
-        styles.container,
-        {
-          top: 0,
-          backgroundColor: 'transparent',
-        },
-      ]}
-    >
+    <ThemedView style={styles.container}>
       <ThemedView
         style={[
           styles.topMenu,
           {
-            backgroundColor: isDarkMode
-              ? 'rgba(0, 0, 0, 0.4)'
-              : 'rgba(244, 244, 244, 0.8)',
+            backgroundColor,
           },
         ]}
       >
@@ -214,7 +194,7 @@ export default function TopMenu() {
           </TouchableOpacity>
         </ThemedView>
       </ThemedView>
-    </ThemedSafeAreaView>
+    </ThemedView>
   ) : null;
 }
 
@@ -227,11 +207,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     position: 'absolute',
-
+    top: 0,
     left: 0,
     right: 0,
     backgroundColor: 'transparent',
     maxWidth: 640,
+    opacity: 0.8,
   },
   topMenu: {
     height: 60,

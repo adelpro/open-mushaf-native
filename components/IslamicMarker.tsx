@@ -1,0 +1,33 @@
+// components/IslamicMark.tsx
+import React from 'react';
+
+type IslamicMarkProps = {
+  width?: number;
+  height?: number;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+};
+
+export const IslamicMark = ({
+  width = 50,
+  height = 50,
+  fill = 'black',
+  stroke = 'black',
+  strokeWidth = 24,
+}: IslamicMarkProps) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 512 512"
+    width={width}
+    height={height}
+    stroke={stroke}
+    fill={fill}
+  >
+    <path
+      strokeLinecap="round"
+      strokeWidth={strokeWidth}
+      d="m461.812 247.728-54.431-54.431V116.32c0-6.461-5.237-11.699-11.699-11.699h-76.979l-54.43-54.431c-4.568-4.568-11.976-4.568-16.544 0l-54.431 54.431H116.32c-6.461 0-11.699 5.237-11.699 11.699v76.977L50.19 247.728c-4.568 4.568-4.568 11.976 0 16.545l54.431 54.431v76.977c0 6.461 5.237 11.699 11.699 11.699h76.977l54.431 54.431c4.568 4.568 11.976 4.568 16.544 0l54.431-54.431h76.977c6.461 0 11.699-5.237 11.699-11.699v-76.977l54.431-54.431c4.57-4.569 4.57-11.977.002-16.545z"
+    />
+  </svg>
+);
