@@ -73,7 +73,12 @@ export default function SettingsScreen() {
         accessibilityState={{ selected: isFlipSoundEnabled }}
       >
         <ThemedView style={styles.iconTextContainer}>
-          <Feather name="volume-2" size={24} color={iconColor} />
+          <Feather
+            name="volume-2"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
           <ThemedText
             type="defaultSemiBold"
             style={[styles.itemText, { backgroundColor: cardColor }]}
@@ -109,7 +114,12 @@ export default function SettingsScreen() {
         }}
       >
         <ThemedView style={styles.iconTextContainer}>
-          <Feather name="bell" size={24} color={iconColor} />
+          <Feather
+            name="bell"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
           <ThemedText
             type="defaultSemiBold"
             style={[styles.itemText, { backgroundColor: cardColor }]}
@@ -223,7 +233,12 @@ export default function SettingsScreen() {
               { backgroundColor: cardColor },
             ]}
           >
-            <Feather name="book-open" size={24} color={iconColor} />
+            <Feather
+              name="book-open"
+              size={24}
+              color={iconColor}
+              style={styles.iconStyle}
+            />
             <ThemedText
               type="defaultSemiBold"
               style={[styles.itemText, styles.fullWidth]}
@@ -428,5 +443,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'transparent',
+    marginRight: 8,
+  },
+  iconStyle: {
+    marginHorizontal: 4,
   },
 });

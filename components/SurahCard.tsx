@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Tajawal_500Medium',
     padding: 10,
     textAlign: 'center',
+    textAlignVertical: 'center',
     position: 'absolute',
     top: '50%',
     left: '50%',
