@@ -34,7 +34,7 @@ export default function HomeScreen() {
   }, [currentAppVersionValue]);
 
   return (
-    <ThemedSafeAreaView style={styles.container}>
+    <ThemedSafeAreaView style={styles.container} disableTopInset={true}>
       <SEO
         title="المصحف المفتوح - المصحف"
         description="قرآءة القرآن مع خيارات متعددة للقراءات والتفاسير"

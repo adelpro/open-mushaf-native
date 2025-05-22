@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 
 - chore: Migrate from @react-native-async-storage/async-storage to react-native-mmkv
 - feat: Add share button
+- fix: Fix Tafseer popup scroll issue
+- chore: Updated Colors.ts with new primary, secondary, and accent colors.
+- refactor: Refactored SurahCard and ChapterCard to include IslamicMarker and improved styling.
+- style: Enhanced TopMenu by removing redundant color scheme logic and simplifying layout.
+- style: Improved settings.tsx with icons and better layout organization.
 
 ## [3.5.1]
 
