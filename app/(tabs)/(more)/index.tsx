@@ -210,6 +210,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     fontFamily: 'Tajawal_400Regular',
     textAlignVertical: 'center',
+    alignItems: 'baseline',
   },
   svg: {
     color: 'white',

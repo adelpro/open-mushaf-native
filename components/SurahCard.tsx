@@ -92,9 +92,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 10,
-    position: 'relative',
   },
-  // The 'number' style is no longer needed as IslamicMark handles it.
+
   name: {
     fontSize: 22,
     fontFamily: 'Amiri_400Regular',

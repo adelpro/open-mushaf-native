@@ -55,6 +55,7 @@ export const IslamicMark = ({
           fontSize={calculatedSvgFontSize}
           fontWeight={fontWeight}
           fontFamily={fontFamily}
+          alignmentBaseline="baseline"
         >
           {number}
         </text>
