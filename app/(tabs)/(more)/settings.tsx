@@ -372,6 +372,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 5,
     textAlignVertical: 'center',
+    alignItems: 'baseline',
   },
   sliderContainer: {
     width: '100%',
@@ -431,7 +432,7 @@ const styles = StyleSheet.create({
   },
   iconTextContainer: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: 'center',
     backgroundColor: 'transparent',
     margin: 2,
     marginBottom: 5,

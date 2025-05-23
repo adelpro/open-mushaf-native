@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: 300,
     height: 50,
-    alignItems: 'baseline',
+    alignItems: 'center',
   },
   buttonText: {
     marginStart: 5,

@@ -32,7 +32,11 @@ export default function ChapterCard({ chapter }: Props) {
     >
       <ThemedView style={styles.content}>
         <ThemedView style={styles.numberContainer}>
-          <IslamicMarkSVG width={50} height={50} />
+          <IslamicMarkSVG
+            width={50}
+            height={50}
+            style={{ position: 'absolute' }}
+          />
           <ThemedText style={[styles.number, { color: secondaryColor }]}>
             {chapter.number}
           </ThemedText>
@@ -74,8 +78,7 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     marginHorizontal: 5,
-    position: 'relative',
-    alignItems: 'baseline',
+    alignItems: 'center',
   },
   number: {
     fontSize: 16,
@@ -83,10 +86,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     includeFontPadding: false,
-    position: 'absolute',
-    top: 25, // half of the height of the number container
-    left: 25, // half of the width of the number container
-    transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
   },
 
   name: {
