@@ -3,10 +3,10 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import { useRouter } from 'expo-router';
 
+import IslamicMarkSVG from '@/assets/svgs/islamic-mark.svg';
 import { useColors } from '@/hooks/useColors';
 import { Chapter } from '@/types';
 
-import { IslamicMark } from './IslamicMarker';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
@@ -16,8 +16,7 @@ type Props = {
 
 export default function ChapterCard({ chapter }: Props) {
   const router = useRouter();
-  const { backgroundColor, textColor, primaryColor, secondaryColor } =
-    useColors();
+  const { backgroundColor, textColor, secondaryColor } = useColors();
 
   const handlePress = () => {
     router.replace({
@@ -34,13 +33,7 @@ export default function ChapterCard({ chapter }: Props) {
       <ThemedView style={styles.content}>
         <ThemedView style={styles.numberContainer}>
           <ThemedView style={styles.numberContainer}>
-            <IslamicMark
-              width={50}
-              height={50}
-              strokeWidth={24}
-              fill={primaryColor}
-              stroke={secondaryColor}
-            />
+            <IslamicMarkSVG width={50} height={50} />
             <ThemedText style={[styles.number, { color: secondaryColor }]}>
               {chapter.number}
             </ThemedText>

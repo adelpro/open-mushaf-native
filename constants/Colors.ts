@@ -1,6 +1,5 @@
-const primary = '#1E5243'; // deep emerald green — calming, spiritual
-const secondary = '#C2B280'; // soft sand/golden — evokes manuscript accents
-const accent = '#A67C52'; // date-brown — traditional and warm
+const primary = '#1E5243';
+const secondary = '#C2B280';
 
 const tintColorDark = '#F1F3F4';
 

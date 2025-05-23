@@ -3,10 +3,10 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import { useRouter } from 'expo-router';
 
+import IslamicMarkSVG from '@/assets/svgs/islamic-mark.svg';
 import { useColors } from '@/hooks/useColors';
 import { Surah } from '@/types';
 
-import { IslamicMark } from './IslamicMarker';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
@@ -17,8 +17,7 @@ type Props = {
 export default function SurahCard({ surah }: Props) {
   const router = useRouter();
 
-  const { backgroundColor, textColor, primaryColor, secondaryColor } =
-    useColors();
+  const { backgroundColor, textColor, secondaryColor } = useColors();
 
   const handlePress = () => {
     router.replace({
@@ -34,33 +33,27 @@ export default function SurahCard({ surah }: Props) {
     >
       <ThemedView style={styles.content}>
         <ThemedView style={styles.numberContainer}>
-          <IslamicMark
-            width={50}
-            height={50}
-            strokeWidth={24}
-            fill={primaryColor}
-            stroke={secondaryColor}
-          />
+          <IslamicMarkSVG width={50} height={50} />
           <ThemedText style={[styles.number, { color: secondaryColor }]}>
             {surah.number}
           </ThemedText>
         </ThemedView>
-      </ThemedView>
 
-      <ThemedView style={styles.surahContainer}>
-        <ThemedText style={[styles.name, { color: textColor }]}>
-          {surah.name}
-        </ThemedText>
-        <ThemedView style={styles.infoWrapper}>
-          <ThemedText style={[styles.infoText, { color: textColor }]}>
-            {surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}
+        <ThemedView style={styles.surahContainer}>
+          <ThemedText style={[styles.name, { color: textColor }]}>
+            {surah.name}
           </ThemedText>
-          <ThemedText style={[styles.infoText, { color: textColor }]}>
-            {` - `}
-          </ThemedText>
-          <ThemedText style={[styles.infoText, { color: textColor }]}>
-            {`آياتها: ${surah.numberOfAyahs}`}
-          </ThemedText>
+          <ThemedView style={styles.infoWrapper}>
+            <ThemedText style={[styles.infoText, { color: textColor }]}>
+              {surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}
+            </ThemedText>
+            <ThemedText style={[styles.infoText, { color: textColor }]}>
+              {` - `}
+            </ThemedText>
+            <ThemedText style={[styles.infoText, { color: textColor }]}>
+              {`آياتها: ${surah.numberOfAyahs}`}
+            </ThemedText>
+          </ThemedView>
         </ThemedView>
       </ThemedView>
     </Pressable>
