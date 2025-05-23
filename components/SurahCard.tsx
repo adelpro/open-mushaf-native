@@ -40,27 +40,27 @@ export default function SurahCard({ surah }: Props) {
             strokeWidth={24}
             fill={primaryColor}
             stroke={secondaryColor}
-            number={surah.number}
-            fontFamily="Tajawal_400Regular"
-            fontSize={16}
           />
-        </ThemedView>
-
-        <ThemedView style={styles.surahContainer}>
-          <ThemedText style={[styles.name, { color: textColor }]}>
-            {surah.name}
+          <ThemedText style={[styles.number, { color: secondaryColor }]}>
+            {surah.number}
           </ThemedText>
-          <ThemedView style={styles.infoWrapper}>
-            <ThemedText style={[styles.infoText, { color: textColor }]}>
-              {surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}
-            </ThemedText>
-            <ThemedText style={[styles.infoText, { color: textColor }]}>
-              {` - `}
-            </ThemedText>
-            <ThemedText style={[styles.infoText, { color: textColor }]}>
-              {`آياتها: ${surah.numberOfAyahs}`}
-            </ThemedText>
-          </ThemedView>
+        </ThemedView>
+      </ThemedView>
+
+      <ThemedView style={styles.surahContainer}>
+        <ThemedText style={[styles.name, { color: textColor }]}>
+          {surah.name}
+        </ThemedText>
+        <ThemedView style={styles.infoWrapper}>
+          <ThemedText style={[styles.infoText, { color: textColor }]}>
+            {surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}
+          </ThemedText>
+          <ThemedText style={[styles.infoText, { color: textColor }]}>
+            {` - `}
+          </ThemedText>
+          <ThemedText style={[styles.infoText, { color: textColor }]}>
+            {`آياتها: ${surah.numberOfAyahs}`}
+          </ThemedText>
         </ThemedView>
       </ThemedView>
     </Pressable>
@@ -80,7 +80,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
+  number: {
+    fontSize: 16,
+    fontFamily: 'Tajawal_400Regular',
+    padding: 2,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
+    alignItems: 'baseline',
+  },
   content: {
     display: 'flex',
     alignItems: 'center',

@@ -27,11 +27,10 @@ import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
 import { HelmetProvider } from 'react-helmet-async';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import Notification from '@/components/Notification';
 import SEO from '@/components/seo';
-import { ThemedView } from '@/components/ThemedView';
 import { isRTL } from '@/utils';
 
 import { NotificationProvider } from '../components/NotificationProvider';
@@ -98,7 +97,7 @@ export default function RootLayout() {
             <ThemeProvider
               value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
             >
-              <ThemedView
+              <SafeAreaView
                 style={{
                   height: '100%',
                   width: '100%',
@@ -142,8 +141,8 @@ export default function RootLayout() {
                     options={{ headerShown: true, title: 'الورد اليومي' }}
                   />
                 </Stack>
-              </ThemedView>
-              <Notification />
+                <Notification />
+              </SafeAreaView>
             </ThemeProvider>
           </SafeAreaProvider>
         </GestureHandlerRootView>
