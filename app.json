@@ -12,15 +12,18 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.adelpro.openmushafnative",
-      "requireFullScreen": true
+      "requireFullScreen": true,
+      "newArchEnabled": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "edgeToEdgeEnabled": true
       },
       "softwareKeyboardLayoutMode": "resize",
       "jsEngine": "hermes",
+      "newArchEnabled": true,
       "package": "com.adelpro.openmushafnative",
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative"
     },

@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'transparent',
     gap: 10,
   },
   toggleIcon: {
