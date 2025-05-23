@@ -101,6 +101,7 @@
     "@types/react": "~19.0.10",
     "@types/react-native-htmlview": "^0.16.5",
     "@types/react-test-renderer": "^18.0.7",
+    "@typescript/native-preview": "^7.0.0-dev.20250523.1",
     "babel-plugin-react-compiler": "^19.0.0-beta-df7b47d-20241124",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "commitizen": "^4.3.1",
