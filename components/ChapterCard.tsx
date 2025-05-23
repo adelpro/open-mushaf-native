@@ -73,9 +73,9 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     justifyContent: 'center',
-    alignItems: 'center',
     marginHorizontal: 5,
     position: 'relative',
+    alignItems: 'baseline',
   },
   number: {
     fontSize: 16,
@@ -84,12 +84,9 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     includeFontPadding: false,
     position: 'absolute',
-    top: 25, // Half of container height (50/2)
-    left: 25, // Half of container width (50/2)
-    transform: [{ translateX: -8 }, { translateY: -8 }], // Adjust based on font size
-    width: 16,
-    height: 16,
-    lineHeight: 16, // Match font size for better vertical centering
+    top: 25, // half of the height of the number container
+    left: 25, // half of the width of the number container
+    transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
   },
 
   name: {

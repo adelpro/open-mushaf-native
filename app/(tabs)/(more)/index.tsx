@@ -197,9 +197,9 @@ const styles = StyleSheet.create({
   },
   buttonContent: {
     flexDirection: 'row',
-    alignItems: 'center',
     width: 300,
     height: 50,
+    alignItems: 'baseline',
   },
   buttonText: {
     marginStart: 5,
@@ -210,7 +210,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     fontFamily: 'Tajawal_400Regular',
     textAlignVertical: 'center',
-    alignItems: 'baseline',
   },
   svg: {
     color: 'white',
