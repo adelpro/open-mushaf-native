@@ -73,18 +73,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  number: {
-    fontSize: 16,
-    fontFamily: 'Tajawal_400Regular',
-    padding: 2,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
-    alignItems: 'baseline',
-  },
+
   content: {
     display: 'flex',
     alignItems: 'center',
@@ -96,12 +85,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 10,
+    position: 'relative',
+  },
+  number: {
+    fontSize: 18,
+    fontFamily: 'Tajawal_400Regular',
+    padding: 2,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
+    alignItems: 'baseline',
   },
 
   name: {
     fontSize: 22,
     fontFamily: 'Amiri_400Regular',
-    lineHeight: 26,
+    lineHeight: 24,
     padding: 10,
   },
   surahContainer: {
@@ -116,12 +118,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 5,
     paddingHorizontal: 15,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   infoText: {
     fontSize: 16,
     fontFamily: 'Tajawal_400Regular',
-
     marginHorizontal: 2,
   },
 });
