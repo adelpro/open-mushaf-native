@@ -82,22 +82,26 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   numberContainer: {
+    width: 50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 10,
+    marginHorizontal: 5,
     position: 'relative',
   },
   number: {
     fontSize: 16,
     fontFamily: 'Tajawal_400Regular',
-    padding: 5,
     textAlign: 'center',
     textAlignVertical: 'center',
+    includeFontPadding: false,
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
-    alignItems: 'baseline',
+    top: 25, // Half of container height (50/2)
+    left: 25, // Half of container width (50/2)
+    transform: [{ translateX: -8 }, { translateY: -8 }], // Adjust based on font size
+    width: 16,
+    height: 16,
+    lineHeight: 16, // Match font size for better vertical centering
   },
 
   name: {
