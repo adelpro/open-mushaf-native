@@ -74,14 +74,7 @@
       "fallbackToCacheTimeout": 3000
     },
     "runtimeVersion": {
-      "policy": "fingerprint",
-      "ignore": [
-        "android/app/build/**",
-        "ios/build/**",
-        "node_modules/**",
-        ".expo/**",
-        "**/*.log"
-      ]
+      "policy": "appVersion"
     },
     "owner": "adelpro"
   }
