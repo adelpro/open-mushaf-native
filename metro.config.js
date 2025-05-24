@@ -6,26 +6,27 @@ const path = require('path');
 
 /** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(__dirname);
-const { transformer, resolver } = config;
+
+// SVG transformer configuration
 config.transformer = {
-  ...transformer,
+  ...config.transformer,
   babelTransformerPath: require.resolve('react-native-svg-transformer'),
 };
+
+// Module resolution
 config.resolver = {
-  ...resolver,
-  assetExts: resolver.assetExts.filter((ext) => ext !== 'svg'),
-  sourceExts: [...resolver.sourceExts, 'svg'],
+  ...config.resolver,
+  assetExts: config.resolver.assetExts.filter((ext) => ext !== 'svg'),
+  sourceExts: [...config.resolver.sourceExts, 'svg'],
+
+  unstable_conditionNames: ['require', 'react-native', 'default'],
 };
 
-config.resolver.unstable_conditionNames = [
-  'require',
-  'react-native',
-  'default',
-];
-
+// Cache configuration
 config.cacheStores = [
   new FileStore({
     root: path.join(os.tmpdir(), 'metro-cache'),
   }),
 ];
+
 module.exports = config;
