@@ -38,9 +38,11 @@ export default function SurahCard({ surah }: Props) {
             height={50}
             style={{ position: 'absolute' }}
           />
-          <ThemedText style={[styles.number, { color: secondaryColor }]}>
-            {surah.number}
-          </ThemedText>
+          <ThemedView style={styles.numberView}>
+            <ThemedText style={[styles.number, { color: secondaryColor }]}>
+              {surah.number}
+            </ThemedText>
+          </ThemedView>
         </ThemedView>
 
         <ThemedView style={styles.surahContainer}>
@@ -89,8 +91,13 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     justifyContent: 'center',
-    marginHorizontal: 5,
     alignItems: 'center',
+    position: 'relative',
+  },
+  numberView: {
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'baseline',
   },
   number: {
     fontSize: 16,
@@ -98,6 +105,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     includeFontPadding: false,
+    /* position: 'absolute',
+    top: 25, // half of the height of the number container
+    left: 25, // half of the width of the number container
+    transform: [{ translateX: '-50%' }, { translateY: '-50%' }], */
   },
 
   name: {
