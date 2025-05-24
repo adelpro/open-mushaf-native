@@ -99,7 +99,7 @@ export default function RootLayout() {
             >
               <SafeAreaView
                 style={{
-                  height: '100%',
+                  flex: 1,
                   width: '100%',
                   maxWidth: 640,
                   margin: 'auto',

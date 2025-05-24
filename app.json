@@ -2,6 +2,7 @@
   "expo": {
     "name": "Open Mushaf",
     "slug": "open-mushaf-native",
+    "owner": "adelpro",
     "version": "3.6.0",
     "orientation": "default",
     "assetBundlePatterns": ["**/*"],
@@ -74,8 +75,7 @@
       "fallbackToCacheTimeout": 3000
     },
     "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "owner": "adelpro"
+      "policy": "fingerprint"
+    }
   }
 }

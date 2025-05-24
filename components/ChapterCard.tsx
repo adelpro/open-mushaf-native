@@ -36,10 +36,12 @@ export default function ChapterCard({ chapter }: Props) {
             width={50}
             height={50}
             style={{ position: 'absolute' }}
-          />
-          <ThemedText style={[styles.number, { color: secondaryColor }]}>
-            {chapter.number}
-          </ThemedText>
+          />{' '}
+          <ThemedView style={styles.numberView}>
+            <ThemedText style={[styles.number, { color: secondaryColor }]}>
+              {chapter.number}
+            </ThemedText>
+          </ThemedView>
         </ThemedView>
 
         <ThemedView style={styles.chapterContainer}>
@@ -80,16 +82,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
   },
+  numberView: {
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'baseline',
+  },
   number: {
     fontSize: 16,
     fontFamily: 'Tajawal_400Regular',
     textAlign: 'center',
     textAlignVertical: 'center',
     includeFontPadding: false,
-    position: 'absolute',
+    /* position: 'absolute',
     top: 25, // half of the height of the number container
     left: 25, // half of the width of the number container
-    transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
+    transform: [{ translateX: '-50%' }, { translateY: '-50%' }], */
   },
 
   name: {
