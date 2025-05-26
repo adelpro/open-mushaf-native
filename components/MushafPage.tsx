@@ -402,15 +402,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   errorContainer: {
-    flex: 1,
     width: '100%',
-    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
   loadingContainer: {
-    flex: 1,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',

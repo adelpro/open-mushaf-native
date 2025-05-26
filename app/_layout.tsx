@@ -27,7 +27,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
 import { HelmetProvider } from 'react-helmet-async';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import Notification from '@/components/Notification';
 import SEO from '@/components/seo';
@@ -97,49 +97,54 @@ export default function RootLayout() {
             <ThemeProvider
               value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
             >
-              {/*  <SafeAreaView
+              <SafeAreaView
                 style={{
-                  flex: 1,
                   width: '100%',
                   maxWidth: 640,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  alignSelf: 'center',
                   margin: 'auto',
                 }}
-              > */}
-              <Stack
-                screenOptions={{
-                  headerTitleStyle: {
-                    fontFamily: 'Tajawal_700Bold',
-                  },
-                }}
               >
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="+not-found" />
-                <Stack.Screen
-                  name="search"
-                  options={{
-                    title: 'بحث',
+                <Stack
+                  screenOptions={{
                     headerTitleStyle: {
-                      fontFamily: 'Tajawal_400Regular',
+                      fontFamily: 'Tajawal_700Bold',
                     },
                   }}
-                />
-                <Stack.Screen
-                  name="navigation"
-                  options={{
-                    title: 'تنقل',
-                  }}
-                />
-                <Stack.Screen
-                  name="tutorial"
-                  options={{ headerShown: true, title: 'جولة تعليمية' }}
-                />
-                <Stack.Screen
-                  name="tracker"
-                  options={{ headerShown: true, title: 'الورد اليومي' }}
-                />
-              </Stack>
-              <Notification />
-              {/*  </SafeAreaView> */}
+                >
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen name="+not-found" />
+                  <Stack.Screen
+                    name="search"
+                    options={{
+                      title: 'بحث',
+                      headerTitleStyle: {
+                        fontFamily: 'Tajawal_400Regular',
+                      },
+                    }}
+                  />
+                  <Stack.Screen
+                    name="navigation"
+                    options={{
+                      title: 'تنقل',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="tutorial"
+                    options={{ headerShown: true, title: 'جولة تعليمية' }}
+                  />
+                  <Stack.Screen
+                    name="tracker"
+                    options={{ headerShown: true, title: 'الورد اليومي' }}
+                  />
+                </Stack>
+                <Notification />
+              </SafeAreaView>
             </ThemeProvider>
           </SafeAreaProvider>
         </GestureHandlerRootView>
