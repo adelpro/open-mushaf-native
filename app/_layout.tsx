@@ -100,6 +100,8 @@ export default function RootLayout() {
               <SafeAreaView
                 style={{
                   width: '100%',
+                  height: '100%',
+                  flex: 1,
                   maxWidth: 640,
                   justifyContent: 'center',
                   alignItems: 'center',
