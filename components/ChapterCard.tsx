@@ -36,7 +36,7 @@ export default function ChapterCard({ chapter }: Props) {
             width={50}
             height={50}
             style={{ position: 'absolute' }}
-          />{' '}
+          />
           <ThemedView style={styles.numberView}>
             <ThemedText style={[styles.number, { color: secondaryColor }]}>
               {chapter.number}
