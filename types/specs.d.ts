@@ -6,6 +6,6 @@ export type Specs = {
   defaultLineHeight: number;
   defaultNumberOfPages: number;
   defaultFirstPagesWidth: number;
-  defaultFirstPagesMarginX: number;
+  defaultFirstPAgesMarginX: number;
   defaultFirstPagesMarginY: number;
 };

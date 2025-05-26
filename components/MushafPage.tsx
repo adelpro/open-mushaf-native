@@ -35,8 +35,8 @@ import {
   showTrackerNotification,
   yesterdayPage,
 } from '@/jotai/atoms';
-import { getSEOMetadataByPage } from '@/utils';
 import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
+import { getSEOMetadataByPage } from '@/utils/quranMetadataUtils';
 
 import { useNotification } from './NotificationProvider';
 import PageOverlay from './PageOverlay';
