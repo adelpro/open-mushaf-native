@@ -3,8 +3,10 @@ import { Platform } from 'react-native';
 import { Link } from 'expo-router';
 import { openBrowserAsync } from 'expo-web-browser';
 
+import { ExternalLinkType } from '@/types';
+
 type Props = Omit<React.ComponentProps<typeof Link>, 'href'> & {
-  href: `http${string}`;
+  href: ExternalLinkType;
 };
 
 export function ExternalLink({ href, ...rest }: Props) {

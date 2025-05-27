@@ -1,5 +1,7 @@
 export * from './chapter';
 
+export * from './external-link-type';
+
 export * from './aya';
 
 export * from './surah';

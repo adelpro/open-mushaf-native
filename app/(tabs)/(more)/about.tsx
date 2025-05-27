@@ -1,19 +1,23 @@
 import { StyleSheet } from 'react-native';
 
-import { Href } from 'expo-router';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { ExternalLink } from '@/components/ExternalLink';
 import SEO from '@/components/seo';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { ExternalLinkType } from '@/types';
 import { getAppVersion, getBuildVersion } from '@/utils';
 
 export default function AboutScreen() {
   const appVersion = getAppVersion();
   const buildVersion = getBuildVersion();
 
-  const sourcesList: { text: string; link: Href; label: string }[] = [
+  const sourcesList: {
+    text: string;
+    link: ExternalLinkType;
+    label: string;
+  }[] = [
     {
       text: 'صفحات المصحف من ',
       link: 'https://qurancomplex.gov.sa/techquran/dev/',
