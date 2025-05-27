@@ -3,7 +3,7 @@
     "name": "Open Mushaf",
     "slug": "open-mushaf-native",
     "owner": "adelpro",
-    "version": "3.6.0",
+    "version": "3.6.1",
     "orientation": "default",
     "assetBundlePatterns": ["**/*"],
     "icon": "./assets/images/icon.png",
