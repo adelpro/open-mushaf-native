@@ -395,13 +395,10 @@ const styles = StyleSheet.create({
     height: '100%',
     flex: 1,
     maxWidth: 640,
-    paddingVertical: 5,
     overflow: 'hidden',
   },
   image: {
     flex: 1,
-    width: '100%',
-    height: '100%',
   },
   errorContainer: {
     width: '100%',

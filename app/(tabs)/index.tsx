@@ -9,7 +9,6 @@ import ReadingPositionBanner from '@/components/ReadingPositionBanner';
 import SelectRiwaya from '@/components/SelectRiwaya';
 import SEO from '@/components/seo';
 import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
-import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
 import TutorialGuide from '@/components/TutorialGuide';
 import {
@@ -45,9 +44,7 @@ export default function HomeScreen() {
         {showChangeLogs ? (
           <ChangeLogs />
         ) : !finishedTutorialValue ? (
-          <ThemedView style={{ width: '100%', height: '100%' }}>
-            <TutorialGuide />
-          </ThemedView>
+          <TutorialGuide />
         ) : mushafRiwayaValue === undefined ? (
           <SelectRiwaya />
         ) : (
@@ -60,15 +57,10 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
     width: '100%',
     height: '100%',
   },
   content: {
-    flex: 1,
     height: '100%',
     width: '100%',
     justifyContent: 'center',

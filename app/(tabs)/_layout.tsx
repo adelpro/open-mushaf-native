@@ -24,11 +24,10 @@ export default function TabLayout() {
         tabBarStyle: {
           display: menuStateValue ? 'flex' : 'none',
           justifyContent: 'center',
-          width: '100%',
-          maxWidth: 640,
           flexDirection: 'column-reverse',
           height: 60,
-          marginHorizontal: 'auto',
+          marginTop: 2,
+          borderWidth: 0.5,
         },
         tabBarLabelStyle: {
           fontFamily: 'Tajawal_400Regular',
