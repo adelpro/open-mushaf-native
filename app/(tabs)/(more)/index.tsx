@@ -171,7 +171,7 @@ export default function MoreScreen() {
 
             <ThemedView style={styles.modalActions}>
               <ThemedButton
-                variant="primary" // Changed from outlined-primary for a single action
+                variant="primary"
                 onPress={() => setErrorModalVisible(false)}
                 style={styles.modalButton}
               >

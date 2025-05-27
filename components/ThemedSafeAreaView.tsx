@@ -10,13 +10,12 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 export type ThemedSafeAreaViewProps = SafeAreaViewProps & {
   lightColor?: string;
   darkColor?: string;
-  disableTopInset?: boolean;
 };
 
 export const ThemedSafeAreaView = React.forwardRef<
   React.ComponentRef<typeof SafeAreaView>,
   ThemedSafeAreaViewProps
->(({ style, lightColor, darkColor, disableTopInset, ...otherProps }, ref) => {
+>(({ style, lightColor, darkColor, ...otherProps }, ref) => {
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
     'background',
@@ -25,7 +24,6 @@ export const ThemedSafeAreaView = React.forwardRef<
     <SafeAreaView
       ref={ref}
       style={[{ backgroundColor }, style]}
-      edges={disableTopInset ? ['left', 'right', 'bottom'] : undefined}
       {...otherProps}
     />
   );

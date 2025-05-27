@@ -24,10 +24,10 @@ export default function TabLayout() {
         tabBarStyle: {
           display: menuStateValue ? 'flex' : 'none',
           justifyContent: 'center',
-          flexDirection: 'column-reverse',
-          height: 60,
           width: '100%',
           maxWidth: 640,
+          flexDirection: 'column-reverse',
+          height: 60,
           marginHorizontal: 'auto',
         },
         tabBarLabelStyle: {

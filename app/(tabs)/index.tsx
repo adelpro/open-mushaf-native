@@ -34,12 +34,12 @@ export default function HomeScreen() {
   }, [currentAppVersionValue]);
 
   return (
-    <ThemedSafeAreaView style={styles.container} disableTopInset={true}>
+    <ThemedSafeAreaView style={styles.container}>
       <SEO
         title="المصحف المفتوح - المصحف"
         description="قرآءة القرآن مع خيارات متعددة للقراءات والتفاسير"
       />
-
+      <TopMenu />
       <ReadingPositionBanner />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
         {showChangeLogs ? (
@@ -51,10 +51,7 @@ export default function HomeScreen() {
         ) : mushafRiwayaValue === undefined ? (
           <SelectRiwaya />
         ) : (
-          <>
-            <TopMenu />
-            <MushafPage />
-          </>
+          <MushafPage />
         )}
       </Pressable>
     </ThemedSafeAreaView>
@@ -63,10 +60,10 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    display: 'flex',
+    position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'relative',
     width: '100%',
     height: '100%',
   },
