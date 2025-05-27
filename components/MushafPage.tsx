@@ -348,7 +348,7 @@ export default function MushafPage() {
           {asset?.localUri ? (
             <>
               {isLandscape ? (
-                <ScrollView>
+                <ScrollView style={styles.scrollContainer}>
                   <Image
                     style={[
                       styles.image,
@@ -393,9 +393,13 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: '100%',
     height: '100%',
-    flex: 1,
     maxWidth: 640,
     overflow: 'hidden',
+  },
+  scrollContainer: {
+    width: '100%',
+    height: '100%',
+    maxWidth: 640,
   },
   image: {
     flex: 1,
