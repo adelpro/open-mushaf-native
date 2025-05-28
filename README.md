@@ -6,7 +6,7 @@ designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macO
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/design/banner/banner.png"
-  alt="Open-Mushaf Logo"  width="1000" height="500" />
+  alt="Open-Mushaf Logo"  width="1000" height="200" />
 </p>
 
 <!-- GitHub & Social Badges -->
