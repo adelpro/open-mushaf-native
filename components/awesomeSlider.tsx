@@ -9,11 +9,11 @@ type Props = {
   primaryColor: string;
 };
 
-const AwesomeSlider: React.FC<Props> = ({
+export default function AwesomeSlider({
   value,
   onValueChange,
   primaryColor,
-}) => {
+}: Props) {
   const progress = useSharedValue(value);
   const min = useSharedValue(0.3);
   const max = useSharedValue(1);
@@ -35,6 +35,4 @@ const AwesomeSlider: React.FC<Props> = ({
       }}
     />
   );
-};
-
-export default AwesomeSlider;
+}
