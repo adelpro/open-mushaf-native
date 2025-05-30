@@ -8,7 +8,6 @@ import MushafPage from '@/components/MushafPage';
 import ReadingPositionBanner from '@/components/ReadingPositionBanner';
 import SelectRiwaya from '@/components/SelectRiwaya';
 import SEO from '@/components/seo';
-import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedView } from '@/components/ThemedView';
 import TopMenu from '@/components/TopMenu';
 import TutorialGuide from '@/components/TutorialGuide';
@@ -34,7 +33,7 @@ export default function HomeScreen() {
   }, [currentAppVersionValue]);
 
   return (
-    <ThemedSafeAreaView style={styles.container}>
+    <ThemedView style={styles.container}>
       <SEO
         title="المصحف المفتوح - المصحف"
         description="قرآءة القرآن مع خيارات متعددة للقراءات والتفاسير"
@@ -54,7 +53,7 @@ export default function HomeScreen() {
           <MushafPage />
         )}
       </Pressable>
-    </ThemedSafeAreaView>
+    </ThemedView>
   );
 }
 
