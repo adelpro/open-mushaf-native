@@ -2,19 +2,19 @@ import { StyleSheet } from 'react-native';
 
 import { Link, Stack } from 'expo-router';
 
-import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 
 export default function NotFoundScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Oops!' }} />
-      <ThemedSafeAreaView style={styles.container}>
+      <Stack.Screen options={{ title: 'عذراً!' }} />
+      <ThemedView style={styles.container}>
         <ThemedText type="title">.صفحة غير موجودة</ThemedText>
         <Link href="/" style={styles.link}>
           <ThemedText type="link">العودة إلى الصفحة الرئيسية</ThemedText>
         </Link>
-      </ThemedSafeAreaView>
+      </ThemedView>
     </>
   );
 }
