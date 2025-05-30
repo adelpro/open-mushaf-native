@@ -9,7 +9,6 @@ import {
 import PrivacyContentArabic from '@/components/PrivacyContentArabic';
 import PrivacyContentEnglish from '@/components/PrivacyContentEnglish';
 import SEO from '@/components/seo';
-import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
@@ -22,7 +21,7 @@ export default function PrivacyScreen() {
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
 
   return (
-    <ThemedSafeAreaView style={styles.container}>
+    <ThemedView style={styles.container}>
       <SEO
         title="المصحف المفتوح - سياسة الخصوصية"
         description="سياسة الخصوصية للمصحف المفتوح - معلومات حول كيفية جمع واستخدام وحماية بياناتك"
@@ -98,7 +97,7 @@ export default function PrivacyScreen() {
           سياسة الخصوصية - عرض التفاصيل
         </ThemedText>
       </TouchableOpacity>
-    </ThemedSafeAreaView>
+    </ThemedView>
   );
 }
 

@@ -15,7 +15,6 @@ import AdvancedSearchSVG from '@/assets/svgs/search-advanced.svg';
 import SEO from '@/components/seo';
 import TafseerPopup from '@/components/TafseerPopup';
 import { ThemedTextInput } from '@/components/ThemedInput';
-import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
@@ -117,26 +116,26 @@ export default function Search() {
 
   if (isLoading) {
     return (
-      <ThemedSafeAreaView style={styles.container}>
+      <ThemedView style={styles.container}>
         <ThemedView style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={tintColor} />
         </ThemedView>
-      </ThemedSafeAreaView>
+      </ThemedView>
     );
   }
 
   if (error) {
     return (
-      <ThemedSafeAreaView style={styles.container}>
+      <ThemedView style={styles.container}>
         <ThemedView style={styles.errorContainer}>
           <ThemedText type="defaultSemiBold">{`حدث خطأ: ${error}`}</ThemedText>
         </ThemedView>
-      </ThemedSafeAreaView>
+      </ThemedView>
     );
   }
 
   return (
-    <ThemedSafeAreaView style={styles.container}>
+    <ThemedView style={styles.container}>
       {/* Search Input */}
       <ThemedView style={styles.searchContainer}>
         <ThemedTextInput
@@ -192,7 +191,7 @@ export default function Search() {
         aya={selectedAya.aya}
         surah={selectedAya.surah}
       />
-    </ThemedSafeAreaView>
+    </ThemedView>
   );
 }
 

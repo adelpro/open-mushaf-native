@@ -92,7 +92,6 @@ export default function RootLayout() {
         <SEO />
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SafeAreaProvider>
-            {' '}
             <SafeAreaView style={{ flex: 1 }}>
               <StatusBar style="auto" />
               <ThemeProvider

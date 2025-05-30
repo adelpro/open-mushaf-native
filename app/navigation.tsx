@@ -7,7 +7,6 @@ import { useRouter } from 'expo-router';
 import PageNavigator from '@/components/PageNavigator';
 import SEO from '@/components/seo';
 import SurahAyaNavigator from '@/components/SurahAyaNavigator';
-import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
@@ -97,26 +96,26 @@ export default function Navigation() {
 
   if (isLoading) {
     return (
-      <ThemedSafeAreaView style={styles.container}>
+      <ThemedView style={styles.container}>
         <ThemedView style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={tintColor} />
         </ThemedView>
-      </ThemedSafeAreaView>
+      </ThemedView>
     );
   }
 
   if (error) {
     return (
-      <ThemedSafeAreaView style={styles.container}>
+      <ThemedView style={styles.container}>
         <ThemedView style={styles.errorContainer}>
           <ThemedText type="defaultSemiBold">{`حدث خطأ: ${error}`}</ThemedText>
         </ThemedView>
-      </ThemedSafeAreaView>
+      </ThemedView>
     );
   }
 
   return (
-    <ThemedSafeAreaView style={styles.container}>
+    <ThemedView style={styles.container}>
       <SEO
         title="المصحف المفتوح - التنقل"
         description="تصفح صفحات وسور وآيات القرآن الكريم بسهولة باستخدام واجهة التنقل في المصحف المفتوح"
@@ -183,7 +182,7 @@ export default function Navigation() {
           cardColor={cardColor}
         />
       </ThemedView>
-    </ThemedSafeAreaView>
+    </ThemedView>
   );
 }
 

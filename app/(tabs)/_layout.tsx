@@ -26,7 +26,7 @@ export default function TabLayout() {
           justifyContent: 'center',
           flexDirection: 'column-reverse',
           height: 60,
-          marginTop: 2,
+          margin: 5,
           borderWidth: 0.5,
         },
         tabBarLabelStyle: {

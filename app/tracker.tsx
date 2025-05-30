@@ -14,7 +14,6 @@ import { useAtom } from 'jotai/react';
 
 import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
@@ -84,7 +83,7 @@ export default function TrackerScreen() {
     <>
       <Stack.Screen options={{ title: 'الورد' }} />
       <SEO title="الورد - المصحف المفتوح" description="الورد في تطبيق المصحف" />
-      <ThemedSafeAreaView style={styles.container}>
+      <ThemedView style={styles.container}>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
@@ -267,7 +266,7 @@ export default function TrackerScreen() {
             </ThemedView>
           </TouchableOpacity>
         </Modal>
-      </ThemedSafeAreaView>
+      </ThemedView>
     </>
   );
 }

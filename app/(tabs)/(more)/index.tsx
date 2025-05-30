@@ -21,7 +21,6 @@ import SettingsSVG from '@/assets/svgs/settings.svg';
 import ShareSVG from '@/assets/svgs/share.svg';
 import WelcomeSVG from '@/assets/svgs/welcome.svg';
 import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
@@ -56,7 +55,7 @@ export default function MoreScreen() {
   };
 
   return (
-    <ThemedSafeAreaView style={styles.container}>
+    <ThemedView style={styles.container}>
       <ThemedButton
         onPress={() => router.push('/settings')}
         variant="primary"
@@ -181,7 +180,7 @@ export default function MoreScreen() {
           </ThemedView>
         </TouchableOpacity>
       </Modal>
-    </ThemedSafeAreaView>
+    </ThemedView>
   );
 }
 
