@@ -3,7 +3,6 @@ import {
   I18nManager,
   InteractionManager,
   Platform,
-  StyleSheet,
   useColorScheme,
 } from 'react-native';
 
@@ -32,7 +31,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import Notification from '@/components/Notification';
 import SEO from '@/components/seo';
-import { ThemedSafeAreaView } from '@/components/ThemedSafeAreaView';
 import { isRTL } from '@/utils';
 
 import { NotificationProvider } from '../components/NotificationProvider';
@@ -94,57 +92,49 @@ export default function RootLayout() {
         <SEO />
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SafeAreaProvider>
-            <ThemedSafeAreaView style={styles.container}>
-              <StatusBar style="auto" />
+            <StatusBar style="auto" />
 
-              <ThemeProvider
-                value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+            <ThemeProvider
+              value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+            >
+              <Stack
+                screenOptions={{
+                  headerTitleStyle: {
+                    fontFamily: 'Tajawal_700Bold',
+                  },
+                }}
               >
-                <Stack
-                  screenOptions={{
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+                <Stack.Screen
+                  name="search"
+                  options={{
+                    title: 'بحث',
                     headerTitleStyle: {
-                      fontFamily: 'Tajawal_700Bold',
+                      fontFamily: 'Tajawal_400Regular',
                     },
                   }}
-                >
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen name="+not-found" />
-                  <Stack.Screen
-                    name="search"
-                    options={{
-                      title: 'بحث',
-                      headerTitleStyle: {
-                        fontFamily: 'Tajawal_400Regular',
-                      },
-                    }}
-                  />
-                  <Stack.Screen
-                    name="navigation"
-                    options={{
-                      title: 'تنقل',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="tutorial"
-                    options={{ headerShown: true, title: 'جولة تعليمية' }}
-                  />
-                  <Stack.Screen
-                    name="tracker"
-                    options={{ headerShown: true, title: 'الورد اليومي' }}
-                  />
-                </Stack>
-                <Notification />
-              </ThemeProvider>
-            </ThemedSafeAreaView>
+                />
+                <Stack.Screen
+                  name="navigation"
+                  options={{
+                    title: 'تنقل',
+                  }}
+                />
+                <Stack.Screen
+                  name="tutorial"
+                  options={{ headerShown: true, title: 'جولة تعليمية' }}
+                />
+                <Stack.Screen
+                  name="tracker"
+                  options={{ headerShown: true, title: 'الورد اليومي' }}
+                />
+              </Stack>
+              <Notification />
+            </ThemeProvider>
           </SafeAreaProvider>
         </GestureHandlerRootView>
       </HelmetProvider>
     </NotificationProvider>
   );
 }
-const styles = StyleSheet.create({
-  container: { width: '100%', height: '100%', maxWidth: 640, margin: 'auto' },
-});
