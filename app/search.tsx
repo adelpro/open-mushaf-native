@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
     alignSelf: 'center',
-    maxWidth: 800,
+    maxWidth: 640,
     width: '100%',
   },
 
