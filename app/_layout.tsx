@@ -92,7 +92,7 @@ export default function RootLayout() {
         <SEO />
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SafeAreaProvider>
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1, width: '100%', maxWidth: 640 }}>
               <StatusBar style="auto" />
               <ThemeProvider
                 value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
