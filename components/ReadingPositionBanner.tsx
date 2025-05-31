@@ -112,6 +112,7 @@ export default function ReadingPositionBanner() {
                 style={{
                   fontFamily: 'Tajawal_400Regular',
                   color: primaryColor,
+                  backgroundColor: 'transparent',
                 }}
               >
                 العودة

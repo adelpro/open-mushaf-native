@@ -98,6 +98,7 @@ export default function RootLayout() {
                 width: '100%',
                 maxWidth: 640,
                 alignSelf: 'center',
+                backgroundColor: 'transparent',
               }}
             >
               <StatusBar style="auto" />
