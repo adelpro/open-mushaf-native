@@ -2,7 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [3.6.0]
+## [3.6.1]
+
+- feat: Add Swipe navigation to the tutorial screen
+- fix: fixed migration error from b3.6.0 (expo sdk 53)
 
 ## [3.5.2]
 
