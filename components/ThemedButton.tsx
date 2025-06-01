@@ -115,7 +115,11 @@ export function ThemedButton({
       {...rest}
     >
       <Text
-        style={[styles.text, styles.center, { color: variantStyles.color }]}
+        style={[
+          styles.text,
+          styles.center,
+          { color: variantStyles.color, backgroundColor: 'transparent' },
+        ]}
       >
         {children}
       </Text>
