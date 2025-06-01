@@ -49,9 +49,9 @@ export default function TutorialGuide() {
   const gestureHandler = Gesture.Pan().onEnd((e) => {
     const threshold = isLandscape ? 150 : 100;
 
-    if (e.translationX < -threshold && index < SLIDES.length - 1) {
+    if (e.translationX < -threshold && index > 0) {
       runOnJS(setIndex)(index - 1);
-    } else if (e.translationX > threshold && index > 0) {
+    } else if (e.translationX > threshold && index < SLIDES.length - 1) {
       runOnJS(setIndex)(index + 1);
     }
   });
@@ -167,11 +167,11 @@ const styles = StyleSheet.create({
   closeButton: {
     position: 'absolute',
     top: 5,
-    left: 5,
+    right: 5,
     zIndex: 1,
     padding: 5,
     borderRadius: 5,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: 'transparent',
   },
   mainContainer: {
     flex: 1,

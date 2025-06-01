@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -29,7 +29,7 @@ export default function ReadingPositionBanner() {
   const { isTemporaryNavigation, currentPage, currentSavedPage } =
     useCurrentPage();
   const router = useRouter();
-  const { tintColor, cardColor, primaryColor } = useColors();
+  const { tintColor, cardColor, primaryColor, textColor } = useColors();
 
   if (!isTemporaryNavigation) {
     return null;
@@ -66,7 +66,7 @@ export default function ReadingPositionBanner() {
         onPress={toggleCollapse}
         accessibilityLabel={isCollapsed ? 'Expand banner' : 'Collapse banner'}
       >
-        <View style={styles.headerContainer}>
+        <ThemedText style={styles.headerContainer}>
           <ThemedText style={[styles.text, { color: tintColor }]}>
             العودة إلى موضع القراءة (صفحة {currentSavedPage})
           </ThemedText>
@@ -75,7 +75,7 @@ export default function ReadingPositionBanner() {
             size={32}
             color={tintColor}
           />
-        </View>
+        </ThemedText>
       </TouchableOpacity>
 
       {!isCollapsed && (
@@ -84,31 +84,34 @@ export default function ReadingPositionBanner() {
         >
           <ThemedButton
             variant="primary"
-            style={styles.button}
+            style={[
+              styles.button,
+              { borderColor: textColor, backgroundColor: 'transparent' },
+            ]}
             onPress={handleSaveCurrentPosition}
             accessibilityLabel="حفظ موضع الحالي"
             accessibilityHint={`حفظ موضع الحالي ${currentPage}`}
           >
-            <View style={styles.buttonContent}>
-              <FontAwesome6 name="bookmark" size={24} color="white" />
-              <Text
-                style={{ fontFamily: 'Tajawal_400Regular', color: 'white' }}
+            <ThemedView style={styles.buttonContent}>
+              <FontAwesome6 name="bookmark" size={24} color={textColor} />
+              <ThemedText
+                style={{ fontFamily: 'Tajawal_400Regular', color: textColor }}
               >
                 حفظ
-              </Text>
-            </View>
+              </ThemedText>
+            </ThemedView>
           </ThemedButton>
 
           <ThemedButton
             variant="outlined-primary"
-            style={styles.button}
+            style={[styles.button, { backgroundColor: 'transparent' }]}
             onPress={handleReturnToSavedPosition}
             accessibilityLabel="العودة إلى موضع القراءة"
             accessibilityHint={`العودة إلى موضع القراءة ${currentSavedPage}`}
           >
-            <View style={styles.buttonContent}>
+            <ThemedView style={styles.buttonContent}>
               <Feather name="arrow-up-right" size={24} color={primaryColor} />
-              <Text
+              <ThemedText
                 style={{
                   fontFamily: 'Tajawal_400Regular',
                   color: primaryColor,
@@ -116,8 +119,8 @@ export default function ReadingPositionBanner() {
                 }}
               >
                 العودة
-              </Text>
-            </View>
+              </ThemedText>
+            </ThemedView>
           </ThemedButton>
         </ThemedView>
       )}
