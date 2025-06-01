@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
   button: {
     width: 150,
     minWidth: 120,
+    backgroundColor: 'transparent',
   },
   buttonsContainer: {
     flexDirection: 'row',

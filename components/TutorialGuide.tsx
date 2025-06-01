@@ -10,9 +10,6 @@ import Animated, {
   FadeOutLeft,
   FadeOutRight,
   runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
 } from 'react-native-reanimated';
 
 import CheckedSVG from '@/assets/svgs/checked.svg';
@@ -34,8 +31,6 @@ export default function TutorialGuide() {
   const { isLandscape } = useOrientation();
   const [index, setIndex] = useState(0);
 
-  const translateX = useSharedValue(0);
-
   const finishTutorial = () => {
     setFinishedTutorial(true);
     if (pathname !== '/') {
@@ -43,32 +38,22 @@ export default function TutorialGuide() {
     }
   };
 
-  const gestureHandler = Gesture.Pan()
-    .onUpdate((e) => {
-      translateX.value = Math.max(-100, Math.min(100, e.translationX));
-    })
-    .onEnd((e) => {
-      const threshold = isLandscape ? 150 : 100;
+  const gestureHandler = Gesture.Pan().onEnd((e) => {
+    const threshold = isLandscape ? 150 : 100;
 
-      if (e.translationX < -threshold && index < SLIDES.length - 1) {
-        runOnJS(setIndex)(index + 1);
-      } else if (e.translationX > threshold && index > 0) {
-        runOnJS(setIndex)(index - 1);
-      }
-
-      translateX.value = withSpring(0, { damping: 20, stiffness: 90 });
-    });
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }],
-  }));
+    if (e.translationX < -threshold && index < SLIDES.length - 1) {
+      runOnJS(setIndex)(index - 1);
+    } else if (e.translationX > threshold && index > 0) {
+      runOnJS(setIndex)(index + 1);
+    }
+  });
 
   return (
     <GestureDetector gesture={gestureHandler}>
       <Animated.View
         entering={isRTL ? FadeInLeft.duration(500) : FadeInRight.duration(500)}
         exiting={isRTL ? FadeOutRight.duration(500) : FadeOutLeft.duration(500)}
-        style={[styles.animatedContainer, animatedStyle]}
+        style={styles.animatedContainer}
       >
         <ThemedView style={styles.mainContainer}>
           <ScrollView
@@ -166,7 +151,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     maxWidth: 640,
+    position: 'relative',
   },
+
   mainContainer: {
     flex: 1,
     width: '100%',
