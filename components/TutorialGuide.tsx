@@ -63,7 +63,10 @@ export default function TutorialGuide() {
         exiting={isRTL ? FadeOutRight.duration(500) : FadeOutLeft.duration(500)}
         style={styles.animatedContainer}
       >
-        <Pressable onPress={finishTutorial} style={styles.closeButton}>
+        <Pressable
+          onPress={finishTutorial}
+          style={[styles.closeButton, { borderColor: primaryColor }]}
+        >
           <Ionicons name="close" size={24} color={primaryColor} />
         </Pressable>
         <ThemedView style={styles.mainContainer}>
@@ -171,6 +174,8 @@ const styles = StyleSheet.create({
     zIndex: 1,
     padding: 5,
     borderRadius: 5,
+    borderWidth: 1,
+
     backgroundColor: 'transparent',
   },
   mainContainer: {
@@ -180,7 +185,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   scrollView: {
-    flex: 1,
     width: '100%',
     maxWidth: 640,
     padding: 1,
