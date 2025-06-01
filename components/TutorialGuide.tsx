@@ -1,6 +1,14 @@
 import { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
+import { Ionicons } from '@expo/vector-icons';
 import { usePathname, useRouter } from 'expo-router';
 import { useSetAtom } from 'jotai/react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -55,6 +63,9 @@ export default function TutorialGuide() {
         exiting={isRTL ? FadeOutRight.duration(500) : FadeOutLeft.duration(500)}
         style={styles.animatedContainer}
       >
+        <Pressable onPress={finishTutorial} style={styles.closeButton}>
+          <Ionicons name="close" size={24} color={primaryColor} />
+        </Pressable>
         <ThemedView style={styles.mainContainer}>
           <ScrollView
             style={styles.scrollView}
@@ -153,7 +164,15 @@ const styles = StyleSheet.create({
     maxWidth: 640,
     position: 'relative',
   },
-
+  closeButton: {
+    position: 'absolute',
+    top: 5,
+    left: 5,
+    zIndex: 1,
+    padding: 5,
+    borderRadius: 5,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+  },
   mainContainer: {
     flex: 1,
     width: '100%',
