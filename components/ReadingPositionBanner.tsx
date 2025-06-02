@@ -84,10 +84,7 @@ export default function ReadingPositionBanner() {
         >
           <ThemedButton
             variant="primary"
-            style={[
-              styles.button,
-              { borderColor: textColor, backgroundColor: 'transparent' },
-            ]}
+            style={[styles.button, { borderColor: textColor }]}
             onPress={handleSaveCurrentPosition}
             accessibilityLabel="حفظ موضع الحالي"
             accessibilityHint={`حفظ موضع الحالي ${currentPage}`}
@@ -104,7 +101,7 @@ export default function ReadingPositionBanner() {
 
           <ThemedButton
             variant="outlined-primary"
-            style={[styles.button, { backgroundColor: 'transparent' }]}
+            style={[styles.button]}
             onPress={handleReturnToSavedPosition}
             accessibilityLabel="العودة إلى موضع القراءة"
             accessibilityHint={`العودة إلى موضع القراءة ${currentSavedPage}`}
@@ -155,14 +152,13 @@ const styles = StyleSheet.create({
   button: {
     width: 150,
     minWidth: 120,
-    backgroundColor: 'transparent',
   },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 10,
-    backgroundColor: 'transparent',
+
     width: '100%',
     marginTop: 5,
   },
@@ -170,7 +166,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent',
+
     gap: 10,
   },
   toggleIcon: {

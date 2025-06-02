@@ -160,7 +160,6 @@ const styles = StyleSheet.create({
     margin: 'auto',
     padding: 2,
     width: '100%',
-    height: '100%',
     maxWidth: 640,
     position: 'relative',
   },
@@ -179,6 +178,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   scrollView: {
+    flex: 1,
     width: '100%',
     maxWidth: 640,
     padding: 1,
