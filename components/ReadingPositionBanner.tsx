@@ -92,7 +92,11 @@ export default function ReadingPositionBanner() {
             <ThemedView style={styles.buttonContent}>
               <FontAwesome6 name="bookmark" size={24} color={textColor} />
               <ThemedText
-                style={{ fontFamily: 'Tajawal_400Regular', color: textColor }}
+                style={{
+                  fontFamily: 'Tajawal_400Regular',
+                  color: textColor,
+                  backgroundColor: 'transparent',
+                }}
               >
                 حفظ
               </ThemedText>
@@ -152,6 +156,7 @@ const styles = StyleSheet.create({
   button: {
     width: 150,
     minWidth: 120,
+    backgroundColor: 'transparent',
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -166,7 +171,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     justifyContent: 'center',
     alignItems: 'center',
-
+    backgroundColor: 'transparent',
     gap: 10,
   },
   toggleIcon: {

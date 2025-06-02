@@ -67,10 +67,7 @@ export default function TutorialGuide() {
           <Ionicons name="close" size={32} color={primaryColor} />
         </Pressable>
         <ThemedView style={styles.mainContainer}>
-          <ScrollView
-            style={styles.scrollView}
-            contentContainerStyle={styles.scrollContent}
-          >
+          <ScrollView>
             <Image
               source={SLIDES[index].image}
               style={styles.image}
@@ -176,19 +173,6 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-  },
-  scrollView: {
-    flex: 1,
-    width: '100%',
-    maxWidth: 640,
-    padding: 1,
-    marginTop: 10,
-  },
-  scrollContent: {
-    paddingHorizontal: 10,
-    paddingBottom: 20,
-    width: '100%',
-    maxWidth: 640,
   },
   image: {
     width: '100%',
