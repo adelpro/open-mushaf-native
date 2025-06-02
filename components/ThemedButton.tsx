@@ -51,13 +51,11 @@ export function ThemedButton({
         };
       case 'outlined-primary':
         return {
-          backgroundColor: 'transparent',
           borderColor: primaryColor,
           color: primaryColor,
         };
       case 'outlined-secondary':
         return {
-          backgroundColor: 'transparent',
           borderColor: secondaryColor,
           color: secondaryColor,
         };
