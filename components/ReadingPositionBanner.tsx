@@ -107,7 +107,7 @@ export default function ReadingPositionBanner() {
 
           <ThemedButton
             variant="outlined-primary"
-            style={[styles.button, { backgroundColor: 'transparent' }]}
+            style={[styles.button, { backgroundColor: cardColor }]}
             onPress={handleReturnToSavedPosition}
             accessibilityLabel="العودة إلى موضع القراءة"
             accessibilityHint={`العودة إلى موضع القراءة ${currentSavedPage}`}

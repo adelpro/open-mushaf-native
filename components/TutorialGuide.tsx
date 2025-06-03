@@ -67,7 +67,10 @@ export default function TutorialGuide() {
           <Ionicons name="close" size={32} color={primaryColor} />
         </Pressable>
         <ThemedView style={styles.mainContainer}>
-          <ScrollView>
+          <ScrollView
+            horizontal={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
             <Image
               source={SLIDES[index].image}
               style={styles.image}
