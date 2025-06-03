@@ -24,8 +24,8 @@ builds/
 dist/
 web/
 web:build/
-android/
-ios/
+#android/
+#ios/
 
 # Ignore design files
 design/

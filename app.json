@@ -10,7 +10,6 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.adelpro.openmushafnative",
@@ -22,6 +21,18 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": {
+            "scheme": "https",
+            "host": "quran.us.kg",
+            "pathPrefix": "/"
+          },
+          "category": ["BROWSABLE", "DEFAULT"],
+          "autoVerify": true
+        }
+      ],
       "softwareKeyboardLayoutMode": "resize",
       "jsEngine": "hermes",
       "package": "com.adelpro.openmushafnative",
@@ -58,7 +69,8 @@
       "expo-router",
       "expo-font",
       "expo-audio",
-      "expo-secure-store"
+      "expo-secure-store",
+      "react-native-edge-to-edge"
     ],
     "experiments": {
       "typedRoutes": true,
