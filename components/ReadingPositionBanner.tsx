@@ -66,7 +66,9 @@ export default function ReadingPositionBanner() {
         onPress={toggleCollapse}
         accessibilityLabel={isCollapsed ? 'Expand banner' : 'Collapse banner'}
       >
-        <ThemedText style={styles.headerContainer}>
+        <ThemedView
+          style={[styles.headerContainer, { backgroundColor: 'transparent' }]}
+        >
           <ThemedText style={[styles.text, { color: tintColor }]}>
             العودة إلى موضع القراءة (صفحة {currentSavedPage})
           </ThemedText>
@@ -75,7 +77,7 @@ export default function ReadingPositionBanner() {
             size={32}
             color={tintColor}
           />
-        </ThemedText>
+        </ThemedView>
       </TouchableOpacity>
 
       {!isCollapsed && (
@@ -84,18 +86,18 @@ export default function ReadingPositionBanner() {
         >
           <ThemedButton
             variant="primary"
-            style={[styles.button, { borderColor: textColor }]}
+            style={[styles.button]}
             onPress={handleSaveCurrentPosition}
             accessibilityLabel="حفظ موضع الحالي"
             accessibilityHint={`حفظ موضع الحالي ${currentPage}`}
           >
             <ThemedView style={styles.buttonContent}>
-              <FontAwesome6 name="bookmark" size={24} color={textColor} />
+              <FontAwesome6 name="bookmark" size={24} color="white" />
               <ThemedText
                 style={{
                   fontFamily: 'Tajawal_400Regular',
-                  color: textColor,
                   backgroundColor: 'transparent',
+                  color: 'white',
                 }}
               >
                 حفظ
@@ -105,12 +107,14 @@ export default function ReadingPositionBanner() {
 
           <ThemedButton
             variant="outlined-primary"
-            style={[styles.button]}
+            style={[styles.button, { backgroundColor: 'transparent' }]}
             onPress={handleReturnToSavedPosition}
             accessibilityLabel="العودة إلى موضع القراءة"
             accessibilityHint={`العودة إلى موضع القراءة ${currentSavedPage}`}
           >
-            <ThemedView style={styles.buttonContent}>
+            <ThemedView
+              style={[styles.buttonContent, { backgroundColor: 'transparent' }]}
+            >
               <Feather name="arrow-up-right" size={24} color={primaryColor} />
               <ThemedText
                 style={{
@@ -156,14 +160,12 @@ const styles = StyleSheet.create({
   button: {
     width: 150,
     minWidth: 120,
-    backgroundColor: 'transparent',
   },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 10,
-
     width: '100%',
     marginTop: 5,
   },
@@ -175,6 +177,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   toggleIcon: {
+    width: '100%',
     padding: 2,
     margin: 2,
   },
