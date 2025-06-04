@@ -29,7 +29,7 @@ export default function ReadingPositionBanner() {
   const { isTemporaryNavigation, currentPage, currentSavedPage } =
     useCurrentPage();
   const router = useRouter();
-  const { tintColor, cardColor, primaryColor, textColor } = useColors();
+  const { tintColor, cardColor, primaryColor } = useColors();
 
   if (!isTemporaryNavigation) {
     return null;
