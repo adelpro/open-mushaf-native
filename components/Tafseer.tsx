@@ -46,6 +46,10 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
     Record<TafseerTabs, boolean>
   >({} as Record<TafseerTabs, boolean>);
 
+  const { specsData } = useQuranMetadata();
+
+  const { countBesmalAya } = specsData;
+
   const formattedTafseerHtml = useTafseerContent({ tafseerData, surah, aya });
   const isCurrentTabEmpty = hasNoTafseerContent({ tafseerData, surah, aya });
 
@@ -204,7 +208,7 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
       style={[styles.container, opacity !== undefined ? { opacity } : {}]}
     >
       <ThemedText style={[styles.title, { backgroundColor: 'transparent' }]}>
-        {surahName} - الآية {aya}
+        {surahName} - الآية {countBesmalAya ? aya : aya - 1}
       </ThemedText>
       <ThemedView style={[styles.tabs, { backgroundColor: 'transparent' }]}>
         {Object.keys(tabLabels).map((key) => {

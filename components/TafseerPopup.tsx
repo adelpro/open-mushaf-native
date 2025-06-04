@@ -15,7 +15,6 @@ import { Colors } from '@/constants/Colors';
 
 import Tafseer from './Tafseer';
 import { ThemedView } from './ThemedView';
-
 type Props = {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;

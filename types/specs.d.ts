@@ -8,4 +8,5 @@ export type Specs = {
   defaultFirstPagesWidth: number;
   defaultFirstPagesMarginX: number;
   defaultFirstPagesMarginY: number;
+  countBesmalAya: boolean;
 };

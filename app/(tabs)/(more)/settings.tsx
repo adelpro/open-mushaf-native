@@ -13,6 +13,7 @@ import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { riwayaOptions } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import {
   flipSound,
@@ -21,7 +22,6 @@ import {
   mushafRiwaya,
   showTrackerNotification,
 } from '@/jotai/atoms';
-import { RiwayaArabic } from '@/types/riwaya';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
 import { clearStorageAndReload } from '@/utils/storage/clearStorage';
 
@@ -45,7 +45,6 @@ export default function SettingsScreen() {
     setShowTrackerNotificationValue((previousState) => !previousState);
   };
 
-  const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش', 'مجود'];
   const handleHizbNotificationValueChange = (value: number) => {
     if (value === 1 || value === 2) {
       setHizbNotificationValue(value);

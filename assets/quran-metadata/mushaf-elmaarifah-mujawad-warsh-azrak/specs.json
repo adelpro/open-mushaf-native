@@ -7,5 +7,6 @@
   "defaultNumberOfPages": 604,
   "defaultFirstPagesWidth": 320,
   "defaultFirstPagesMarginX": 50,
-  "defaultFirstPagesMarginY": 90
+  "defaultFirstPagesMarginY": 90,
+  "countBesmalAya":  false
 }

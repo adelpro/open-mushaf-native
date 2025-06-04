@@ -3,16 +3,14 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import { useAtom } from 'jotai/react';
 
+import { riwayaOptions } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import { mushafRiwaya } from '@/jotai/atoms';
-import { RiwayaArabic } from '@/types/riwaya';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
 
 import SegmentedControl from './SegmentControl';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-
-const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش', 'مجود'];
 
 export default function SelectRiwaya() {
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
