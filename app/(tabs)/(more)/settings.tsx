@@ -45,7 +45,7 @@ export default function SettingsScreen() {
     setShowTrackerNotificationValue((previousState) => !previousState);
   };
 
-  const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش'];
+  const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش', 'مجود'];
   const handleHizbNotificationValueChange = (value: number) => {
     if (value === 1 || value === 2) {
       setHizbNotificationValue(value);

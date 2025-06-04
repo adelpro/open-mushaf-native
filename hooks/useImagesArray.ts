@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Asset } from 'expo-asset';
 import { useAtomValue } from 'jotai/react';
 
-import { imagesMapHafs, imagesMapWarsh } from '@/constants';
+import { imagesMapHafs, imagesMapMujawad, imagesMapWarsh } from '@/constants';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import { mushafRiwaya } from '@/jotai/atoms';
 
@@ -25,8 +25,20 @@ export default function useImagesArray() {
           return;
         }
 
-        const imagesMap =
-          mushafRiwayaValue === 'hafs' ? imagesMapHafs : imagesMapWarsh;
+        let imagesMap;
+        switch (mushafRiwayaValue) {
+          case 'hafs':
+            imagesMap = imagesMapHafs;
+            break;
+          case 'warsh':
+            imagesMap = imagesMapWarsh;
+            break;
+          case 'mujawad':
+            imagesMap = imagesMapMujawad;
+            break;
+          default:
+            imagesMap = undefined;
+        }
         if (!imagesMap) {
           return;
         }

@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.7.0]
+
+- feat: Add new mushaf riwaya warsh mujawad from el maarifah
+
 ## [3.6.1]
 
 - feat: Add Swipe navigation to the tutorial screen

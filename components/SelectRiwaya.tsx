@@ -12,7 +12,7 @@ import SegmentedControl from './SegmentControl';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش'];
+const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش', 'مجود'];
 
 export default function SelectRiwaya() {
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
@@ -34,6 +34,8 @@ export default function SelectRiwaya() {
             activeColor={primaryColor}
             textColor={primaryColor}
             onSelectionChange={(index: number) => {
+              console.log('Selected Riwaya Index:', index);
+              console.log('Selected Riwaya Value:', RiwayaByValue(index));
               const selectedRiwaya = RiwayaByValue(index);
               setMushafRiwayaValue(selectedRiwaya);
             }}

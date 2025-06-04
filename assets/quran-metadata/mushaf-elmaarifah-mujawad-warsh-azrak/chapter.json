@@ -1,0 +1,182 @@
+[
+  {
+    "number": 1,
+    "name": "الجزء الاول",
+    "englishName": "First chapter",
+    "startingPage": 1
+  },
+  {
+    "number": 2,
+    "name": "الجزء الثاني",
+    "englishName": "Second chapter",
+    "startingPage": 22
+  },
+  {
+    "number": 3,
+    "name": "الجزء الثالث",
+    "englishName": "Third chapter",
+    "startingPage": 42
+  },
+  {
+    "number": 4,
+    "name": "الجزء الرابع",
+    "englishName": "Fourth chapter",
+    "startingPage": 62
+  },
+  {
+    "number": 5,
+    "name": "الجزء الخامس",
+    "englishName": "Fifth chapter",
+    "startingPage": 82
+  },
+  {
+    "number": 6,
+    "name": "الجزء السادس",
+    "englishName": "Sixth chapter",
+    "startingPage": 102
+  },
+  {
+    "number": 7,
+    "name": "الجزء السابع",
+    "englishName": "Seventh chapter",
+    "startingPage": 121
+  },
+  {
+    "number": 8,
+    "name": "الجزء الثامن",
+    "englishName": "Eighth chapter",
+    "startingPage": 142
+  },
+  {
+    "number": 9,
+    "name": "الجزء التاسع",
+    "englishName": "Ninth chapter",
+    "startingPage": 162
+  },
+  {
+    "number": 10,
+    "name": "الجزء العاشر",
+    "englishName": "Tenth chapter",
+    "startingPage": 182
+  },
+  {
+    "number": 11,
+    "name": "الجزء الحادي عشر",
+    "englishName": "Eleventh chapter",
+    "startingPage": 202
+  },
+  {
+    "number": 12,
+    "name": "الجزء الثاني عشر",
+    "englishName": "Twelfth chapter",
+    "startingPage": 222
+  },
+  {
+    "number": 13,
+    "name": "الجزء الثالث عشر",
+    "englishName": "Thirteenth chapter",
+    "startingPage": 242
+  },
+  {
+    "number": 14,
+    "name": "الجزء الرابع عشر",
+    "englishName": "Fourteenth chapter",
+    "startingPage": 262
+  },
+  {
+    "number": 15,
+    "name": "الجزء الخامس عشر",
+    "englishName": "Fifteenth chapter",
+    "startingPage": 282
+  },
+  {
+    "number": 16,
+    "name": "الجزء السادس عشر",
+    "englishName": "Sixteenth chapter",
+    "startingPage": 302
+  },
+  {
+    "number": 17,
+    "name": "الجزء السابع عشر",
+    "englishName": "Seventeenth chapter",
+    "startingPage": 322
+  },
+  {
+    "number": 18,
+    "name": "الجزء الثامن عشر",
+    "englishName": "Eighteenth chapter",
+    "startingPage": 342
+  },
+  {
+    "number": 19,
+    "name": "الجزء التاسع عشر",
+    "englishName": "Nineteenth chapter",
+    "startingPage": 362
+  },
+  {
+    "number": 20,
+    "name": "الجزء العشرون",
+    "englishName": "Twentieth chapter",
+    "startingPage": 382
+  },
+  {
+    "number": 21,
+    "name": "الجزء الواحد و العشرون",
+    "englishName": "Twenty one chapter",
+    "startingPage": 402
+  },
+  {
+    "number": 22,
+    "name": "الجزء الإثنان و العشرون",
+    "englishName": "Twenty two chapter",
+    "startingPage": 422
+  },
+  {
+    "number": 23,
+    "name": "الجزء الثلاثة و العشرون",
+    "englishName": "Twenty three chapter",
+    "startingPage": 442
+  },
+  {
+    "number": 24,
+    "name": "الجزء الأربعة و العشرون",
+    "englishName": "Twenty four chapter",
+    "startingPage": 462
+  },
+  {
+    "number": 25,
+    "name": "الجزء الخمسة و العشرون",
+    "englishName": "Twenty five chapter",
+    "startingPage": 482
+  },
+  {
+    "number": 26,
+    "name": "الجزء الستة و العشرون",
+    "englishName": "Twenty six chapter",
+    "startingPage": 502
+  },
+  {
+    "number": 27,
+    "name": "الجزء السبعة و العشرون",
+    "englishName": "Twenty seven chapter",
+    "startingPage": 522
+  },
+  {
+    "number": 28,
+    "name": "الجزء الثمانية و العشرون",
+    "englishName": "Twenty eight chapter",
+    "startingPage": 542
+  },
+  {
+    "number": 29,
+    "name": "الجزء التسعة و العشرون",
+    "englishName": "Twenty nine chapter",
+    "startingPage": 562
+  },
+  {
+    "number": 30,
+    "name": "الجزء الثلاثون",
+    "englishName": "Thirty chapter",
+    "startingPage": 582
+  }
+]

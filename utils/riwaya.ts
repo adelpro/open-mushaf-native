@@ -1,12 +1,12 @@
 import { Riwaya } from '@/types/riwaya';
 
-// Array mapping indices to Riwaya values
-const riwayaArray: Riwaya[] = ['hafs', 'warsh', undefined];
+// Array mapping indices to Riwaya values (no undefined)
+const riwayaArray: Riwaya[] = ['hafs', 'warsh', 'mujawad'];
 
 // Function to get the index of a Riwaya value
-export function RiwayaByIndice(value: Riwaya): number | undefined {
-  const index = riwayaArray.indexOf(value);
-  return index !== -1 ? index : undefined;
+export function RiwayaByIndice(value: Riwaya): number {
+  const index = riwayaArray.indexOf(value ?? 'hafs');
+  return index !== -1 ? index : 0;
 }
 
 // Function to get the Riwaya value by index
