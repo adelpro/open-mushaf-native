@@ -8,7 +8,6 @@ import {
   View,
 } from 'react-native';
 
-import { Ionicons } from '@expo/vector-icons';
 import { usePathname, useRouter } from 'expo-router';
 import { useSetAtom } from 'jotai/react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -34,7 +33,7 @@ import { isRTL } from '@/utils';
 export default function TutorialGuide() {
   const router = useRouter();
   const pathname = usePathname();
-  const { primaryColor } = useColors();
+  const { primaryColor, primaryLightColor } = useColors();
   const setFinishedTutorial = useSetAtom(finishedTutorial);
   const { isLandscape } = useOrientation();
   const [index, setIndex] = useState(0);
@@ -63,45 +62,41 @@ export default function TutorialGuide() {
         exiting={isRTL ? FadeOutRight.duration(500) : FadeOutLeft.duration(500)}
         style={styles.animatedContainer}
       >
-        <Pressable onPress={finishTutorial} style={styles.closeButton}>
-          <Ionicons name="close" size={32} color={primaryColor} />
-        </Pressable>
         <ThemedView style={styles.mainContainer}>
-          <ScrollView
-            horizontal={false}
-            contentContainerStyle={{ flexGrow: 1 }}
-          >
-            <Image
-              source={SLIDES[index].image}
-              style={styles.image}
-              resizeMode="contain"
-            />
+          <ScrollView>
+            <ThemedView style={styles.ScrollContent}>
+              <Image
+                source={SLIDES[index].image}
+                style={styles.image}
+                resizeMode="contain"
+              />
 
-            <View style={styles.textContainer}>
-              <ThemedText style={styles.title}>
-                {SLIDES[index].title}
-              </ThemedText>
-              {Array.isArray(SLIDES[index].description) ? (
-                SLIDES[index].description.map((item, i) => (
-                  <ThemedText
-                    key={i}
-                    style={[
-                      styles.description,
-                      item.align !== 'start' && { textAlign: 'center' },
-                    ]}
-                  >
-                    {item.align === 'start' ? '✓ ' : ''}
-                    {item.text}
-                  </ThemedText>
-                ))
-              ) : (
-                <ThemedText
-                  style={[styles.description, { textAlign: 'center' }]}
-                >
-                  {SLIDES[index].description}
+              <View style={styles.textContainer}>
+                <ThemedText style={styles.title}>
+                  {SLIDES[index].title}
                 </ThemedText>
-              )}
-            </View>
+                {Array.isArray(SLIDES[index].description) ? (
+                  SLIDES[index].description.map((item, i) => (
+                    <ThemedText
+                      key={i}
+                      style={[
+                        styles.description,
+                        item.align !== 'start' && { textAlign: 'center' },
+                      ]}
+                    >
+                      {item.align === 'start' ? '✓ ' : ''}
+                      {item.text}
+                    </ThemedText>
+                  ))
+                ) : (
+                  <ThemedText
+                    style={[styles.description, { textAlign: 'center' }]}
+                  >
+                    {SLIDES[index].description}
+                  </ThemedText>
+                )}
+              </View>
+            </ThemedView>
           </ScrollView>
 
           <ThemedView style={styles.controlsContainer}>
@@ -145,6 +140,22 @@ export default function TutorialGuide() {
                 )}
               </View>
             </ThemedButton>
+            <View style={styles.closeButtonContainer}>
+              <Pressable onPress={finishTutorial}>
+                <Text
+                  style={[styles.closeButtonText, { color: primaryLightColor }]}
+                >
+                  تخطي
+                </Text>
+              </Pressable>
+              <View
+                style={{
+                  width: 24,
+                  height: 24,
+                  backgroundColor: 'transparent',
+                }}
+              />
+            </View>
           </ThemedView>
         </ThemedView>
       </Animated.View>
@@ -163,13 +174,20 @@ const styles = StyleSheet.create({
     maxWidth: 640,
     position: 'relative',
   },
-  closeButton: {
-    position: 'absolute',
-    top: 5,
-    right: 5,
-    zIndex: 1,
-    padding: 5,
-    backgroundColor: 'transparent',
+  closeButtonContainer: {
+    flexDirection: 'row',
+    margin: 5,
+    marginTop: 10,
+    width: '100%',
+    maxWidth: 300,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  closeButtonText: {
+    fontFamily: 'Tajawal_400Regular',
+    fontSize: 18,
+    paddingHorizontal: 5,
+    textAlign: 'center',
   },
   mainContainer: {
     flex: 1,
@@ -218,6 +236,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     flexDirection: 'row',
   },
+  ScrollContent: {},
   dot: {
     width: 5,
     height: 5,
@@ -230,11 +249,12 @@ const styles = StyleSheet.create({
     height: 15,
   },
   button: {
-    height: 60,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 200,
-    marginBottom: 10,
+    width: '100%',
+    maxWidth: 300,
+    marginTop: 10,
   },
   buttonContent: {
     alignItems: 'center',
@@ -244,8 +264,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 24,
-    fontFamily: 'Tajawal_700Bold',
+    fontSize: 20,
+    fontFamily: 'Tajawal_500Medium',
     paddingHorizontal: 5,
   },
   buttonIcon: {

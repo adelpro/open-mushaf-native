@@ -26,12 +26,12 @@ export default function TabLayout() {
           justifyContent: 'center',
           flexDirection: 'column-reverse',
           height: 60,
-          margin: 2,
+          margin: 4,
           borderWidth: 0.5,
         },
         tabBarLabelStyle: {
           fontFamily: 'Tajawal_400Regular',
-          marginTop: 2,
+          marginTop: 1,
         },
         tabBarIconStyle: {},
         headerShown: false,
@@ -44,7 +44,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
               name={focused ? 'view-list' : 'view-list-outline'}
-              size={28}
+              size={24}
               color={color}
               accessible={true}
               accessibilityLabel="فهرس السور والأجزاء"
@@ -60,7 +60,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <FontAwesome6
               name="book-quran"
-              size={28}
+              size={24}
               style={{ marginBottom: -3 }}
               color={color}
               accessible={true}

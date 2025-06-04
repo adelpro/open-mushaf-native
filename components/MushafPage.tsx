@@ -406,12 +406,14 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     width: '100%',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
   loadingContainer: {
     width: '100%',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
