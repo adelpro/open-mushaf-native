@@ -4,7 +4,7 @@ Open-Mushaf Native is an **open-source Quran Mushaf** application built with **R
 This mobile-friendly app offers **offline Quran reading**, **gesture navigation**, and **dynamic Tafseer popups**,
 designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macOS** platforms.
 
-<div style="text-align: center;">
+<div align="center">
   <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/design/banner/banner.png"
   alt="Open-Mushaf Logo"  width="1000" height="300" />
 </div>
@@ -16,7 +16,7 @@ designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macO
 ![GitHub Watchers](https://img.shields.io/github/watchers/adelpro/open-mushaf-native?style=social)
 [![Twitter Follow](https://img.shields.io/twitter/follow/adelpro?style=social)](https://twitter.com/adelpro)
 
-<div style="text-align: center; width: 100%; display: flex; justify-content: center; align-item: center;">
+<div align="center">
 <a href="https://www.producthunt.com/products/open-mushaf?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-open-mushaf" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=974453&theme=light&t=1749127782693" alt="Open Mushaf - A modern and minimalist Quran Mushaf application | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 </div>
 
@@ -76,7 +76,7 @@ Experience the seamless navigation and features of Open-Mushaf Native in this de
 
 Ready-to-use versions are available for:
 
-<div style="display: flex; gap: 20px; align-items: center; margin-top: 15px; text-align: center;">
+<div style="display: flex; gap: 20px; align-items: center; margin-top: 15px; text-align: center;" align="center">
   <a href="https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative" target="_blank">
     <img src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white"
      alt="Google Play Store" />
@@ -95,7 +95,7 @@ Ready-to-use versions are available for:
 
 ## App Screenshots
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 2rem 0; text-align: center;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 2rem 0; text-align: center;" align="center">
   <div>
     <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/main-screen.png"
     alt="Main reading interface" style="border-radius: 15px; max-width: 100%; height: auto;">
