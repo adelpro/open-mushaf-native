@@ -16,7 +16,7 @@ designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macO
 ![GitHub Watchers](https://img.shields.io/github/watchers/adelpro/open-mushaf-native?style=social)
 [![Twitter Follow](https://img.shields.io/twitter/follow/adelpro?style=social)](https://twitter.com/adelpro)
 
-<div style="text-align: center; width: 100%">
+<div style="text-align: center; width: 100%; display: flex; justify-content: center; align-item: center;">
 <a href="https://www.producthunt.com/products/open-mushaf?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-open-mushaf" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=974453&theme=light&t=1749127782693" alt="Open Mushaf - A modern and minimalist Quran Mushaf application | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 </div>
 
