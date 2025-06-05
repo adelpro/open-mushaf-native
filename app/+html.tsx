@@ -12,6 +12,10 @@ export default function Root({ children }: PropsWithChildren) {
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        <meta
+          name="description"
+          content="مصحف إلكتروني مفتوح المصدر لتلاوة القرآن الكريم، مع دعم لمختلف التفاسير والروايات."
+        />
 
         {/* Preload Amiri and Tajawal fonts */}
         <link
@@ -343,3 +347,8 @@ if ('serviceWorker' in navigator) {
 // navigator.serviceWorker.controller.postMessage({ type: 'SW_STATE_UPDATE', message: 'Another message, stays until hidden.' });
 // navigator.serviceWorker.controller.postMessage({ type: 'SW_STATE_UPDATE', hide: true });
 `;
+
+<meta
+  name="description"
+  content="مصحف مفتوح المصدر للقراءة والاستماع للقرآن الكريم."
+/>;

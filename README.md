@@ -4,10 +4,10 @@ Open-Mushaf Native is an **open-source Quran Mushaf** application built with **R
 This mobile-friendly app offers **offline Quran reading**, **gesture navigation**, and **dynamic Tafseer popups**,
 designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macOS** platforms.
 
-<p align="center">
+<div align="center">
   <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/design/banner/banner.png"
-  alt="Open-Mushaf Logo"  width="1000" height="400" />
-</p>
+  alt="Open-Mushaf Logo"  width="1000" height="300" />
+</div>
 
 <!-- GitHub & Social Badges -->
 
@@ -15,6 +15,10 @@ designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macO
 ![GitHub Forks](https://img.shields.io/github/forks/adelpro/open-mushaf-native?style=social)
 ![GitHub Watchers](https://img.shields.io/github/watchers/adelpro/open-mushaf-native?style=social)
 [![Twitter Follow](https://img.shields.io/twitter/follow/adelpro?style=social)](https://twitter.com/adelpro)
+
+<div align="center">
+<a href="https://www.producthunt.com/products/open-mushaf?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-open-mushaf" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=974453&theme=light&t=1749127782693" alt="Open Mushaf - A modern and minimalist Quran Mushaf application | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+</div>
 
 <!-- Quality & Code Analysis -->
 
@@ -67,6 +71,27 @@ and localized caching for Quranic images and Tafseer data.
 
 Experience the seamless navigation and features of Open-Mushaf Native in this demo video.
 [Watch on YouTube](https://www.youtube.com/watch?v=SpqCVOhiVes)
+
+## Download
+
+Ready-to-use versions are available for:
+
+<div style="display: flex; gap: 20px; align-items: center; margin-top: 15px;" align="center">
+  <a href="https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative" target="_blank">
+    <img src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white"
+     alt="Google Play Store" />
+  </a>
+  
+  <a href="https://open-mushaf-native.web.app/" target="_blank">
+    <img src="https://img.shields.io/badge/Web_App-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white"
+    alt="Web App" />
+  </a>
+
+  <a href="https://github.com/adelpro/open-mushaf-native/releases/latest" target="_blank">
+     <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"
+    alt="Get it on GitHub" />
+  </a>
+</div>
 
 ## App Screenshots
 
@@ -170,22 +195,6 @@ Experience the seamless navigation and features of Open-Mushaf Native in this de
    ```bash
    npx expo start
    ```
-
-## Download
-
-Ready-to-use versions are available for:
-
-<div style="display: flex; gap: 20px; align-items: center; margin-top: 15px;">
-  <a href="https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative" target="_blank">
-    <img src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white"
-     alt="Google Play Store" />
-  </a>
-  
-  <a href="https://open-mushaf-native.web.app/" target="_blank">
-    <img src="https://img.shields.io/badge/Web_App-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white"
-    alt="Web App" />
-  </a>
-</div>
 
 ## Contributing
 
