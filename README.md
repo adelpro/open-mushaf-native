@@ -1,4 +1,4 @@
-# Open-Mushaf Native - Quran Mushaf Reader for Mobile and Web
+# Open-Mushaf Native – Modern Offline Quran Reader for Mobile, Web & macOS
 
 Open-Mushaf Native is an **open-source Quran Mushaf** application built with **React Native** and **Expo**.
 This mobile-friendly app offers **offline Quran reading**, **gesture navigation**, and **dynamic Tafseer popups**,
@@ -15,10 +15,6 @@ designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macO
 ![GitHub Forks](https://img.shields.io/github/forks/adelpro/open-mushaf-native?style=social)
 ![GitHub Watchers](https://img.shields.io/github/watchers/adelpro/open-mushaf-native?style=social)
 [![Twitter Follow](https://img.shields.io/twitter/follow/adelpro?style=social)](https://twitter.com/adelpro)
-
-<div align="center" style="margin: 20px 80px;">
-<a href="https://www.producthunt.com/products/open-mushaf?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-open-mushaf" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=974453&theme=light&t=1749127782693" alt="Open Mushaf - A modern and minimalist Quran Mushaf application | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
-</div>
 
 <!-- Quality & Code Analysis -->
 
@@ -64,13 +60,21 @@ and localized caching for Quranic images and Tafseer data.
 - **Offline Access**: Preload and cache Quran pages and Tafseer data for complete offline functionality.
 - **Dynamic Tafseer Popups**: Smoothly resize Tafseer popups with gesture control.
 - **Optimized Image Loading**: Efficient loading of large Quran pages using `expo-image` for better memory management.
-- **Recoil State Management**: Smooth state management for all app interactions.
+- **Jotai State Management**: Smooth state management for all app interactions.
 - **Cross-Platform Support**: Built with Expo for easy deployment on Android and web platforms.
 
 ## Demo
 
 Experience the seamless navigation and features of Open-Mushaf Native in this demo video.
 [Watch on YouTube](https://www.youtube.com/watch?v=SpqCVOhiVes)
+
+<div align="center" style="margin: 20px 80px;">
+  <a href="https://www.producthunt.com/products/open-mushaf?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-open-mushaf" target="_blank">
+    <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=974453&theme=light&t=1749127782693"
+    alt="Open Mushaf - A modern and minimalist Quran Mushaf application | Product Hunt"
+    style="width: 250px; height: 54px;" width="250" height="54" />
+  </a>
+</div>
 
 ## Download
 
