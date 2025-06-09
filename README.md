@@ -4,7 +4,7 @@ Open-Mushaf Native is an **open-source Quran Mushaf** application built with **R
 This mobile-friendly app offers **offline Quran reading**, **gesture navigation**, and **dynamic Tafseer popups**,
 designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macOS** platforms.
 
-<div align="center" style="margin: 10px;">
+<div align="center" style="margin: 20px 80px;">
   <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/design/banner/banner.png"
   alt="Open-Mushaf Logo"  width="1000" height="300" />
 </div>
@@ -16,7 +16,7 @@ designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macO
 ![GitHub Watchers](https://img.shields.io/github/watchers/adelpro/open-mushaf-native?style=social)
 [![Twitter Follow](https://img.shields.io/twitter/follow/adelpro?style=social)](https://twitter.com/adelpro)
 
-<div align="center" style="margin: 10px;">
+<div align="center" style="margin: 20px 80px;">
 <a href="https://www.producthunt.com/products/open-mushaf?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-open-mushaf" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=974453&theme=light&t=1749127782693" alt="Open Mushaf - A modern and minimalist Quran Mushaf application | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 </div>
 
@@ -48,7 +48,7 @@ designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macO
 <!-- Other/Integrations -->
 
 [<img src="./assets/svgs/explore-in-deepwiki.svg" title="Explore in DeepWiki" width="150" height="25" alt="DeepWiki">](https://deepwiki.com/adelpro/open-mushaf-native)
-[<img src="https://github.com/codespaces/badge.svg" title="Open in Github Codespace" width="150" height="25" alt="Logo">](https://codespaces.new/adelpro/open-mushaf-native)
+[<img src="https://github.com/codespaces/badge.svg" title="Open in GitHub Codespaces" width="150" height="25" alt="Open in GitHub Codespaces">](https://codespaces.new/adelpro/open-mushaf-native)
 
 ## About
 
@@ -76,7 +76,7 @@ Experience the seamless navigation and features of Open-Mushaf Native in this de
 
 Ready-to-use versions are available for:
 
-<div style="display: flex; gap: 20px; align-items: center; margin: 10px; text-align: center;" align="center">
+<div style="display: flex; gap: 20px; align-items: center; margin: 20px; text-align: center;" align="center">
   <a href="https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative" target="_blank">
     <img src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white"
      alt="Google Play Store" />
