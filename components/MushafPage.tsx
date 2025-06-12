@@ -16,6 +16,7 @@ import {
 import { useRouter } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { useAtomValue, useSetAtom } from 'jotai/react';
+import Magnifier from 'react-magnifier';
 import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
@@ -349,34 +350,10 @@ export default function MushafPage() {
             <>
               {isLandscape ? (
                 <ScrollView style={styles.scrollContainer}>
-                  <Image
-                    style={[
-                      styles.image,
-                      {
-                        width: '100%',
-                        height: undefined,
-                        aspectRatio: 0.7,
-                      },
-                      colorScheme === 'dark' && {
-                        opacity: mushafContrastValue,
-                      },
-                    ]}
-                    source={{ uri: asset?.localUri }}
-                    contentFit="fill"
-                  />
+                  <Magnifier src={asset?.localUri} width={500} />
                 </ScrollView>
               ) : (
-                <Image
-                  style={[
-                    styles.image,
-                    { width: '100%' },
-                    colorScheme === 'dark' && {
-                      opacity: mushafContrastValue,
-                    },
-                  ]}
-                  source={{ uri: asset?.localUri }}
-                  contentFit="fill"
-                />
+                <Magnifier src={asset?.localUri} width={500} />
               )}
             </>
           ) : (

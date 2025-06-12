@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .slide-container {
+      width: 1280px;
+      min-height: 720px;
+      background: linear-gradient(135deg, #107869 0%, #0d6b5c 50%, #0a5a4f 100%);
+      position: relative;
+      overflow: hidden;
+      font-family: 'Times New Roman', serif;
+    }
+
+    .geometric-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.1;
+      background-image:
+        radial-gradient(circle at 25% 25%, #ffc107 2px, transparent 2px),
+        radial-gradient(circle at 75% 75%, #ffc107 2px, transparent 2px);
+      background-size: 60px 60px;
+    }
+
+    .title-text {
+      font-family: 'Times New Roman', serif;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .subtitle-text {
+      font-family: 'Times New Roman', serif;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="slide-container flex items-center justify-center relative">
+    <div class="geometric-pattern"></div>
+
+    <div class="text-center z-10 px-16">
+      <div class="mb-8">
+        <img
+          src="https://private-us-east-1.manuscdn.com/sessionFile/svgiW19G7z5JoBTPRLkVe4/sandbox/slides_resource_i5i5zzqkkyhqbitnxfywb-54688680-e2b-prod-aws_1749730025827_na1fn_L2hvbWUvdWJ1bnR1L3VwbG9hZC9wdXJlLWljb24.png?x-oss-process=image/resize,w_1560,h_1560/format,webp&Expires=1767225600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvc3ZnaVcxOUc3ejVKb0JUUFJMa1ZlNC9zYW5kYm94L3NsaWRlc19yZXNvdXJjZV9pNWk1enpxa2t5aHFiaXRueGZ5d2ItNTQ2ODg2ODAtZTJiLXByb2QtYXdzXzE3NDk3MzAwMjU4MjdfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzVndiRzloWkM5d2RYSmxMV2xqYjI0LnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE1NjAsaF8xNTYwL2Zvcm1hdCx3ZWJwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzY3MjI1NjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=qJJy9BAmJi9MggbLd~BMvbJhyXRb5KsaGHhDeJknsUj2cbekSPuMYuLL2oiYnELDDU1-mruFi0qLEXgOIkwepZyGQ2fnjucfkzBZtKV6nbRQL5m472zZYXR3z9mE8TsyZkniDaynBebhUye3LhPoxSEC15rvP~aFxcnxI6qYfLSc9WJNzaaY74pF4eAKH9dYPJOLmX5z1V2SXLlyyL1VC5beFR0D5OJ8FCscAEi0oRzhtgTe-HcwvO~s7ko2F99UmoSy3MlAUTPkBFl-fP7ncXl71G3nGMV22j3pfWPrTsymxjBjvHKCIz-OwArEGtylQNthHaeBL~A7SDN8jvQ54g__"
+          alt="Open Mushaf Logo" class="mx-auto" style="width: 150px; height: 150px;">
+      </div>
+
+      <h1 class="title-text text-6xl font-bold text-white mb-6">
+        Open Mushaf
+      </h1>
+
+      <h2 class="title-text text-4xl font-semibold text-yellow-300 mb-8">
+        A Community-Driven Quran for All
+      </h2>
+
+      <p class="subtitle-text text-xl text-teal-100 max-w-4xl mx-auto leading-relaxed mb-8">
+        In a digital world full of noise, we created something pure:
+        a Quran platform built by the community, for the community
+      </p>
+
+      <div class="mt-12 flex justify-center space-x-12">
+        <div class="flex items-center text-teal-200">
+          <i class="fas fa-heart text-2xl mr-3 text-yellow-400"></i>
+          <span class="text-lg">Community Driven</span>
+        </div>
+        <div class="flex items-center text-teal-200">
+          <i class="fas fa-wifi-slash text-2xl mr-3 text-yellow-400"></i>
+          <span class="text-lg">Works Offline</span>
+        </div>
+        <div class="flex items-center text-teal-200">
+          <i class="fas fa-globe text-2xl mr-3 text-yellow-400"></i>
+          <span class="text-lg">For Everyone</span>
+        </div>
+      </div>
+
+      <div class="mt-8 text-teal-300 text-lg">
+        www.quran.us
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

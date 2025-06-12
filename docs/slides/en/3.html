@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .slide-container {
+      width: 1280px;
+      min-height: 680px;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%);
+      position: relative;
+      overflow: hidden;
+      font-family: 'Times New Roman', serif;
+    }
+
+    .geometric-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.05;
+      background-image:
+        radial-gradient(circle at 20% 20%, #107869 3px, transparent 3px),
+        radial-gradient(circle at 80% 80%, #107869 3px, transparent 3px);
+      background-size: 100px 100px;
+    }
+
+    .vision-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      border: 2px solid rgba(255, 193, 7, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .vision-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .principle-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(45deg, #107869, #0d6b5c);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="slide-container flex items-center justify-center p-16">
+    <div class="geometric-pattern"></div>
+
+    <div class="max-w-6xl z-10">
+      <div class="text-center mb-12">
+        <h1 class="text-5xl font-bold text-teal-800 mb-4">Our Clear Vision</h1>
+        <div class="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
+        <p class="text-xl text-gray-700 max-w-3xl mx-auto">
+          From the beginning, Open Mushaf was built around core principles focused on usability, authenticity, and
+          accessibility
+        </p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-8">
+        <div class="vision-card p-6 text-center">
+          <div class="principle-icon">
+            <i class="fas fa-heart text-2xl text-white"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-teal-800 mb-3">Usability</h3>
+          <p class="text-gray-700 leading-relaxed">
+            Natural gesture-based navigation and intuitive design that feels effortless for every user
+          </p>
+        </div>
+
+        <div class="vision-card p-6 text-center">
+          <div class="principle-icon">
+            <i class="fas fa-certificate text-2xl text-white"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-teal-800 mb-3">Authenticity</h3>
+          <p class="text-gray-700 leading-relaxed">
+            Multiple authentic recitations (Riwayat) with color-coded Tajweed rules for proper pronunciation
+          </p>
+        </div>
+
+        <div class="vision-card p-6 text-center">
+          <div class="principle-icon">
+            <i class="fas fa-universal-access text-2xl text-white"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-teal-800 mb-3">Accessibility</h3>
+          <p class="text-gray-700 leading-relaxed">
+            Works on all platforms, fully offline, with personalized settings that remember your preferences
+          </p>
+        </div>
+
+        <div class="vision-card p-6 text-center">
+          <div class="principle-icon">
+            <i class="fas fa-wifi-slash text-2xl text-white"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-teal-800 mb-3">Offline First</h3>
+          <p class="text-gray-700 leading-relaxed">
+            No internet? No problem. The entire Quran, recitations, and Tafseer remain accessible offline
+          </p>
+        </div>
+
+        <div class="vision-card p-6 text-center">
+          <div class="principle-icon">
+            <i class="fas fa-book-open text-2xl text-white"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-teal-800 mb-3">Rich Content</h3>
+          <p class="text-gray-700 leading-relaxed">
+            Access to multiple Tafseer sources and reading tracking to support your spiritual journey
+          </p>
+        </div>
+
+        <div class="vision-card p-6 text-center">
+          <div class="principle-icon">
+            <i class="fas fa-mobile-alt text-2xl text-white"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-teal-800 mb-3">Multi-Platform</h3>
+          <p class="text-gray-700 leading-relaxed">
+            Seamless performance on Android, iOS, and web with native features on each platform
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .slide-container {
+      width: 1280px;
+      min-height: 680px;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%);
+      position: relative;
+      overflow: hidden;
+      font-family: 'Times New Roman', serif;
+    }
+
+    .geometric-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.05;
+      background-image:
+        linear-gradient(45deg, #107869 1px, transparent 1px),
+        linear-gradient(-45deg, #107869 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .story-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(16, 120, 105, 0.1);
+      border: 2px solid rgba(255, 193, 7, 0.3);
+    }
+
+    .date-highlight {
+      background: linear-gradient(45deg, #ffc107, #ffb300);
+      color: #333;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="slide-container flex items-center justify-center p-16">
+    <div class="geometric-pattern"></div>
+
+    <div class="story-card p-12 max-w-5xl z-10">
+      <div class="text-center mb-10">
+        <h1 class="text-5xl font-bold text-teal-800 mb-4">A Personal Beginning</h1>
+        <div class="w-24 h-1 bg-yellow-500 mx-auto"></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-12">
+        <div class="space-y-6">
+          <div class="flex items-center mb-6">
+            <i class="fas fa-calendar-day text-3xl text-teal-600 mr-4"></i>
+            <div class="date-highlight">September 6th, 2024</div>
+          </div>
+          <p class="text-lg text-gray-700 leading-relaxed">
+            It all started with a simple idea from a solo developer. In a digital world full of noise and distractions,
+            there was a need for something pure and authentic.
+          </p>
+          <div class="bg-teal-50 p-6 rounded-lg border-l-4 border-teal-500">
+            <p class="text-teal-800 font-medium italic text-lg">
+              "My goal was simple: build a Quran platform that I myself would use—fast, accessible, authentic, and open
+              to everyone."
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <div class="flex items-center mb-6">
+            <i class="fas fa-seedling text-3xl text-teal-600 mr-4"></i>
+            <h2 class="text-3xl font-semibold text-teal-800">From Seed to Tree</h2>
+          </div>
+          <p class="text-lg text-gray-700 leading-relaxed">
+            What began as a personal side project quickly grew into something much bigger, thanks to the incredible
+            support of a global community of believers.
+          </p>
+          <div class="space-y-4">
+            <div class="flex items-center text-teal-700">
+              <i class="fas fa-user text-yellow-500 mr-3"></i>
+              <span>Started as a solo developer's vision</span>
+            </div>
+            <div class="flex items-center text-teal-700">
+              <i class="fas fa-users text-yellow-500 mr-3"></i>
+              <span>Grew with community support</span>
+            </div>
+            <div class="flex items-center text-teal-700">
+              <i class="fas fa-globe text-yellow-500 mr-3"></i>
+              <span>Became a global mission</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-10 text-center">
+        <div class="bg-yellow-100 p-6 rounded-lg border border-yellow-300">
+          <p class="text-xl text-gray-800 font-medium">
+            Together, we've transformed a personal project into a mission-driven platform that helps users connect
+            deeply with the Quran—anytime, anywhere.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
