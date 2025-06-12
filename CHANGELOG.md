@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 - feat: Add new mushaf riwaya warsh mujawad from el maarifah
 - feat: Add besmala aya count to mushaf specs
+- feat: Add slides presentation (our story)
 
 ## [3.6.1]
 
