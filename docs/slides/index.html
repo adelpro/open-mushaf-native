@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Open Mushaf Presentation</title>
+    <script type="text/javascript">
+        function setLanguage(lang) {
+            localStorage.setItem('preferredLanguage', lang);
+            if (lang === 'ar') {
+                window.location.replace('index-ar.html');
+            } else {
+                window.location.replace('index-en.html');
+            }
+        }
+
+        var preferredLang = localStorage.getItem('preferredLanguage');
+        if (preferredLang) {
+            setLanguage(preferredLang);
+        } else {
+            var userLang = navigator.language || navigator.userLanguage;
+            if (userLang.startsWith('ar')) {
+                setLanguage('ar');
+            } else {
+                setLanguage('en');
+            }
+        }
+    </script>
+</head>
+<body>
+    <p>Redirecting to the appropriate language version...</p>
+    <div style="text-align: center; margin-top: 20px;">
+        <button onclick="setLanguage('en')" style="padding: 10px 20px; margin: 5px; cursor: pointer;">English</button>
+        <button onclick="setLanguage('ar')" style="padding: 10px 20px; margin: 5px; cursor: pointer;">العربية</button>
+    </div>
+</body>
+
+</html>
