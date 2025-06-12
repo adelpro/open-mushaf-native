@@ -1,15 +1,12 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css');
 
-/* styles.css */
-
 /* Custom styles for the presentation */
 
 .slide-container {
-  /* Removed fixed width and height for Reveal.js responsiveness */
-  background: linear-gradient(135deg, #107869 0%, #0d6b5c 50%, #0a5a4f 100%);
+  background: none;
+  background-color: #107869;
   position: relative;
   overflow: hidden;
-  /* Font family applied globally or to main content wrapper for better cascade */
 }
 
 .slide-container::before {
@@ -23,35 +20,14 @@
   z-index: -1;
 }
 
-.slide-container {
-  background: none;
-  background-color: #107869;
-}
-
-.title-text {
+.title-text,
+.subtitle-text {
   font-family: 'Times New Roman', serif;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   color: #333;
 }
 
-.subtitle-text {
-  font-family: 'Times New Roman', serif;
-  color: #333;
-}
-
-
-
-
-.title-text {
-  font-family: 'Times New Roman', serif;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.subtitle-text {
-  font-family: 'Times New Roman', serif;
-}
-
-/* Specific component styles that might not be fully covered by Tailwind or need customization */
+/* Card styles */
 .story-card,
 .vision-card,
 .feature-card,
@@ -60,34 +36,15 @@
 .impact-card,
 .mission-card {
   background-color: rgba(255, 255, 255, 0.95);
-  /* Slightly transparent white for content cards */
   border-radius: 1rem;
-  /* Equivalent to Tailwind's rounded-xl */
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-  /* Equivalent to Tailwind's shadow-xl */
   padding: 3rem;
-  /* Equivalent to Tailwind's p-12 */
 }
 
-/* You could define specific styles for these if they need unique appearance beyond Tailwind */
-/* Example:
-  .vision-card .principle-icon {
-      background-color: #0d6b5c;
-      border-radius: 9999px; // full circle
-      width: 60px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem auto;
-  }
-  */
-
-/* Styles for the timeline steps (if you want specific visual cues beyond general spacing) */
+/* Timeline steps */
 .timeline-step {
   position: relative;
   padding-left: 20px;
-  /* Space for the line */
   margin-bottom: 20px;
 }
 
@@ -99,7 +56,6 @@
   bottom: 0;
   width: 2px;
   background-color: #0d6b5c;
-  /* Teal line */
   transform: translateX(-50%);
 }
 
@@ -108,50 +64,40 @@
   position: absolute;
   left: 0;
   top: 5px;
-  /* Adjust to align with text */
   width: 10px;
   height: 10px;
   border-radius: 50%;
   background-color: #fcd34d;
-  /* Yellow dot */
   transform: translateX(-50%);
   z-index: 1;
-  /* Ensure dot is above the line */
 }
 
-/* Remove ::after for the last timeline-step if you want the line to end */
 .timeline-step:last-child::after {
   background-color: #0d6b5c;
-  /* Or a different color for the final step dot */
 }
 
-/* Additional styling for icons that might need background or specific size not handled by FA/Tailwind */
+/* Icon backgrounds */
 .principle-icon,
 .feature-icon,
 .open-source-icon {
   background-color: #0d6b5c;
-  /* Dark teal background */
   border-radius: 50%;
-  /* Make it round */
   width: 50px;
-  /* Fixed size */
   height: 50px;
   display: flex;
-  /* Center icon inside */
   align-items: center;
   justify-content: center;
   margin: 0 auto 1rem auto;
-  /* Center horizontally and add bottom margin */
 }
 
+.principle-icon .fas,
 .feature-icon .fas,
 .open-source-icon .fas,
-.fas,
-.principle-icon .fas {
+.fas {
   color: white;
-  /* White icon color */
 }
 
+/* Globe icon */
 .globe-icon {
   display: flex;
   align-items: center;
@@ -159,20 +105,18 @@
   width: 40px;
   height: 40px;
   background: #107869;
-  /* strong teal, fully opaque */
   border-radius: 50%;
   font-size: 1.5rem;
   color: #fff;
-  /* white icon for contrast */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   z-index: 1101;
 }
 
+/* Language switcher */
 .language-switcher-container {
   position: fixed;
   top: 10px;
   right: 10px;
-  left: unset;
   z-index: 1100;
 }
 
@@ -180,16 +124,13 @@
   display: flex;
   flex-direction: row;
   background: #e5e7eb;
-  /* unified gray */
   gap: 0;
-  min-width: unset;
   position: static;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .language-switcher .lang-button {
   color: #107869;
-  /* unified teal */
   background: transparent;
   border: none;
   outline: none;
@@ -204,7 +145,6 @@
 
 .language-switcher .lang-button.selected {
   background: #107869;
-  /* unified teal */
   color: #fff;
   font-weight: 700;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.10);
@@ -212,13 +152,7 @@
 
 .language-switcher .lang-button:not(.selected):hover {
   background: #b6e0db;
-  /* lighter teal for hover */
   color: #0d6b5c;
-}
-
-.language-switcher .lang-button:not(.selected):hover {
-  background: rgba(0, 0, 0, 0.2);
-  color: white
 }
 
 .language-switcher a {
@@ -228,25 +162,22 @@
   display: block;
 }
 
-/* Specific card types if they need distinct styling */
+/* Community stat cards */
 .community-stat {
   text-align: center;
   padding: 1rem;
   border-radius: 0.5rem;
   background-color: #ebf8f8;
-  /* Light teal background */
   border: 1px solid #a7d9d9;
-  /* Border to match */
 }
 
 .community-stat .fas {
   color: #0d6b5c;
-  /* Teal icon */
 }
 
+/* Feedback, value, and connection icons */
 .feedback-item .fas,
 .value-item .fas,
 .connection-item .fas {
   color: #0d6b5c;
-
 }
