@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html dir="rtl">
 
 <head>
   <meta charset="utf-8">
@@ -34,7 +34,7 @@
         <div class="slide-container flex items-center justify-center p-4 md:p-8">
           <div class="story-card max-w-5xl z-10 w-full">
             <div class="mb-8">
-              <img src="icon.png" alt="شعار المصحف المفتوح" class="mx-auto" style="width: 150px; height: 150px;">
+              <img src="icon.png" alt="Open Mushaf Logo" class="mx-auto w-24 h-24 md:w-[150px] md:h-[150px]">
             </div>
 
             <h1 class="title-text text-5xl md:text-6xl font-bold text-white mb-6">
@@ -230,7 +230,7 @@
             <div class="text-center mb-8 md:mb-10">
               <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">ما الذي يميز المصحف المفتوح</h1>
               <div class="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
-              <p class="text-base md:text-xl text-gray-700 max-w-3xl mx-auto">
+              <p class="text-base md:text-xl text-white max-w-3xl mx-auto">
                 ميزات مصممة لتعزيز اتصالك بالقرآن
               </p>
             </div>
@@ -641,8 +641,8 @@
     </div>
   </div>
 
-  <script src=" https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.min.js"></script>
   <script src="language-switcher.js"></script>
+  <script src=" https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.min.js"></script>
   <script>
     Reveal.initialize({
       controls: true,        // Display controls in the bottom right corner
@@ -653,6 +653,18 @@
       // Check the Reveal.js documentation for full list: https://revealjs.com/
     });
   </script>
+  <script type="module">
+    import { showTopNotification } from './top-notification.js';
+
+    // Show notification on document load
+    window.addEventListener('DOMContentLoaded', function () {
+      // Only show on small screens (max-width: 767px)
+      if (window.innerWidth > 767) return;
+
+      showTopNotification('تعمل بشكل أفضل على الشاشات والكبيرة.');
+    });
+  </script>
+
 </body>
 
 </html>
