@@ -14,7 +14,7 @@ designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macO
 ![GitHub Stars](https://img.shields.io/github/stars/adelpro/open-mushaf-native?style=social)
 ![GitHub Forks](https://img.shields.io/github/forks/adelpro/open-mushaf-native?style=social)
 ![GitHub Watchers](https://img.shields.io/github/watchers/adelpro/open-mushaf-native?style=social)
-[![Twitter Follow](https://img.shields.io/twitter/follow/adelpro?style=social)](https://twitter.com/adelpro)
+[![Twitter Follow](https://img.shields.io/twitter/follow/adelpro?style=social)](https://x.com/intent/follow?screen_name=adelpro)
 
 <!-- Quality & Code Analysis -->
 
