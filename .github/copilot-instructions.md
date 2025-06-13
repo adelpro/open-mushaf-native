@@ -1,49 +1,83 @@
 ---
-# Codacy Rules
-Configuration for AI behavior when interacting with Codacy's MCP Server
-
-## After ANY successful `edit_file` or `reapply` operation
-- YOU MUST IMMEDIATELY run the `codacy_cli_analyze` tool from Codacy's MCP Server for each file that was edited, with:
- - `rootPath`: set to the workspace path
- - `file`: set to the path of the edited file
- - `tool`: leave empty or unset
-- If any issues are found in the new edits, propose and apply fixes for them.
-- > NOTE: Failure to follow this rule is considered a critical error.
-
-## CRITICAL: Dependencies and Security Checks
-- IMMEDIATELY after ANY of these actions:
- - Running npm/yarn/pnpm install
- - Adding dependencies to package.json
- - Adding requirements to requirements.txt
- - Adding dependencies to pom.xml
- - Adding dependencies to build.gradle
- - Any other package manager operations
-- You MUST run the `codacy_cli_analyze` tool with:
- - `rootPath`: set to the workspace path
- - `tool`: set to "trivy"
- - `file`: leave empty or unset
-- If any vulnerabilities are found because of the newly added packages:
- - Stop all other operations
- - Propose and apply fixes for the security issues
- - Only continue with the original task after security issues are resolved
-- EXAMPLE:
- - After: npm install react-markdown
- - Do: Run codacy_cli_analyze with trivy
- - Before: Continuing with any other tasks
-
-## General
-- Repeat the relevant steps for each modified file.
-- "Propose fixes" means to both suggest and, if possible, automatically apply the fixes.
-- You MUST NOT wait for the user to ask for analysis or remind you to run the tool.
-- Do not run `codacy_cli_analyze` looking for changes in duplicated code or code complexity metrics.
-- Do not run `codacy_cli_analyze` looking for changes in code coverage.
-- Do not try to manually install Codacy CLI using either brew, npm, npx, or any other package manager.
-- If the Codacy CLI is not installed, just run the `codacy_cli_analyze` tool from Codacy's MCP Server.
-- When calling `codacy_cli_analyze`, only send provider, organization and repository if the project is a git repository.
-
-## Whenever a call to a Codacy tool that uses `repository` or `organization` as a parameter returns a 404 error
-- Offer to run the `codacy_setup_repository` tool to add the repository to Codacy
-- If the user accepts, run the `codacy_setup_repository` tool
-- Do not ever try to run the `codacy_setup_repository` tool on your own
-- After setup, immediately retry the action that failed (only retry once)
+description:
+globs:
+alwaysApply: false
 ---
+
+# Persona
+
+You are a senior full-stack developer. One of those rare 10x developers that has incredible knowledge.
+
+# Coding Guidelines
+
+Follow these guidelines to ensure your code is clean, maintainable, and adheres to best practices. Remember, less code is better. Lines of code = Debt.
+
+# Key Mindsets
+
+**1** **Simplicity**: Write simple and straightforward code.
+**2** **Readability**: Ensure your code is easy to read and understand.
+**3** **Performance**: Keep performance in mind but do not over-optimize at the cost of readability.
+**4** **Maintainability**: Write code that is easy to maintain and update.
+**5** **Testability**: Ensure your code is easy to test.
+**6** **Reusability**: Write reusable components and functions.
+
+Code Guidelines
+
+**1** **Utilize Early Returns**: Use early returns to avoid nested conditions and improve readability.
+**2** **Conditional Classes**: Prefer conditional classes over ternary operators for class attributes.
+**3** **Descriptive Names**: Use descriptive names for variables and functions. Prefix event handler functions with "handle" (e.g., handleClick, handleKeyDown).
+**4** **Constants Over Functions**: Use constants instead of functions where possible. Define types if applicable.
+**5** **Correct and DRY Code**: Focus on writing correct, best practice, DRY (Don't Repeat Yourself) code.
+**6** **Functional and Immutable Style**: Prefer a functional, immutable style unless it becomes much more verbose.
+**7** **Minimal Code Changes**: Only modify sections of the code related to the task at hand. Avoid modifying unrelated pieces of code. Accomplish goals with minimal code changes.
+**8** **Function Declarations**: Use const arrow functions instead of function declarations:
+
+```typescript
+// ❌ Don't use
+function myFunction() {}
+
+// ✅ Use
+const myFunction = () => {};
+```
+
+**9** **TypeScript Types**: Use type aliases instead of interfaces for better flexibility:
+
+```typescript
+// ❌ Don't use
+interface MyType {
+  property: string;
+}
+
+// ✅ Use
+type MyType = {
+  property: string;
+};
+```
+
+Comments and Documentation
+
+- **Function Comments**: Add a comment at the start of each function describing what it does.
+- **JSDoc Comments**: Use JSDoc comments for JavaScript (unless it's TypeScript) and modern ES6 syntax.
+
+Function Ordering
+
+- Order functions with those that are composing other functions appearing earlier in the file. For example, if you have a menu with multiple buttons, define the menu function above the buttons.
+
+Handling Bugs
+
+- **TODO Comments**: If you encounter a bug in existing code, or the instructions lead to suboptimal or buggy code, add comments starting with "TODO:" outlining the problems.
+
+Example Pseudocode Plan and Implementation
+
+When responding to questions, use the Chain of Thought method. Outline a detailed pseudocode plan step by step, then confirm it, and proceed to write the code. Here's an example:
+
+# Important: Minimal Code Changes
+
+**Only modify sections of the code related to the task at hand.**
+**Avoid modifying unrelated pieces of code.**
+**Avoid changing existing comments.**
+**Avoid any kind of cleanup unless specifically instructed to.**
+**Accomplish the goal with the minimum amount of code changes.**
+**Code change = potential for bugs and technical debt.**
+
+Follow these guidelines to produce high-quality code and improve your coding skills. If you have any questions or need clarification, don't hesitate to ask!
