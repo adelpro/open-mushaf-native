@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.0]
+
+- chore: removed riwaya warsh mujawad from el maarifah ( because of copyright )
+
 ## [3.7.0]
 
 - feat: Add new mushaf riwaya warsh mujawad from el maarifah

@@ -73,42 +73,6 @@ export default function useQuranMetadata(): QuranMetadata {
           setAyaData(ayaModule.default.coordinates as Page[]);
           setSpecsData(specsModule.default);
           setChapterData(chapterModule.default);
-        } else if (mushafRiwayaValue === 'mujawad') {
-          // Load Mujawad metadata
-          const [
-            thumnModule,
-            hizbModule,
-            surahModule,
-            ayaModule,
-            specsModule,
-            chapterModule,
-          ] = await Promise.all([
-            import(
-              '@/assets/quran-metadata/mushaf-elmaarifah-mujawad-warsh-azrak/thumn.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmaarifah-mujawad-warsh-azrak/hizb.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmaarifah-mujawad-warsh-azrak/surah.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmaarifah-mujawad-warsh-azrak/aya.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmaarifah-mujawad-warsh-azrak/specs.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmaarifah-mujawad-warsh-azrak/chapter.json'
-            ),
-          ]);
-
-          setThumnData(thumnModule.default);
-          setHizbData(hizbModule.default);
-          setSurahData(surahModule.default);
-          setAyaData(ayaModule.default.coordinates as Page[]);
-          setSpecsData(specsModule.default);
-          setChapterData(chapterModule.default);
         } else {
           // Load Warsh metadata (default)
           const [

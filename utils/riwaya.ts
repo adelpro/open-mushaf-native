@@ -1,7 +1,7 @@
 import { Riwaya } from '@/types/riwaya';
 
 // Array mapping indices to Riwaya values (no undefined)
-const riwayaArray: Riwaya[] = ['hafs', 'warsh', 'mujawad'];
+const riwayaArray: Riwaya[] = ['hafs', 'warsh'];
 
 // Function to get the index of a Riwaya value
 export function RiwayaByIndice(value: Riwaya): number {

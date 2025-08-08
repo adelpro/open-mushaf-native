@@ -1,2 +1,2 @@
 import { RiwayaArabic } from '@/types/riwaya';
-export const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش', 'مجود'];
+export const riwayaOptions: RiwayaArabic[] = ['حفص', 'ورش'];
