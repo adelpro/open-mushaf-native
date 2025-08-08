@@ -401,6 +401,9 @@ const styles = StyleSheet.create({
     height: '100%',
     maxWidth: 640,
   },
+  image: {
+    flex: 1,
+  },
   errorContainer: {
     width: '100%',
     flex: 1,
