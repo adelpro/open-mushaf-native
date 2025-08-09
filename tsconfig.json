@@ -3,6 +3,7 @@
   "compilerOptions": {
     "module": "es2020",
     "target": "es2020",
+    "incremental": true,
     "strict": true,
     "paths": {
       "@/*": ["./*"]
@@ -15,5 +16,6 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "metro.config.js"
-  ]
+  ],
+  "exclude": ["node_modules"]
 }
