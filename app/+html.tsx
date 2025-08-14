@@ -12,11 +12,12 @@ export default function Root({ children }: PropsWithChildren) {
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="title" content="المصحف مفتوح المصدر" />
         <meta
           name="description"
           content="مصحف إلكتروني مفتوح المصدر لتلاوة القرآن الكريم، مع دعم لمختلف التفاسير والروايات."
         />
-        <meta name="title" content="مصحف مفتوح المصدر" />;
+
         {/* Preload Amiri and Tajawal fonts */}
         <link
           rel="preload"
