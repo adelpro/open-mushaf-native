@@ -16,7 +16,7 @@ export default function Root({ children }: PropsWithChildren) {
           name="description"
           content="مصحف إلكتروني مفتوح المصدر لتلاوة القرآن الكريم، مع دعم لمختلف التفاسير والروايات."
         />
-
+        <meta name="title" content="مصحف مفتوح المصدر" />;
         {/* Preload Amiri and Tajawal fonts */}
         <link
           rel="preload"
@@ -46,10 +46,8 @@ export default function Root({ children }: PropsWithChildren) {
           type="font/woff2"
           crossOrigin="anonymous"
         />
-
         {/* Digital Asset Links for Android App Links */}
         <link rel="assetlinks.json" href="/.well-known/assetlinks.json" />
-
         {/*} <!-- Safari PWA specific tags -->*/}
         <meta name="mobile-web-app-capable" content="yes" />
         <meta
@@ -102,7 +100,6 @@ export default function Root({ children }: PropsWithChildren) {
           href="splash/apple-splash-640-1136.png"
           media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
         />
-
         {/*<!-- Apple touch icon -->*/}
         <link
           rel="apple-touch-icon"
@@ -113,24 +110,20 @@ export default function Root({ children }: PropsWithChildren) {
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
-
         {/* Link the PWA manifest file. */}
         <link rel="manifest" href="/manifest.json" />
-
         {/* Bootstrap the service worker. */}
         <script dangerouslySetInnerHTML={{ __html: sw }} />
-
         {/*
           Disable body scrolling on web. This makes ScrollView components work closer to how they do on native.
           However, body scrolling is often nice to have for mobile web. If you want to enable it, remove this line.
         */}
         <ScrollViewStyleReset />
-
         {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
         <style dangerouslySetInnerHTML={{ __html: responsiveBackground }} />
         {/* Add any additional <head> elements that you want globally available on web... */}
       </head>
-      <body>
+      <body style={{ overscrollBehavior: 'none' }}>
         {children}
 
         {/* Enhanced Floating Notification Area */}
@@ -347,8 +340,3 @@ if ('serviceWorker' in navigator) {
 // navigator.serviceWorker.controller.postMessage({ type: 'SW_STATE_UPDATE', message: 'Another message, stays until hidden.' });
 // navigator.serviceWorker.controller.postMessage({ type: 'SW_STATE_UPDATE', hide: true });
 `;
-
-<meta
-  name="description"
-  content="مصحف مفتوح المصدر للقراءة والاستماع للقرآن الكريم."
-/>;
