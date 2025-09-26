@@ -20,7 +20,6 @@ designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macO
 
 [![CodeQL](https://github.com/adelpro/open-mushaf-native/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/adelpro/open-mushaf-native/actions/workflows/github-code-scanning/codeql)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/ee280dfe97634fa5b5afd85fc8652d85)](https://app.codacy.com/gh/adelpro/open-mushaf-native/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![codebeat badge](https://codebeat.co/badges/60e335a3-d534-4cdb-9441-15a5b259e0bb)](https://codebeat.co/projects/github-com-adelpro-open-mushaf-native-main)
 
 <!-- Release & Issue Tracking -->
 
