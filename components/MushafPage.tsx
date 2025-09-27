@@ -387,7 +387,7 @@ const MushafPage = memo(function MushafPage() {
                       },
                     ]}
                     source={{ uri: asset?.localUri }}
-                    contentFit="fill"
+                    contentFit="contain"
                   />
                 </ScrollView>
               ) : (
@@ -400,7 +400,7 @@ const MushafPage = memo(function MushafPage() {
                     },
                   ]}
                   source={{ uri: asset?.localUri }}
-                  contentFit="fill"
+                  contentFit="contain"
                 />
               )}
             </>
