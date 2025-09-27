@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { memo, useState } from 'react';
+import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
+import { FlashList } from '@shopify/flash-list';
 
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 import { Surah } from '@/types';
@@ -20,7 +21,7 @@ interface SurahAyaNavigatorProps {
   iconColor: string;
   cardColor: string;
 }
-export default function SurahAyaNavigator({
+const SurahAyaNavigator = memo(function SurahAyaNavigator({
   currentSurah,
   currentAya,
   ayaCount,
@@ -183,17 +184,12 @@ export default function SurahAyaNavigator({
               </TouchableOpacity>
             </ThemedView>
 
-            <FlatList
+            <FlashList
               data={surahData}
               renderItem={renderSurahItem}
               keyExtractor={(item) => item.number.toString()}
               showsVerticalScrollIndicator={isWeb}
-              initialScrollIndex={currentSurah - 1}
-              getItemLayout={(_data, index) => ({
-                length: 60,
-                offset: 60 * index,
-                index,
-              })}
+              estimatedItemSize={60}
             />
           </ThemedView>
         </TouchableOpacity>
@@ -225,18 +221,13 @@ export default function SurahAyaNavigator({
               </TouchableOpacity>
             </ThemedView>
 
-            <FlatList
+            <FlashList
               data={ayaCount}
               renderItem={renderAyaItem}
               keyExtractor={(item) => item.toString()}
               showsVerticalScrollIndicator={isWeb}
+              estimatedItemSize={50}
               numColumns={5}
-              initialScrollIndex={Math.floor((currentAya - 1) / 5)}
-              getItemLayout={(_data, index) => ({
-                length: 50,
-                offset: 50 * Math.floor(index / 5),
-                index,
-              })}
               contentContainerStyle={styles.ayaGrid}
             />
           </ThemedView>
@@ -244,7 +235,9 @@ export default function SurahAyaNavigator({
       </Modal>
     </ThemedView>
   );
-}
+});
+
+export default SurahAyaNavigator;
 
 const styles = StyleSheet.create({
   container: {

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { Slider } from 'react-native-awesome-slider';
-import { useSharedValue } from 'react-native-reanimated';
+import { useSharedValue, withTiming } from 'react-native-reanimated';
 
 type Props = {
   value: number;
@@ -18,8 +18,12 @@ export default function AwesomeSlider({
   const min = useSharedValue(0.3);
   const max = useSharedValue(1);
 
+  // Enhanced smooth transitions with Reanimated 4 timing
   useEffect(() => {
-    progress.value = value;
+    progress.value = withTiming(value, {
+      duration: 150,
+      easing: 'ease-out',
+    });
   }, [value, progress]);
 
   return (

@@ -10,6 +10,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+.claude/
 
 # macOS
 .DS_Store
@@ -36,6 +37,7 @@ firebase.json
 google-services.json
 .firebase
 firebase-debug.log
+claude.md
 
 
 #Ignore vscode AI rules

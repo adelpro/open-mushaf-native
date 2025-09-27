@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
@@ -17,7 +17,11 @@ import { useRouter } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { useAtomValue, useSetAtom } from 'jotai/react';
 import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
@@ -46,7 +50,8 @@ import { ThemedView } from './ThemedView';
 
 const audioSource = require('@/assets/sounds/page-flip-sound.mp3');
 
-export default function MushafPage() {
+const MushafPage = memo(function MushafPage() {
+  'use memo';
   const player = useAudioPlayer(audioSource);
   const isFlipSoundEnabled = useAtomValue(flipSound);
   const mushafContrastValue = useAtomValue(mushafContrast);
@@ -68,11 +73,10 @@ export default function MushafPage() {
     thumnData,
     surahData,
     hizbData,
+    specsData,
     isLoading: metadataIsLoading,
     error: metadataError,
   } = useQuranMetadata();
-
-  const { specsData } = useQuranMetadata();
   const { defaultNumberOfPages } = specsData;
   const { notify } = useNotification();
 
@@ -184,25 +188,46 @@ export default function MushafPage() {
 
   const animatedStyle = useAnimatedStyle(() => {
     const maxTranslateX = 20;
-    const clampedTranslateX = Math.max(
-      -maxTranslateX,
-      Math.min(translateX.value, maxTranslateX),
+    const absTranslateX = Math.abs(translateX.value);
+
+    // Enhanced interpolation with Reanimated 4 optimizations
+    const clampedTranslateX = interpolate(
+      translateX.value,
+      [-maxTranslateX, 0, maxTranslateX],
+      [-maxTranslateX, 0, maxTranslateX],
+      Extrapolation.CLAMP,
     );
-    const shadowOpacity = Math.min(
-      0.5,
-      Math.abs(clampedTranslateX) / maxTranslateX,
+
+    const shadowOpacity = interpolate(
+      absTranslateX,
+      [0, maxTranslateX],
+      [0, 0.5],
+      Extrapolation.CLAMP,
     );
-    const opacity = Math.max(
-      0.85,
-      1 - Math.abs(clampedTranslateX) / maxTranslateX,
+
+    const opacity = interpolate(
+      absTranslateX,
+      [0, maxTranslateX],
+      [1, 0.85],
+      Extrapolation.CLAMP,
+    );
+
+    // Enhanced shadow with depth effect
+    const shadowRadius = interpolate(
+      absTranslateX,
+      [0, maxTranslateX],
+      [0, 8],
+      Extrapolation.CLAMP,
     );
 
     return {
       transform: [{ translateX: clampedTranslateX }],
       shadowOpacity,
+      shadowRadius,
       opacity,
+      elevation: shadowRadius, // Android shadow
     };
-  });
+  }, [translateX]);
 
   useEffect(() => {
     const tag = 'MushafPage';
@@ -387,7 +412,9 @@ export default function MushafPage() {
       </GestureDetector>
     </>
   );
-}
+});
+
+export default MushafPage;
 
 const styles = StyleSheet.create({
   imageContainer: {

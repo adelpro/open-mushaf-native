@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import { useSetAtom } from 'jotai';
@@ -13,7 +13,8 @@ type Props = {
   dimensions: { customPageWidth: number; customPageHeight: number };
 };
 
-export default function PageOverlay({ index, dimensions }: Props) {
+const PageOverlay = memo(function PageOverlay({ index, dimensions }: Props) {
+  'use memo';
   const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
   const [show, setShow] = useState<boolean>(false);
   const setShowTopMenu = useSetAtom(topMenuState);
@@ -68,7 +69,9 @@ export default function PageOverlay({ index, dimensions }: Props) {
       />
     </>
   );
-}
+});
+
+export default PageOverlay;
 
 const styles = StyleSheet.create({
   overlay: {

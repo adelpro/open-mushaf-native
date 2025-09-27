@@ -1,4 +1,11 @@
-import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  memo,
+  Suspense,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { ActivityIndicator, StyleSheet, useColorScheme } from 'react-native';
 
 import BottomSheet, {
@@ -22,7 +29,12 @@ type Props = {
   surah: number;
 };
 
-export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
+const TafseerPopup = memo(function TafseerPopup({
+  show,
+  setShow,
+  aya,
+  surah,
+}: Props) {
   const colorScheme = useColorScheme();
   const tintColor = Colors[colorScheme ?? 'light'].tint;
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
@@ -98,7 +110,9 @@ export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
       </BottomSheetScrollView>
     </BottomSheet>
   );
-}
+});
+
+export default TafseerPopup;
 
 const styles = StyleSheet.create({
   content: {

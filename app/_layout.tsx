@@ -38,8 +38,9 @@ import { NotificationProvider } from '../components/NotificationProvider';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-// Add fade animation to splash screen
-SplashScreen.setOptions({ fade: true, duration: 1000 });
+// Note: SplashScreen.setOptions() is not supported in Expo Go
+// Splash screen configuration should be done in app.json instead
+// The fade animation is configured in the expo-splash-screen plugin in app.json
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();

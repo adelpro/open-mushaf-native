@@ -62,7 +62,9 @@
             "image": "./assets/images/icon-large.png",
             "backgroundColor": "#eeeee6"
           },
-          "imageWidth": 200
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "fade": true
         }
       ],
       "expo-web-browser",

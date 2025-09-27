@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 
 import { useColors } from '@/hooks/useColors';
@@ -8,7 +8,7 @@ import ChapterCard from './ChapterCard';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-export default function ChapterList() {
+const ChapterList = memo(function ChapterList() {
   const { tintColor } = useColors();
   const { chapterData, isLoading, error } = useQuranMetadata();
 
@@ -35,7 +35,9 @@ export default function ChapterList() {
       ))}
     </ThemedView>
   );
-}
+});
+
+export default ChapterList;
 const styles = StyleSheet.create({
   container: {
     alignSelf: 'center',

@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  FlatList,
   Pressable,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
+import { FlashList } from '@shopify/flash-list';
 import { router } from 'expo-router';
 import { useAtom } from 'jotai/react';
 
@@ -28,7 +28,8 @@ import {
   simpleSearch,
 } from '@/utils/searchUtils';
 
-export default function Search() {
+const Search = memo(function Search() {
+  'use memo';
   const { quranData, isLoading, error } = useQuranMetadata();
   const [query, setQuery] = useState('');
   const [inputText, setInputText] = useState('');
@@ -174,16 +175,15 @@ export default function Search() {
         )}
       </ThemedView>
 
-      {/* FlatList for search results */}
-      <FlatList
+      {/* FlashList for ultra-fast search results */}
+      <FlashList
         data={filteredResults}
         keyExtractor={(item) => item.gid.toString()}
         renderItem={renderItem}
+        estimatedItemSize={80}
         ListEmptyComponent={
           query ? <ThemedText type="default">لا توجد نتائج</ThemedText> : null
         }
-        accessibilityRole="list"
-        accessibilityLabel="نتائج البحث"
       />
       <TafseerPopup
         show={show}
@@ -193,7 +193,9 @@ export default function Search() {
       />
     </ThemedView>
   );
-}
+});
+
+export default Search;
 
 const styles = StyleSheet.create({
   container: {
