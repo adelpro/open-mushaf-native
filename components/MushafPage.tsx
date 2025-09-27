@@ -404,9 +404,6 @@ const MushafPage = memo(function MushafPage() {
                         height: undefined,
                         aspectRatio: 0.7,
                       },
-                      colorScheme === 'dark' && {
-                        opacity: mushafContrastValue,
-                      },
                     ]}
                     source={{ uri: asset?.localUri }}
                     contentFit="contain"
@@ -414,13 +411,7 @@ const MushafPage = memo(function MushafPage() {
                 </ScrollView>
               ) : (
                 <Image
-                  style={[
-                    styles.image,
-                    { width: '100%' },
-                    colorScheme === 'dark' && {
-                      opacity: mushafContrastValue,
-                    },
-                  ]}
+                  style={[styles.image, { width: '100%' }]}
                   source={{ uri: asset?.localUri }}
                   contentFit="contain"
                 />
