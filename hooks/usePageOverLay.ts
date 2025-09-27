@@ -38,7 +38,9 @@ const usePageOverlay = ({
     const lineHeight = defaultLineHeight * heightCoeff;
 
     const pageWidth =
-      index <= 2 ? defaultFirstPagesWidth * widthCoeff : imageWidth;
+      index <= 2
+        ? defaultFirstPagesWidth * widthCoeff
+        : defaultPageWidth * widthCoeff;
 
     const marginY =
       index <= 2
@@ -68,55 +70,85 @@ const usePageOverlay = ({
       const defaultX: number = aya[2];
       const defaultY: number = aya[3];
 
+      // Calculate normalized coordinates (0-1) relative to original image dimensions
+      const normalizedX =
+        index <= 2
+          ? (defaultX - defaultFirstPagesMarginX) /
+            (defaultPageHeight - defaultFirstPagesMarginX)
+          : (defaultX - defaultMarginX) / (defaultPageHeight - defaultMarginX);
+
+      const normalizedY =
+        index <= 2
+          ? (defaultY - defaultFirstPagesMarginY) /
+            (defaultFirstPagesWidth - defaultFirstPagesMarginY)
+          : (defaultY - defaultMarginY) / (defaultPageWidth - defaultMarginY);
+
+      // Convert to actual image pixel coordinates (strictly within image bounds)
       const X =
-        index <= 2
-          ? (defaultX - defaultFirstPagesMarginX) * heightCoeff + offsetY
-          : (defaultX - defaultMarginX) * heightCoeff + offsetY;
-
+        Math.max(0, Math.min(normalizedX * imageHeight, imageHeight - 1)) +
+        offsetY;
       const Y =
-        index <= 2
-          ? (defaultY - defaultFirstPagesMarginX) * widthCoeff + offsetX
-          : (defaultY - defaultMarginY) * widthCoeff + offsetX;
+        Math.max(0, Math.min(normalizedY * imageWidth, imageWidth - 1)) +
+        offsetX;
 
-      // Drawing overlay for aya line (first part before the aya marker)
-      overlayElements.push({
-        x: X,
-        y: Y,
-        width: pageWidth - Y,
-        aya: aya[1],
-        surah: aya[0],
-      });
+      // Define strict image boundaries
+      const maxX = offsetY + imageHeight;
+      const maxY = offsetX + imageWidth;
+      const minX = offsetY;
+      const minY = offsetX;
 
-      // Drawing overlay for aya line (last part after the aya marker in the same line)
-      // 93 minimum aya end marker width
-      if (Y > 93 * widthCoeff + offsetX) {
+      // Only create overlays if coordinates are within image bounds
+      if (X >= minX && X < maxX && Y >= minY && Y < maxY) {
+        // Drawing overlay for aya line (first part before the aya marker)
         overlayElements.push({
           x: X,
-          y: marginY + offsetX,
-          width: Y - (marginY + offsetX),
+          y: Y,
+          width: maxY - Y,
+          aya: aya[1],
+          surah: aya[0],
+        });
+      }
+
+      // Drawing overlay for aya line (last part after the aya marker in the same line)
+      // 93 minimum aya end marker width scaled to image
+      const scaledMinWidth = (93 / defaultPageWidth) * imageWidth;
+      const adjustedMarginY = Math.max(minY, marginY + offsetX);
+
+      if (
+        Y > minY + scaledMinWidth &&
+        adjustedMarginY < maxY &&
+        Y > adjustedMarginY
+      ) {
+        overlayElements.push({
+          x: X,
+          y: adjustedMarginY,
+          width: Math.min(Y - adjustedMarginY, maxY - adjustedMarginY),
           aya: aya[1] + 1,
           surah: aya[0],
         });
       }
 
-      // Drawing overlay for multiple-line aya
+      // Drawing overlay for multiple-line aya (only if valid line height and within bounds)
+      if (lineHeight > 0 && X > prevX) {
+        const numberOfLines: number = Math.ceil(
+          (X - prevX - lineHeight) / lineHeight,
+        );
 
-      const numberOfLines: number = Math.ceil(
-        (X - prevX - lineHeight) / lineHeight,
-      );
-
-      if (numberOfLines > 1) {
-        let x = X;
-        for (let i = 0; i < numberOfLines - 1; i++) {
-          x -= lineHeight;
-          if (x >= lineHeight) {
-            overlayElements.push({
-              x: x,
-              y: marginY + offsetX,
-              width: pageWidth - (marginY + offsetX),
-              aya: aya[1],
-              surah: aya[0],
-            });
+        if (numberOfLines > 1) {
+          let x = X;
+          for (let i = 0; i < numberOfLines - 1; i++) {
+            x -= lineHeight;
+            // Ensure x coordinate stays within image bounds
+            const clampedX = Math.max(minX, Math.min(x, maxX - 1));
+            if (clampedX >= minX && clampedX < maxX && adjustedMarginY < maxY) {
+              overlayElements.push({
+                x: clampedX,
+                y: adjustedMarginY,
+                width: maxY - adjustedMarginY,
+                aya: aya[1],
+                surah: aya[0],
+              });
+            }
           }
         }
       }
