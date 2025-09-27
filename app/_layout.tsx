@@ -29,6 +29,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+import BottomMenuOverlay from '@/components/BottomMenuOverlay';
 import Notification from '@/components/Notification';
 import SEO from '@/components/seo';
 import { isRTL } from '@/utils';
@@ -143,6 +144,7 @@ export default function RootLayout() {
                   />
                 </Stack>
                 <Notification />
+                <BottomMenuOverlay />
               </ThemeProvider>
             </SafeAreaView>
           </SafeAreaProvider>

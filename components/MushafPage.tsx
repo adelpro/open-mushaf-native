@@ -16,10 +16,16 @@ import {
 import { useRouter } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { useAtomValue, useSetAtom } from 'jotai/react';
-import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
+import {
+  Gesture,
+  GestureDetector,
+  ScrollView,
+  TapGesture,
+} from 'react-native-gesture-handler';
 import Animated, {
   Extrapolation,
   interpolate,
+  runOnJS,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
@@ -31,6 +37,7 @@ import useOrientation from '@/hooks/useOrientation';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 import {
+  bottomMenuState,
   dailyTrackerCompleted,
   dailyTrackerGoal,
   flipSound,
@@ -60,6 +67,7 @@ const MushafPage = memo(function MushafPage() {
   const [showHizbNotification, setShowHizbNotification] = useState(false);
 
   const setdailyTrackerCompletedValue = useSetAtom(dailyTrackerCompleted);
+  const setBottomMenuState = useSetAtom(bottomMenuState);
 
   const showTrackerNotificationValue = useAtomValue(showTrackerNotification);
   const [showGoalNotification, setShowGoalNotification] = useState(false);
@@ -185,6 +193,20 @@ const MushafPage = memo(function MushafPage() {
     handlePageChange,
     defaultNumberOfPages,
   );
+
+  const toggleBottomMenu = () => {
+    setBottomMenuState((prev) => !prev);
+  };
+
+  const doubleTapGesture = Gesture.Tap()
+    .numberOfTaps(2)
+    .maxDuration(500)
+    .onEnd(() => {
+      'worklet';
+      runOnJS(toggleBottomMenu)();
+    });
+
+  const combinedGesture = Gesture.Race(doubleTapGesture, panGestureHandler);
 
   const animatedStyle = useAnimatedStyle(() => {
     const maxTranslateX = 20;
@@ -356,7 +378,7 @@ const MushafPage = memo(function MushafPage() {
         description={seoMetadata.description}
         keywords={seoMetadata.keywords}
       />
-      <GestureDetector gesture={panGestureHandler}>
+      <GestureDetector gesture={combinedGesture}>
         <Animated.View
           style={[
             styles.imageContainer,

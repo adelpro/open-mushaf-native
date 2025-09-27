@@ -22,12 +22,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         tabBarLabelPosition: 'below-icon',
         tabBarStyle: {
-          display: menuStateValue ? 'flex' : 'none',
-          justifyContent: 'center',
-          flexDirection: 'column-reverse',
-          height: 60,
-          margin: 4,
-          borderWidth: 0.5,
+          display: 'none',
         },
         tabBarLabelStyle: {
           fontFamily: 'Tajawal_400Regular',
