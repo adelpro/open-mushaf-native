@@ -24,11 +24,6 @@ export default function AboutScreen() {
       label: 'مجمع الملك فهد لطباعة المصحف الشريف',
     },
     {
-      text: 'صفحات المصحف المجود من ',
-      link: 'https://easyquran.com/',
-      label: 'دار المعرفة',
-    },
-    {
       text: 'قاعدة البيانات (JSON)',
       link: 'https://github.com/Zizwar/mushaf-mauri',
       label: 'Zizwar/mushaf-mauri',
