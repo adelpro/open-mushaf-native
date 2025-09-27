@@ -1,6 +1,7 @@
 import { Aya } from '@/types';
 import { getDimensionCoeff } from '@/utils';
 
+import { useImageCoordinateScaling } from './useImageCoordinateScaling';
 import useQuranMetadata from './useQuranMetadata';
 
 const usePageOverlay = ({
@@ -24,22 +25,20 @@ const usePageOverlay = ({
     defaultFirstPagesMarginY,
   } = specsData;
 
-  const heightCoeff = getDimensionCoeff({
-    defaultDimension: defaultPageHeight,
-    customDimension: customPageHeight,
-  });
-  const widthCoeff = getDimensionCoeff({
-    defaultDimension: defaultPageWidth,
-    customDimension: customPageWidth,
-  });
+  const { imageWidth, imageHeight, offsetX, offsetY, scaleX, scaleY } =
+    useImageCoordinateScaling({
+      containerWidth: customPageWidth,
+      containerHeight: customPageHeight,
+    });
+
+  const heightCoeff = scaleY;
+  const widthCoeff = scaleX;
 
   const calculateDimensions = () => {
     const lineHeight = defaultLineHeight * heightCoeff;
 
     const pageWidth =
-      index <= 2
-        ? defaultFirstPagesWidth * widthCoeff
-        : defaultPageWidth * widthCoeff;
+      index <= 2 ? defaultFirstPagesWidth * widthCoeff : imageWidth;
 
     const marginY =
       index <= 2
@@ -71,13 +70,13 @@ const usePageOverlay = ({
 
       const X =
         index <= 2
-          ? (defaultX - defaultFirstPagesMarginX) * heightCoeff
-          : (defaultX - defaultMarginX) * heightCoeff;
+          ? (defaultX - defaultFirstPagesMarginX) * heightCoeff + offsetY
+          : (defaultX - defaultMarginX) * heightCoeff + offsetY;
 
       const Y =
         index <= 2
-          ? (defaultY - defaultFirstPagesMarginX) * widthCoeff
-          : (defaultY - defaultMarginY) * widthCoeff;
+          ? (defaultY - defaultFirstPagesMarginX) * widthCoeff + offsetX
+          : (defaultY - defaultMarginY) * widthCoeff + offsetX;
 
       // Drawing overlay for aya line (first part before the aya marker)
       overlayElements.push({
@@ -90,11 +89,11 @@ const usePageOverlay = ({
 
       // Drawing overlay for aya line (last part after the aya marker in the same line)
       // 93 minimum aya end marker width
-      if (Y > 93) {
+      if (Y > 93 * widthCoeff + offsetX) {
         overlayElements.push({
           x: X,
-          y: marginY,
-          width: Y - marginY,
+          y: marginY + offsetX,
+          width: Y - (marginY + offsetX),
           aya: aya[1] + 1,
           surah: aya[0],
         });
@@ -113,8 +112,8 @@ const usePageOverlay = ({
           if (x >= lineHeight) {
             overlayElements.push({
               x: x,
-              y: marginY,
-              width: pageWidth - marginY,
+              y: marginY + offsetX,
+              width: pageWidth - (marginY + offsetX),
               aya: aya[1],
               surah: aya[0],
             });
