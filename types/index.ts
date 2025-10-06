@@ -21,3 +21,5 @@ export * from './hizb';
 export * from './overlay-element';
 
 export * from './thumn';
+
+export * from './morphology-verse.d';

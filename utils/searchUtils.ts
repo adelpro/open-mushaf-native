@@ -1,97 +1,139 @@
 import Fuse, { type IFuseOptions } from 'fuse.js';
 
-/**
- * Removes tashkeel and additional diacritical marks from Arabic text
- */
+// =============== ARABIC NORMALIZATION ===============
 export const removeTashkeel = (text: string): string => {
-  return (
-    text
-      // Replace wasl sign (ٱ) with regular alef (ا)
-      .replace(/\u0671/g, '\u0627')
-      // Remove all tashkeel (harakat) and extra diacritics
-      .replace(
-        /[\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06FC]/g,
-        '',
-      )
-  );
+  return text
+    .replace(/\u0671/g, '\u0627') // Wasl alef → regular alef
+    .replace(
+      /[\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06FC]/g,
+      '',
+    );
 };
 
-/**
- * Normalizes Arabic text by removing diacritics and standardizing characters
- */
 export const normalizeArabicText = (text: string): string => {
   if (!text) return '';
-
-  let normalizedText = removeTashkeel(text); // Remove tashkeel using the new function
-  normalizedText = normalizedText
-    .replace(/[\u0622\u0623\u0625]/g, '\u0627') // Normalize alef
-    .replace(/[\u0624\u0626]/g, '\u0621') // Normalize hamza
-    .replace(/\u0649/g, '\u064A') // Normalize ya/alif maqsura
-    .replace(/\u0640/g, '') // Remove tatweel
-    .replace(/[\u0654\u0655]/g, '\u0621'); // Normalize hamza above/below
-
-  return normalizedText;
+  let normalized = removeTashkeel(text);
+  normalized = normalized
+    .replace(/[\u0622\u0623\u0625]/g, '\u0627') // Alef variants → ا
+    .replace(/[\u0624\u0626]/g, '\u0621') // Hamza variants → ء
+    .replace(/\u0649/g, '\u064A') // Alif maqsura → ي
+    .replace(/\u0640/g, '') // Tatweel
+    .replace(/[\u0654\u0655]/g, '\u0621'); // Hamza above/below
+  return normalized;
 };
 
-/**
- * Creates a configured Fuse instance for Arabic text search
- */
+// =============== FUSE SETUP ===============
 export const createArabicFuseSearch = <T>(
   collection: T[],
-  keys: string[],
+  keys: string[] = ['standard'],
   options: Partial<IFuseOptions<T>> = {},
 ): Fuse<T> => {
   return new Fuse(collection, {
     includeScore: true,
-    threshold: 0.6,
+    threshold: 0.3, // Stricter for Arabic
     ignoreLocation: true,
-    useExtendedSearch: true,
+    useExtendedSearch: false,
     keys,
     ...options,
   });
 };
 
-export const performAdvancedSearch = <T extends Record<string, any>>(
-  fuseInstance: Fuse<T>,
+// =============== SIMPLE SEARCH (Lemma-aware + Fuse fallback) ===============
+export const simpleSearch = <T extends QuranVerse>(
+  items: T[],
+  morphologyData: MorphologyVerse[],
   query: string,
-  searchFields: string[] = ['uthmani', 'standard'],
-  originalCollection?: T[],
 ): T[] => {
   if (!query.trim()) return [];
 
-  // Try exact matches first using simpleSearch if we have original collection
-  if (originalCollection) {
-    const exactMatches = searchFields.flatMap((field) =>
-      simpleSearch(originalCollection, query, field as keyof T),
-    );
+  const normQuery = normalizeArabicText(query);
+  const matchingGids = new Set<number>();
 
-    // Remove duplicates
-    const uniqueMatches = Array.from(
-      new Set(exactMatches.map((item) => JSON.stringify(item))),
-    ).map((item) => JSON.parse(item));
-
-    if (uniqueMatches.length > 0) return uniqueMatches;
+  for (const morph of morphologyData) {
+    if (
+      morph.lemmas.some((lemma) => normalizeArabicText(lemma) === normQuery)
+    ) {
+      matchingGids.add(morph.gid);
+    }
   }
 
-  // Fall back to fuzzy search if no exact matches
+  const gidToVerse = new Map(items.map((v) => [v.gid, v]));
+  return Array.from(matchingGids).map((gid) => gidToVerse.get(gid)!);
+};
+
+export const performSimpleSearch = <T extends QuranVerse>(
+  fuseInstance: Fuse<T>,
+  query: string,
+  originalCollection: T[],
+  morphologyData: MorphologyVerse[],
+): T[] => {
+  if (!query.trim()) return [];
+
+  const exactMatches = simpleSearch(originalCollection, morphologyData, query);
+  if (exactMatches.length > 0) return exactMatches;
+
+  // Fallback to Fuse for typos/unknown words
   return fuseInstance
-    .search(normalizeArabicText(query.toLowerCase()))
+    .search(normalizeArabicText(query))
     .map((result) => result.item);
 };
 
-export const simpleSearch = <T extends Record<string, any>>(
-  items: T[],
+// =============== ADVANCED SEARCH (Root + Lemma + Semantic) ===============
+export interface WordMapEntry {
+  lemma: string;
+  root: string;
+}
+
+// Load at startup: import wordMap from '/data/wordmap.json';
+export const getLemmaAndRoot = (
+  wordMap: Record<string, WordMapEntry>,
+  normalizedWord: string,
+): WordMapEntry | null => {
+  return wordMap[normalizedWord] || null;
+};
+
+// Load at startup: import rootClusters from '/data/root-clusters.json';
+export const performAdvancedSearch = <T extends QuranVerse>(
   query: string,
-  searchField: keyof T,
+  items: T[],
+  morphologyData: MorphologyVerse[],
+  wordMap: Record<string, WordMapEntry>,
+  rootClusters: Record<string, string[]>, // e.g., { "ر-ح-م": ["ر-ح-م", "غ-ف-ر"] }
 ): T[] => {
   if (!query.trim()) return [];
 
-  const normalizedQuery = normalizeArabicText(query.toLowerCase());
+  const normQuery = normalizeArabicText(query);
+  const wordInfo = getLemmaAndRoot(wordMap, normQuery);
 
-  return items.filter((item) => {
-    const normalizedField = normalizeArabicText(
-      String(item[searchField] || '').toLowerCase(),
-    );
-    return normalizedField.includes(normalizedQuery);
-  });
+  if (!wordInfo) {
+    return []; // Word not in Quran → no linguistic results
+  }
+
+  const { root } = wordInfo;
+  const gidSet = new Set<number>();
+
+  // 1. Lemma matches (all forms of the word)
+  const lemmaGids = morphologyData
+    .filter((morph) =>
+      morph.lemmas.some((l) => normalizeArabicText(l) === normQuery),
+    )
+    .map((morph) => morph.gid);
+  lemmaGids.forEach((id) => gidSet.add(id));
+
+  // 2. Root matches (all words from the same root)
+  const rootGids = morphologyData
+    .filter((morph) => morph.roots.includes(root))
+    .map((morph) => morph.gid);
+  rootGids.forEach((id) => gidSet.add(id));
+
+  // 3. Semantic matches (related roots)
+  const semanticRoots = rootClusters[root] || [root];
+  const semanticGids = morphologyData
+    .filter((morph) => morph.roots.some((r) => semanticRoots.includes(r)))
+    .map((morph) => morph.gid);
+  semanticGids.forEach((id) => gidSet.add(id));
+
+  // Return results
+  const gidToVerse = new Map(items.map((v) => [v.gid, v]));
+  return Array.from(gidSet).map((gid) => gidToVerse.get(gid)!);
 };
