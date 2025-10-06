@@ -1,26 +1,27 @@
 import React from 'react';
 import { Text, TextStyle } from 'react-native';
 
-interface HighlightTextProps {
+type HighlightTextProps = {
   text: string;
-  query: string;
+  tokens: string[]; // <-- now an array of matched words
   color?: string;
   style?: TextStyle;
-}
+};
 
-/**
- * HighlightText component — highlights parts of the given text that match the query.
- */
 export const HighlightText: React.FC<HighlightTextProps> = ({
   text,
-  query,
+  tokens,
   color = '#FFD54F',
   style,
 }) => {
-  if (!query.trim()) return <Text style={style}>{text}</Text>;
+  if (!tokens || tokens.length === 0) return <Text style={style}>{text}</Text>;
 
-  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const regex = new RegExp(`(${escapedQuery})`, 'gi');
+  // Escape tokens for regex
+  const escapedTokens = tokens.map((t) =>
+    t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+  );
+  const regex = new RegExp(`(${escapedTokens.join('|')})`, 'gi');
+
   const parts = text.split(regex);
 
   return (

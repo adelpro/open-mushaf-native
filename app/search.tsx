@@ -32,7 +32,6 @@ import {
 } from '@/utils/search-utils';
 
 const MORPH = morphologyDataRaw as MorphologyAya[];
-
 const WORD_MAP = wordMapJSON as WordMap;
 
 export default function Search() {
@@ -77,7 +76,6 @@ export default function Search() {
     [],
   );
 
-  // stable token extractor — wrapped in useCallback to satisfy hooks lint
   const getPositiveTokens = useCallback(
     (
       verse: QuranText,
@@ -86,59 +84,47 @@ export default function Search() {
       targetRoot?: string,
       cleanQuery?: string,
     ): string[] => {
-      try {
-        if (mode === 'text') {
-          if (!cleanQuery) return [];
+      if (!cleanQuery) return [];
 
-          const normalizedQuery = normalizeArabic(cleanQuery);
-          // simple find: split words and return those equal or containing query
-          const words = (verse.standard || '')
-            .split(/\s+/)
-            .map((w) => w.replace(/[^\u0621-\u064A]/g, ''));
-          return Array.from(
-            new Set(
-              words.filter((w) => normalizeArabic(w).includes(normalizedQuery)),
-            ),
-          );
-        }
+      const normalizedQuery = normalizeArabic(cleanQuery);
 
-        const morph = getMorphByGid(verse.gid);
-        if (!morph) return [];
+      // --- Text search ---
+      if (mode === 'text') {
+        const words = (verse.standard || '')
+          .split(/\s+/)
+          .map((w) => w.replace(/[^\u0621-\u064A]/g, ''));
 
-        if (mode === 'lemma' && targetLemma) {
-          const normTarget = normalizeArabic(targetLemma);
-          const matched = morph.lemmas.filter(
-            (l) => normalizeArabic(l) === normTarget,
-          );
-          if (matched.length) return Array.from(new Set(matched));
-          return Array.from(
-            new Set(
-              morph.lemmas.filter((l) =>
-                normalizeArabic(l).includes(normTarget),
-              ),
-            ),
-          );
-        }
-
-        if (mode === 'root' && targetRoot) {
-          const normTarget = normalizeArabic(targetRoot);
-          const matched = morph.roots.filter(
-            (r) => normalizeArabic(r) === normTarget,
-          );
-          if (matched.length) return Array.from(new Set(matched));
-          return Array.from(
-            new Set(
-              morph.roots.filter((r) =>
-                normalizeArabic(r).includes(normTarget),
-              ),
-            ),
-          );
-        }
-
-        return [];
-      } catch {
-        return [];
+        // return only words that actually include the query
+        return Array.from(
+          new Set(
+            words.filter((w) => normalizeArabic(w).includes(normalizedQuery)),
+          ),
+        );
       }
+
+      // --- Lemma / Root search ---
+      const morph = getMorphByGid(verse.gid);
+      if (!morph) return [];
+
+      if (mode === 'lemma' && targetLemma) {
+        const normTarget = normalizeArabic(targetLemma);
+        return Array.from(
+          new Set(
+            morph.lemmas.filter((l) => normalizeArabic(l).includes(normTarget)),
+          ),
+        );
+      }
+
+      if (mode === 'root' && targetRoot) {
+        const normTarget = normalizeArabic(targetRoot);
+        return Array.from(
+          new Set(
+            morph.roots.filter((r) => normalizeArabic(r).includes(normTarget)),
+          ),
+        );
+      }
+
+      return [];
     },
     [getMorphByGid],
   );
@@ -161,9 +147,7 @@ export default function Search() {
 
     const useLemma = advancedOptions.lemma;
     const useRoot = advancedOptions.root;
-    const isAdvanced = useLemma || useRoot;
 
-    // per-type results
     const simpleMatches = simpleSearch(quranData, cleanQuery, 'standard');
 
     const lemmaMatches = useLemma
@@ -184,7 +168,6 @@ export default function Search() {
         )
       : [];
 
-    // unique combined results (preserve quranData order)
     const gidSet = new Set<number>();
     const combined: QuranText[] = [];
     const pushIfNew = (v: QuranText) => {
@@ -193,7 +176,6 @@ export default function Search() {
         combined.push(v);
       }
     };
-
     for (const v of simpleMatches) pushIfNew(v);
     for (const v of lemmaMatches) pushIfNew(v);
     for (const v of rootMatches) pushIfNew(v);
@@ -211,11 +193,10 @@ export default function Search() {
     });
     setFilteredResults(combined);
 
-    // Logging with detail
     console.groupCollapsed(`🔍 Search Debug — "${cleanQuery}"`);
     console.log(
       'Mode:',
-      isAdvanced
+      useLemma || useRoot
         ? `Advanced (lemma=${useLemma}, root=${useRoot})`
         : 'Simple text',
     );
@@ -273,34 +254,73 @@ export default function Search() {
     }));
   };
 
-  const renderItem = ({ item }: { item: QuranText }) => (
-    <TouchableOpacity onPress={() => handlePress(item)}>
-      <SEO
-        title="البحث - المصحف المفتوح"
-        description="البحث في آيات القرآن الكريم"
-      />
-      <ThemedView style={[styles.item, { borderBottomColor: tintColor }]}>
-        <ThemedText type="default" style={styles.uthmani}>
-          <HighlightText
-            text={item.standard}
-            query={query.trim()}
-            color="#FFEB3B" // optional highlight color
-            style={{ fontSize: 18 }}
-          />
-        </ThemedText>
-        <Pressable
-          onPress={() => {
-            router.replace({
-              pathname: '/',
-              params: { page: item.page_id.toString(), temporary: 'true' },
-            });
-          }}
-        >
-          <ThemedText type="link">{`سورة: ${item.sura_name} - الآية: ${item.aya_id}`}</ThemedText>
-        </Pressable>
-      </ThemedView>
-    </TouchableOpacity>
-  );
+  const renderItem = ({ item }: { item: QuranText }) => {
+    // collect matched tokens from all active search modes
+    const tokens: string[] = [];
+
+    const mapEntry = WORD_MAP[normalizeArabic(query.trim())];
+
+    if (filteredResults.find((v) => v.gid === item.gid)) {
+      if (!advancedOptions.lemma && !advancedOptions.root) {
+        tokens.push(
+          ...getPositiveTokens(item, 'text', undefined, undefined, query),
+        );
+      } else {
+        if (advancedOptions.lemma) {
+          tokens.push(
+            ...getPositiveTokens(
+              item,
+              'lemma',
+              mapEntry?.lemma,
+              undefined,
+              query,
+            ),
+          );
+        }
+        if (advancedOptions.root) {
+          tokens.push(
+            ...getPositiveTokens(
+              item,
+              'root',
+              undefined,
+              mapEntry?.root,
+              query,
+            ),
+          );
+        }
+      }
+    }
+
+    return (
+      <TouchableOpacity onPress={() => handlePress(item)}>
+        {/* SEO meta tags */}
+        <SEO
+          title="البحث - المصحف المفتوح"
+          description="البحث في آيات القرآن الكريم"
+        />
+        <ThemedView style={[styles.item, { borderBottomColor: tintColor }]}>
+          <ThemedText type="default" style={styles.uthmani}>
+            <HighlightText
+              text={item.standard}
+              tokens={tokens}
+              color="#FFEB3B"
+              style={{ fontSize: 18 }}
+            />
+          </ThemedText>
+          <Pressable
+            onPress={() => {
+              router.replace({
+                pathname: '/',
+                params: { page: item.page_id.toString(), temporary: 'true' },
+              });
+            }}
+          >
+            <ThemedText type="link">{`سورة: ${item.sura_name} - الآية: ${item.aya_id}`}</ThemedText>
+          </Pressable>
+        </ThemedView>
+      </TouchableOpacity>
+    );
+  };
 
   if (isLoading)
     return (
@@ -316,7 +336,6 @@ export default function Search() {
       </ThemedView>
     );
 
-  // Result label logic: show only selected types + total
   const selectedLabels: string[] = [];
   if (advancedOptions.lemma) selectedLabels.push(`صيغة: ${counts.lemma}`);
   if (advancedOptions.root) selectedLabels.push(`جذر: ${counts.root}`);
@@ -329,14 +348,12 @@ export default function Search() {
 
   return (
     <ThemedView style={styles.container}>
-      {/* Search Input */}
       <ThemedView style={styles.searchContainer}>
         <ThemedTextInput
           variant="outlined"
           style={styles.searchInput}
           placeholder="البحث..."
           onChangeText={(text) => {
-            // keep only Arabic letters and spaces
             const arabicOnly = text.replace(/[^\u0621-\u064A\s]/g, '');
             setInputText(arabicOnly);
             handleSearch(arabicOnly);
@@ -360,7 +377,6 @@ export default function Search() {
         </Pressable>
       </ThemedView>
 
-      {/* Advanced Options */}
       {showOptions && (
         <ThemedView style={styles.advancedOptions}>
           <View style={styles.optionRow}>
@@ -399,12 +415,10 @@ export default function Search() {
         </ThemedView>
       )}
 
-      {/* Results Count */}
       {query ? (
         <ThemedText style={styles.resultCount}>{counterText}</ThemedText>
       ) : null}
 
-      {/* Results */}
       <FlatList
         data={filteredResults}
         keyExtractor={(item) => item.gid.toString()}
