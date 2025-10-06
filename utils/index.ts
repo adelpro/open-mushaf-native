@@ -1,6 +1,6 @@
-export * from './getDimensionCoeff';
+export * from './get-dimension-coeff';
 
-export * from './getVersion';
+export * from './get-version';
 
 export * from './isRTL';
 
@@ -10,4 +10,6 @@ export * from './isDEBUG';
 
 export * from './isWeb';
 
-export * from './quranMetadataUtils';
+export * from './quran-metadata-utils';
+
+export * from './arabic-utils';

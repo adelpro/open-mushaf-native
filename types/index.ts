@@ -4,15 +4,17 @@ export * from './external-link-type';
 
 export * from './aya';
 
+export * from './word-map';
+
 export * from './surah';
 
-export * from './quranText';
+export * from './quran-text';
 
-export * from './listTabs';
+export * from './list-tabs';
 
-export * from './tafseerTabs';
+export * from './tafseer-tabs';
 
-export * from './tafseerAya';
+export * from './tafseer-aya';
 
 export * from './specs';
 
@@ -22,4 +24,4 @@ export * from './overlay-element';
 
 export * from './thumn';
 
-export * from './morphology-verse.d';
+export * from './morphology-aya.d';

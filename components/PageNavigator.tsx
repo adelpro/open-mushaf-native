@@ -10,7 +10,7 @@ import {
 import { Feather } from '@expo/vector-icons';
 
 import { useColors } from '@/hooks/useColors';
-import { getPaginationRange, isCompactView } from '@/utils/dimensionsUtils';
+import { getPaginationRange, isCompactView } from '@/utils/dimensions-utils';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';

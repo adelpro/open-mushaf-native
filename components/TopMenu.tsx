@@ -22,9 +22,11 @@ import {
   dailyTrackerGoal,
   topMenuState,
 } from '@/jotai/atoms';
-import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
-import { getJuzPositionByPage } from '@/utils/quranMetadataUtils';
-import { removeTashkeel } from '@/utils/searchUtils';
+import { removeTashkeel } from '@/utils/arabic-utils';
+import {
+  getJuzPositionByPage,
+  getSurahNameByPage,
+} from '@/utils/quran-metadata-utils';
 
 const ICON_SIZE = 32;
 export default function TopMenu() {

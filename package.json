@@ -11,7 +11,10 @@
     "start:prod": "expo start --no-dev --minify",
     "start:clear": "expo start --reset-cache",
     "web": "expo start --web",
-    "prebuild": "npx expo prebuild --clean",
+    "build:morphology": "ts-node --project tsconfig.scripts.json scripts/build-morphology.ts",
+    "build:wordmap": "ts-node --project tsconfig.scripts.json scripts/build-word-map.ts",
+    "build:data": "yarn run build:morphology && yarn run build:wordmap",
+    "prebuild": "yarn run build:data && npx expo prebuild --clean",
     "android": "expo run:android -d",
     "android:prod": "npx expo run:android --variant Release -d",
     "ios": "expo run:ios",
@@ -101,6 +104,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/jest": "^29.5.12",
+    "@types/node": "^24.7.0",
     "@types/react": "~19.0.10",
     "@types/react-native-htmlview": "^0.16.5",
     "@types/react-test-renderer": "^18.0.7",
@@ -123,7 +127,8 @@
     "prettier": "^3.3.3",
     "react-native-svg-transformer": "^1.5.0",
     "react-test-renderer": "18.2.0",
-    "typescript": "~5.8.3"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
   "config": {
     "commitizen": {
