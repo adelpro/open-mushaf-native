@@ -4,16 +4,14 @@ import {
   FlatList,
   Pressable,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
 
 import morphologyDataRaw from '@/assets/search/quran-morphology.json';
 import wordMapJSON from '@/assets/search/word-map.json';
-import { HighlightText } from '@/components/highlight-arabic';
+import SearchResultItem from '@/components/search-result-item';
 import SEO from '@/components/seo';
 import TafseerPopup from '@/components/TafseerPopup';
 import { ThemedTextInput } from '@/components/ThemedInput';
@@ -23,7 +21,6 @@ import useQuranSearch from '@/hooks/use-quran-search';
 import { useColors } from '@/hooks/useColors';
 import useDebounce from '@/hooks/useDebounce';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
-import { WordMap } from '@/types';
 import { createArabicFuseSearch } from '@/utils/search-utils';
 
 const MORPH = morphologyDataRaw;
@@ -66,99 +63,6 @@ export default function Search() {
 
   const toggleOption = (option: keyof typeof advancedOptions) => {
     setAdvancedOptions((prev) => ({ ...prev, [option]: !prev[option] }));
-  };
-
-  const handlePress = (aya: any) => {
-    setSelectedAya({ aya: aya.aya_id, surah: aya.sura_id });
-  };
-
-  const renderItem = ({ item }: { item: any }) => {
-    const cleanQuery = query.trim();
-    const mapEntry = (WORD_MAP as WordMap)[cleanQuery];
-
-    // Collect tokens for highlighting
-    const directTokens: string[] = [];
-    const relatedTokens: string[] = [];
-    const fuzzyTokens: string[] = [];
-
-    if (filteredResults.find((v) => v.gid === item.gid)) {
-      const textMatches = getPositiveTokens(
-        item,
-        'text',
-        undefined,
-        undefined,
-        query,
-      );
-      directTokens.push(...textMatches);
-
-      if (advancedOptions.lemma && mapEntry?.lemma) {
-        const lemmaMatches = getPositiveTokens(
-          item,
-          'lemma',
-          mapEntry.lemma,
-          undefined,
-          query,
-        );
-        relatedTokens.push(
-          ...lemmaMatches.filter((w) => !textMatches.includes(w)),
-        );
-      }
-
-      if (advancedOptions.root && mapEntry?.root) {
-        const rootMatches = getPositiveTokens(
-          item,
-          'root',
-          undefined,
-          mapEntry.root,
-          query,
-        );
-        relatedTokens.push(
-          ...rootMatches.filter(
-            (w) => !textMatches.includes(w) && !relatedTokens.includes(w),
-          ),
-        );
-      }
-    }
-
-    return (
-      <TouchableOpacity onPress={() => handlePress(item)}>
-        <SEO
-          title="البحث - المصحف المفتوح"
-          description="البحث في آيات القرآن الكريم"
-        />
-        <ThemedView style={styles.item}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
-            <Pressable
-              onPress={() =>
-                router.replace({
-                  pathname: '/',
-                  params: { page: item.page_id.toString(), temporary: 'true' },
-                })
-              }
-            >
-              <ThemedText type="link">{`سورة: ${item.sura_name} - الآية: ${item.aya_id}`}</ThemedText>
-            </Pressable>
-          </View>
-          <ThemedText type="default" style={styles.uthmani}>
-            <HighlightText
-              text={item.standard}
-              tokens={directTokens}
-              relatedWords={relatedTokens}
-              fuzzyWords={fuzzyTokens}
-              color="#FFEB3B"
-              style={{ fontSize: 18 }}
-            />
-          </ThemedText>
-        </ThemedView>
-      </TouchableOpacity>
-    );
   };
 
   if (isLoading)
@@ -260,7 +164,18 @@ export default function Search() {
       <FlatList
         data={filteredResults}
         keyExtractor={(item) => item.gid.toString()}
-        renderItem={renderItem}
+        renderItem={({ item }) => (
+          <SearchResultItem
+            item={item}
+            query={query}
+            advancedOptions={advancedOptions}
+            wordMap={WORD_MAP}
+            getPositiveTokens={getPositiveTokens}
+            onSelectAya={(selected: { aya: number; surah: number }) =>
+              setSelectedAya(selected)
+            }
+          />
+        )}
         ListEmptyComponent={
           query ? (
             <ThemedView style={styles.emptyContainer}>
@@ -275,6 +190,11 @@ export default function Search() {
         setShow={() => setSelectedAya({ aya: 0, surah: 0 })}
         aya={selectedAya.aya}
         surah={selectedAya.surah}
+      />
+
+      <SEO
+        title="البحث - المصحف المفتوح"
+        description="البحث في آيات القرآن الكريم"
       />
     </ThemedView>
   );
@@ -298,16 +218,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   icon: { marginHorizontal: 6 },
-  item: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    gap: 5,
-    padding: 15,
-    marginHorizontal: 10,
-    borderBottomWidth: 1,
-  },
-  uthmani: { paddingVertical: 10, fontFamily: 'Amiri_400Regular' },
   advancedOptions: {
     padding: 10,
     marginBottom: 12,

@@ -106,69 +106,90 @@ export default function useQuranSearch({
     [getMorphByGid],
   );
 
-  const processSearchResults = useCallback(
+  // -----------------------------
+  // Compute relevance score
+  // -----------------------------
+  const computeScore = useCallback(
     (
-      simpleMatches: QuranText[],
-      lemmaMatches: QuranText[],
-      rootMatches: QuranText[],
-    ) => {
+      verse: QuranText,
+      cleanQuery: string,
+      mapEntry: { lemma?: string; root?: string } | undefined,
+    ): ScoredQuranText => {
+      let score = 0;
+      let matchType: MatchType = 'none';
+
+      const textMatches = getPositiveTokens(
+        verse,
+        'text',
+        undefined,
+        undefined,
+        cleanQuery,
+      );
+      if (textMatches.length > 0) {
+        score += textMatches.length * 3;
+        matchType = 'exact';
+      }
+
+      if (advancedOptions.lemma && mapEntry?.lemma) {
+        const lemmaMatches = getPositiveTokens(
+          verse,
+          'lemma',
+          mapEntry.lemma,
+          undefined,
+          cleanQuery,
+        );
+        if (lemmaMatches.length > 0) {
+          score += lemmaMatches.length * 2;
+          if (score > 0 && matchType !== 'exact') matchType = 'lemma';
+        }
+      }
+
+      if (advancedOptions.root && mapEntry?.root) {
+        const rootMatches = getPositiveTokens(
+          verse,
+          'root',
+          undefined,
+          mapEntry.root,
+          cleanQuery,
+        );
+        if (rootMatches.length > 0) {
+          score += rootMatches.length;
+          if (score > 0 && matchType !== 'exact' && matchType !== 'lemma')
+            matchType = 'root';
+        }
+      }
+
+      return { ...verse, matchScore: score, matchType };
+    },
+    [advancedOptions, getPositiveTokens],
+  );
+
+  const processSearchResults = useCallback(
+    (results: QuranText[], cleanQuery: string) => {
       const gidSet = new Set<number>();
       const combined: ScoredQuranText[] = [];
 
-      const scoreMatch = (
-        verse: QuranText,
-        matchTypes: { simple?: boolean; lemma?: boolean; root?: boolean },
-      ): ScoredQuranText => {
-        let matchScore = 0;
-        let matchType: MatchType = 'none';
-
-        if (matchTypes.simple) {
-          matchScore = 100;
-          matchType = 'exact';
-        } else if (matchTypes.lemma) {
-          matchScore = 70;
-          matchType = 'lemma';
-        } else if (matchTypes.root) {
-          matchScore = 50;
-          matchType = 'root';
-        }
-
-        return { ...verse, matchScore, matchType };
-      };
-
-      const pushIfNew = (
-        v: QuranText,
-        matchTypes: { simple?: boolean; lemma?: boolean; root?: boolean },
-      ) => {
+      for (const v of results) {
         if (!gidSet.has(v.gid)) {
           gidSet.add(v.gid);
-          combined.push(scoreMatch(v, matchTypes));
-        } else {
-          const idx = combined.findIndex((item) => item.gid === v.gid);
-          if (idx >= 0) {
-            const existing = combined[idx];
-            const newScored = scoreMatch(v, matchTypes);
-            if (newScored.matchScore > existing.matchScore)
-              combined[idx] = newScored;
-          }
+          const mapEntry = wordMap[cleanQuery];
+          combined.push(computeScore(v, cleanQuery, mapEntry));
         }
-      };
-
-      for (const v of simpleMatches) pushIfNew(v, { simple: true });
-      for (const v of lemmaMatches) pushIfNew(v, { lemma: true });
-      for (const v of rootMatches) pushIfNew(v, { root: true });
+      }
 
       combined.sort((a, b) => b.matchScore - a.matchScore);
 
+      // Counts
       setCounts({
-        simple: simpleMatches.length,
-        lemma: lemmaMatches.length,
-        root: rootMatches.length,
+        simple: combined.filter((v) => v.matchType === 'exact').length,
+        lemma: combined.filter((v) => v.matchType === 'lemma').length,
+        root: combined.filter((v) => v.matchType === 'root').length,
         total: combined.length,
       });
+
       setFilteredResults(combined as QuranText[]);
     },
-    [],
+    [computeScore, wordMap],
   );
 
   useEffect(() => {
@@ -180,40 +201,42 @@ export default function useQuranSearch({
 
     const arabicOnly = (query ?? '').replace(/[^\u0621-\u064A\s]/g, '').trim();
     const cleanQuery = normalizeArabic(arabicOnly);
+
     if (!cleanQuery) {
       setFilteredResults([]);
       setCounts({ simple: 0, lemma: 0, root: 0, total: 0 });
       return;
     }
 
-    const MAX_RESULTS_PER_TYPE = 500;
+    const MAX_RESULTS = 500;
 
     const simpleMatches = simpleSearch(quranData, cleanQuery, 'standard').slice(
       0,
-      MAX_RESULTS_PER_TYPE,
+      MAX_RESULTS,
     );
 
-    const lemmaMatches = advancedOptions.lemma
-      ? performAdvancedLinguisticSearch(
-          cleanQuery,
-          quranData,
-          { lemma: true, root: false },
-          fuseInstance,
-        ).slice(0, MAX_RESULTS_PER_TYPE)
-      : [];
+    const advancedMatches = [
+      ...(advancedOptions.lemma
+        ? performAdvancedLinguisticSearch(
+            cleanQuery,
+            quranData,
+            { lemma: true, root: false },
+            fuseInstance,
+          ).slice(0, MAX_RESULTS)
+        : []),
+      ...(advancedOptions.root
+        ? performAdvancedLinguisticSearch(
+            cleanQuery,
+            quranData,
+            { lemma: false, root: true },
+            fuseInstance,
+          ).slice(0, MAX_RESULTS)
+        : []),
+    ];
 
-    const rootMatches = advancedOptions.root
-      ? performAdvancedLinguisticSearch(
-          cleanQuery,
-          quranData,
-          { lemma: false, root: true },
-          fuseInstance,
-        ).slice(0, MAX_RESULTS_PER_TYPE)
-      : [];
+    const allMatches = [...simpleMatches, ...advancedMatches];
 
-    requestAnimationFrame(() =>
-      processSearchResults(simpleMatches, lemmaMatches, rootMatches),
-    );
+    requestAnimationFrame(() => processSearchResults(allMatches, cleanQuery));
   }, [query, quranData, fuseInstance, advancedOptions, processSearchResults]);
 
   return { filteredResults, counts, getPositiveTokens };
