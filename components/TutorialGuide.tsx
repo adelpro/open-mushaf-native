@@ -25,8 +25,8 @@ import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { SLIDES } from '@/constants';
-import { useColors } from '@/hooks/useColors';
-import useOrientation from '@/hooks/useOrientation';
+import { useColors } from '@/hooks/use-colors';
+import useOrientation from '@/hooks/use-orientation';
 import { finishedTutorial } from '@/jotai/atoms';
 import { isRTL } from '@/utils';
 

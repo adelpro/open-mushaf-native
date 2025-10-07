@@ -9,9 +9,9 @@ import SEO from '@/components/seo';
 import SurahAyaNavigator from '@/components/SurahAyaNavigator';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import { useColors } from '@/hooks/use-colors';
+import useCurrentPage from '@/hooks/use-current-page';
+import useQuranMetadata from '@/hooks/use-quran-metadata';
 
 export default function Navigation() {
   const router = useRouter();

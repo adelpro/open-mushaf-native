@@ -3,7 +3,7 @@ import { ActivityIndicator, StyleSheet, Text } from 'react-native';
 
 import { FontAwesome } from '@expo/vector-icons';
 
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks/use-colors';
 
 import { useNotification } from './NotificationProvider';
 import { ThemedButton } from './ThemedButton';

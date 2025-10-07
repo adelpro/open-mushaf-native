@@ -5,7 +5,7 @@ import { useAtom } from 'jotai/react';
 
 import { currentSavedPage } from '@/jotai/atoms';
 
-import useQuranMetadata from './useQuranMetadata';
+import useQuranMetadata from './use-quran-metadata';
 
 export default function useCurrentPage() {
   const { page: pageParam, temporary } = useLocalSearchParams();

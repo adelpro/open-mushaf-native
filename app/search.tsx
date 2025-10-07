@@ -17,10 +17,10 @@ import TafseerPopup from '@/components/TafseerPopup';
 import { ThemedTextInput } from '@/components/ThemedInput';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useColors } from '@/hooks/use-colors';
+import useDebounce from '@/hooks/use-debounce';
+import useQuranMetadata from '@/hooks/use-quran-metadata';
 import useQuranSearch from '@/hooks/use-quran-search';
-import { useColors } from '@/hooks/useColors';
-import useDebounce from '@/hooks/useDebounce';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
 import { createArabicFuseSearch } from '@/utils/search-utils';
 
 const MORPH = morphologyDataRaw;

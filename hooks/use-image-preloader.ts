@@ -6,7 +6,7 @@ import { useAtomValue } from 'jotai/react';
 import { imagesMapHafs, imagesMapWarsh } from '@/constants';
 import { mushafRiwaya } from '@/jotai/atoms';
 
-import useQuranMetadata from './useQuranMetadata';
+import useQuranMetadata from './use-quran-metadata';
 
 /**
  * Hook to preload images for smoother page navigation

@@ -4,7 +4,7 @@ import { Pressable, StyleSheet } from 'react-native';
 import { useAtom } from 'jotai/react';
 
 import { riwayaOptions } from '@/constants';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks/use-colors';
 import { mushafRiwaya } from '@/jotai/atoms';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
 

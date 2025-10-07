@@ -1,7 +1,7 @@
 import { Aya } from '@/types';
 import { getDimensionCoeff } from '@/utils';
 
-import useQuranMetadata from './useQuranMetadata';
+import useQuranMetadata from './use-quran-metadata';
 
 const usePageOverlay = ({
   index,

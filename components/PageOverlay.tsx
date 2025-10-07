@@ -3,7 +3,7 @@ import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import { useSetAtom } from 'jotai';
 
-import usePageOverlay from '@/hooks/usePageOverLay';
+import usePageOverlay from '@/hooks/use-page-overLay';
 import { topMenuState } from '@/jotai/atoms';
 
 import TafseerPopup from './TafseerPopup';

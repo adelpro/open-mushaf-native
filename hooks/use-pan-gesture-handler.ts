@@ -1,7 +1,7 @@
 import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS, useSharedValue, withSpring } from 'react-native-reanimated';
 
-import useOrientation from './useOrientation';
+import useOrientation from './use-orientation';
 
 export const usePanGestureHandler = (
   currentPage: number,

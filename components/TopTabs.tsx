@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks/use-colors';
 import { ListTabs } from '@/types';
 
 import { ThemedText } from './ThemedText';

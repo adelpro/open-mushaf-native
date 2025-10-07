@@ -23,7 +23,7 @@ import WelcomeSVG from '@/assets/svgs/welcome.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks/use-colors';
 
 export default function MoreScreen() {
   const [errorModalVisible, setErrorModalVisible] = useState(false);

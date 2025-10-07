@@ -9,7 +9,7 @@ import { Tabs } from 'expo-router';
 import { useAtomValue } from 'jotai/react';
 
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { bottomMenuState } from '@/jotai/atoms';
 
 export default function TabLayout() {

@@ -14,7 +14,7 @@ import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { riwayaOptions } from '@/constants';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks/use-colors';
 import {
   flipSound,
   hizbNotification,

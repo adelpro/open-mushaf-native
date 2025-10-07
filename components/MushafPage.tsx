@@ -19,13 +19,13 @@ import { useAtomValue, useSetAtom } from 'jotai/react';
 import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
-import useImagePreloader from '@/hooks/useImagePreloader';
-import useImagesArray from '@/hooks/useImagesArray';
-import useOrientation from '@/hooks/useOrientation';
-import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import { useColors } from '@/hooks/use-colors';
+import useCurrentPage from '@/hooks/use-current-page';
+import useImagePreloader from '@/hooks/use-image-preloader';
+import useImagesArray from '@/hooks/use-images-array';
+import useOrientation from '@/hooks/use-orientation';
+import { usePanGestureHandler } from '@/hooks/use-pan-gesture-handler';
+import useQuranMetadata from '@/hooks/use-quran-metadata';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,

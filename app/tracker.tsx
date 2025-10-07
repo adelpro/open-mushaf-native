@@ -16,8 +16,8 @@ import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
+import { useColors } from '@/hooks/use-colors';
+import useCurrentPage from '@/hooks/use-current-page';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,

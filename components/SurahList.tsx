@@ -1,8 +1,8 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 
-import { useColors } from '@/hooks/useColors';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import { useColors } from '@/hooks/use-colors';
+import useQuranMetadata from '@/hooks/use-quran-metadata';
 
 import SurahCard from './SurahCard';
 import { ThemedText } from './ThemedText';

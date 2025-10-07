@@ -10,8 +10,8 @@ import {
   READING_BANNER_HEIGHT_CLOSED,
   READING_BANNER_HEIGHT_OPEN,
 } from '@/constants';
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
+import { useColors } from '@/hooks/use-colors';
+import useCurrentPage from '@/hooks/use-current-page';
 import { readingBannerCollapsedState, yesterdayPage } from '@/jotai/atoms';
 
 import { ThemedButton } from './ThemedButton';

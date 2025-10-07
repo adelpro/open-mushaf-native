@@ -4,7 +4,7 @@ import { Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import IslamicMarkSVG from '@/assets/svgs/islamic-mark.svg';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks/use-colors';
 import { Surah } from '@/types';
 
 import { ThemedText } from './ThemedText';
@@ -50,9 +50,9 @@ export default function SurahCard({ surah }: Props) {
             {surah.name}
           </ThemedText>
           <ThemedView style={styles.infoWrapper}>
-            <ThemedText style={[styles.infoText, { color: textColor }]}>
-              {surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}
-            </ThemedText>
+            {/*           <ThemedText style={[styles.infoText, { color: textColor }]}>
+              {surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'} 
+            </ThemedText> */}
             <ThemedText style={[styles.infoText, { color: textColor }]}>
               {` - `}
             </ThemedText>

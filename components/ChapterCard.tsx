@@ -4,7 +4,7 @@ import { Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import IslamicMarkSVG from '@/assets/svgs/islamic-mark.svg';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks/use-colors';
 import { Chapter } from '@/types';
 
 import { ThemedText } from './ThemedText';

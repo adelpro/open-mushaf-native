@@ -4,8 +4,8 @@ import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import { useAtom } from 'jotai/react';
 import HTMLView from 'react-native-htmlview';
 
-import { useColors } from '@/hooks/useColors';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import { useColors } from '@/hooks/use-colors';
+import useQuranMetadata from '@/hooks/use-quran-metadata';
 import {
   hasNoTafseerContent,
   useTafseerContent,
