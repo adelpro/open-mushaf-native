@@ -11,6 +11,7 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 
 import morphologyDataRaw from '@/assets/search/quran-morphology.json';
 import wordMapJSON from '@/assets/search/word-map.json';
+import SearchColorLegend from '@/components/search-color-legend';
 import SearchResultItem from '@/components/search-result-item';
 import SEO from '@/components/seo';
 import TafseerPopup from '@/components/TafseerPopup';
@@ -161,6 +162,7 @@ export default function Search() {
         <ThemedText style={styles.resultCount}>{counterText}</ThemedText>
       ) : null}
 
+      <SearchColorLegend />
       <FlatList
         data={filteredResults}
         keyExtractor={(item) => item.gid.toString()}

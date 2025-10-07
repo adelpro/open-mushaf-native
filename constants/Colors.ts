@@ -18,6 +18,11 @@ export const Colors = {
     dangerLight: '#FFCDD2',
     ivory: '#F9F6EF',
     card: '#FFFFFF',
+
+    // Text Highlight colors
+    directColor: '#FFD700',
+    relatedColor: '#4FC3F7',
+    fuzzyColor: '#FF8A65',
   },
   dark: {
     text: '#EDEDED',
@@ -33,5 +38,10 @@ export const Colors = {
     dangerLight: '#E57373',
     ivory: '#2E2E2E',
     card: '#1E1E1E',
+
+    // Text Highlight colors
+    directColor: '#FFA000',
+    relatedColor: '#03A9F4',
+    fuzzyColor: '#FF5722',
   },
 };

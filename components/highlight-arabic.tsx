@@ -18,7 +18,7 @@ export const HighlightText: React.FC<HighlightTextProps> = ({
   relatedWords = [],
   fuzzyWords = [],
   color = '#FFD54F',
-  relatedColor,
+  relatedColor = '#FFD211',
   fuzzyColor = '#81C784',
   style,
 }) => {

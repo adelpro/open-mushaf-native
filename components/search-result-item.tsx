@@ -1,20 +1,15 @@
 import React from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { router } from 'expo-router';
 
 import { HighlightText } from '@/components/highlight-arabic';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useColors } from '@/hooks/use-colors';
 import { QuranText, WordMap } from '@/types';
 
-interface SearchResultItemProps {
+type SearchResultItemProps = {
   item: QuranText;
   query: string;
   advancedOptions: { lemma: boolean; root: boolean };
@@ -27,7 +22,7 @@ interface SearchResultItemProps {
     cleanQuery?: string,
   ) => string[];
   onSelectAya: (aya: { aya: number; surah: number }) => void;
-}
+};
 
 export default function SearchResultItem({
   item,
@@ -37,13 +32,7 @@ export default function SearchResultItem({
   getPositiveTokens,
   onSelectAya,
 }: SearchResultItemProps) {
-  // Pick highlight color based on theme
-  const theme = useColorScheme() ?? 'light';
-  // Colors based on theme
-  const directColor = theme === 'dark' ? '#FFA000' : '#FFD700'; // bright yellow / darker yellow
-  const relatedColor = theme === 'dark' ? '#03A9F4' : '#4FC3F7'; // light blue / normal blue
-  const fuzzyColor = theme === 'dark' ? '#FF5722' : '#FF8A65'; // light orange / deep orange
-
+  const { directColor, fuzzyColor, relatedColor } = useColors();
   const cleanQuery = query.trim();
   const mapEntry = wordMap[cleanQuery];
 
