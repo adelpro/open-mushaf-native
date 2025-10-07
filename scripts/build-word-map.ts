@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import type { MorphologyAya } from '../types/morphology-aya';
-import type { QuranText } from '../types/quranText';
+import type { QuranText } from '../types/quran-text';
 import type { WordMap } from '../types/word-map';
 import { normalizeArabic } from '../utils/arabic-utils';
 
@@ -35,12 +35,12 @@ function main() {
     morphMap.set(morph.gid, morph);
   }
 
-  // Build wordmap
-  const wordMap: Record<string, WordMap> = {};
+  // Build word map: normalized word → { lemma, root? }
+  const wordMap: WordMap = {}; // ✅ Correct type: not Record<string, WordMap>
 
   for (const verse of quranData) {
     const morph = morphMap.get(verse.gid);
-    if (!morph || !morph.lemmas.length) continue;
+    if (!morph || !morph.lemmas?.length) continue;
 
     // Split verse into words (handle multiple spaces)
     const words = verse.standard_full
@@ -55,7 +55,7 @@ function main() {
       if (!wordMap[normWord]) {
         wordMap[normWord] = {
           lemma: morph.lemmas[i],
-          root: morph.roots[i],
+          root: morph.roots?.[i], // Optional chaining for safety
         };
       }
     }
@@ -64,7 +64,7 @@ function main() {
   // Save as JSON
   fs.writeFileSync(outputPath, JSON.stringify(wordMap, null, 2), 'utf-8');
   console.log(
-    `✅ wordmap.json generated (${Object.keys(wordMap).length} entries)`,
+    `✅ word-map.json generated (${Object.keys(wordMap).length} entries)`,
   );
 }
 

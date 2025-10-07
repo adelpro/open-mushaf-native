@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import type { MorphologyAya } from '../types/morphology-aya';
-import type { QuranText } from '../types/quranText';
+import type { QuranText } from '../types/quran-text';
 import { normalizeArabic, removeTashkeel } from '../utils/arabic-utils';
 
 // Full Buckwalter → Arabic map (standard + QAC extensions)
