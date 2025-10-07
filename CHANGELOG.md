@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.0]
+
+- feat: enhance the search function by updating the simple search and adding root and lemma search
+- feat: add serached text hightlight in search results
+
 ## [4.0.0]
 
 - chore: removed riwaya warsh mujawad from el maarifah ( because of copyright )
