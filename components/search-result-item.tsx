@@ -1,5 +1,11 @@
 import React from 'react';
-import { Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from 'react-native';
 
 import { router } from 'expo-router';
 
@@ -31,6 +37,13 @@ export default function SearchResultItem({
   getPositiveTokens,
   onSelectAya,
 }: SearchResultItemProps) {
+  // Pick highlight color based on theme
+  const theme = useColorScheme() ?? 'light';
+  // Colors based on theme
+  const directColor = theme === 'dark' ? '#FFA000' : '#FFD700'; // bright yellow / darker yellow
+  const relatedColor = theme === 'dark' ? '#03A9F4' : '#4FC3F7'; // light blue / normal blue
+  const fuzzyColor = theme === 'dark' ? '#FF5722' : '#FF8A65'; // light orange / deep orange
+
   const cleanQuery = query.trim();
   const mapEntry = wordMap[cleanQuery];
 
@@ -102,7 +115,9 @@ export default function SearchResultItem({
             tokens={directTokens}
             relatedWords={relatedTokens}
             fuzzyWords={fuzzyTokens}
-            color="#FFEB3B"
+            color={directColor} // main tokens
+            relatedColor={relatedColor} // if HighlightText supports it
+            fuzzyColor={fuzzyColor} // fuzzy matches
             style={{ fontSize: 18 }}
           />
         </ThemedText>
