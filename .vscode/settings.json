@@ -19,5 +19,6 @@
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "typescript.experimental.useTsgo": true
+  "typescript.experimental.useTsgo": true,
+  "postman.settings.dotenv-detection-notification-visibility": false
 }
