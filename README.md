@@ -1,38 +1,28 @@
-# Open-Mushaf Native – Modern Offline Quran Reader for Mobile, Web & macOS
+# Open-Mushaf Native – Modern Offline Quran Reader (React Native, Expo, PWA)
 
-Open-Mushaf Native is an **open-source Quran Mushaf** application built with **React Native** and **Expo**.
-This mobile-friendly app offers **offline Quran reading**, **gesture navigation**, and **dynamic Tafseer popups**,
-designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macOS** platforms.
+A **cross-platform Quran Mushaf app** built with **React Native**, **Expo**, and **TypeScript**.  
+Supports **Android**, **iOS**, **Web**, and **macOS**, featuring **offline Quran reading**, **gesture navigation**,  
+**dynamic Tafseer popups**, and **optimized image caching** for a smooth and immersive study experience.
 
-<div align="center" style="margin: 20px 80px;">
+<div align="center">
   <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/design/banner/banner.png"
-  alt="Open-Mushaf Logo"  width="1000" height="300" />
+  alt="Open-Mushaf Banner" width="900" />
 </div>
 
-<!-- GitHub & Social Badges -->
+---
 
 ![GitHub Stars](https://img.shields.io/github/stars/adelpro/open-mushaf-native?style=social)
 ![GitHub Forks](https://img.shields.io/github/forks/adelpro/open-mushaf-native?style=social)
 ![GitHub Watchers](https://img.shields.io/github/watchers/adelpro/open-mushaf-native?style=social)
 [![Twitter Follow](https://img.shields.io/twitter/follow/adelpro?style=social)](https://x.com/intent/follow?screen_name=adelpro)
 
-<!-- Quality & Code Analysis -->
-
 [![CodeQL](https://github.com/adelpro/open-mushaf-native/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/adelpro/open-mushaf-native/actions/workflows/github-code-scanning/codeql)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/ee280dfe97634fa5b5afd85fc8652d85)](https://app.codacy.com/gh/adelpro/open-mushaf-native/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-
-<!-- Release & Issue Tracking -->
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/ee280dfe97634fa5b5afd85fc8652d85)](https://app.codacy.com/gh/adelpro/open-mushaf-native/dashboard?utm_source=gh&utm_medium=referral)
 
 [![Release Notes](https://img.shields.io/github/release/adelpro/open-mushaf-native?style=flat-square)](https://github.com/adelpro/open-mushaf-native/releases)
 [![Open Issues](https://img.shields.io/github/issues/adelpro/open-mushaf-native?style=flat-square)](https://github.com/adelpro/open-mushaf-native/issues)
 ![License](https://img.shields.io/github/license/adelpro/open-mushaf-native?style=flat-square)
-
-<!-- Platform -->
-
 ![Supports Android, iOS, web, macOS and Windows](https://img.shields.io/badge/platforms-android%20%7C%20ios%20%7C%20web%20%7C%20macos%20%7C%20windows-lightgrey.svg)
-
-<!-- Tech -->
-
 ![npm](https://img.shields.io/badge/npm-v20%2B-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff)
 ![Expo](https://img.shields.io/badge/Expo-1B1F23?logo=expo&logoColor=fff&style=flat)
@@ -40,175 +30,92 @@ designed for seamless Quranic study on **Android**, **iOS**, **Web**, and **macO
 ![PWA](https://img.shields.io/badge/PWA-1B1F23?logo=pwa&logoColor=fff&style=flat)
 ![Jotai](https://img.shields.io/badge/Jotai-20232A?style=flat)
 
-<!-- Other/Integrations -->
-
-[<img src="./assets/svgs/explore-in-deepwiki.svg" title="Explore in DeepWiki" width="150" height="25" alt="DeepWiki">](https://deepwiki.com/adelpro/open-mushaf-native)
-[<img src="https://github.com/codespaces/badge.svg" title="Open in GitHub Codespaces" width="150" height="25" alt="Open in GitHub Codespaces">](https://codespaces.new/adelpro/open-mushaf-native)
+---
 
 ## About
 
-**Open-Mushaf Native** is a modern and minimalist Quran Mushaf application built with
-**React Native** and **Expo**, designed for seamless, immersive reading and interaction
-on mobile platforms. It focuses on performance, offline functionality, and accessibility,
-providing a rich user experience with gesture-based navigation, dynamic content loading,
-and localized caching for Quranic images and Tafseer data.
+**Open-Mushaf Native** is a modern, minimalist Quran Mushaf built for seamless reading and Tafseer exploration.  
+It emphasizes performance, offline access, and a distraction-free experience, powered by React Native and Expo.
 
 ### Key Features
 
-- **Swipeable Navigation**: Navigate the Quran Mushaf by swiping left or right.
-- **Offline Access**: Preload and cache Quran pages and Tafseer data for complete offline functionality.
-- **Dynamic Tafseer Popups**: Smoothly resize Tafseer popups with gesture control.
-- **Optimized Image Loading**: Efficient loading of large Quran pages using `expo-image` for better memory management.
-- **Jotai State Management**: Smooth state management for all app interactions.
-- **Cross-Platform Support**: Built with Expo for easy deployment on Android and web platforms.
+- **Swipeable Navigation** – Move between pages smoothly with gestures.  
+- **Offline Access** – Cache Quran pages and Tafseer data for full offline use.  
+- **Dynamic Tafseer Popups** – Resize Tafseer sections with drag gestures.  
+- **Optimized Image Loading** – Uses `expo-image` for efficient memory handling.  
+- **Lightweight State Management** – Powered by **Jotai** atoms.  
+- **Cross-Platform Ready** – One codebase for Android, iOS, Web, and macOS.
+
+---
 
 ## Demo
 
-Experience the seamless navigation and features of Open-Mushaf Native in this demo video.
-[Watch on YouTube](https://www.youtube.com/watch?v=SpqCVOhiVes)
+[![Watch the demo](https://img.youtube.com/vi/SpqCVOhiVes/0.jpg)](https://www.youtube.com/watch?v=SpqCVOhiVes)
 
-<div align="center" style="margin: 20px 80px;">
-  <a href="https://www.producthunt.com/products/open-mushaf?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-open-mushaf" target="_blank">
-    <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=974453&theme=light&t=1749127782693"
-    alt="Open Mushaf - A modern and minimalist Quran Mushaf application | Product Hunt"
-    style="width: 250px; height: 54px;" width="250" height="54" />
-  </a>
-</div>
+---
 
 ## Download
 
-Ready-to-use versions are available for:
+<div align="center">
 
-<div style="display: flex; gap: 20px; align-items: center; margin: 20px; text-align: center;" align="center">
-  <a href="https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative" target="_blank">
-    <img src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white"
-     alt="Google Play Store" />
-  </a>
-  
-  <a href="https://open-mushaf-native.web.app/" target="_blank">
-    <img src="https://img.shields.io/badge/Web_App-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white"
-    alt="Web App" />
-  </a>
+<a href="https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative" target="_blank">
+  <img src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white" alt="Google Play Store" />
+</a>
 
-  <a href="https://github.com/adelpro/open-mushaf-native/releases/latest" target="_blank">
-     <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"
-    alt="Get it on GitHub" />
-  </a>
+<a href="https://open-mushaf-native.web.app/" target="_blank">
+  <img src="https://img.shields.io/badge/Web_App-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Web App" />
+</a>
+
+<a href="https://github.com/adelpro/open-mushaf-native/releases/latest" target="_blank">
+  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="Get it on GitHub" />
+</a>
+
 </div>
+
+---
 
 ## App Screenshots
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 10px; text-align: center;" align="center">
-  <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/main-screen.png"
-    alt="Main reading interface" style="border-radius: 15px; max-width: 100%; height: auto;">
-    <p align="center" style="margin-top: 0.5rem;">📖 Default reading view</p>
-  </div>
-  
-  <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/landscape-mode.png"
-    alt="Landscape reading mode" style="border-radius: 15px; max-width: 100%; height: auto;">
-    <p align="center" style="margin-top: 0.5rem;">🔄 Landscape layout</p>
-  </div>
-
-  <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/dark-mode.png"
-    alt="Dark mode interface" style="border-radius: 15px; max-width: 100%; height: auto;">
-    <p align="center" style="margin-top: 0.5rem;">🌙 Dark theme</p>
-  </div>
-
-  <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/tafseer-popup.png"
-    alt="Tafseer explanation" style="border-radius: 15px; max-width: 100%; height: auto;">
-    <p align="center" style="margin-top: 0.5rem;">📚 Resizable Tafseer</p>
-  </div>
-
-  <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/sura-index.png"
-    alt="Surah index" style="border-radius: 15px; max-width: 100%; height: auto;">
-    <p align="center" style="margin-top: 0.5rem;">📑 Surah navigation</p>
-  </div>
-
-  <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/settings-menu.png"
-    alt="Settings panel" style="border-radius: 15px; max-width: 100%; height: auto;">
-    <p align="center" style="margin-top: 0.5rem;">⚙️ Customization options</p>
-  </div>
-
-  <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/riwaya-selection.png"
-    alt="Riwaya selection" style="border-radius: 15px; max-width: 100%; height: auto;">
-    <p align="center" style="margin-top: 0.5rem;">🔄 Riwaya switcher</p>
-  </div>
-
-  <div>
-    <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/search-screen.png"
-    alt="Search functionality"
-    style="border-radius: 15px; max-width: 100%; height: auto;">
-    <p align="center" style="margin-top: 0.5rem;">🔍 Advanced search</p>
-  </div>
+<div align="center">
+  <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/main-screen.png" alt="Main reading interface" width="250" />
+  <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/dark-mode.png" alt="Dark mode" width="250" />
+  <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/tafseer-popup.png" alt="Tafseer popup" width="250" />
+  <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/sura-index.png" alt="Surah index" width="250" />
 </div>
 
-- **Mushaf Page**: A minimalist Quran page layout for immersive reading.
-
-  ![Mushaf Page](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/main-screen.png)
-
-- **Tafseer Popup**: Resizeable Tafseer popups for deeper understanding.
-
-  ![Tafseer Popup](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/tafseer-popup.png)
-
-- **Sura Index**: Navigate through the Quran using the Sura Index.
-
-  ![Sura Index](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/sura-index.png)
-
-- **Settings**: Customize your reading experience.
-
-  ![Settings](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/settings-screen.png)
-
-- **Navigation**: Swipe left or right to navigate the Quran.
-
-  ![Navigation](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/navigation-screen.png)
-
-- **Search**: Search for specific Quranic content.
-
-  ![Search](https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/screenshots/search-screen.png)
+---
 
 ## Installation
 
-1. Clone the repository:
+### Requirements
+- Node.js **v22+**
+- Expo SDK **52+**
 
-   ```bash
-   git clone https://github.com/adelpro/open-mushaf-native.git
-   ```
-
-2. Navigate to the project directory:
-
-   ```bash
-   cd open-mushaf-native
-   ```
-
-3. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-4. Start the app:
-
-   ```bash
-   npx expo start
-   ```
+### Steps
+```bash
+git clone https://github.com/adelpro/open-mushaf-native.git
+cd open-mushaf-native
+npm install
+npx expo start
+```
 
 ## Contributing
 
-Contributions are welcome to Open-Mushaf Native! Please see the [contribution guidelines](https://github.com/adelpro/open-mushaf-native/blob/main/CONTRIBUTING.md)
+Contributions are welcome
 
-## Like the Project?
+Please follow the [contribution guidelines](https://github.com/adelpro/open-mushaf-native/blob/main/CONTRIBUTING.md) and ensure **zero ESLint errors** before submitting a pull request.
 
-If you find this project helpful, please give it a star to show your support!
+## Stargazers
+
+Thank you to everyone who supports the project 🌟
+
+[![Stargazers repo roster for @adelpro/open-mushaf-native](https://reporoster.com/stars/adelpro/open-mushaf-native)](https://github.com/adelpro/open-mushaf-native/stargazers)
 
 ## License
 
 This project is licensed under the MIT License. See the
 [LICENSE](https://github.com/adelpro/open-mushaf-native/blob/main/LICENSE) file
 for more details.
+
+---
+Keywords: Quran App, Mushaf, React Native, Expo, Offline Quran, Tafseer, PWA, Islamic App
