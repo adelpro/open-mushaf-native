@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
 import { useAtomValue, useSetAtom } from 'jotai/react';
+import { WidgetPreview } from 'react-native-android-widget';
 
 import ChangeLogs from '@/components/ChangeLogs';
 import MushafPage from '@/components/MushafPage';
@@ -18,6 +19,7 @@ import {
   topMenuState,
 } from '@/jotai/atoms';
 import { getAppVersion, isWeb } from '@/utils';
+import AndroidWidget from '@/widgets/android';
 
 export default function HomeScreen() {
   const setShowTopMenu = useSetAtom(topMenuState);
@@ -51,6 +53,11 @@ export default function HomeScreen() {
         ) : (
           <>
             <TopMenu />
+            {/*  <WidgetPreview
+              renderWidget={() => <AndroidWidget />}
+              width={320}
+              height={200}
+            /> */}
             <MushafPage />
           </>
         )}
