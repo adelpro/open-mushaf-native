@@ -1,3 +1,4 @@
+'use no memo';
 import React from 'react';
 
 import {
@@ -14,19 +15,36 @@ export default function AndroidWidget() {
         width: 'match_parent',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#000000',
+        backgroundColor: '#112344',
         borderRadius: 16,
       }}
       clickAction="OPEN_APP"
     >
-      <TextWidget
-        text="Open App"
+      <FlexWidget
         style={{
-          fontSize: 32,
-          fontFamily: 'Inter',
-          color: '#ffffff',
+          height: 'wrap_content',
+          width: 'match_parent',
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'flex_start',
+          paddingHorizontal: 8,
+          borderRadius: 16,
         }}
-      />
+      >
+        <ImageWidget
+          image={require('../assets/widgets/widget-preview.png')}
+          imageWidth={88}
+          imageHeight={88}
+        />
+        <TextWidget
+          text="Open Mushaf - Open App"
+          style={{
+            fontSize: 32,
+            fontFamily: 'Tajawal_400Regular',
+            color: '#ffffff',
+          }}
+        />
+      </FlexWidget>
     </FlexWidget>
   );
 }

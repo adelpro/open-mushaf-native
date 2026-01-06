@@ -69,7 +69,12 @@ export default function ReadingPositionBanner() {
         <ThemedView
           style={[styles.headerContainer, { backgroundColor: 'transparent' }]}
         >
-          <ThemedText style={[styles.text, { color: tintColor }]}>
+          <ThemedText
+            style={[
+              styles.text,
+              { color: tintColor, fontFamily: 'Tajawal_400Regular' },
+            ]}
+          >
             العودة إلى موضع القراءة (صفحة {currentSavedPage})
           </ThemedText>
           <Feather

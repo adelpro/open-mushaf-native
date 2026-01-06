@@ -53,12 +53,12 @@ export default function HomeScreen() {
         ) : (
           <>
             <TopMenu />
-            {/*  <WidgetPreview
+            <WidgetPreview
               renderWidget={() => <AndroidWidget />}
               width={320}
               height={200}
-            /> */}
-            <MushafPage />
+            />
+            {/*   <MushafPage /> */}
           </>
         )}
       </Pressable>
