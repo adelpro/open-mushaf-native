@@ -33,17 +33,9 @@ function buildRingSvg(params: {
   trackColor: string;
   progressColor: string;
   label: string;
-  labelColor: string;
 }): string {
-  const {
-    radius,
-    strokeWidth,
-    progress,
-    trackColor,
-    progressColor,
-    label,
-    labelColor,
-  } = params;
+  const { radius, strokeWidth, progress, trackColor, progressColor, label } =
+    params;
 
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
@@ -72,10 +64,10 @@ function buildRingSvg(params: {
       />
       <text
         x="36"
-        y="36"
+        y="40"
         text-anchor="middle"
         dominant-baseline="middle"
-        fill="${labelColor}"
+        fill="${progressColor}"
         font-size="18"
         font-weight="700"
         font-family="sans-serif"
@@ -130,7 +122,6 @@ export default function AndroidWidget({
     trackColor,
     progressColor: primaryColor,
     label: `${Math.round(progress)}%`,
-    labelColor: textColor,
   });
   const detailsText = `صفحة ${safePage} • حزب ${safeHizb}`;
 
