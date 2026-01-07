@@ -1,7 +1,12 @@
 'use no memo';
 import React from 'react';
 
-import { FlexWidget, SvgWidget, TextWidget } from 'react-native-android-widget';
+import {
+  FlexWidget,
+  IconWidget,
+  SvgWidget,
+  TextWidget,
+} from 'react-native-android-widget';
 import type { HexColor } from 'react-native-android-widget';
 
 import { Colors } from '../constants/Colors';
@@ -164,16 +169,30 @@ export default function AndroidWidget({
             paddingLeft: 8,
           }}
         >
-          <TextWidget
-            text={`${surahName} (${detailsText})`}
+          <FlexWidget
             style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: textColor,
-              marginBottom: 4,
-              textAlign: 'right',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
             }}
-          />
+          >
+            <IconWidget
+              font="material"
+              icon="import_contacts"
+              size={24}
+              color={textColor}
+            />
+            <TextWidget
+              text={`${surahName} (${detailsText})`}
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: textColor,
+                marginBottom: 4,
+                textAlign: 'right',
+              }}
+            />
+          </FlexWidget>
 
           <TextWidget
             text={`الورد: ${compactWird}`}
@@ -189,14 +208,33 @@ export default function AndroidWidget({
 
         <FlexWidget
           style={{
-            width: 72,
-            height: 72,
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             marginLeft: 12,
           }}
         >
-          <SvgWidget style={{ height: 72, width: 72 }} svg={svgString} />
+          <TextWidget
+            text="الورد اليومي"
+            style={{
+              fontSize: 16,
+              color: subtextColor,
+              fontWeight: '500',
+              marginBottom: 6,
+              textAlign: 'center',
+            }}
+          />
+
+          <FlexWidget
+            style={{
+              width: 72,
+              height: 72,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <SvgWidget style={{ height: 72, width: 72 }} svg={svgString} />
+          </FlexWidget>
         </FlexWidget>
       </FlexWidget>
     </FlexWidget>

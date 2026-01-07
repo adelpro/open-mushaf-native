@@ -71,22 +71,27 @@
       "expo-audio",
       "expo-secure-store",
       "react-native-edge-to-edge",
-      ["react-native-android-widget",{
-        "widgets": [
-    {
-      "name": "OpenMushaf", 
-      "label": "Open Mushaf Widget", 
-      "minWidth": "320dp",
-      "minHeight": "120dp",
-      "targetCellWidth": 5,
-      "targetCellHeight": 2,
-      "description": "Open Mushaf Widget", 
-      "previewImage": "./assets/widgets/widget-preview.png", 
-      "resizeMode": "horizontal",
-      "updatePeriodMillis": 1800000
-    }
-    ]
-    }]],
+      [
+        "react-native-android-widget",
+        {
+          "fonts": ["./assets/fonts/material.ttf"],
+          "widgets": [
+            {
+              "name": "OpenMushaf",
+              "label": "Open Mushaf Widget",
+              "minWidth": "320dp",
+              "minHeight": "120dp",
+              "targetCellWidth": 5,
+              "targetCellHeight": 2,
+              "description": "Open Mushaf Widget",
+              "previewImage": "./assets/widgets/widget-preview.png",
+              "resizeMode": "horizontal | vertical",
+              "updatePeriodMillis": 1800000
+            }
+          ]
+        }
+      ]
+    ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
