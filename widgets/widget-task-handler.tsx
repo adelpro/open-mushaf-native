@@ -14,6 +14,8 @@ import {
   dailyTrackerGoal,
   mushafRiwaya,
 } from '../jotai/atoms';
+import { Surah } from '../types/surah';
+import { Thumn } from '../types/thumn';
 import {
   getJuzPositionByPage,
   getSurahNameByPage,
@@ -49,8 +51,8 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
       dailyCompleted = 0;
     }
 
-    let surahs: any[] = [];
-    let thumns: any[] = [];
+    let surahs: Surah[] = [];
+    let thumns: Thumn[] = [];
 
     // Load metadata files based on Riwaya
     if (riwaya === 'hafs') {
