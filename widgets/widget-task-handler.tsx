@@ -1,7 +1,7 @@
 import React from 'react';
 
+import { getDefaultStore } from 'jotai';
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
-import { MMKV } from 'react-native-mmkv';
 
 import AndroidWidget from './android';
 import hafsSurahs from '../assets/quran-metadata/mushaf-elmadina-hafs-assim/surah.json';
@@ -9,63 +9,44 @@ import hafsThumns from '../assets/quran-metadata/mushaf-elmadina-hafs-assim/thum
 import warshSurahs from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
 import warshThumns from '../assets/quran-metadata/mushaf-elmadina-warsh-azrak/thumn.json';
 import {
+  currentSavedPage,
+  dailyTrackerCompleted,
+  dailyTrackerGoal,
+  mushafRiwaya,
+} from '../jotai/atoms';
+import {
   getJuzPositionByPage,
   getSurahNameByPage,
 } from '../utils/quranMetadataUtils';
 
 const nameToWidget = {
-  // OpenMushaf will be the **name** with which we will reference our widget.
   OpenMushaf: AndroidWidget,
 };
-
-const mmkv = new MMKV();
 
 export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
   const widgetInfo = props.widgetInfo;
   const Widget =
     nameToWidget[widgetInfo.widgetName as keyof typeof nameToWidget];
 
-  // Read data from MMKV
-  const dailyGoalStr = mmkv.getString('DailyTrackerGoal');
-  const dailyCompletedStr = mmkv.getString('DailyTrackerCompleted');
-  const currentSavedPageStr = mmkv.getString('CurrentSavedPage');
-  const mushafRiwayaStr = mmkv.getString('MushafRiwaya');
+  const store = getDefaultStore();
 
-  let dailyGoal = 1;
+  // Read data from Atoms
+  const dailyGoal = store.get(dailyTrackerGoal);
+  const dailyCompletedData = store.get(dailyTrackerCompleted);
+  const currentPage = store.get(currentSavedPage);
+  const riwaya = store.get(mushafRiwaya) || 'warsh';
+
   let dailyCompleted = 0;
-  let currentPage = 1;
   let currentSurahName = '';
   let currentHizbNumber = 1;
 
   try {
-    if (dailyGoalStr) {
-      dailyGoal = parseInt(dailyGoalStr, 10);
-    }
-    if (currentSavedPageStr) {
-      currentPage = parseInt(currentSavedPageStr, 10);
-    }
-
-    if (dailyCompletedStr) {
-      const parsed = JSON.parse(dailyCompletedStr);
-      const today = new Date().toDateString();
-      if (parsed.date === today) {
-        dailyCompleted = parsed.value;
-      } else {
-        dailyCompleted = 0;
-      }
-    }
-
-    // Determine Riwaya and load metadata
-    let riwaya = 'warsh'; // Default
-    if (mushafRiwayaStr) {
-      // MMKV might store simple strings without quotes for simple values, or JSON.
-      // atomWithStorage usually JSON stringifies everything.
-      try {
-        const parsed = JSON.parse(mushafRiwayaStr);
-        if (parsed) riwaya = parsed;
-      } catch {
-        riwaya = mushafRiwayaStr;
-      }
+    // Validate Daily Goal Date
+    const today = new Date().toDateString();
+    if (dailyCompletedData.date === today) {
+      dailyCompleted = dailyCompletedData.value;
+    } else {
+      dailyCompleted = 0;
     }
 
     let surahs: any[] = [];

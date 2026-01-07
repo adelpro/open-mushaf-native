@@ -19,5 +19,8 @@
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "typescript.experimental.useTsgo": true
+  "typescript.experimental.useTsgo": true,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "prettier.prettier-vscode"
+  }
 }

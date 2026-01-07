@@ -14,9 +14,9 @@ export interface WidgetProps {
 }
 
 const theme = Colors.dark;
-const PRIMARY_COLOR = theme.primary; // Or theme.tint if primary is too dark, but using primary as requested
-const BG_COLOR = theme.card; // Using card color for widget background
-const TRACK_COLOR = theme.ivory + '20'; // Adding transparency to ivory for track
+const PRIMARY_COLOR = theme.primary;
+const BG_COLOR = theme.card;
+const TRACK_COLOR = theme.ivory + '20';
 const TEXT_COLOR = theme.text;
 const SUBTEXT_COLOR = theme.icon;
 
@@ -53,21 +53,6 @@ export default function AndroidWidget({
       }}
       clickAction="OPEN_APP"
     >
-      {/* Left Side: Reading Info (RTL but laid out visually on the left for now, logic is per item) 
-          Wait, user wants Arabic. We should probably align right if we want true Arabic feel, 
-          but usually widgets are LTR in strict layout unless we reverse children. 
-          Let's put text on right and circle on left? Or standard "Start -> End".
-          Let's stick to: Circle on Left (or Right) - Text on the other side.
-          Let's put Circle on Left, Text on Right for English, but for Arabic?
-          Usually Arabic reads Right to Left. 
-          So: Text (Right) ... Circle (Left).
-          FlexWidget default is 'column', we set 'row'.
-          If we want Text on Right, we should put FlexWidget (Text) then SvgWidget? 
-          No, in Row: [Child1 (Left)] [Child2 (Right)].
-          So for Arabic RTL feel: [SvgWidget (Left)] [TextWidget (Right)].
-          Let's try that.
-      */}
-
       <FlexWidget
         style={{
           width: 64,
@@ -93,7 +78,7 @@ export default function AndroidWidget({
           flex: 1,
           marginLeft: 12,
           justifyContent: 'center',
-          alignItems: 'flex-end', // Align text to the right for Arabic
+          alignItems: 'flex-end',
         }}
       >
         <TextWidget
