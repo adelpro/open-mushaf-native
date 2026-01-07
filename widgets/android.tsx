@@ -1,12 +1,7 @@
 'use no memo';
 import React from 'react';
 
-import {
-  FlexWidget,
-  IconWidget,
-  SvgWidget,
-  TextWidget,
-} from 'react-native-android-widget';
+import { FlexWidget, SvgWidget, TextWidget } from 'react-native-android-widget';
 import type { HexColor } from 'react-native-android-widget';
 
 import { Colors } from '../constants/Colors';
@@ -122,7 +117,7 @@ export default function AndroidWidget({
     Number.isInteger(n) ? String(n) : n.toFixed(1);
 
   const compactWird = `${formatNumber(safeCompleted)} / ${safeGoal} حزب`;
-  // Design Constants for "Minimalist Modern Ring"
+
   const radius = 28;
   const strokeWidth = 5;
   const svgString = buildRingSvg({
@@ -131,8 +126,9 @@ export default function AndroidWidget({
     progress,
     trackColor,
     progressColor: primaryColor,
-    label: `${Math.round(progress)}٪`,
+    label: `٪${Math.round(progress)}`,
   });
+
   const detailsText = `صفحة ${safePage} • حزب ${safeHizb}`;
 
   return (
@@ -146,13 +142,12 @@ export default function AndroidWidget({
         borderWidth: 1,
         borderColor: outlineColor,
         paddingHorizontal: 20,
-        paddingVertical: 14,
-
+        paddingVertical: 18,
         justifyContent: 'center',
       }}
       clickAction="OPEN_APP"
     >
-      {/* Top row: surah + details on the left (right-aligned), ring on the right */}
+      {/* Top row: surah + details on the left, ring on the right */}
       <FlexWidget
         style={{
           flexDirection: 'row',
@@ -171,25 +166,30 @@ export default function AndroidWidget({
         >
           <FlexWidget
             style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
+              flexDirection: 'column',
+              alignItems: 'flex-end',
             }}
           >
-            <IconWidget
-              font="material"
-              icon="import_contacts"
-              size={24}
-              color={textColor}
+            <TextWidget
+              text={`📖 ${surahName}`}
+              style={{
+                fontSize: 22,
+                fontWeight: '700',
+                color: textColor,
+                lineHeight: 26,
+                textAlign: 'right',
+                writingDirection: 'rtl',
+              }}
             />
             <TextWidget
-              text={`${surahName} (${detailsText})`}
+              text={detailsText}
               style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                color: textColor,
-                marginBottom: 4,
+                fontSize: 15,
+                fontWeight: '500',
+                color: subtextColor,
+                marginTop: 2,
                 textAlign: 'right',
+                writingDirection: 'rtl',
               }}
             />
           </FlexWidget>
@@ -200,7 +200,7 @@ export default function AndroidWidget({
               fontSize: 16,
               color: subtextColor,
               fontWeight: '500',
-              marginTop: 2,
+              marginTop: 6,
               textAlign: 'right',
             }}
           />
@@ -224,7 +224,6 @@ export default function AndroidWidget({
               textAlign: 'center',
             }}
           />
-
           <FlexWidget
             style={{
               width: 72,
