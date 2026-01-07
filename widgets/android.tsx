@@ -67,6 +67,7 @@ function buildRingSvg(params: {
         y="40"
         text-anchor="middle"
         dominant-baseline="middle"
+        direction="rtl"
         fill="${progressColor}"
         font-size="18"
         font-weight="700"
@@ -112,6 +113,10 @@ export default function AndroidWidget({
   );
   const surahName = (currentSurahName ?? '').trim() || 'الفاتحة';
 
+  const formatNumber = (n: number) =>
+    Number.isInteger(n) ? String(n) : n.toFixed(1);
+
+  const compactWird = `${formatNumber(safeCompleted)} / ${safeGoal} حزب`;
   // Design Constants for "Minimalist Modern Ring"
   const radius = 28;
   const strokeWidth = 5;
@@ -121,7 +126,7 @@ export default function AndroidWidget({
     progress,
     trackColor,
     progressColor: primaryColor,
-    label: `${Math.round(progress)}%`,
+    label: `${Math.round(progress)}٪`,
   });
   const detailsText = `صفحة ${safePage} • حزب ${safeHizb}`;
 
@@ -130,57 +135,69 @@ export default function AndroidWidget({
       style={{
         height: 'match_parent',
         width: 'match_parent',
-        flexDirection: 'row',
+        flexDirection: 'column',
         backgroundColor: bgColor,
         borderRadius: 16,
         borderWidth: 1,
         borderColor: outlineColor,
         paddingHorizontal: 20,
-        paddingVertical: 16,
-        alignItems: 'center',
-        justifyContent: 'flex-end', // Align all content to the right
+        paddingVertical: 14,
+
+        justifyContent: 'center',
       }}
       clickAction="OPEN_APP"
     >
-      {/* Text Information (Left side, taking up space, aligned to right) */}
+      {/* Top row: surah + details on the left (right-aligned), ring on the right */}
       <FlexWidget
         style={{
-          flex: 1,
-          marginRight: 24, // Space between text and ring
-          justifyContent: 'center',
-          alignItems: 'flex-end', // Right align the text itself
-        }}
-      >
-        <TextWidget
-          text={surahName}
-          style={{
-            fontSize: 22,
-            fontWeight: 'bold',
-            color: textColor,
-            marginBottom: 4,
-          }}
-        />
-
-        <TextWidget
-          text={detailsText}
-          style={{
-            fontSize: 14,
-            color: subtextColor,
-            fontWeight: '500',
-          }}
-        />
-      </FlexWidget>
-
-      {/* Progress Ring Area (Right Side) */}
-      <FlexWidget
-        style={{
-          width: 72,
-          height: 72,
+          flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'space-between',
+          width: 'match_parent',
         }}
       >
-        <SvgWidget style={{ height: 72, width: 72 }} svg={svgString} />
+        <FlexWidget
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'flex-end',
+            paddingLeft: 8,
+          }}
+        >
+          <TextWidget
+            text={`${surahName} (${detailsText})`}
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: textColor,
+              marginBottom: 4,
+              textAlign: 'right',
+            }}
+          />
+
+          <TextWidget
+            text={`الورد: ${compactWird}`}
+            style={{
+              fontSize: 16,
+              color: subtextColor,
+              fontWeight: '500',
+              marginTop: 2,
+              textAlign: 'right',
+            }}
+          />
+        </FlexWidget>
+
+        <FlexWidget
+          style={{
+            width: 72,
+            height: 72,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginLeft: 12,
+          }}
+        >
+          <SvgWidget style={{ height: 72, width: 72 }} svg={svgString} />
+        </FlexWidget>
       </FlexWidget>
     </FlexWidget>
   );
