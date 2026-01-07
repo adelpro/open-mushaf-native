@@ -3,7 +3,7 @@
     "name": "Open Mushaf",
     "slug": "open-mushaf-native",
     "owner": "adelpro",
-    "version": "4.0.0",
+    "version": "4.1.0",
     "orientation": "default",
     "assetBundlePatterns": ["**/*"],
     "icon": "./assets/images/icon.png",
@@ -74,7 +74,6 @@
       [
         "react-native-android-widget",
         {
-          "fonts": ["./assets/fonts/material.ttf"],
           "widgets": [
             {
               "name": "OpenMushaf",
