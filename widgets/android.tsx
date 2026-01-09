@@ -21,8 +21,11 @@ export type WidgetProps = {
 };
 
 function surahToIconChar(surahNumber: number): string {
-  const baseCodePoint = 0xe000;
-  return String.fromCharCode(baseCodePoint + surahNumber);
+  // 1. Convert surahNumber (e.g., 38) to a hex string ("38")
+  // 2. Parse that string as a hex value (0x38)
+  // 3. Add to base 0xe000
+  const hexOffset = parseInt(surahNumber.toString(), 16);
+  return String.fromCharCode(0xe000 + hexOffset);
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -200,7 +203,7 @@ export default function AndroidWidget({
           </FlexWidget>
         </FlexWidget>
 
-        {/* Surah Number */}
+        {/* Surah Name */}
         <IconWidget
           font="open_mushaf_icons"
           size={60}
