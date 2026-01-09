@@ -1,7 +1,12 @@
 'use no memo';
 import React from 'react';
 
-import { FlexWidget, SvgWidget, TextWidget } from 'react-native-android-widget';
+import {
+  FlexWidget,
+  IconWidget,
+  SvgWidget,
+  TextWidget,
+} from 'react-native-android-widget';
 import type { HexColor } from 'react-native-android-widget';
 
 import { Colors } from '../constants/Colors';
@@ -170,17 +175,24 @@ export default function AndroidWidget({
               alignItems: 'flex-end',
             }}
           >
-            <TextWidget
-              text={`📖 ${surahName}`}
-              style={{
-                fontSize: 22,
-                fontWeight: '700',
-                color: textColor,
-                lineHeight: 26,
-                textAlign: 'right',
-                writingDirection: 'rtl',
-              }}
-            />
+            <FlexWidget>
+              <IconWidget
+                font="open_mushaf_icons"
+                size={24}
+                icon="icon-book-open-2"
+              />
+              <TextWidget
+                text={surahName}
+                style={{
+                  fontSize: 22,
+                  fontWeight: '700',
+                  color: textColor,
+                  lineHeight: 26,
+                  textAlign: 'right',
+                  writingDirection: 'rtl',
+                }}
+              />
+            </FlexWidget>
             <TextWidget
               text={detailsText}
               style={{

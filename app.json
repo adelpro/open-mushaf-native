@@ -74,6 +74,7 @@
       [
         "react-native-android-widget",
         {
+          "fonts": ["./assets/fonts/open_mushaf_icons.woff2"],
           "widgets": [
             {
               "name": "OpenMushaf",
