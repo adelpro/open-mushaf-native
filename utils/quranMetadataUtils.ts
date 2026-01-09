@@ -9,6 +9,15 @@ export function getSurahNameByPage(surahs: Surah[], page: number): string {
   return surah ? surah.name : '';
 }
 
+export function getSurahNumberByPage(surahs: Surah[], page: number): string {
+  const surah = surahs.find(
+    (s, index) =>
+      page >= s.startingPage &&
+      (index === surahs.length - 1 || page < surahs[index + 1].startingPage),
+  );
+  return surah ? surah.number : 1;
+}
+
 export function getJuzPositionByPage(thumns: Thumn[], page: number) {
   const thumn = thumns.find(
     (t, index) =>

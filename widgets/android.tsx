@@ -15,10 +15,15 @@ export type WidgetProps = {
   dailyGoal?: number;
   dailyCompleted?: number;
   currentPage?: number;
-  currentSurahName?: string;
+  currentSurahNumber?: number;
   currentHizbNumber?: number;
   colorScheme?: 'light' | 'dark';
 };
+
+function surahToIconChar(surahNumber: number): string {
+  const baseCodePoint = 0xe000;
+  return String.fromCharCode(baseCodePoint + surahNumber);
+}
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
@@ -86,7 +91,7 @@ export default function AndroidWidget({
   dailyGoal = 1,
   dailyCompleted = 0,
   currentPage = 1,
-  currentSurahName = 'الفاتحة',
+  currentSurahNumber = 1,
   currentHizbNumber = 1,
   colorScheme = 'light',
 }: WidgetProps) {
@@ -95,10 +100,7 @@ export default function AndroidWidget({
   const bgColor = theme.card as HexColor;
   const textColor = theme.text as HexColor;
   const subtextColor = theme.icon as HexColor;
-  const outlineColor = withHexAlpha(
-    theme.text as HexColor,
-    colorScheme === 'dark' ? '24' : '14',
-  );
+
   const trackColor = withHexAlpha(
     theme.text as HexColor,
     colorScheme === 'dark' ? '33' : '24',
@@ -111,30 +113,23 @@ export default function AndroidWidget({
     safeGoal,
   );
   const progress = clamp((safeCompleted / safeGoal) * 100, 0, 100);
+
   const safePage = Math.max(1, Number.isFinite(currentPage) ? currentPage : 1);
   const safeHizb = Math.max(
     1,
     Number.isFinite(currentHizbNumber) ? currentHizbNumber : 1,
   );
-  const surahName = (currentSurahName ?? '').trim() || 'الفاتحة';
 
-  const formatNumber = (n: number) =>
-    Number.isInteger(n) ? String(n) : n.toFixed(1);
+  const compactWird = `${safeCompleted}/${safeGoal}`;
 
-  const compactWird = `${formatNumber(safeCompleted)} / ${safeGoal} حزب`;
-
-  const radius = 28;
-  const strokeWidth = 5;
   const svgString = buildRingSvg({
-    radius,
-    strokeWidth,
+    radius: 28,
+    strokeWidth: 5,
     progress,
     trackColor,
     progressColor: primaryColor,
     label: `٪${Math.round(progress)}`,
   });
-
-  const detailsText = `صفحة ${safePage} • حزب ${safeHizb}`;
 
   return (
     <FlexWidget
@@ -143,16 +138,40 @@ export default function AndroidWidget({
         width: 'match_parent',
         flexDirection: 'column',
         backgroundColor: bgColor,
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: outlineColor,
-        paddingHorizontal: 20,
-        paddingVertical: 18,
+        alignItems: 'center',
+        paddingHorizontal: 5,
         justifyContent: 'center',
       }}
       clickAction="OPEN_APP"
     >
-      {/* Top row: surah + details on the left, ring on the right */}
+      {/* Header Row*/}
+      <FlexWidget
+        style={{
+          flexDirection: 'row',
+          marginBottom: 4,
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          width: 'match_parent',
+        }}
+      >
+        <TextWidget
+          text="المصحف المفتوح"
+          style={{
+            fontSize: 22,
+            fontWeight: '700',
+            color: textColor,
+            lineHeight: 26,
+          }}
+        />
+        <IconWidget
+          font="open_mushaf_icons"
+          size={22}
+          icon={'\uF000'}
+          style={{ marginHorizontal: 6 }}
+        />
+      </FlexWidget>
+
+      {/* Main row */}
       <FlexWidget
         style={{
           flexDirection: 'row',
@@ -161,90 +180,108 @@ export default function AndroidWidget({
           width: 'match_parent',
         }}
       >
+        {/* Progress ring */}
         <FlexWidget
           style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'flex-end',
-            paddingLeft: 8,
-          }}
-        >
-          <FlexWidget
-            style={{
-              flexDirection: 'column',
-              alignItems: 'flex-end',
-            }}
-          >
-            <FlexWidget>
-              <IconWidget
-                font="open_mushaf_icons"
-                size={24}
-                icon="icon-book-open-2"
-              />
-              <TextWidget
-                text={surahName}
-                style={{
-                  fontSize: 22,
-                  fontWeight: '700',
-                  color: textColor,
-                  lineHeight: 26,
-                  textAlign: 'right',
-                  writingDirection: 'rtl',
-                }}
-              />
-            </FlexWidget>
-            <TextWidget
-              text={detailsText}
-              style={{
-                fontSize: 15,
-                fontWeight: '500',
-                color: subtextColor,
-                marginTop: 2,
-                textAlign: 'right',
-                writingDirection: 'rtl',
-              }}
-            />
-          </FlexWidget>
-
-          <TextWidget
-            text={`الورد: ${compactWird}`}
-            style={{
-              fontSize: 16,
-              color: subtextColor,
-              fontWeight: '500',
-              marginTop: 6,
-              textAlign: 'right',
-            }}
-          />
-        </FlexWidget>
-
-        <FlexWidget
-          style={{
-            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            marginLeft: 12,
+            margin: 5,
           }}
         >
-          <TextWidget
-            text="الورد اليومي"
-            style={{
-              fontSize: 16,
-              color: subtextColor,
-              fontWeight: '500',
-              marginBottom: 6,
-              textAlign: 'center',
-            }}
-          />
           <FlexWidget
             style={{
-              width: 72,
-              height: 72,
+              width: 120,
+              height: 120,
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <SvgWidget style={{ height: 72, width: 72 }} svg={svgString} />
+            <SvgWidget style={{ height: 120, width: 120 }} svg={svgString} />
+          </FlexWidget>
+        </FlexWidget>
+
+        {/* Surah Number */}
+        <IconWidget
+          font="open_mushaf_icons"
+          size={60}
+          icon={surahToIconChar(currentSurahNumber)}
+          style={{ marginHorizontal: 6 }}
+        />
+
+        {/* Content */}
+        <FlexWidget
+          style={{
+            flexDirection: 'column',
+            columnGap: 20,
+          }}
+        >
+          <FlexWidget
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              width: 'match_parent',
+            }}
+          >
+            <TextWidget
+              text={`الصفحة: ${safePage}`}
+              style={{
+                fontSize: 18,
+                color: subtextColor,
+              }}
+            />
+            <IconWidget
+              font="open_mushaf_icons"
+              size={18}
+              icon={'\uF002'}
+              style={{ marginHorizontal: 6 }}
+            />
+          </FlexWidget>
+
+          <FlexWidget
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              width: 'match_parent',
+            }}
+          >
+            <TextWidget
+              text={`الحزب: ${safeHizb}`}
+              style={{
+                fontSize: 18,
+                color: subtextColor,
+              }}
+            />
+            <IconWidget
+              font="open_mushaf_icons"
+              size={18}
+              icon={'\uF3A5'}
+              style={{ marginHorizontal: 6 }}
+            />
+          </FlexWidget>
+
+          <FlexWidget
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              width: 'match_parent',
+            }}
+          >
+            <TextWidget
+              text={`الورد: ${compactWird}`}
+              style={{
+                fontSize: 18,
+                color: subtextColor,
+              }}
+            />
+            <IconWidget
+              font="open_mushaf_icons"
+              size={18}
+              icon={'\uF259'}
+              style={{ marginHorizontal: 6 }}
+            />
           </FlexWidget>
         </FlexWidget>
       </FlexWidget>

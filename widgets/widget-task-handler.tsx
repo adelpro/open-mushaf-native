@@ -18,7 +18,7 @@ import { Surah } from '../types/surah';
 import { Thumn } from '../types/thumn';
 import {
   getJuzPositionByPage,
-  getSurahNameByPage,
+  getSurahNumberByPage,
 } from '../utils/quranMetadataUtils';
 
 const nameToWidget = {
@@ -39,7 +39,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
   const riwaya = store.get(mushafRiwaya) || 'warsh';
 
   let dailyCompleted = 0;
-  let currentSurahName = '';
+  let currentSurahNumber = 1;
   let currentHizbNumber = 1;
 
   try {
@@ -66,7 +66,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
 
     // Calculate Reading Position
     if (surahs.length > 0) {
-      currentSurahName = getSurahNameByPage(surahs, currentPage);
+      currentSurahNumber = getSurahNumberByPage(surahs, currentPage);
     }
     if (thumns.length > 0) {
       const { juzNumber } = getJuzPositionByPage(thumns, currentPage);
@@ -92,7 +92,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     dailyGoal,
     dailyCompleted,
     currentPage,
-    currentSurahName,
+    currentSurahNumber,
     currentHizbNumber,
   };
 
