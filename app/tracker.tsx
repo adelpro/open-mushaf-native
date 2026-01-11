@@ -18,6 +18,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
+import { useUpdateAndroidWidget } from '@/hooks/useUpdateAndroidWidget';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
@@ -27,6 +28,8 @@ import {
 export default function TrackerScreen() {
   const { iconColor, cardColor, primaryColor } = useColors();
   const { currentSavedPage: savedPage } = useCurrentPage();
+
+  const { updateAndroidWidget } = useUpdateAndroidWidget();
 
   const [dailyTrackerGoalValue, setdailyTrackerGoalValue] =
     useAtom(dailyTrackerGoal);
@@ -52,7 +55,7 @@ export default function TrackerScreen() {
     setdailyTrackerGoalValue((prev) => Math.max(1, prev - 1));
 
   // Consolidated reset logic into one function
-  const performReset = () => {
+  const performReset = async () => {
     if (typeof savedPage === 'number' && savedPage > 0) {
       setYesterdayPageValue({
         value: savedPage,
@@ -64,6 +67,8 @@ export default function TrackerScreen() {
       value: 0,
       date: new Date().toDateString(),
     });
+    // Update Android widget
+    await updateAndroidWidget();
     setConfirmModalVisible(false); // Close modal after reset
   };
 
@@ -257,7 +262,7 @@ export default function TrackerScreen() {
                 </ThemedButton>
                 <ThemedButton
                   variant="primary"
-                  onPress={performReset} // Call the reset logic
+                  onPress={() => performReset()} // Call the reset logic
                   style={styles.modalButton}
                 >
                   تأكيد

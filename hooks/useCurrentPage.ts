@@ -6,12 +6,16 @@ import { useAtom } from 'jotai/react';
 import { currentSavedPage } from '@/jotai/atoms';
 
 import useQuranMetadata from './useQuranMetadata';
+import { useUpdateAndroidWidget } from './useUpdateAndroidWidget';
 
 export default function useCurrentPage() {
   const { page: pageParam, temporary } = useLocalSearchParams();
   const [currentSavedPageValue, setCurrentSavedPageValue] =
     useAtom(currentSavedPage);
   const { specsData } = useQuranMetadata();
+
+  const { updateAndroidWidget } = useUpdateAndroidWidget();
+
   const defaultNumberOfPages = specsData?.defaultNumberOfPages;
   const setNewCurrentPage = (page: number) => {
     if (!page) return;
@@ -24,6 +28,8 @@ export default function useCurrentPage() {
     } else {
       setCurrentSavedPageValue(page);
     }
+
+    updateAndroidWidget();
   };
 
   useEffect(() => {
@@ -33,8 +39,9 @@ export default function useCurrentPage() {
 
     if (!isNaN(parsedPage) && temporary !== 'true') {
       setCurrentSavedPageValue(parsedPage);
+      updateAndroidWidget();
     }
-  }, [pageParam, setCurrentSavedPageValue, temporary]);
+  }, [pageParam, setCurrentSavedPageValue, temporary, updateAndroidWidget]);
 
   // Parse the current page from URL params or use saved page
   const parsedPage = (() => {
