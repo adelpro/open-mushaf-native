@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.3.0]
+
+- fix: now the data in the android widget is correcly synced with the app
+- feat: add advanced morphology search
+
 ## [4.2.0]
 
 - feat: add Android widget
