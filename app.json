@@ -86,7 +86,7 @@
               "description": "Open Mushaf Widget",
               "previewImage": "./assets/widgets/widget-preview.png",
               "resizeMode": "horizontal | vertical",
-              "updatePeriodMillis": 1800000
+              "updatePeriodMillis": 300000  
             }
           ]
         }

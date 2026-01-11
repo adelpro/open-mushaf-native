@@ -72,7 +72,6 @@ function buildRingSvg(params: {
         stroke-dasharray="${circumference}"
         stroke-dashoffset="${strokeDashoffset}"
         stroke-linecap="round"
-        transform="rotate(-90 36 36)"
         fill="none"
       />
       <text
