@@ -22,6 +22,7 @@ export const HighlightText: React.FC<HighlightTextProps> = ({
   fuzzyColor = '#81C784',
   style,
 }) => {
+  const TextSelectionColor = '#010c14ff';
   // Default related color if not provided
   const actualRelatedColor = relatedColor || `${color}99`;
 
@@ -77,21 +78,33 @@ export const HighlightText: React.FC<HighlightTextProps> = ({
         if (isDirectMatch) {
           // Direct match - primary highlight color
           return (
-            <Text key={index} style={{ backgroundColor: color }}>
+            <Text
+              key={index}
+              style={{ backgroundColor: color, color: TextSelectionColor }}
+            >
               {part}
             </Text>
           );
         } else if (isRelatedMatch) {
           // Related match - slightly different highlight color
           return (
-            <Text key={index} style={{ backgroundColor: actualRelatedColor }}>
+            <Text
+              key={index}
+              style={{
+                backgroundColor: actualRelatedColor,
+                color: TextSelectionColor,
+              }}
+            >
               {part}
             </Text>
           );
         } else if (isFuzzyMatch) {
           // Fuzzy match - different highlight color
           return (
-            <Text key={index} style={{ backgroundColor: fuzzyColor }}>
+            <Text
+              key={index}
+              style={{ backgroundColor: fuzzyColor, color: TextSelectionColor }}
+            >
               {part}
             </Text>
           );

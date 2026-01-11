@@ -1,97 +1,98 @@
 import Fuse, { type IFuseOptions } from 'fuse.js';
 
-/**
- * Removes tashkeel and additional diacritical marks from Arabic text
- */
-export const removeTashkeel = (text: string): string => {
-  return (
-    text
-      // Replace wasl sign (ٱ) with regular alef (ا)
-      .replace(/\u0671/g, '\u0627')
-      // Remove all tashkeel (harakat) and extra diacritics
-      .replace(
-        /[\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06FC]/g,
-        '',
-      )
-  );
-};
+import morphologyData from '@/assets/search/quran-morphology.json';
+import wordMapJSON from '@/assets/search/word-map.json';
+import type { QuranText, WordMap } from '@/types';
 
-/**
- * Normalizes Arabic text by removing diacritics and standardizing characters
- */
-export const normalizeArabicText = (text: string): string => {
-  if (!text) return '';
+import { normalizeArabic } from './arabicUtils';
 
-  let normalizedText = removeTashkeel(text); // Remove tashkeel using the new function
-  normalizedText = normalizedText
-    .replace(/[\u0622\u0623\u0625]/g, '\u0627') // Normalize alef
-    .replace(/[\u0624\u0626]/g, '\u0621') // Normalize hamza
-    .replace(/\u0649/g, '\u064A') // Normalize ya/alif maqsura
-    .replace(/\u0640/g, '') // Remove tatweel
-    .replace(/[\u0654\u0655]/g, '\u0621'); // Normalize hamza above/below
+import type { MorphologyAya } from '@/types/morphology-aya';
 
-  return normalizedText;
-};
+// ==================== Morphology Map ====================
+const GID_TO_MORPH = new Map<number, MorphologyAya>();
+for (const morph of morphologyData) {
+  GID_TO_MORPH.set(morph.gid, morph);
+}
 
-/**
- * Creates a configured Fuse instance for Arabic text search
- */
+// ==================== Fuse.js Setup ====================
 export const createArabicFuseSearch = <T>(
   collection: T[],
   keys: string[],
   options: Partial<IFuseOptions<T>> = {},
-): Fuse<T> => {
-  return new Fuse(collection, {
+): Fuse<T> =>
+  new Fuse(collection, {
     includeScore: true,
-    threshold: 0.6,
+    threshold: 0.3, // stricter match
+    distance: 50,
     ignoreLocation: true,
+    minMatchCharLength: 2,
     useExtendedSearch: true,
     keys,
     ...options,
   });
+
+// ==================== Arabic Query Cleaning ====================
+const cleanArabicQuery = (query: string): string => {
+  // Keep only Arabic letters and spaces
+  return normalizeArabic(query.replace(/[^\u0600-\u06FF\s]+/g, '').trim());
 };
 
-export const performAdvancedSearch = <T extends Record<string, any>>(
-  fuseInstance: Fuse<T>,
-  query: string,
-  searchFields: string[] = ['uthmani', 'standard'],
-  originalCollection?: T[],
-): T[] => {
-  if (!query.trim()) return [];
-
-  // Try exact matches first using simpleSearch if we have original collection
-  if (originalCollection) {
-    const exactMatches = searchFields.flatMap((field) =>
-      simpleSearch(originalCollection, query, field as keyof T),
-    );
-
-    // Remove duplicates
-    const uniqueMatches = Array.from(
-      new Set(exactMatches.map((item) => JSON.stringify(item))),
-    ).map((item) => JSON.parse(item));
-
-    if (uniqueMatches.length > 0) return uniqueMatches;
-  }
-
-  // Fall back to fuzzy search if no exact matches
-  return fuseInstance
-    .search(normalizeArabicText(query.toLowerCase()))
-    .map((result) => result.item);
-};
-
+// ==================== Simple Search ====================
 export const simpleSearch = <T extends Record<string, any>>(
   items: T[],
   query: string,
   searchField: keyof T,
 ): T[] => {
-  if (!query.trim()) return [];
-
-  const normalizedQuery = normalizeArabicText(query.toLowerCase());
+  const cleanQuery = cleanArabicQuery(query);
+  if (!cleanQuery) return [];
 
   return items.filter((item) => {
-    const normalizedField = normalizeArabicText(
-      String(item[searchField] || '').toLowerCase(),
-    );
-    return normalizedField.includes(normalizedQuery);
+    const fieldValue = String(item[searchField] || '');
+    return normalizeArabic(fieldValue).includes(cleanQuery);
   });
+};
+
+// ==================== Advanced Linguistic Search ====================
+interface AdvancedOptions {
+  lemma: boolean;
+  root: boolean;
+}
+
+export const performAdvancedLinguisticSearch = (
+  query: string,
+  quranData: QuranText[],
+  options: AdvancedOptions,
+  fuseInstance: Fuse<QuranText>,
+): QuranText[] => {
+  const cleanQuery = cleanArabicQuery(query);
+  if (!cleanQuery) return [];
+
+  const wordMap = wordMapJSON as WordMap;
+  const entry = wordMap[cleanQuery];
+  if (!entry) return fuseInstance.search(cleanQuery).map((r) => r.item);
+
+  const { lemma: targetLemma, root: targetRoot = '' } = entry;
+  const matchingGids = new Set<number>();
+  const getMorph = (gid: number) => GID_TO_MORPH.get(gid);
+
+  if (options.lemma && targetLemma) {
+    for (const verse of quranData) {
+      const morph = getMorph(verse.gid);
+      if (morph?.lemmas.includes(targetLemma)) matchingGids.add(verse.gid);
+    }
+  }
+
+  if (options.root && targetRoot) {
+    for (const verse of quranData) {
+      const morph = getMorph(verse.gid);
+      if (morph?.roots.includes(targetRoot)) matchingGids.add(verse.gid);
+    }
+  }
+
+  if (matchingGids.size > 0) {
+    const gidToVerse = new Map(quranData.map((v) => [v.gid, v]));
+    return Array.from(matchingGids).map((gid) => gidToVerse.get(gid)!);
+  }
+
+  return fuseInstance.search(cleanQuery).map((r) => r.item);
 };
