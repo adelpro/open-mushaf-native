@@ -16,6 +16,11 @@ export const useColors = () => {
   const cardColor = Colors[colorScheme ?? 'light'].card;
   const ivoryColor = Colors[colorScheme ?? 'light'].ivory;
 
+  // Text Highlight colors
+  const directColor = Colors[colorScheme ?? 'light'].directColor;
+  const relatedColor = Colors[colorScheme ?? 'light'].relatedColor;
+  const fuzzyColor = Colors[colorScheme ?? 'light'].fuzzyColor;
+
   return {
     backgroundColor,
     tintColor,
@@ -28,5 +33,10 @@ export const useColors = () => {
     dangerColor,
     dangerLightColor,
     ivoryColor,
+
+    // Text Highlight colors
+    directColor,
+    relatedColor,
+    fuzzyColor,
   };
 };
