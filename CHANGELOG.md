@@ -5,7 +5,8 @@ All notable changes to this project will be documented in this file.
 ## [4.3.0]
 
 - fix: now the data in the android widget is correcly synced with the app
-- feat: add advanced morphology search
+- feat: enhance the search function by updating the simple search and adding root and lemma search
+- feat: add serached text hightlight in search results
 
 ## [4.2.0]
 
