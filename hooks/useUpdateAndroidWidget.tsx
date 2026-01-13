@@ -41,7 +41,7 @@ export const useUpdateAndroidWidget = () => {
       // Calculate current surah
       let currentSurahNumber = 1;
       if (surahs.length > 0) {
-        currentSurahNumber = getSurahNumberByPage(surahs, currentPage);
+        currentSurahNumber = Number(getSurahNumberByPage(surahs, currentPage));
       }
 
       // Calculate current hizb
