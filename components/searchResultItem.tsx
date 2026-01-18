@@ -2,21 +2,21 @@ import React from 'react';
 import { Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { router } from 'expo-router';
+import { type QuranText, type WordMap } from 'quran-search-engine';
 
 import { HighlightText } from '@/components/HighlightArabic';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
-import { QuranText, WordMap } from '@/types';
 
 type SearchResultItemProps = {
   item: QuranText;
   query: string;
-  advancedOptions: { lemma: boolean; root: boolean };
+  advancedOptions: { lemma: boolean; root: boolean; fuzzy: boolean };
   wordMap: WordMap;
   getPositiveTokens: (
     verse: QuranText,
-    mode: 'text' | 'lemma' | 'root',
+    mode: 'text' | 'lemma' | 'root' | 'fuzzy',
     targetLemma?: string,
     targetRoot?: string,
     cleanQuery?: string,
@@ -36,7 +36,6 @@ export default function SearchResultItem({
   const cleanQuery = query.trim();
   const mapEntry = wordMap[cleanQuery];
 
-  // Collect tokens for highlighting
   const directTokens: string[] = [];
   const relatedTokens: string[] = [];
   const fuzzyTokens: string[] = [];
@@ -75,6 +74,24 @@ export default function SearchResultItem({
       relatedTokens.push(
         ...rootMatches.filter(
           (w) => !textMatches.includes(w) && !relatedTokens.includes(w),
+        ),
+      );
+    }
+
+    if (advancedOptions.fuzzy) {
+      const fuzzyMatches = getPositiveTokens(
+        item,
+        'fuzzy',
+        undefined,
+        undefined,
+        query,
+      );
+      fuzzyTokens.push(
+        ...fuzzyMatches.filter(
+          (w) =>
+            !textMatches.includes(w) &&
+            !relatedTokens.includes(w) &&
+            !fuzzyTokens.includes(w),
         ),
       );
     }

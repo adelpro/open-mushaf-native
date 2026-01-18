@@ -9,6 +9,7 @@ import {
 } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useAtom, useAtomValue } from 'jotai/react';
+import { removeTashkeel } from 'quran-search-engine';
 import * as Progress from 'react-native-progress';
 
 import { ThemedView } from '@/components/ThemedView';
@@ -22,7 +23,6 @@ import {
   dailyTrackerGoal,
   topMenuState,
 } from '@/jotai/atoms';
-import { removeTashkeel } from '@/utils/arabicUtils';
 import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
 import { getJuzPositionByPage } from '@/utils/quranMetadataUtils';
 

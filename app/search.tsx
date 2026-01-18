@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -22,7 +22,6 @@ import { useColors } from '@/hooks/useColors';
 import useDebounce from '@/hooks/useDebounce';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 import useQuranSearch from '@/hooks/useQuranSearch';
-import { createArabicFuseSearch } from '@/utils/searchUtils';
 
 const MORPH = morphologyDataRaw;
 const WORD_MAP = wordMapJSON;
@@ -31,36 +30,64 @@ export default function Search() {
   const { quranData, isLoading, error } = useQuranMetadata();
   const { tintColor, primaryColor } = useColors();
 
+  const PAGE_SIZE = 50;
+
   const [inputText, setInputText] = useState('');
   const [query, setQuery] = useState('');
   const [showOptions, setShowOptions] = useState(false);
   const [advancedOptions, setAdvancedOptions] = useState({
     lemma: false,
     root: false,
+    fuzzy: false,
   });
   const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
+  const [page, setPage] = useState(1);
+  const [results, setResults] = useState<any[]>([]);
+  const [hasMore, setHasMore] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const fuseInstance = useMemo(
-    () =>
-      quranData
-        ? createArabicFuseSearch(quranData, ['standard'], {
-            threshold: 0.3,
-            minMatchCharLength: 2,
-          })
-        : null,
-    [quranData],
-  );
+  const listRef = useRef<FlatList>(null);
 
-  const handleSearch = useDebounce((text: string) => setQuery(text), 200);
+  const handleSearch = useDebounce((text: string) => {
+    setPage(1);
+    setResults([]);
+    setHasMore(false);
+    setQuery(text);
+  }, 200);
 
-  const { filteredResults, counts, getPositiveTokens } = useQuranSearch({
+  const { pageResults, counts, getPositiveTokens } = useQuranSearch({
     quranData,
     morphologyData: MORPH,
     wordMap: WORD_MAP,
     query,
     advancedOptions,
-    fuseInstance,
+    fuseInstance: null,
+    page,
+    limit: PAGE_SIZE,
   });
+
+  useEffect(() => {
+    if (!query.trim()) {
+      setResults([]);
+      setHasMore(false);
+      setIsLoadingMore(false);
+      return;
+    }
+
+    if (!pageResults) return;
+
+    setResults((prev) =>
+      page === 1 ? pageResults : [...prev, ...pageResults],
+    );
+
+    const more = pageResults.length === PAGE_SIZE;
+    setHasMore(more);
+    setIsLoadingMore(false);
+
+    if (page === 1 && listRef.current) {
+      listRef.current.scrollToOffset({ offset: 0, animated: false });
+    }
+  }, [pageResults, page, query]);
 
   const toggleOption = (option: keyof typeof advancedOptions) => {
     setAdvancedOptions((prev) => ({ ...prev, [option]: !prev[option] }));
@@ -83,6 +110,7 @@ export default function Search() {
   const selectedLabels: string[] = [];
   if (advancedOptions.lemma) selectedLabels.push(`صيغة: ${counts.lemma}`);
   if (advancedOptions.root) selectedLabels.push(`جذر: ${counts.root}`);
+  if (advancedOptions.fuzzy) selectedLabels.push(`تقريبي: ${counts.fuzzy}`);
   const counterText =
     query.trim() === ''
       ? ''
@@ -154,6 +182,21 @@ export default function Search() {
                 الجذر
               </ThemedText>
             </Pressable>
+            <Pressable
+              style={[
+                styles.optionButton,
+                advancedOptions.fuzzy && styles.optionActive,
+              ]}
+              onPress={() => toggleOption('fuzzy')}
+            >
+              <ThemedText
+                style={
+                  advancedOptions.fuzzy ? styles.optionActiveText : undefined
+                }
+              >
+                التقريب
+              </ThemedText>
+            </Pressable>
           </View>
         </ThemedView>
       )}
@@ -164,7 +207,8 @@ export default function Search() {
 
       <SearchColorLegend />
       <FlatList
-        data={filteredResults}
+        ref={listRef}
+        data={results}
         keyExtractor={(item) => item.gid.toString()}
         renderItem={({ item }) => (
           <SearchResultItem
@@ -178,8 +222,21 @@ export default function Search() {
             }
           />
         )}
+        onEndReached={() => {
+          if (!hasMore || isLoadingMore) return;
+          setIsLoadingMore(true);
+          setPage((prev) => prev + 1);
+        }}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          isLoadingMore ? (
+            <ThemedView style={{ paddingVertical: 12 }}>
+              <ActivityIndicator size="small" color={tintColor} />
+            </ThemedView>
+          ) : null
+        }
         ListEmptyComponent={
-          query ? (
+          query && !isLoading ? (
             <ThemedView style={styles.emptyContainer}>
               <ThemedText type="default">لا توجد نتائج</ThemedText>
             </ThemedView>
@@ -226,7 +283,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: 'rgba(0, 0, 0, 0.03)',
   },
-  optionRow: { flexDirection: 'row', justifyContent: 'flex-end', gap: 10 },
+  optionRow: { flexDirection: 'row', justifyContent: 'center', gap: 10 },
   optionButton: {
     paddingHorizontal: 14,
     paddingVertical: 6,

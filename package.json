@@ -80,6 +80,7 @@
     "fuse.js": "^7.1.0",
     "jotai": "^2.12.4",
     "jotai-effect": "^2.0.2",
+    "quran-search-engine": "^0.1.4",
     "react": "19.1.0",
     "react-compiler-runtime": "^19.0.0-beta-df7b47d-20241124",
     "react-dom": "19.1.0",

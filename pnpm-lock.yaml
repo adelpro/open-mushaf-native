@@ -98,6 +98,9 @@ importers:
       jotai-effect:
         specifier: ^2.0.2
         version: 2.2.3(jotai@2.16.1(@babel/core@7.28.5)(@babel/template@7.27.2)(@types/react@19.1.17)(react@19.1.0))
+      quran-search-engine:
+        specifier: ^0.1.4
+        version: 0.1.4
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -4762,6 +4765,9 @@ packages:
 
   queue@6.0.2:
     resolution: {integrity: sha512-iHZWu+q3IdFZFX36ro/lKBkSvfkztY5Y7HMiPlOUjhupPcG2JMfst2KKEpu5XndviX/3UhFbRngUPNKtgvtZiA==}
+
+  quran-search-engine@0.1.4:
+    resolution: {integrity: sha512-EfZ/qnDjzL0XrU4dOrZs1NRa4HgQPhX9bg8nW+K42yjVh8othVwmDdLnzd+o2Psk953yu/HQE8FKOC3IX/m9Bw==}
 
   range-parser@1.2.1:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
@@ -11564,6 +11570,10 @@ snapshots:
   queue@6.0.2:
     dependencies:
       inherits: 2.0.4
+
+  quran-search-engine@0.1.4:
+    dependencies:
+      fuse.js: 7.1.0
 
   range-parser@1.2.1: {}
 
