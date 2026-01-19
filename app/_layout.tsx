@@ -33,6 +33,7 @@ import Notification from '@/components/Notification';
 import SEO from '@/components/seo';
 import { isRTL } from '@/utils';
 
+import ErrorBoundary from '../components/ErrorBoundary';
 import { NotificationProvider } from '../components/NotificationProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -87,66 +88,68 @@ export default function RootLayout() {
   }
 
   return (
-    <NotificationProvider>
-      <HelmetProvider>
-        <SEO />
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <SafeAreaProvider>
-            <SafeAreaView
-              style={{
-                flex: 1,
-                width: '100%',
-                maxWidth: 640,
-                alignSelf: 'center',
-                backgroundColor: 'transparent',
-              }}
-            >
-              <StatusBar style="auto" />
-              <ThemeProvider
-                value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+    <ErrorBoundary>
+      <NotificationProvider>
+        <HelmetProvider>
+          <SEO />
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaProvider>
+              <SafeAreaView
+                style={{
+                  flex: 1,
+                  width: '100%',
+                  maxWidth: 640,
+                  alignSelf: 'center',
+                  backgroundColor: 'transparent',
+                }}
               >
-                <Stack
-                  screenOptions={{
-                    headerTitleStyle: {
-                      fontFamily: 'Tajawal_700Bold',
-                    },
-                  }}
+                <StatusBar style="auto" />
+                <ThemeProvider
+                  value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
                 >
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen name="+not-found" />
-                  <Stack.Screen
-                    name="search"
-                    options={{
-                      title: 'بحث',
+                  <Stack
+                    screenOptions={{
                       headerTitleStyle: {
-                        fontFamily: 'Tajawal_400Regular',
+                        fontFamily: 'Tajawal_700Bold',
                       },
                     }}
-                  />
-                  <Stack.Screen
-                    name="navigation"
-                    options={{
-                      title: 'تنقل',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="tutorial"
-                    options={{ headerShown: true, title: 'جولة تعليمية' }}
-                  />
-                  <Stack.Screen
-                    name="tracker"
-                    options={{ headerShown: true, title: 'الورد اليومي' }}
-                  />
-                </Stack>
-                <Notification />
-              </ThemeProvider>
-            </SafeAreaView>
-          </SafeAreaProvider>
-        </GestureHandlerRootView>
-      </HelmetProvider>
-    </NotificationProvider>
+                  >
+                    <Stack.Screen
+                      name="(tabs)"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen name="+not-found" />
+                    <Stack.Screen
+                      name="search"
+                      options={{
+                        title: 'بحث',
+                        headerTitleStyle: {
+                          fontFamily: 'Tajawal_400Regular',
+                        },
+                      }}
+                    />
+                    <Stack.Screen
+                      name="navigation"
+                      options={{
+                        title: 'تنقل',
+                      }}
+                    />
+                    <Stack.Screen
+                      name="tutorial"
+                      options={{ headerShown: true, title: 'جولة تعليمية' }}
+                    />
+                    <Stack.Screen
+                      name="tracker"
+                      options={{ headerShown: true, title: 'الورد اليومي' }}
+                    />
+                  </Stack>
+                  <Notification />
+                </ThemeProvider>
+              </SafeAreaView>
+            </SafeAreaProvider>
+          </GestureHandlerRootView>
+        </HelmetProvider>
+      </NotificationProvider>
+    </ErrorBoundary>
   );
 }
