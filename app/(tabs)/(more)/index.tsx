@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
@@ -24,6 +25,7 @@ import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
+import { isWeb } from '@/utils/isWeb';
 
 export default function MoreScreen() {
   const [errorModalVisible, setErrorModalVisible] = useState(false);
@@ -56,6 +58,22 @@ export default function MoreScreen() {
 
   return (
     <ThemedView style={styles.container}>
+      {!isWeb && (
+        <ThemedButton
+          onPress={() => router.push('/reminders')}
+          variant="primary"
+          style={styles.button}
+        >
+          <View style={styles.buttonContent}>
+            <MaterialCommunityIcons
+              name="bell-outline"
+              size={24}
+              color="white"
+            />
+            <Text style={styles.buttonText}>التذكيرات</Text>
+          </View>
+        </ThemedButton>
+      )}
       <ThemedButton
         onPress={() => router.push('/settings')}
         variant="primary"
