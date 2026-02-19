@@ -2,19 +2,27 @@
 
 Thank you for considering contributing to **Open-Mushaf Native**! We appreciate your help in making this project better.
 
-## How to Contribute
+---
 
-### Reporting Issues
+## 🤝 Code of Conduct
 
-- If you find a bug or have a feature request, please open an issue on the [GitHub Issues page](https://github.com/adelpro/open-mushaf-native/issues).
-- Provide as much detail as possible, including steps to reproduce the issue and any relevant screenshots.
+We are committed to providing a welcoming and inspiring community for all.
 
-### Pull Requests
+- **Respect**: Treat everyone with respect and kindness.
+- **Inclusivity**: Welcome people of all backgrounds and identities.
+- **Professionalism**: Focus on constructive feedback and collaboration.
+
+**Reporting**: If you experience or witness unacceptable behavior, please contact the maintainer at [adelpro@gmail.com](mailto:adelpro@gmail.com).
+
+---
+
+## 🛠️ How to Contribute
+
+### Development Setup
+
+This project uses **pnpm** for package management.
 
 1. **Fork the Repository**
-
-   - Click the "Fork" button at the top right of the repository page.
-
 2. **Clone Your Fork**
 
    ```bash
@@ -22,33 +30,46 @@ Thank you for considering contributing to **Open-Mushaf Native**! We appreciate 
    cd open-mushaf-native
    ```
 
-3. Create a Branch
-
-   Use a descriptive name for your branch.
+3. **Install Dependencies**
 
    ```bash
-   git checkout -b feature/your-feature-name
+   pnpm install
    ```
 
-4. Make Your Changes
-
-   Implement your feature or fix the bug. Ensure that your code follows the project's style guidelines.
-
-5. Commit Your Changes
+4. **Start the App**
 
    ```bash
-   git add .
-   git commit -m "Add your feature or fix"
+   npx expo start
    ```
 
-6. Push to Your Fork
+### Pull Requests
 
-   ```bash
-   git push origin feature/your-feature-name
-   ```
+1. **Create a Branch**: Use a descriptive name like `feature/your-feature-name`.
+2. **Make Your Changes**: Ensure your code follows the project's style guidelines.
+3. **Commit Your Changes**: Use conventional commit messages if possible.
+4. **Push to Your Fork** and open a Pull Request.
 
-### Questions?
+---
 
-If you have any questions, feel free to reach out by opening an issue or contacting us directly through the GitHub repository.
+## 🏷️ Issue Labels
+
+We use labels to categorize issues and indicate their status.
+
+| Label                 | Description                                  |
+| :-------------------- | :------------------------------------------- |
+| `type: bug`           | Something isn't working as expected.         |
+| `type: enhancement`   | A request for a new feature or improvement.  |
+| `type: documentation` | Improvements or additions to documentation.  |
+| `difficulty: easy`    | Good for first-time contributors.            |
+| `difficulty: medium`  | Requires some familiarity with the codebase. |
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
+See the [LICENSE](file:///d:/benyahia-dev/open-mushaf-native/LICENSE) for full details.
+
+---
 
 Thank you for your contributions!
