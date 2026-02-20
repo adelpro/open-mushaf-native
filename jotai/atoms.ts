@@ -63,7 +63,7 @@ export type DailyReadingRecord = {
   hizbsCompleted: number;
 };
 
-const MAX_HISTORY_DAYS = 90;
+export const MAX_HISTORY_DAYS = 90;
 
 export const readingHistory = createAtomWithStorage<DailyReadingRecord[]>(
   'ReadingHistory',

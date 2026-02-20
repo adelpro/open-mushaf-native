@@ -76,9 +76,15 @@ export default function ReadingChart() {
 
   const drawableWidth = chartWidth - CHART_PADDING_LEFT - CHART_PADDING_RIGHT;
   const drawableHeight = chartHeight - CHART_PADDING_TOP - CHART_PADDING_BOTTOM;
-  const barGap = period <= 7 ? 6 : period <= 30 ? 2 : 1;
+  const baseGap = period <= 7 ? 6 : period <= 30 ? 2 : 1;
+  const minBarWidth = 1;
+  // Shrink gap to 0 if bars won't fit at minimum width
+  const barGap =
+    data.length * minBarWidth + (data.length - 1) * baseGap > drawableWidth
+      ? 0
+      : baseGap;
   const barWidth = Math.max(
-    1,
+    minBarWidth,
     (drawableWidth - barGap * (data.length - 1)) / data.length,
   );
 
@@ -108,13 +114,16 @@ export default function ReadingChart() {
         />
       </ThemedView>
 
-      <Svg width={chartWidth} height={chartHeight}>
-        {/* Y-axis gridlines */}
-        {[0.25, 0.5, 0.75, 1].map((ratio) => {
-          const y = CHART_PADDING_TOP + drawableHeight * (1 - ratio);
-          const label = Math.round(maxValue * ratio);
-          return (
-            <React.Fragment key={ratio}>
+      <Svg width={chartWidth} height={chartHeight} style={{ overflow: 'hidden' }}>
+        {/* Y-axis gridlines (deduplicated for small maxValue) */}
+        {[...new Set([0.25, 0.5, 0.75, 1].map((r) => Math.round(maxValue * r)))]
+          .map((label) => ({
+            label,
+            ratio: label / maxValue,
+            y: CHART_PADDING_TOP + drawableHeight * (1 - label / maxValue),
+          }))
+          .map(({ label, y }) => (
+            <React.Fragment key={label}>
               <Line
                 x1={CHART_PADDING_LEFT}
                 y1={y}
@@ -135,8 +144,7 @@ export default function ReadingChart() {
                 {label}
               </SvgText>
             </React.Fragment>
-          );
-        })}
+          ))}
 
         {/* Baseline */}
         <Line
@@ -186,7 +194,7 @@ export default function ReadingChart() {
 
       <ThemedText style={[styles.summaryText, { color: primaryColor }]}>
         {totalHizbs > 0
-          ? `المجموع: ${Number.isInteger(totalHizbs) ? totalHizbs : totalHizbs.toFixed(1)} حزب في ${period} يوم`
+          ? `المجموع: ${Number.isInteger(totalHizbs) ? totalHizbs : totalHizbs.toFixed(1)} حزب في ${PERIOD_LABELS[periodIndex]}`
           : 'لا توجد بيانات قراءة بعد'}
       </ThemedText>
     </ThemedView>

@@ -10,7 +10,7 @@ import {
 
 import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
-import { useAtom } from 'jotai/react';
+import { useAtom, useSetAtom } from 'jotai/react';
 
 import ReadingChart from '@/components/ReadingChart';
 import SEO from '@/components/seo';
@@ -23,6 +23,7 @@ import { useUpdateAndroidWidget } from '@/hooks/useUpdateAndroidWidget';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
+  MAX_HISTORY_DAYS,
   readingHistory,
   yesterdayPage,
 } from '@/jotai/atoms';
@@ -39,8 +40,7 @@ export default function TrackerScreen() {
     dailyTrackerCompleted,
   );
   const [yesterdayPageValue, setYesterdayPageValue] = useAtom(yesterdayPage);
-  const [readingHistoryValue, setReadingHistoryValue] =
-    useAtom(readingHistory);
+  const setReadingHistoryValue = useSetAtom(readingHistory);
   // Add state for modal visibility
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
@@ -70,15 +70,14 @@ export default function TrackerScreen() {
     // Archive today's progress before clearing so it appears in history
     if (dailyTrackerCompletedValue.value > 0) {
       const today = new Date().toDateString();
-      const alreadyArchived = readingHistoryValue.some(
-        (r) => r.date === today,
-      );
-      if (!alreadyArchived) {
-        setReadingHistoryValue([
-          ...readingHistoryValue,
+      setReadingHistoryValue((prev) => {
+        const alreadyArchived = prev.some((r) => r.date === today);
+        if (alreadyArchived) return prev;
+        return [
+          ...prev,
           { date: today, hizbsCompleted: dailyTrackerCompletedValue.value },
-        ]);
-      }
+        ].slice(-MAX_HISTORY_DAYS);
+      });
     }
 
     setdailyTrackerCompletedValue({
