@@ -23,6 +23,7 @@ import { useUpdateAndroidWidget } from '@/hooks/useUpdateAndroidWidget';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
+  readingHistory,
   yesterdayPage,
 } from '@/jotai/atoms';
 
@@ -38,6 +39,8 @@ export default function TrackerScreen() {
     dailyTrackerCompleted,
   );
   const [yesterdayPageValue, setYesterdayPageValue] = useAtom(yesterdayPage);
+  const [readingHistoryValue, setReadingHistoryValue] =
+    useAtom(readingHistory);
   // Add state for modal visibility
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
@@ -62,6 +65,20 @@ export default function TrackerScreen() {
         value: savedPage,
         date: new Date().toDateString(),
       });
+    }
+
+    // Archive today's progress before clearing so it appears in history
+    if (dailyTrackerCompletedValue.value > 0) {
+      const today = new Date().toDateString();
+      const alreadyArchived = readingHistoryValue.some(
+        (r) => r.date === today,
+      );
+      if (!alreadyArchived) {
+        setReadingHistoryValue([
+          ...readingHistoryValue,
+          { date: today, hizbsCompleted: dailyTrackerCompletedValue.value },
+        ]);
+      }
     }
 
     setdailyTrackerCompletedValue({

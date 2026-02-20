@@ -78,7 +78,7 @@ export default function ReadingChart() {
   const drawableHeight = chartHeight - CHART_PADDING_TOP - CHART_PADDING_BOTTOM;
   const barGap = period <= 7 ? 6 : period <= 30 ? 2 : 1;
   const barWidth = Math.max(
-    2,
+    1,
     (drawableWidth - barGap * (data.length - 1)) / data.length,
   );
 
