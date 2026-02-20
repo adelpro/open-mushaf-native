@@ -12,6 +12,7 @@ import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useAtom } from 'jotai/react';
 
+import ReadingChart from '@/components/ReadingChart';
 import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
@@ -164,6 +165,8 @@ export default function TrackerScreen() {
               </ThemedView>
             </ThemedView>
           </ThemedView>
+
+          <ReadingChart />
 
           <ThemedView
             style={[styles.navigationSection, { backgroundColor: cardColor }]}

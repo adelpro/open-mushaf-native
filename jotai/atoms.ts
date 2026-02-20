@@ -57,6 +57,19 @@ type DailyTrackerProgress = {
   date: string;
 };
 
+// Reading history — stores up to 90 days of daily hizb counts
+export type DailyReadingRecord = {
+  date: string;
+  hizbsCompleted: number;
+};
+
+const MAX_HISTORY_DAYS = 90;
+
+export const readingHistory = createAtomWithStorage<DailyReadingRecord[]>(
+  'ReadingHistory',
+  [],
+);
+
 // Daily tracker with reset if date changed
 export const dailyTrackerCompleted =
   createAtomWithStorage<DailyTrackerProgress>('DailyTrackerCompleted', {
@@ -64,12 +77,26 @@ export const dailyTrackerCompleted =
     date: new Date().toDateString(),
   });
 
+// Archive yesterday's reading before resetting the daily counter
 observe((get, set) => {
   (async () => {
     const stored = await get(dailyTrackerCompleted);
     const today = new Date().toDateString();
 
     if (stored.date !== today) {
+      // Archive the previous day's data if there was any reading
+      if (stored.value > 0) {
+        const history = await get(readingHistory);
+        const alreadyArchived = history.some((r) => r.date === stored.date);
+        if (!alreadyArchived) {
+          const updated = [
+            ...history,
+            { date: stored.date, hizbsCompleted: stored.value },
+          ].slice(-MAX_HISTORY_DAYS);
+          set(readingHistory, updated);
+        }
+      }
+
       set(dailyTrackerCompleted, { value: 0, date: today });
     }
   })();
