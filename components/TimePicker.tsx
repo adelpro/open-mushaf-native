@@ -38,16 +38,45 @@ const Wheel = ({
 }: WheelProps) => {
   const { primaryColor, textColor, cardColor } = useColors();
   const flatListRef = useRef<FlatList<number>>(null);
+  const isMomentumScrolling = useRef(false);
   const initialIndex = data.indexOf(value);
 
-  const handleMomentumScrollEnd = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const offsetY = event.nativeEvent.contentOffset.y;
+  /** Selects the item closest to the current scroll offset */
+  const selectFromOffset = useCallback(
+    (offsetY: number) => {
       const index = Math.round(offsetY / ITEM_HEIGHT);
       const clampedIndex = Math.max(0, Math.min(index, data.length - 1));
       onChange(data[clampedIndex]);
     },
     [data, onChange],
+  );
+
+  /** When drag ends, wait briefly to see if momentum follows */
+  const handleScrollEndDrag = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const offsetY = event.nativeEvent.contentOffset.y;
+      isMomentumScrolling.current = false;
+      setTimeout(() => {
+        if (!isMomentumScrolling.current) {
+          selectFromOffset(offsetY);
+        }
+      }, 100);
+    },
+    [selectFromOffset],
+  );
+
+  /** Tracks that a momentum phase has started */
+  const handleMomentumScrollBegin = useCallback(() => {
+    isMomentumScrolling.current = true;
+  }, []);
+
+  /** Selects the final snapped item after momentum ends */
+  const handleMomentumScrollEnd = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      isMomentumScrolling.current = false;
+      selectFromOffset(event.nativeEvent.contentOffset.y);
+    },
+    [selectFromOffset],
   );
 
   const renderItem = useCallback(
@@ -102,6 +131,8 @@ const Wheel = ({
         snapToInterval={ITEM_HEIGHT}
         decelerationRate="fast"
         showsVerticalScrollIndicator={false}
+        onScrollEndDrag={handleScrollEndDrag}
+        onMomentumScrollBegin={handleMomentumScrollBegin}
         onMomentumScrollEnd={handleMomentumScrollEnd}
         contentContainerStyle={{
           paddingVertical: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2),
