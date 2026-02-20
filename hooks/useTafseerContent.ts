@@ -1,9 +1,7 @@
-import { TafseerAya } from '@/types';
+import { AyaReference, TafseerAya } from '@/types';
 
-type UseFormattedTafseerParams = {
+type UseFormattedTafseerParams = AyaReference & {
   tafseerData: TafseerAya[] | null;
-  surah: number;
-  aya: number;
 };
 
 /**

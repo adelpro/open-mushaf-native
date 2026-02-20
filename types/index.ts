@@ -1,3 +1,5 @@
+export * from './ayaReference';
+
 export * from './chapter';
 
 export * from './external-link-type';

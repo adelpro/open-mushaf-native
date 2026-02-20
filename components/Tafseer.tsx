@@ -11,7 +11,7 @@ import {
   useTafseerContent,
 } from '@/hooks';
 import { tafseerTab } from '@/jotai/atoms';
-import { TafseerAya, TafseerTabs } from '@/types';
+import { AyaReference, TafseerAya, TafseerTabs } from '@/types';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -30,13 +30,11 @@ const tabLabels: Partial<Record<TafseerTabs, string>> = {
   waseet: 'الوسيط',
 };
 
-type Props = {
-  aya: number;
-  surah: number;
-  opacity?: number | undefined;
+type TafseerProps = AyaReference & {
+  opacity?: number;
 };
 
-export function Tafseer({ aya, surah, opacity = undefined }: Props) {
+export function Tafseer({ aya, surah, opacity = undefined }: TafseerProps) {
   const { tintColor, textColor } = useColors();
   const { surahData } = useQuranMetadata();
   const [surahName, setSurahName] = useState<string>('');

@@ -10,11 +10,11 @@ import { Chapter } from '@/types';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-type Props = {
+type ChapterCardProps = {
   chapter: Chapter;
 };
 
-export function ChapterCard({ chapter }: Props) {
+export function ChapterCard({ chapter }: ChapterCardProps) {
   const router = useRouter();
   const { backgroundColor, textColor, secondaryColor } = useColors();
 

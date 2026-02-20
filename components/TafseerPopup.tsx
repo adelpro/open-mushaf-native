@@ -12,17 +12,17 @@ import {
 } from 'react-native-reanimated';
 
 import { Colors } from '@/constants/Colors';
+import { AyaReference } from '@/types';
 
 import { Tafseer } from './Tafseer';
 import { ThemedView } from './ThemedView';
-type Props = {
+
+type TafseerPopupProps = AyaReference & {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  aya: number;
-  surah: number;
 };
 
-export function TafseerPopup({ show, setShow, aya, surah }: Props) {
+export function TafseerPopup({ show, setShow, aya, surah }: TafseerPopupProps) {
   const colorScheme = useColorScheme();
   const tintColor = Colors[colorScheme ?? 'light'].tint;
   const backgroundColor = Colors[colorScheme ?? 'light'].background;

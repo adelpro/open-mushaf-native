@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Helmet } from 'react-helmet-async';
 
-type Props = {
+type SEOProps = {
   title?: string;
   description?: string;
   image?: string;
@@ -10,7 +10,7 @@ type Props = {
   canonical?: string;
   keywords?: string;
   locale?: string;
-  structuredData?: Record<string, any>; // Add structured data support
+  structuredData?: Record<string, any>;
 };
 
 export function Seo({
@@ -22,7 +22,7 @@ export function Seo({
   keywords = 'quran, mushaf, islam, holy book, reading quran',
   locale = 'ar_DZ',
   structuredData,
-}: Props) {
+}: SEOProps) {
   return (
     <Helmet>
       <title>{title}</title>

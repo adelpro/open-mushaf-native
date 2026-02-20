@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Slider } from 'react-native-awesome-slider';
 import { useSharedValue } from 'react-native-reanimated';
 
-type Props = {
+type AwesomeSliderProps = {
   value: number;
   onValueChange: (value: number) => void;
   primaryColor: string;
@@ -17,7 +17,7 @@ export function AwesomeSlider({
   primaryColor,
   minimumValue = 0.3,
   maximumValue = 1.0,
-}: Props) {
+}: AwesomeSliderProps) {
   const progress = useSharedValue(value);
   const min = useSharedValue(minimumValue);
   const max = useSharedValue(maximumValue);

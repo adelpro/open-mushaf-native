@@ -5,11 +5,11 @@ import { openBrowserAsync } from 'expo-web-browser';
 
 import { ExternalLinkType } from '@/types';
 
-type Props = Omit<React.ComponentProps<typeof Link>, 'href'> & {
+type ExternalLinkProps = Omit<React.ComponentProps<typeof Link>, 'href'> & {
   href: ExternalLinkType;
 };
 
-export function ExternalLink({ href, ...rest }: Props) {
+export function ExternalLink({ href, ...rest }: ExternalLinkProps) {
   return (
     <Link
       target="_blank"

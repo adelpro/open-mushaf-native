@@ -5,21 +5,22 @@ import { useSetAtom } from 'jotai';
 
 import { usePageOverlay } from '@/hooks';
 import { topMenuState } from '@/jotai/atoms';
+import { AyaReference } from '@/types';
 import { triggerImpactHaptic } from '@/utils';
 
 import { TafseerPopup } from './TafseerPopup';
 
-type Props = {
+type PageOverlayProps = {
   index: number;
   dimensions: { customPageWidth: number; customPageHeight: number };
 };
 
-export function PageOverlay({ index, dimensions }: Props) {
-  const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
+export function PageOverlay({ index, dimensions }: PageOverlayProps) {
+  const [selectedAya, setSelectedAya] = useState<AyaReference>({ aya: 0, surah: 0 });
   const [show, setShow] = useState<boolean>(false);
   const setShowTopMenu = useSetAtom(topMenuState);
 
-  const handleAyaClick = ({ aya, surah }: { aya: number; surah: number }) => {
+  const handleAyaClick = ({ aya, surah }: AyaReference) => {
     triggerImpactHaptic();
     setSelectedAya({ aya, surah });
     setShow(true);

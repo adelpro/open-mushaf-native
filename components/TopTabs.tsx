@@ -6,12 +6,12 @@ import { ListTabs } from '@/types';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-type Props = {
+type TopTabsProps = {
   setActiveTab: (tab: ListTabs) => void;
   activeTab: ListTabs;
 };
 
-export function TopTabs({ activeTab, setActiveTab }: Props) {
+export function TopTabs({ activeTab, setActiveTab }: TopTabsProps) {
   const { backgroundColor, textColor } = useColors();
 
   const handleTabPress = (tab: ListTabs) => {

@@ -10,11 +10,11 @@ import { Surah } from '@/types';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-type Props = {
+type SurahCardProps = {
   surah: Surah;
 };
 
-export function SurahCard({ surah }: Props) {
+export function SurahCard({ surah }: SurahCardProps) {
   const router = useRouter();
 
   const { backgroundColor, textColor, secondaryColor } = useColors();
