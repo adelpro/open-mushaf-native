@@ -47,24 +47,12 @@ export default function useQuranMetadata(): QuranMetadata {
             specsModule,
             chapterModule,
           ] = await Promise.all([
-            import(
-              '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/thumn.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/hizb.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/surah.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/aya.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/specs.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/chapter.json'
-            ),
+            import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/thumn.json'),
+            import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/hizb.json'),
+            import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/surah.json'),
+            import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/aya.json'),
+            import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/specs.json'),
+            import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/chapter.json'),
           ]);
 
           setThumnData(thumnModule.default);
@@ -83,24 +71,12 @@ export default function useQuranMetadata(): QuranMetadata {
             specsModule,
             chapterModule,
           ] = await Promise.all([
-            import(
-              '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/thumn.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/aya.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json'
-            ),
-            import(
-              '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/chapter.json'
-            ),
+            import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/thumn.json'),
+            import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.json'),
+            import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json'),
+            import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/aya.json'),
+            import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json'),
+            import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/chapter.json'),
           ]);
 
           setThumnData(thumnModule.default);

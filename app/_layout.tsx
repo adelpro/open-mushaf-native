@@ -32,6 +32,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Notification from '@/components/Notification';
 import SEO from '@/components/seo';
 import { isRTL } from '@/utils';
+import { setupNotificationChannel } from '@/utils/notifications';
 
 import { NotificationProvider } from '../components/NotificationProvider';
 
@@ -81,6 +82,19 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [fontError, fontLoaded]);
+
+  // Initialize notification channel for Android
+  useEffect(() => {
+    if (Platform.OS !== 'web') {
+      (async () => {
+        try {
+          await setupNotificationChannel();
+        } catch (error) {
+          console.error('Failed to set up notification channel:', error);
+        }
+      })();
+    }
+  }, []);
 
   if (!fontLoaded && !fontError) {
     return null;
