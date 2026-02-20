@@ -105,9 +105,8 @@ export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
                 tafseerJSON = await import('@/assets/tafaseer/tabary.json');
                 break;
               case 'wahidy':
-                tafseerJSON = await import(
-                  '@/assets/tafaseer/nozool-wahidy.json'
-                );
+                tafseerJSON =
+                  await import('@/assets/tafaseer/nozool-wahidy.json');
                 break;
               case 'tanweer':
                 tafseerJSON = await import('@/assets/tafaseer/tanweer.json');
