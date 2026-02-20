@@ -30,6 +30,10 @@ export const tafseerTab = createAtomWithStorage<TafseerTabs>(
   'katheer',
 );
 export const flipSound = createAtomWithStorage<boolean>('FlipSound', false);
+export const hapticFeedback = createAtomWithStorage<boolean>(
+  'HapticFeedback',
+  false,
+);
 export const currentAppVersion = createAtomWithStorage<string | undefined>(
   'CurrentAppVersion',
   undefined,

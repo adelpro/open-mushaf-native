@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { useAudioPlayer } from 'expo-audio';
+import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import {
   activateKeepAwakeAsync,
@@ -30,6 +31,7 @@ import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
   flipSound,
+  hapticFeedback,
   hizbNotification,
   mushafContrast,
   showTrackerNotification,
@@ -49,6 +51,7 @@ const audioSource = require('@/assets/sounds/page-flip-sound.mp3');
 export default function MushafPage() {
   const player = useAudioPlayer(audioSource);
   const isFlipSoundEnabled = useAtomValue(flipSound);
+  const isHapticEnabled = useAtomValue(hapticFeedback);
   const mushafContrastValue = useAtomValue(mushafContrast);
 
   const hizbNotificationValue = useAtomValue(hizbNotification);
@@ -173,6 +176,9 @@ export default function MushafPage() {
 
     if (isFlipSoundEnabled) {
       player.play();
+    }
+    if (isHapticEnabled && Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
   };
 

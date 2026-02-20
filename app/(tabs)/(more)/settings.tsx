@@ -17,6 +17,7 @@ import { riwayaOptions } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import {
   flipSound,
+  hapticFeedback,
   hizbNotification,
   mushafContrast,
   mushafRiwaya,
@@ -27,6 +28,7 @@ import { clearStorageAndReload } from '@/utils/storage/clearStorage';
 
 export default function SettingsScreen() {
   const [isFlipSoundEnabled, setIsFlipSoundEnabled] = useAtom(flipSound);
+  const [isHapticEnabled, setIsHapticEnabled] = useAtom(hapticFeedback);
   const [showTrackerNotificationValue, setShowTrackerNotificationValue] =
     useAtom(showTrackerNotification);
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
@@ -39,6 +41,10 @@ export default function SettingsScreen() {
 
   const toggleFlipSoundSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
+  };
+
+  const toggleHapticSwitch = () => {
+    setIsHapticEnabled((previousState) => !previousState);
   };
 
   const toggleTrackerSwitch = () => {
@@ -95,6 +101,44 @@ export default function SettingsScreen() {
           aria-label="صوت قلب الصفحة"
           accessibilityLabel="تبديل صوت قلب الصفحة"
           accessibilityState={{ checked: isFlipSoundEnabled }}
+        />
+      </Pressable>
+
+      <Pressable
+        style={[
+          styles.settingsSection,
+          { borderColor: textColor, backgroundColor: cardColor },
+        ]}
+        onPress={toggleHapticSwitch}
+        accessibilityRole="button"
+        accessibilityLabel="تفعيل الاهتزاز عند قلب الصفحة"
+        accessibilityHint="اضغط لتفعيل أو تعطيل الاهتزاز عند قلب الصفحة"
+        accessibilityState={{ selected: isHapticEnabled }}
+      >
+        <ThemedView style={styles.iconTextContainer}>
+          <Feather
+            name="smartphone"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, { backgroundColor: cardColor }]}
+          >
+            اهتزاز عند قلب الصفحة:
+          </ThemedText>
+        </ThemedView>
+        <Toggle
+          color={primaryColor}
+          size={40}
+          circleColor={primaryColor}
+          toggle={isHapticEnabled}
+          setToggle={toggleHapticSwitch}
+          aria-checked={isHapticEnabled}
+          aria-label="اهتزاز عند قلب الصفحة"
+          accessibilityLabel="تبديل الاهتزاز عند قلب الصفحة"
+          accessibilityState={{ checked: isHapticEnabled }}
         />
       </Pressable>
 
