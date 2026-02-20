@@ -92,7 +92,17 @@ observe((get, set) => {
         const entry = { date: stored.date, hizbsCompleted: stored.value };
         const updated =
           existingIndex >= 0
-            ? history.map((r, i) => (i === existingIndex ? entry : r))
+            ? history.map((r, i) =>
+                i === existingIndex
+                  ? {
+                      ...r,
+                      hizbsCompleted: Math.max(
+                        r.hizbsCompleted,
+                        entry.hizbsCompleted,
+                      ),
+                    }
+                  : r,
+              )
             : [...history, entry].slice(-MAX_HISTORY_DAYS);
         set(readingHistory, updated);
       }

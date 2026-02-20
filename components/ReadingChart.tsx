@@ -78,14 +78,11 @@ export default function ReadingChart() {
   const drawableWidth = chartWidth - CHART_PADDING_LEFT - CHART_PADDING_RIGHT;
   const drawableHeight = chartHeight - CHART_PADDING_TOP - CHART_PADDING_BOTTOM;
   const baseGap = period <= 7 ? 6 : period <= 30 ? 2 : 1;
-  const minBarWidth = 1;
-  // Shrink gap to 0 if bars won't fit at minimum width
+  // Shrink gap to 0 if bars won't fit, then compute bar width to fill exactly
   const barGap =
-    data.length * minBarWidth + (data.length - 1) * baseGap > drawableWidth
-      ? 0
-      : baseGap;
+    data.length + (data.length - 1) * baseGap > drawableWidth ? 0 : baseGap;
   const barWidth = Math.max(
-    minBarWidth,
+    0.5,
     (drawableWidth - barGap * (data.length - 1)) / data.length,
   );
 
