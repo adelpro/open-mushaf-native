@@ -19,6 +19,7 @@ import MailSVG from '@/assets/svgs/mail.svg';
 import PageSVG from '@/assets/svgs/page.svg';
 import SettingsSVG from '@/assets/svgs/settings.svg';
 import ShareSVG from '@/assets/svgs/share.svg';
+import StarSVG from '@/assets/svgs/star.svg';
 import WelcomeSVG from '@/assets/svgs/welcome.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
@@ -131,6 +132,25 @@ export default function MoreScreen() {
         <View style={styles.buttonContent}>
           <ShareSVG width={24} height={24} style={styles.svg} />
           <Text style={styles.buttonText}>شارك التطبيق</Text>
+        </View>
+      </ThemedButton>
+      <ThemedButton
+        onPress={async () => {
+          const url =
+            Platform.OS === 'android'
+              ? 'https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative'
+              : 'https://www.quran.us.kg';
+          const supported = await Linking.canOpenURL(url);
+          if (supported) {
+            await Linking.openURL(url);
+          }
+        }}
+        variant="primary"
+        style={styles.button}
+      >
+        <View style={styles.buttonContent}>
+          <StarSVG width={24} height={24} style={styles.svg} />
+          <Text style={styles.buttonText}>قيّم التطبيق</Text>
         </View>
       </ThemedButton>
 
