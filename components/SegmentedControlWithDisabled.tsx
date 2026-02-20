@@ -15,7 +15,7 @@ interface BaseProps {
   activeDisabledColor?: string;
 }
 
-export default function SegmentedControlWithDisabled({
+export function SegmentedControlWithDisabled({
   options,
   onSelectionChange,
   initialSelectedIndex = 0,

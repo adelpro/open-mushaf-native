@@ -9,7 +9,7 @@ type Props = {
   primaryColor: string;
 };
 
-export default function AwesomeSlider({
+export function AwesomeSlider({
   value,
   onValueChange,
   primaryColor,

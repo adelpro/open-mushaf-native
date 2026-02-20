@@ -12,12 +12,12 @@ import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useAtom } from 'jotai/react';
 
-import SEO from '@/components/seo';
+import { SEO } from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
+import { useCurrentPage } from '@/hooks/useCurrentPage';
 import { useUpdateAndroidWidget } from '@/hooks/useUpdateAndroidWidget';
 import {
   dailyTrackerCompleted,

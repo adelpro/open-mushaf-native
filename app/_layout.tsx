@@ -30,8 +30,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import ErrorBoundary from '@/components/ErrorBoundary';
-import Notification from '@/components/Notification';
-import SEO from '@/components/seo';
+import { Notification } from '@/components/Notification';
+import { SEO } from '@/components/seo';
 import { isRTL } from '@/utils';
 import { setupNotificationChannel } from '@/utils/notifications';
 

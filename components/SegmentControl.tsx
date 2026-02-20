@@ -13,7 +13,7 @@ interface BaseProps {
   activeTextColor?: string;
 }
 
-export default function SegmentedControl({
+export function SegmentedControl({
   options,
   onSelectionChange,
   initialSelectedIndex = undefined,

@@ -3,14 +3,14 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import { useAtomValue, useSetAtom } from 'jotai/react';
 
-import ChangeLogs from '@/components/ChangeLogs';
-import MushafPage from '@/components/MushafPage';
-import ReadingPositionBanner from '@/components/ReadingPositionBanner';
-import SelectRiwaya from '@/components/SelectRiwaya';
-import SEO from '@/components/seo';
+import { ChangeLogs } from '@/components/ChangeLogs';
+import { MushafPage } from '@/components/MushafPage';
+import { ReadingPositionBanner } from '@/components/ReadingPositionBanner';
+import { SelectRiwaya } from '@/components/SelectRiwaya';
+import { SEO } from '@/components/seo';
 import { ThemedView } from '@/components/ThemedView';
-import TopMenu from '@/components/TopMenu';
-import TutorialGuide from '@/components/TutorialGuide';
+import { TopMenu } from '@/components/TopMenu';
+import { TutorialGuide } from '@/components/TutorialGuide';
 import {
   currentAppVersion,
   finishedTutorial,

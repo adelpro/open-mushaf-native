@@ -1,9 +1,9 @@
 import { Aya } from '@/types';
 import { getDimensionCoeff } from '@/utils';
 
-import useQuranMetadata from './useQuranMetadata';
+import { useQuranMetadata } from './useQuranMetadata';
 
-const usePageOverlay = ({
+export const usePageOverlay = ({
   index,
   dimensions,
 }: {
@@ -131,4 +131,3 @@ const usePageOverlay = ({
   return { overlay: generateOverlay(), lineHeight };
 };
 
-export default usePageOverlay;

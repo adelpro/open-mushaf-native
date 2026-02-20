@@ -6,10 +6,10 @@ import { useAtom } from 'jotai/react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
 
-import AwesomeSlider from '@/components/awesomeSlider';
-import SegmentedControl from '@/components/SegmentControl';
-import SegmentedControlWithDisabled from '@/components/SegmentedControlWithDisabled';
-import SEO from '@/components/seo';
+import { AwesomeSlider } from '@/components/awesomeSlider';
+import { SegmentedControl } from '@/components/SegmentControl';
+import { SegmentedControlWithDisabled } from '@/components/SegmentedControlWithDisabled';
+import { SEO } from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';

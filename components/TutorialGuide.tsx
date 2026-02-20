@@ -26,11 +26,11 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { SLIDES } from '@/constants';
 import { useColors } from '@/hooks/useColors';
-import useOrientation from '@/hooks/useOrientation';
+import { useOrientation } from '@/hooks/useOrientation';
 import { finishedTutorial } from '@/jotai/atoms';
 import { isRTL } from '@/utils';
 
-export default function TutorialGuide() {
+export function TutorialGuide() {
   const router = useRouter();
   const pathname = usePathname();
   const { primaryColor, primaryLightColor } = useColors();

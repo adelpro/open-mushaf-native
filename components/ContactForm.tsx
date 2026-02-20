@@ -13,7 +13,7 @@ import { ThemedTextInput } from './ThemedInput';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-export default function ContactForm() {
+export function ContactForm() {
   const { textColor, secondaryColor } = useColors();
   const { notify } = useNotification();
   const [isLoading, setIsLoading] = useState(false);

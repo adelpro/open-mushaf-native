@@ -1,5 +1,5 @@
-import SEO from '@/components/seo';
-import TutorialGuide from '@/components/TutorialGuide';
+import { SEO } from '@/components/seo';
+import { TutorialGuide } from '@/components/TutorialGuide';
 
 export default function TutorialScreen() {
   return (

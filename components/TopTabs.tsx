@@ -11,7 +11,7 @@ type Props = {
   activeTab: ListTabs;
 };
 
-export default function TopTabs({ activeTab, setActiveTab }: Props) {
+export function TopTabs({ activeTab, setActiveTab }: Props) {
   const { backgroundColor, textColor } = useColors();
 
   const handleTabPress = (tab: ListTabs) => {

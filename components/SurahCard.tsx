@@ -14,7 +14,7 @@ type Props = {
   surah: Surah;
 };
 
-export default function SurahCard({ surah }: Props) {
+export function SurahCard({ surah }: Props) {
   const router = useRouter();
 
   const { backgroundColor, textColor, secondaryColor } = useColors();

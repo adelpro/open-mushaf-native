@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
-import ContactForm from '@/components/ContactForm';
-import SEO from '@/components/seo';
+import { ContactForm } from '@/components/ContactForm';
+import { SEO } from '@/components/seo';
 import { ThemedView } from '@/components/ThemedView';
 
 export default function Contact() {

@@ -4,14 +4,14 @@ import { ActivityIndicator, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
-import PageNavigator from '@/components/PageNavigator';
-import SEO from '@/components/seo';
-import SurahAyaNavigator from '@/components/SurahAyaNavigator';
+import { PageNavigator } from '@/components/PageNavigator';
+import { SEO } from '@/components/seo';
+import { SurahAyaNavigator } from '@/components/SurahAyaNavigator';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import { useCurrentPage } from '@/hooks/useCurrentPage';
+import { useQuranMetadata } from '@/hooks/useQuranMetadata';
 
 export default function Navigation() {
   const router = useRouter();

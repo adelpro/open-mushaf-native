@@ -3,12 +3,12 @@ import { StyleSheet, View } from 'react-native';
 import Animated, { SlideInUp, SlideOutUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import useNotificationStyles from '@/hooks/useNotificationStyles';
+import { useNotificationStyles } from '@/hooks/useNotificationStyles';
 
 import { useNotification } from './NotificationProvider';
 import { ThemedText } from './ThemedText';
 
-export default function Notification() {
+export function Notification() {
   const { notifications } = useNotification();
   const insets = useSafeAreaInsets();
   const notificationStyles = useNotificationStyles();

@@ -6,9 +6,9 @@ import {
   useColorScheme,
 } from 'react-native';
 
-import PrivacyContentArabic from '@/components/PrivacyContentArabic';
-import PrivacyContentEnglish from '@/components/PrivacyContentEnglish';
-import SEO from '@/components/seo';
+import { PrivacyContentArabic } from '@/components/PrivacyContentArabic';
+import { PrivacyContentEnglish } from '@/components/PrivacyContentEnglish';
+import { SEO } from '@/components/seo';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';

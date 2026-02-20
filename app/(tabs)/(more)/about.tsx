@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { ExternalLink } from '@/components/ExternalLink';
-import SEO from '@/components/seo';
+import { SEO } from '@/components/seo';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { ExternalLinkType } from '@/types';
