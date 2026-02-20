@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  Modal,
+  Platform,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 import { Entypo, Feather } from '@expo/vector-icons';
 import { useAtom } from 'jotai/react';
@@ -104,43 +110,45 @@ export default function SettingsScreen() {
         />
       </Pressable>
 
-      <Pressable
-        style={[
-          styles.settingsSection,
-          { borderColor: textColor, backgroundColor: cardColor },
-        ]}
-        onPress={toggleHapticSwitch}
-        accessibilityRole="button"
-        accessibilityLabel="تفعيل الاهتزاز عند قلب الصفحة"
-        accessibilityHint="اضغط لتفعيل أو تعطيل الاهتزاز عند قلب الصفحة"
-        accessibilityState={{ selected: isHapticEnabled }}
-      >
-        <ThemedView style={styles.iconTextContainer}>
-          <Feather
-            name="smartphone"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
+      {Platform.OS !== 'web' && (
+        <Pressable
+          style={[
+            styles.settingsSection,
+            { borderColor: textColor, backgroundColor: cardColor },
+          ]}
+          onPress={toggleHapticSwitch}
+          accessibilityRole="button"
+          accessibilityLabel="تفعيل الاهتزاز عند قلب الصفحة"
+          accessibilityHint="اضغط لتفعيل أو تعطيل الاهتزاز عند قلب الصفحة"
+          accessibilityState={{ selected: isHapticEnabled }}
+        >
+          <ThemedView style={styles.iconTextContainer}>
+            <Feather
+              name="smartphone"
+              size={24}
+              color={iconColor}
+              style={styles.iconStyle}
+            />
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.itemText, { backgroundColor: cardColor }]}
+            >
+              اهتزاز عند قلب الصفحة:
+            </ThemedText>
+          </ThemedView>
+          <Toggle
+            color={primaryColor}
+            size={40}
+            circleColor={primaryColor}
+            toggle={isHapticEnabled}
+            setToggle={toggleHapticSwitch}
+            aria-checked={isHapticEnabled}
+            aria-label="اهتزاز عند قلب الصفحة"
+            accessibilityLabel="تبديل الاهتزاز عند قلب الصفحة"
+            accessibilityState={{ checked: isHapticEnabled }}
           />
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.itemText, { backgroundColor: cardColor }]}
-          >
-            اهتزاز عند قلب الصفحة:
-          </ThemedText>
-        </ThemedView>
-        <Toggle
-          color={primaryColor}
-          size={40}
-          circleColor={primaryColor}
-          toggle={isHapticEnabled}
-          setToggle={toggleHapticSwitch}
-          aria-checked={isHapticEnabled}
-          aria-label="اهتزاز عند قلب الصفحة"
-          accessibilityLabel="تبديل الاهتزاز عند قلب الصفحة"
-          accessibilityState={{ checked: isHapticEnabled }}
-        />
-      </Pressable>
+        </Pressable>
+      )}
 
       {/* New Toggle for showDailyHizbCompletedBorder */}
       <Pressable
