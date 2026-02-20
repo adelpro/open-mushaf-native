@@ -85,6 +85,16 @@ export default function MoreScreen() {
         </View>
       </ThemedButton>
       <ThemedButton
+        onPress={() => router.push('/bookmarks')}
+        variant="primary"
+        style={styles.button}
+      >
+        <View style={styles.buttonContent}>
+          <Feather name="bookmark" size={24} color="white" />
+          <Text style={styles.buttonText}>العلامات المرجعية</Text>
+        </View>
+      </ThemedButton>
+      <ThemedButton
         onPress={() => router.push('/privacy')}
         variant="primary"
         style={styles.button}
