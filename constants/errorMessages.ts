@@ -3,12 +3,6 @@
  * All user-visible error strings should be defined here.
  */
 
-/** Generic unexpected error message. */
-export const ERROR_GENERIC = 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.';
-
-/** Error shown when the app fails to load. */
-export const ERROR_LOADING_APP = 'حدث خطأ أثناء تحميل التطبيق.';
-
 /** Error shown when Quran metadata fails to load. */
 export const ERROR_LOADING_METADATA = 'فشل في تحميل بيانات القرآن الكريم.';
 
