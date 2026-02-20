@@ -11,7 +11,7 @@ export function useDebounce<T extends (...args: any[]) => void>(
       if (timeoutRef.current !== null) {
         clearTimeout(timeoutRef.current);
       }
-      timeoutRef.current = window.setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         fn(...args);
       }, delay);
     },

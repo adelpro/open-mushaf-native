@@ -28,7 +28,7 @@ interface UseQuranSearchProps {
   wordMap: WordMap;
   query: string;
   advancedOptions: AdvancedOptions;
-  fuseInstance: any | null;
+  fuseInstance: unknown;
   page: number;
   limit: number;
 }

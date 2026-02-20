@@ -32,8 +32,6 @@ export function SelectRiwaya() {
             activeColor={primaryColor}
             textColor={primaryColor}
             onSelectionChange={(index: number) => {
-              console.log('Selected Riwaya Index:', index);
-              console.log('Selected Riwaya Value:', RiwayaByValue(index));
               const selectedRiwaya = RiwayaByValue(index);
               setMushafRiwayaValue(selectedRiwaya);
             }}

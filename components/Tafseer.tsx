@@ -38,15 +38,13 @@ type Props = {
 
 export function Tafseer({ aya, surah, opacity = undefined }: Props) {
   const { tintColor, textColor } = useColors();
-  const { surahData } = useQuranMetadata();
+  const { surahData, specsData } = useQuranMetadata();
   const [surahName, setSurahName] = useState<string>('');
   const [selectedTabValue, setSelectedTab] = useAtom(tafseerTab);
   const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
   const [tabsWithContent, setTabsWithContent] = useState<
     Record<TafseerTabs, boolean>
   >({} as Record<TafseerTabs, boolean>);
-
-  const { specsData } = useQuranMetadata();
 
   const { countBesmalAya } = specsData;
 

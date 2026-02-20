@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   arabicText: {
-    flexDirection: 'row',
+    textAlign: 'right',
   },
 
   title: {

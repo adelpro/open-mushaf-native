@@ -19,7 +19,7 @@ export function AwesomeSlider({
   const max = useSharedValue(1);
 
   useEffect(() => {
-    progress.value = value;
+    progress.set(value);
   }, [value, progress]);
 
   return (
