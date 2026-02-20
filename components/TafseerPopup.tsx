@@ -16,13 +16,13 @@ import { Colors } from '@/constants/Colors';
 import Tafseer from './Tafseer';
 import { ThemedView } from './ThemedView';
 type Props = {
-  show: boolean;
+  show?: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  aya: number;
-  surah: number;
+  aya?: number;
+  surah?: number;
 };
 
-export default function TafseerPopup({ show, setShow, aya, surah }: Props) {
+export default function TafseerPopup({ show = false, setShow, aya = 1, surah = 1 }: Props) {
   const colorScheme = useColorScheme();
   const tintColor = Colors[colorScheme ?? 'light'].tint;
   const backgroundColor = Colors[colorScheme ?? 'light'].background;

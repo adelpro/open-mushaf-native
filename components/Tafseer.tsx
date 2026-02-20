@@ -33,10 +33,10 @@ const tabLabels: Partial<Record<TafseerTabs, string>> = {
 type Props = {
   aya: number;
   surah: number;
-  opacity?: number | undefined;
+  opacity?: number;
 };
 
-export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
+export default function Tafseer({ aya, surah, opacity = 1 }: Props) {
   const { tintColor, textColor } = useColors();
   const { surahData } = useQuranMetadata();
   const [surahName, setSurahName] = useState<string>('');
