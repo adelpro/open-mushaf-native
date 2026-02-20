@@ -86,7 +86,13 @@ export default function RootLayout() {
   // Initialize notification channel for Android
   useEffect(() => {
     if (Platform.OS !== 'web') {
-      setupNotificationChannel();
+      (async () => {
+        try {
+          await setupNotificationChannel();
+        } catch (error) {
+          console.error('Failed to set up notification channel:', error);
+        }
+      })();
     }
   }, []);
 

@@ -95,8 +95,16 @@ export const syncReminders = async (
       (!reminder.notificationId || !scheduledIds.has(reminder.notificationId))
     ) {
       // Re-schedule missing notification
-      const newId = await scheduleReminder(reminder);
-      updated.push({ ...reminder, notificationId: newId });
+      try {
+        const newId = await scheduleReminder(reminder);
+        updated.push({ ...reminder, notificationId: newId });
+      } catch (error) {
+        console.error(
+          `Failed to re-schedule reminder "${reminder.id}":`,
+          error,
+        );
+        updated.push(reminder);
+      }
     } else {
       updated.push(reminder);
     }

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import {
   FlatList,
   ListRenderItemInfo,
@@ -39,7 +39,17 @@ const Wheel = ({
   const { primaryColor, textColor, cardColor } = useColors();
   const flatListRef = useRef<FlatList<number>>(null);
   const isMomentumScrolling = useRef(false);
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const initialIndex = data.indexOf(value);
+
+  /** Clear any pending scroll timeout on unmount */
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
 
   /** Selects the item closest to the current scroll offset */
   const selectFromOffset = useCallback(
@@ -56,7 +66,11 @@ const Wheel = ({
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       const offsetY = event.nativeEvent.contentOffset.y;
       isMomentumScrolling.current = false;
-      setTimeout(() => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      scrollTimeoutRef.current = setTimeout(() => {
+        scrollTimeoutRef.current = null;
         if (!isMomentumScrolling.current) {
           selectFromOffset(offsetY);
         }

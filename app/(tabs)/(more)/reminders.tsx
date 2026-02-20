@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import uuid from 'expo-modules-core/src/uuid';
 import { Stack } from 'expo-router';
 import { useAtom } from 'jotai';
 import Toggle from 'react-native-toggle-input';
@@ -104,15 +105,18 @@ export default function RemindersScreen() {
       hasSynced.current
     )
       return;
-    hasSynced.current = true;
-
     const sync = async () => {
-      const synced = await syncReminders(reminders);
-      // Only update if something changed
-      const changed = synced.some(
-        (r, i) => r.notificationId !== reminders[i]?.notificationId,
-      );
-      if (changed) setReminders(synced);
+      try {
+        const synced = await syncReminders(reminders);
+        // Only update if something changed
+        const changed = synced.some(
+          (r, i) => r.notificationId !== reminders[i]?.notificationId,
+        );
+        if (changed) setReminders(synced);
+        hasSynced.current = true;
+      } catch (error) {
+        console.error('Failed to sync reminders:', error);
+      }
     };
     sync();
   }, [permissionGranted, reminders, setReminders]);
@@ -120,36 +124,43 @@ export default function RemindersScreen() {
   /** Toggles a reminder on/off, scheduling or cancelling the notification */
   const handleToggle = useCallback(
     async (id: string) => {
-      const updated = await Promise.all(
-        reminders.map(async (r) => {
-          if (r.id !== id) return r;
+      const prev = reminders;
+      try {
+        const updated = await Promise.all(
+          reminders.map(async (r) => {
+            if (r.id !== id) return r;
 
-          if (r.enabled) {
-            // Turning off
-            if (r.notificationId) await cancelReminder(r.notificationId);
-            return { ...r, enabled: false, notificationId: undefined };
-          }
-
-          // Turning on
-          if (!permissionGranted) {
-            const granted = await requestNotificationPermissions();
-            setPermissionGranted(granted);
-            if (!granted) {
-              Alert.alert(
-                'الإذن مطلوب',
-                'يجب السماح بالإشعارات لتفعيل التذكيرات',
-              );
-              return r;
+            if (r.enabled) {
+              // Turning off
+              if (r.notificationId) await cancelReminder(r.notificationId);
+              return { ...r, enabled: false, notificationId: undefined };
             }
-          }
-          const notificationId = await scheduleReminder({
-            ...r,
-            enabled: true,
-          });
-          return { ...r, enabled: true, notificationId };
-        }),
-      );
-      setReminders(updated);
+
+            // Turning on
+            if (!permissionGranted) {
+              const granted = await requestNotificationPermissions();
+              setPermissionGranted(granted);
+              if (!granted) {
+                Alert.alert(
+                  'الإذن مطلوب',
+                  'يجب السماح بالإشعارات لتفعيل التذكيرات',
+                );
+                return r;
+              }
+            }
+            const notificationId = await scheduleReminder({
+              ...r,
+              enabled: true,
+            });
+            return { ...r, enabled: true, notificationId };
+          }),
+        );
+        setReminders(updated);
+      } catch (error) {
+        console.error('Failed to toggle reminder:', error);
+        setReminders(prev);
+        Alert.alert('خطأ', 'فشل تبديل التذكير. يرجى المحاولة مرة أخرى.');
+      }
     },
     [reminders, permissionGranted, setReminders],
   );
@@ -164,31 +175,38 @@ export default function RemindersScreen() {
   const handleTimeSave = useCallback(async () => {
     if (!editingReminder) return;
 
-    const updated = await Promise.all(
-      reminders.map(async (r) => {
-        if (r.id !== editingReminder.id) return r;
+    const prev = reminders;
+    try {
+      const updated = await Promise.all(
+        reminders.map(async (r) => {
+          if (r.id !== editingReminder.id) return r;
 
-        // Cancel old if active
-        if (r.notificationId) await cancelReminder(r.notificationId);
+          // Cancel old if active
+          if (r.notificationId) await cancelReminder(r.notificationId);
 
-        const updatedReminder = {
-          ...r,
-          hour: editingReminder.hour,
-          minute: editingReminder.minute,
-        };
+          const updatedReminder = {
+            ...r,
+            hour: editingReminder.hour,
+            minute: editingReminder.minute,
+          };
 
-        // Re-schedule if enabled
-        if (updatedReminder.enabled) {
-          const notificationId = await scheduleReminder(updatedReminder);
-          return { ...updatedReminder, notificationId };
-        }
-        return { ...updatedReminder, notificationId: undefined };
-      }),
-    );
+          // Re-schedule if enabled
+          if (updatedReminder.enabled) {
+            const notificationId = await scheduleReminder(updatedReminder);
+            return { ...updatedReminder, notificationId };
+          }
+          return { ...updatedReminder, notificationId: undefined };
+        }),
+      );
 
-    setReminders(updated);
-    setTimePickerVisible(false);
-    setEditingReminder(null);
+      setReminders(updated);
+      setTimePickerVisible(false);
+      setEditingReminder(null);
+    } catch (error) {
+      console.error('Failed to save reminder time:', error);
+      setReminders(prev);
+      Alert.alert('خطأ', 'فشل حفظ وقت التذكير. يرجى المحاولة مرة أخرى.');
+    }
   }, [editingReminder, reminders, setReminders]);
 
   /** Adds a custom reminder */
@@ -196,7 +214,7 @@ export default function RemindersScreen() {
     if (!newTitle.trim()) return;
 
     const newReminder: Reminder = {
-      id: `custom-${Date.now()}`,
+      id: `custom-${uuid.v4()}`,
       title: newTitle.trim(),
       body: newTitle.trim(),
       enabled: false,
@@ -218,7 +236,12 @@ export default function RemindersScreen() {
     async (id: string) => {
       const reminder = reminders.find((r) => r.id === id);
       if (reminder?.notificationId) {
-        await cancelReminder(reminder.notificationId);
+        try {
+          await cancelReminder(reminder.notificationId);
+        } catch (error) {
+          console.error('Failed to cancel notification during delete:', error);
+          Alert.alert('تنبيه', 'تم حذف التذكير لكن فشل إلغاء الإشعار.');
+        }
       }
       setReminders(reminders.filter((r) => r.id !== id));
       setDeleteConfirmId(null);
