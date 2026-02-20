@@ -106,6 +106,8 @@ export default function PageNavigator({
             <TouchableOpacity
               style={styles.submitButton}
               onPress={handleInputSubmit}
+              accessibilityRole="button"
+              accessibilityLabel="تأكيد رقم الصفحة"
             >
               <Feather name="check" size={18} color={primaryColor} />
             </TouchableOpacity>

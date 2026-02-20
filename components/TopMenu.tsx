@@ -128,6 +128,8 @@ export default function TopMenu() {
                 setShowTopMenuState(false);
                 router.push('/tracker');
               }}
+              accessibilityRole="button"
+              accessibilityLabel="الورد اليومي"
             >
               <View style={styles.progressContainer}>
                 <Progress.Circle
@@ -154,6 +156,8 @@ export default function TopMenu() {
               setShowTopMenuState(false);
               router.push('/navigation');
             }}
+            accessibilityRole="button"
+            accessibilityLabel="الانتقال إلى صفحة أو سورة"
           >
             <Ionicons
               name="navigate-circle-outline"
@@ -168,6 +172,8 @@ export default function TopMenu() {
               setShowTopMenuState(false);
               router.push('/search');
             }}
+            accessibilityRole="button"
+            accessibilityLabel="البحث في القرآن"
           >
             <Ionicons name="search" size={ICON_SIZE} color={tintColor} />
           </TouchableOpacity>
@@ -177,6 +183,10 @@ export default function TopMenu() {
               setShowTopMenuState(false);
               toggleMenu();
             }}
+            accessibilityRole="button"
+            accessibilityLabel={
+              showBottomMenuState ? 'وضع ملء الشاشة' : 'إظهار القائمة'
+            }
           >
             {showBottomMenuState ? (
               <MaterialCommunityIcons

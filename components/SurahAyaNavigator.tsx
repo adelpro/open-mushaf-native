@@ -178,6 +178,8 @@ export default function SurahAyaNavigator({
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setSurahModalVisible(false)}
+                accessibilityRole="button"
+                accessibilityLabel="إغلاق قائمة السور"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
@@ -220,6 +222,8 @@ export default function SurahAyaNavigator({
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setAyaModalVisible(false)}
+                accessibilityRole="button"
+                accessibilityLabel="إغلاق قائمة الآيات"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
