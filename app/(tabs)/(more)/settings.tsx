@@ -47,7 +47,8 @@ export default function SettingsScreen() {
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const [HizbNotificationValue, setHizbNotificationValue] =
     useAtom(hizbNotification);
-  const { textColor, primaryColor, cardColor, iconColor } = useColors();
+  const { textColor, primaryColor, cardColor, iconColor, overlayColor, borderLightColor } = useColors();
+  const styles = createStyles({ overlayColor, borderLightColor });
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
   const [panGestureSensitivityValue, setPanGestureSensitivityValue] = useAtom(
     panGestureSensitivity,
@@ -452,7 +453,11 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: {
+  overlayColor: string;
+  borderLightColor: string;
+}) =>
+  StyleSheet.create({
   container: {
     padding: 15,
     margin: 2,
@@ -502,7 +507,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: colors.overlayColor,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 5,
@@ -523,7 +528,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: colors.borderLightColor,
     minHeight: 40,
   },
   modalTitle: {
@@ -562,4 +567,4 @@ const styles = StyleSheet.create({
   iconStyle: {
     paddingVertical: 8,
   },
-});
+  });

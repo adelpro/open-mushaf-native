@@ -32,7 +32,24 @@ const WORD_MAP = wordMapJSON;
 
 export default function Search() {
   const { quranData, isLoading, error } = useQuranMetadata();
-  const { tintColor, primaryColor } = useColors();
+  const {
+    tintColor,
+    primaryColor,
+    inactiveIconColor,
+    borderColor,
+    subtleBgColor,
+    activeOptionBgColor,
+    activeOptionBorderColor,
+    activeOptionTextColor,
+  } = useColors();
+
+  const styles = createStyles({
+    borderColor,
+    subtleBgColor,
+    activeOptionBgColor,
+    activeOptionBorderColor,
+    activeOptionTextColor,
+  });
 
   const PAGE_SIZE = 50;
 
@@ -151,7 +168,7 @@ export default function Search() {
           <Ionicons
             name="options"
             size={20}
-            color={showOptions ? primaryColor : '#777'}
+            color={showOptions ? primaryColor : inactiveIconColor}
             style={styles.icon}
           />
         </Pressable>
@@ -286,66 +303,76 @@ export default function Search() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    paddingHorizontal: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    textAlign: 'right',
-    paddingVertical: 10,
-  },
-  icon: { marginHorizontal: 6 },
-  advancedOptions: {
-    padding: 10,
-    marginBottom: 12,
-    borderRadius: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.03)',
-  },
-  optionRow: { flexDirection: 'row', justifyContent: 'center', gap: 10 },
-  optionButton: {
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
-  optionActive: { backgroundColor: '#e3f2fd', borderColor: '#1976d2' },
-  optionActiveText: { color: '#1976d2', fontWeight: '600' },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 32,
-  },
-  emptyIconWrapper: {
-    width: 84,
-    height: 84,
-    borderRadius: 42,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 12,
-    backgroundColor: 'rgba(25, 118, 210, 0.12)',
-  },
-  emptyTitle: {
-    fontSize: 18,
-    marginBottom: 6,
-    textAlign: 'center',
-  },
-  emptySubtitle: {
-    textAlign: 'center',
-    fontSize: 14,
-    lineHeight: 22,
-    opacity: 0.8,
-  },
-  resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14 },
-});
+const createStyles = (colors: {
+  borderColor: string;
+  subtleBgColor: string;
+  activeOptionBgColor: string;
+  activeOptionBorderColor: string;
+  activeOptionTextColor: string;
+}) =>
+  StyleSheet.create({
+    container: { flex: 1, padding: 20 },
+    searchContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderColor: colors.borderColor,
+      borderWidth: 1,
+      borderRadius: 8,
+      marginBottom: 10,
+      paddingHorizontal: 8,
+    },
+    searchInput: {
+      flex: 1,
+      fontSize: 16,
+      textAlign: 'right',
+      paddingVertical: 10,
+    },
+    icon: { marginHorizontal: 6 },
+    advancedOptions: {
+      padding: 10,
+      marginBottom: 12,
+      borderRadius: 8,
+      backgroundColor: colors.subtleBgColor,
+    },
+    optionRow: { flexDirection: 'row', justifyContent: 'center', gap: 10 },
+    optionButton: {
+      paddingHorizontal: 14,
+      paddingVertical: 6,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: colors.borderColor,
+    },
+    optionActive: {
+      backgroundColor: colors.activeOptionBgColor,
+      borderColor: colors.activeOptionBorderColor,
+    },
+    optionActiveText: { color: colors.activeOptionTextColor, fontWeight: '600' },
+    emptyContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 24,
+      paddingTop: 32,
+    },
+    emptyIconWrapper: {
+      width: 84,
+      height: 84,
+      borderRadius: 42,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 12,
+      backgroundColor: 'rgba(25, 118, 210, 0.12)',
+    },
+    emptyTitle: {
+      fontSize: 18,
+      marginBottom: 6,
+      textAlign: 'center',
+    },
+    emptySubtitle: {
+      textAlign: 'center',
+      fontSize: 14,
+      lineHeight: 22,
+      opacity: 0.8,
+    },
+    resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14 },
+  });

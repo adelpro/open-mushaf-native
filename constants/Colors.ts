@@ -19,6 +19,16 @@ export const Colors = {
     ivory: '#F9F6EF',
     card: '#FFFFFF',
 
+    // UI chrome colors
+    border: '#ddd',
+    borderLight: '#E5E7EB',
+    inactiveIcon: '#777',
+    subtleBg: 'rgba(0, 0, 0, 0.03)',
+    overlay: 'rgba(0, 0, 0, 0.5)',
+    activeOptionBg: '#e3f2fd',
+    activeOptionBorder: '#1976d2',
+    activeOptionText: '#1976d2',
+
     // Text Highlight colors
     directColor: '#FFD700',
     relatedColor: '#4FC3F7',
@@ -38,6 +48,16 @@ export const Colors = {
     dangerLight: '#E57373',
     ivory: '#2E2E2E',
     card: '#1E1E1E',
+
+    // UI chrome colors
+    border: '#444',
+    borderLight: '#333',
+    inactiveIcon: '#888',
+    subtleBg: 'rgba(255, 255, 255, 0.05)',
+    overlay: 'rgba(0, 0, 0, 0.7)',
+    activeOptionBg: '#1a3a5c',
+    activeOptionBorder: '#42a5f5',
+    activeOptionText: '#42a5f5',
 
     // Text Highlight colors
     directColor: '#FFA000',

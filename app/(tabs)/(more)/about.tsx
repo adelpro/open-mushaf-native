@@ -3,10 +3,13 @@ import { StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { ExternalLink, Seo, ThemedText, ThemedView } from '@/components';
+import { useColors } from '@/hooks/useColors';
 import { ExternalLinkType } from '@/types';
 import { getAppVersion, getBuildVersion } from '@/utils';
 
 export default function AboutScreen() {
+  const { inactiveIconColor, primaryLightColor } = useColors();
+  const styles = createStyles({ inactiveIconColor, primaryLightColor });
   const appVersion = getAppVersion();
   const buildVersion = getBuildVersion();
 
@@ -141,7 +144,11 @@ export default function AboutScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: {
+  inactiveIconColor: string;
+  primaryLightColor: string;
+}) =>
+  StyleSheet.create({
   scrollContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -180,19 +187,19 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   link: {
-    color: '#1E90FF',
+    color: colors.primaryLightColor,
     textDecorationLine: 'underline',
   },
   versionText: {
     fontSize: 12,
-    color: '#888',
+    color: colors.inactiveIconColor,
     textAlign: 'center',
     marginTop: 5,
   },
   copyright: {
     fontSize: 12,
-    color: '#888',
+    color: colors.inactiveIconColor,
     textAlign: 'center',
     marginTop: 10,
   },
-});
+  });

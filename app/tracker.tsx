@@ -27,7 +27,7 @@ import {
 } from '@/jotai/atoms';
 
 export default function TrackerScreen() {
-  const { iconColor, cardColor, primaryColor } = useColors();
+  const { iconColor, cardColor, primaryColor, borderLightColor, overlayColor, textColor } = useColors();
   const { currentSavedPage: savedPage } = useCurrentPage();
 
   const { updateAndroidWidget } = useUpdateAndroidWidget();
@@ -84,6 +84,8 @@ export default function TrackerScreen() {
     if (hizbCount >= 3 && hizbCount <= 10) return `${hizbCount} أحزاب`;
     return `${hizbCount} حزباً`;
   };
+
+  const styles = createStyles({ borderLightColor, overlayColor });
 
   return (
     <>
@@ -289,7 +291,11 @@ export default function TrackerScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: {
+  borderLightColor: string;
+  overlayColor: string;
+}) =>
+  StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -318,7 +324,7 @@ const styles = StyleSheet.create({
     height: 24,
     width: '100%',
     borderRadius: 12,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: colors.borderLightColor,
     overflow: 'hidden',
     justifyContent: 'center',
     marginBottom: 8,
@@ -353,7 +359,7 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.borderLightColor,
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 10,
@@ -374,7 +380,7 @@ const styles = StyleSheet.create({
   // Add Modal Styles (copied from settings.tsx and adjusted slightly)
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: colors.overlayColor,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 5,
@@ -395,7 +401,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee', // Consider using a theme color here
+    borderBottomColor: colors.borderLightColor,
     minHeight: 40,
     backgroundColor: 'transparent', // Ensure header background is transparent if content has color
   },
@@ -425,4 +431,4 @@ const styles = StyleSheet.create({
     width: '40%', // Use percentage for better responsiveness
     maxWidth: 120, // Add maxWidth to prevent buttons getting too large
   },
-});
+  });

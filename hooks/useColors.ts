@@ -20,6 +20,16 @@ export const useColors = () => {
     ivoryColor: theme.ivory,
     tabIconDefaultColor: theme.tabIconDefault,
 
+    // UI chrome colors
+    borderColor: theme.border,
+    borderLightColor: theme.borderLight,
+    inactiveIconColor: theme.inactiveIcon,
+    subtleBgColor: theme.subtleBg,
+    overlayColor: theme.overlay,
+    activeOptionBgColor: theme.activeOptionBg,
+    activeOptionBorderColor: theme.activeOptionBorder,
+    activeOptionTextColor: theme.activeOptionText,
+
     // Text Highlight colors
     directColor: theme.directColor,
     relatedColor: theme.relatedColor,
