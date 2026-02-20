@@ -1,6 +1,25 @@
 import { Hizb, Thumn } from '@/types';
 
 /**
+ * Formats a Date to a stable string key for history lookups.
+ * Used by both the readingHistory atom and the ReadingChart component.
+ */
+export function formatDateKey(date: Date): string {
+  return date.toDateString();
+}
+
+/**
+ * Returns the Arabic plural form for a hizb count.
+ */
+export function getHizbText(count: number): string {
+  if (count === 0) return '0 أحزاب';
+  if (count === 1) return 'حزب واحد';
+  if (count === 2) return 'حزبين';
+  if (count >= 3 && count <= 10) return `${count} أحزاب`;
+  return `${count} حزباً`;
+}
+
+/**
  *
  * @param previousPage the page number of the previous page
  * @param currentPage the page number of the current page

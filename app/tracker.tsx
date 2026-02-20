@@ -27,6 +27,7 @@ import {
   readingHistory,
   yesterdayPage,
 } from '@/jotai/atoms';
+import { formatDateKey, getHizbText } from '@/utils/hizbProgress';
 
 export default function TrackerScreen() {
   const { iconColor, cardColor, primaryColor } = useColors();
@@ -60,16 +61,17 @@ export default function TrackerScreen() {
 
   // Consolidated reset logic into one function
   const performReset = async () => {
+    const today = formatDateKey(new Date());
+
     if (typeof savedPage === 'number' && savedPage > 0) {
       setYesterdayPageValue({
         value: savedPage,
-        date: new Date().toDateString(),
+        date: today,
       });
     }
 
     // Archive today's progress before clearing so it appears in history
     if (dailyTrackerCompletedValue.value > 0) {
-      const today = new Date().toDateString();
       setReadingHistoryValue((prev) => {
         const alreadyArchived = prev.some((r) => r.date === today);
         if (alreadyArchived) return prev;
@@ -82,23 +84,11 @@ export default function TrackerScreen() {
 
     setdailyTrackerCompletedValue({
       value: 0,
-      date: new Date().toDateString(),
+      date: today,
     });
     // Update Android widget
     await updateAndroidWidget();
     setConfirmModalVisible(false); // Close modal after reset
-  };
-
-  // Removed the old resetAllProgress function that used Alert/confirm
-
-  const getHizbText = (count: number) => {
-    const hizbCount = count;
-
-    if (hizbCount === 0) return '0 أحزاب';
-    if (hizbCount === 1) return 'حزب واحد';
-    if (hizbCount === 2) return 'حزبين';
-    if (hizbCount >= 3 && hizbCount <= 10) return `${hizbCount} أحزاب`;
-    return `${hizbCount} حزباً`;
   };
 
   return (

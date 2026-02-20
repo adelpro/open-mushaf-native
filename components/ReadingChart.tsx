@@ -6,10 +6,11 @@ import Svg, { Line, Rect, Text as SvgText } from 'react-native-svg';
 
 import { useColors } from '@/hooks/useColors';
 import {
-  dailyTrackerCompleted,
   DailyReadingRecord,
+  dailyTrackerCompleted,
   readingHistory,
 } from '@/jotai/atoms';
+import { formatDateKey, getHizbText } from '@/utils/hizbProgress';
 
 import SegmentedControl from './SegmentControl';
 import { ThemedText } from './ThemedText';
@@ -23,17 +24,17 @@ const CHART_PADDING_RIGHT = 8;
 const CHART_PADDING_TOP = 12;
 const CHART_PADDING_BOTTOM = 28;
 
-/** Generate a date string N days ago. */
+/** Generate a date key N days ago using the shared format. */
 function daysAgo(n: number): string {
   const d = new Date();
   d.setDate(d.getDate() - n);
-  return d.toDateString();
+  return formatDateKey(d);
 }
 
-/** Format a Date-string to a short Arabic-friendly label (day number). */
+/** Format a Date-string to a short label with day/month for disambiguation. */
 function shortLabel(dateStr: string): string {
   const d = new Date(dateStr);
-  return d.getDate().toString();
+  return `${d.getDate()}/${d.getMonth() + 1}`;
 }
 
 export default function ReadingChart() {
@@ -98,13 +99,13 @@ export default function ReadingChart() {
 
   return (
     <ThemedView style={[styles.container, { backgroundColor: cardColor }]}>
-      <ThemedView
-        style={[styles.headerRow, { backgroundColor: cardColor }]}
-      >
+      <ThemedView style={[styles.headerRow, { backgroundColor: cardColor }]}>
         <ThemedText style={styles.title}>إحصائيات القراءة</ThemedText>
       </ThemedView>
 
-      <ThemedView style={[styles.segmentContainer, { backgroundColor: cardColor }]}>
+      <ThemedView
+        style={[styles.segmentContainer, { backgroundColor: cardColor }]}
+      >
         <SegmentedControl
           options={PERIOD_LABELS}
           initialSelectedIndex={periodIndex}
@@ -114,7 +115,11 @@ export default function ReadingChart() {
         />
       </ThemedView>
 
-      <Svg width={chartWidth} height={chartHeight} style={{ overflow: 'hidden' }}>
+      <Svg
+        width={chartWidth}
+        height={chartHeight}
+        style={{ overflow: 'hidden' }}
+      >
         {/* Y-axis gridlines (deduplicated for small maxValue) */}
         {[...new Set([0.25, 0.5, 0.75, 1].map((r) => Math.round(maxValue * r)))]
           .map((label) => ({
@@ -194,7 +199,7 @@ export default function ReadingChart() {
 
       <ThemedText style={[styles.summaryText, { color: primaryColor }]}>
         {totalHizbs > 0
-          ? `المجموع: ${Number.isInteger(totalHizbs) ? totalHizbs : totalHizbs.toFixed(1)} حزب في ${PERIOD_LABELS[periodIndex]}`
+          ? `المجموع: ${Number.isInteger(totalHizbs) ? getHizbText(totalHizbs) : `${totalHizbs.toFixed(1)} حزباً`} في ${PERIOD_LABELS[periodIndex]}`
           : 'لا توجد بيانات قراءة بعد'}
       </ThemedText>
     </ThemedView>

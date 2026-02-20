@@ -2,6 +2,7 @@ import { observe } from 'jotai-effect';
 
 import { Reminder, TafseerTabs } from '@/types';
 import { Riwaya } from '@/types/riwaya';
+import { formatDateKey } from '@/utils/hizbProgress';
 
 import { createAtomWithStorage } from './createAtomWithStorage';
 
@@ -74,14 +75,14 @@ export const readingHistory = createAtomWithStorage<DailyReadingRecord[]>(
 export const dailyTrackerCompleted =
   createAtomWithStorage<DailyTrackerProgress>('DailyTrackerCompleted', {
     value: 0,
-    date: new Date().toDateString(),
+    date: formatDateKey(new Date()),
   });
 
 // Archive yesterday's reading before resetting the daily counter
 observe((get, set) => {
   (async () => {
     const stored = await get(dailyTrackerCompleted);
-    const today = new Date().toDateString();
+    const today = formatDateKey(new Date());
 
     if (stored.date !== today) {
       // Archive the previous day's data if there was any reading
@@ -112,14 +113,14 @@ export const yesterdayPage = createAtomWithStorage<PageWithDate>(
   'YesterdayPage',
   {
     value: 1,
-    date: new Date().toDateString(),
+    date: formatDateKey(new Date()),
   },
 );
 
 // Yesterday page reset logic
 observe((get, set) => {
   (async () => {
-    const today = new Date().toDateString();
+    const today = formatDateKey(new Date());
     const saved = await get(yesterdayPage);
     const lastPage = await get(currentSavedPage);
 
