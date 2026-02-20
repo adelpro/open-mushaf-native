@@ -238,7 +238,18 @@ export default function Search() {
         ListEmptyComponent={
           query && !isLoading ? (
             <ThemedView style={styles.emptyContainer}>
-              <ThemedText type="default">لا توجد نتائج</ThemedText>
+              <Feather
+                name="search"
+                size={64}
+                color="#ccc"
+                style={styles.emptyIcon}
+              />
+              <ThemedText style={styles.emptyTitle}>
+                لا توجد نتائج
+              </ThemedText>
+              <ThemedText style={styles.emptyHint}>
+                جرّب البحث باسم السورة أو بنص الآية
+              </ThemedText>
             </ThemedView>
           ) : null
         }
@@ -293,6 +304,23 @@ const styles = StyleSheet.create({
   },
   optionActive: { backgroundColor: '#e3f2fd', borderColor: '#1976d2' },
   optionActiveText: { color: '#1976d2', fontWeight: '600' },
-  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 60,
+  },
+  emptyIcon: { marginBottom: 16 },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  emptyHint: {
+    fontSize: 14,
+    color: '#999',
+    textAlign: 'center',
+    fontFamily: 'Tajawal_400Regular',
+  },
   resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14 },
 });
