@@ -178,7 +178,7 @@ export default function MushafPage() {
       player.play();
     }
     if (isHapticEnabled && Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
     }
   };
 
