@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import {
   Modal,
+  Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,6 +13,7 @@ import {
 import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useAtom } from 'jotai/react';
+import Toggle from 'react-native-toggle-input';
 
 import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
@@ -19,6 +22,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import { useUpdateAndroidWidget } from '@/hooks/useUpdateAndroidWidget';
+import useWirdNotification from '@/hooks/useWirdNotification';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
@@ -37,6 +41,7 @@ export default function TrackerScreen() {
     dailyTrackerCompleted,
   );
   const [yesterdayPageValue, setYesterdayPageValue] = useAtom(yesterdayPage);
+  const { enabled: reminderEnabled, setEnabled: setReminderEnabled, time: reminderTime, setTime: setReminderTime } = useWirdNotification();
   // Add state for modal visibility
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
@@ -164,6 +169,110 @@ export default function TrackerScreen() {
               </ThemedView>
             </ThemedView>
           </ThemedView>
+
+          {Platform.OS !== 'web' && (
+            <ThemedView
+              style={[styles.navigationSection, { backgroundColor: cardColor }]}
+            >
+              <ThemedView
+                style={[styles.labelContainer, { backgroundColor: cardColor }]}
+              >
+                <Feather
+                  name="clock"
+                  size={24}
+                  color={iconColor}
+                  style={[styles.icon, { color: primaryColor }]}
+                />
+                <ThemedText style={styles.label}>تذكير الورد اليومي:</ThemedText>
+              </ThemedView>
+
+              <Pressable
+                style={styles.reminderToggleRow}
+                onPress={() => setReminderEnabled(!reminderEnabled)}
+                accessibilityRole="button"
+                accessibilityLabel="تفعيل تذكير الورد اليومي"
+                accessibilityState={{ selected: reminderEnabled }}
+              >
+                <ThemedText style={styles.infoText}>تفعيل التذكير:</ThemedText>
+                <Toggle
+                  color={primaryColor}
+                  size={40}
+                  circleColor={primaryColor}
+                  toggle={reminderEnabled}
+                  setToggle={() => setReminderEnabled(!reminderEnabled)}
+                />
+              </Pressable>
+
+              {reminderEnabled && (
+                <ThemedView style={styles.timePickerContainer}>
+                  <ThemedText style={styles.infoText}>وقت التذكير:</ThemedText>
+                  <ThemedView style={styles.timePicker}>
+                    <ThemedView style={styles.timeUnit}>
+                      <TouchableOpacity
+                        style={styles.controlButton}
+                        onPress={() =>
+                          setReminderTime((prev) => ({
+                            ...prev,
+                            hour: (prev.hour + 1) % 24,
+                          }))
+                        }
+                        accessibilityLabel="زيادة الساعة"
+                      >
+                        <Feather name="chevron-up" size={20} color={primaryColor} />
+                      </TouchableOpacity>
+                      <ThemedText style={styles.timeValue}>
+                        {String(reminderTime.hour).padStart(2, '0')}
+                      </ThemedText>
+                      <TouchableOpacity
+                        style={styles.controlButton}
+                        onPress={() =>
+                          setReminderTime((prev) => ({
+                            ...prev,
+                            hour: (prev.hour - 1 + 24) % 24,
+                          }))
+                        }
+                        accessibilityLabel="إنقاص الساعة"
+                      >
+                        <Feather name="chevron-down" size={20} color={primaryColor} />
+                      </TouchableOpacity>
+                    </ThemedView>
+
+                    <ThemedText style={styles.timeSeparator}>:</ThemedText>
+
+                    <ThemedView style={styles.timeUnit}>
+                      <TouchableOpacity
+                        style={styles.controlButton}
+                        onPress={() =>
+                          setReminderTime((prev) => ({
+                            ...prev,
+                            minute: (prev.minute + 5) % 60,
+                          }))
+                        }
+                        accessibilityLabel="زيادة الدقائق"
+                      >
+                        <Feather name="chevron-up" size={20} color={primaryColor} />
+                      </TouchableOpacity>
+                      <ThemedText style={styles.timeValue}>
+                        {String(reminderTime.minute).padStart(2, '0')}
+                      </ThemedText>
+                      <TouchableOpacity
+                        style={styles.controlButton}
+                        onPress={() =>
+                          setReminderTime((prev) => ({
+                            ...prev,
+                            minute: (prev.minute - 5 + 60) % 60,
+                          }))
+                        }
+                        accessibilityLabel="إنقاص الدقائق"
+                      >
+                        <Feather name="chevron-down" size={20} color={primaryColor} />
+                      </TouchableOpacity>
+                    </ThemedView>
+                  </ThemedView>
+                </ThemedView>
+              )}
+            </ThemedView>
+          )}
 
           <ThemedView
             style={[styles.navigationSection, { backgroundColor: cardColor }]}
@@ -358,9 +467,42 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
-  resetButton: { paddingHorizontal: 16, paddingVertical: 8 }, // This padding controls the space around the icon and text
+  resetButton: { paddingHorizontal: 16, paddingVertical: 8 },
+  reminderToggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 8,
+  },
+  timePickerContainer: {
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  timePicker: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+    backgroundColor: 'transparent',
+  },
+  timeUnit: {
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  timeValue: {
+    fontSize: 28,
+    fontFamily: 'Tajawal_700Bold',
+    minWidth: 50,
+    textAlign: 'center',
+  },
+  timeSeparator: {
+    fontSize: 28,
+    fontFamily: 'Tajawal_700Bold',
+    marginHorizontal: 8,
+  },
 
-  // Add Modal Styles (copied from settings.tsx and adjusted slightly)
+  // Modal Styles (copied from settings.tsx and adjusted slightly)
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

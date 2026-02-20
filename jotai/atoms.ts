@@ -128,3 +128,19 @@ export const readingBannerCollapsedState = createAtomWithStorage<boolean>(
   'ReadingBannerCollapsedState',
   false,
 );
+
+// Wird reminder notification
+type WirdReminderTime = {
+  hour: number;
+  minute: number;
+};
+
+export const wirdReminderEnabled = createAtomWithStorage<boolean>(
+  'WirdReminderEnabled',
+  false,
+);
+
+export const wirdReminderTime = createAtomWithStorage<WirdReminderTime>(
+  'WirdReminderTime',
+  { hour: 7, minute: 0 },
+);
