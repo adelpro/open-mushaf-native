@@ -131,6 +131,7 @@ const Wheel = ({
         snapToInterval={ITEM_HEIGHT}
         decelerationRate="fast"
         showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
         onScrollEndDrag={handleScrollEndDrag}
         onMomentumScrollBegin={handleMomentumScrollBegin}
         onMomentumScrollEnd={handleMomentumScrollEnd}

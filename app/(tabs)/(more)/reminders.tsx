@@ -3,6 +3,7 @@ import {
   Alert,
   Modal,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -355,17 +356,16 @@ export default function RemindersScreen() {
           setEditingReminder(null);
         }}
       >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => {
-            setTimePickerVisible(false);
-            setEditingReminder(null);
-          }}
-        >
+        <View style={styles.modalOverlay}>
+          <Pressable
+            style={StyleSheet.absoluteFill}
+            onPress={() => {
+              setTimePickerVisible(false);
+              setEditingReminder(null);
+            }}
+          />
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
-            onStartShouldSetResponder={() => true}
           >
             <ThemedView
               style={[styles.modalHeader, { borderBottomColor: textColor }]}
@@ -405,7 +405,7 @@ export default function RemindersScreen() {
               </ThemedButton>
             </ThemedView>
           </ThemedView>
-        </TouchableOpacity>
+        </View>
       </Modal>
 
       {/* Add Custom Reminder Modal */}
@@ -415,14 +415,13 @@ export default function RemindersScreen() {
         visible={addModalVisible}
         onRequestClose={() => setAddModalVisible(false)}
       >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setAddModalVisible(false)}
-        >
+        <View style={styles.modalOverlay}>
+          <Pressable
+            style={StyleSheet.absoluteFill}
+            onPress={() => setAddModalVisible(false)}
+          />
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
-            onStartShouldSetResponder={() => true}
           >
             <ThemedView
               style={[styles.modalHeader, { borderBottomColor: textColor }]}
@@ -464,7 +463,7 @@ export default function RemindersScreen() {
               </ThemedButton>
             </ThemedView>
           </ThemedView>
-        </TouchableOpacity>
+        </View>
       </Modal>
 
       {/* Delete Confirmation Modal */}
