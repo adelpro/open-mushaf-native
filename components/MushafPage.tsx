@@ -33,6 +33,7 @@ import {
   hizbNotification,
   mushafContrast,
   showTrackerNotification,
+  swipeSensitivity,
   yesterdayPage,
 } from '@/jotai/atoms';
 import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
@@ -63,6 +64,7 @@ export default function MushafPage() {
   const [progressValue, setProgressValue] = useState(0);
   const dailyTrackerGoalValue = useAtomValue(dailyTrackerGoal);
   const dailyTrackerCompletedValue = useAtomValue(dailyTrackerCompleted);
+  const swipeSensitivityValue = useAtomValue(swipeSensitivity);
 
   const {
     thumnData,
@@ -180,6 +182,7 @@ export default function MushafPage() {
     currentPage,
     handlePageChange,
     defaultNumberOfPages,
+    swipeSensitivityValue,
   );
 
   const animatedStyle = useAnimatedStyle(() => {

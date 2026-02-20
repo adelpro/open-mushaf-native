@@ -128,3 +128,10 @@ export const readingBannerCollapsedState = createAtomWithStorage<boolean>(
   'ReadingBannerCollapsedState',
   false,
 );
+
+// Swipe sensitivity for page-turn gesture threshold (px).
+// Lower = more sensitive, higher = less sensitive. Default 100.
+export const swipeSensitivity = createAtomWithStorage<number>(
+  'SwipeSensitivity',
+  100,
+);

@@ -1,22 +1,39 @@
 import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS, useSharedValue, withSpring } from 'react-native-reanimated';
 
+import {
+  LANDSCAPE_THRESHOLD_RATIO,
+  MAX_DRAG_TRANSLATION,
+  SPRING_DAMPING,
+  SPRING_STIFFNESS,
+} from '@/constants';
+
 import useOrientation from './useOrientation';
 
 export const usePanGestureHandler = (
   currentPage: number,
   onPageChange: (page: number) => void,
   maxPages: number,
+  /** Portrait swipe threshold in px. Landscape is derived automatically. */
+  swipeThreshold = 100,
 ) => {
   const translateX = useSharedValue(0);
   const { isLandscape } = useOrientation();
 
   const panGestureHandler = Gesture.Pan()
     .onUpdate((e) => {
-      translateX.value = Math.max(-100, Math.min(100, e.translationX));
+      // Clamp visible drag to MAX_DRAG_TRANSLATION in either direction
+      translateX.value = Math.max(
+        -MAX_DRAG_TRANSLATION,
+        Math.min(MAX_DRAG_TRANSLATION, e.translationX),
+      );
     })
     .onEnd((e) => {
-      const threshold = isLandscape ? 150 : 100;
+      // Landscape screens require a proportionally wider swipe
+      const threshold = isLandscape
+        ? swipeThreshold * LANDSCAPE_THRESHOLD_RATIO
+        : swipeThreshold;
+
       const targetPage =
         e.translationX > threshold
           ? Math.min(currentPage + 1, maxPages) // Swipe Right
@@ -29,7 +46,11 @@ export const usePanGestureHandler = (
         runOnJS(onPageChange)(targetPage);
       }
 
-      translateX.value = withSpring(0, { damping: 20, stiffness: 90 }); // Smooth return
+      // Smooth snap-back to resting position
+      translateX.value = withSpring(0, {
+        damping: SPRING_DAMPING,
+        stiffness: SPRING_STIFFNESS,
+      });
     });
 
   return { translateX, panGestureHandler };

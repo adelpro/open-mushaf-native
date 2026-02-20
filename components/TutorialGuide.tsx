@@ -24,7 +24,11 @@ import NextSVG from '@/assets/svgs/next.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { SLIDES } from '@/constants';
+import {
+  SLIDES,
+  SWIPE_THRESHOLD_LANDSCAPE,
+  SWIPE_THRESHOLD_PORTRAIT,
+} from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useOrientation from '@/hooks/useOrientation';
 import { finishedTutorial } from '@/jotai/atoms';
@@ -46,7 +50,9 @@ export default function TutorialGuide() {
   };
 
   const gestureHandler = Gesture.Pan().onEnd((e) => {
-    const threshold = isLandscape ? 150 : 100;
+    const threshold = isLandscape
+      ? SWIPE_THRESHOLD_LANDSCAPE
+      : SWIPE_THRESHOLD_PORTRAIT;
 
     if (e.translationX < -threshold && index > 0) {
       runOnJS(setIndex)(index - 1);

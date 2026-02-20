@@ -13,7 +13,11 @@ import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { riwayaOptions } from '@/constants';
+import {
+  riwayaOptions,
+  SWIPE_SENSITIVITY_MAX,
+  SWIPE_SENSITIVITY_MIN,
+} from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import {
   flipSound,
@@ -21,6 +25,7 @@ import {
   mushafContrast,
   mushafRiwaya,
   showTrackerNotification,
+  swipeSensitivity,
 } from '@/jotai/atoms';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
 import { clearStorageAndReload } from '@/utils/storage/clearStorage';
@@ -35,6 +40,8 @@ export default function SettingsScreen() {
   const { textColor, primaryColor, cardColor, iconColor } = useColors();
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
+  const [swipeSensitivityValue, setSwipeSensitivityValue] =
+    useAtom(swipeSensitivity);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
   const toggleFlipSoundSwitch = () => {
@@ -171,6 +178,44 @@ export default function SettingsScreen() {
             value={mushafContrastValue}
             onValueChange={setMushafContrastValue}
             primaryColor={primaryColor}
+          />
+        </ThemedView>
+      </ThemedView>
+
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
+      >
+        <ThemedView
+          style={[
+            styles.rowContainer,
+            styles.iconTextContainer,
+            { backgroundColor: cardColor },
+          ]}
+        >
+          <Feather
+            name="navigation"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
+            {` حساسية التمرير: (${Math.round(swipeSensitivityValue)})`}
+          </ThemedText>
+        </ThemedView>
+
+        <ThemedView
+          style={[styles.sliderContainer, { backgroundColor: cardColor }]}
+        >
+          <AwesomeSlider
+            value={swipeSensitivityValue}
+            onValueChange={(v) => setSwipeSensitivityValue(Math.round(v))}
+            primaryColor={primaryColor}
+            minimumValue={SWIPE_SENSITIVITY_MIN}
+            maximumValue={SWIPE_SENSITIVITY_MAX}
           />
         </ThemedView>
       </ThemedView>
