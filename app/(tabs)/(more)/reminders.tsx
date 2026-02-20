@@ -360,12 +360,12 @@ export default function RemindersScreen() {
           onPress={() => setAddModalVisible(true)}
           style={styles.addButton}
         >
-          <View style={styles.addButtonContent}>
+          <ThemedView style={styles.addButtonContent}>
             <Feather name="plus" size={20} color={primaryColor} />
             <ThemedText style={[styles.addButtonText, { color: primaryColor }]}>
               إضافة تذكير
             </ThemedText>
-          </View>
+          </ThemedView>
         </ThemedButton>
       </ScrollView>
 
@@ -617,15 +617,18 @@ const styles = StyleSheet.create({
   addButton: {
     marginTop: 12,
     height: 48,
+    alignSelf: 'center',
   },
   addButtonContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 8,
   },
   addButtonText: {
     fontSize: 16,
     fontFamily: 'Tajawal_700Bold',
+    textAlignVertical: 'center',
   },
   warningBanner: {
     flexDirection: 'row',
