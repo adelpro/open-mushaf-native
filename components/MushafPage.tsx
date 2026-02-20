@@ -19,6 +19,12 @@ import { useAtomValue, useSetAtom } from 'jotai/react';
 import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
+import {
+  MAX_SWIPE_SHADOW_OPACITY,
+  MAX_VISUAL_TRANSLATE_X,
+  MIN_SWIPE_PAGE_OPACITY,
+  SENSITIVITY_MULTIPLIERS,
+} from '@/constants';
 import { READING_THEMES } from '@/constants/readingThemes';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
@@ -35,6 +41,7 @@ import {
   mushafContrast,
   readingTheme,
   showTrackerNotification,
+  swipeSensitivity,
   yesterdayPage,
 } from '@/jotai/atoms';
 import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
@@ -52,6 +59,7 @@ export default function MushafPage() {
   const player = useAudioPlayer(audioSource);
   const isFlipSoundEnabled = useAtomValue(flipSound);
   const mushafContrastValue = useAtomValue(mushafContrast);
+  const swipeSensitivityIndex = useAtomValue(swipeSensitivity);
   const readingThemeValue = useAtomValue(readingTheme);
   const themeConfig =
     READING_THEMES[readingThemeValue] || READING_THEMES.default;
@@ -195,6 +203,7 @@ export default function MushafPage() {
     currentPage,
     handlePageChange,
     defaultNumberOfPages,
+    SENSITIVITY_MULTIPLIERS[swipeSensitivityIndex] ?? 1,
   );
 
   React.useEffect(() => {
@@ -213,18 +222,17 @@ export default function MushafPage() {
   }, [currentPage, handlePageChange]);
 
   const animatedStyle = useAnimatedStyle(() => {
-    const maxTranslateX = 20;
     const clampedTranslateX = Math.max(
-      -maxTranslateX,
-      Math.min(translateX.value, maxTranslateX),
+      -MAX_VISUAL_TRANSLATE_X,
+      Math.min(translateX.value, MAX_VISUAL_TRANSLATE_X),
     );
     const shadowOpacity = Math.min(
-      0.5,
-      Math.abs(clampedTranslateX) / maxTranslateX,
+      MAX_SWIPE_SHADOW_OPACITY,
+      Math.abs(clampedTranslateX) / MAX_VISUAL_TRANSLATE_X,
     );
     const opacity = Math.max(
-      0.85,
-      1 - Math.abs(clampedTranslateX) / maxTranslateX,
+      MIN_SWIPE_PAGE_OPACITY,
+      1 - Math.abs(clampedTranslateX) / MAX_VISUAL_TRANSLATE_X,
     );
 
     return {

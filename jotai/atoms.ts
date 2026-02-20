@@ -123,6 +123,12 @@ observe((get, set) => {
   }
 });
 
+// Swipe sensitivity (index into SENSITIVITY_MULTIPLIERS: 0=sensitive, 1=default, 2=steady)
+export const swipeSensitivity = createAtomWithStorage<number>(
+  'SwipeSensitivity',
+  1,
+);
+
 // Reading theme: 'default' | 'sepia' | 'highContrast'
 export const readingTheme = createAtomWithStorage<string>(
   'ReadingTheme',

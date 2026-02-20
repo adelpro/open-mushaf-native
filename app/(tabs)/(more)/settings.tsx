@@ -17,6 +17,7 @@ import {
   READING_THEME_KEYS,
   READING_THEME_LABELS,
   riwayaOptions,
+  SENSITIVITY_LABELS,
 } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import {
@@ -26,6 +27,7 @@ import {
   mushafRiwaya,
   readingTheme,
   showTrackerNotification,
+  swipeSensitivity,
 } from '@/jotai/atoms';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
 import { clearStorageAndReload } from '@/utils/storage/clearStorage';
@@ -41,6 +43,8 @@ export default function SettingsScreen() {
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const [readingThemeValue, setReadingThemeValue] = useAtom(readingTheme);
+  const [swipeSensitivityValue, setSwipeSensitivityValue] =
+    useAtom(swipeSensitivity);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
   const toggleFlipSoundSwitch = () => {
@@ -258,6 +262,46 @@ export default function SettingsScreen() {
             onSelectionChange={(index: number) => {
               setReadingThemeValue(READING_THEME_KEYS[index]);
             }}
+          />
+        </Pressable>
+      </ThemedView>
+
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
+      >
+        <ThemedView
+          style={[
+            styles.fullWidthContainer,
+            styles.iconTextContainer,
+            { backgroundColor: cardColor },
+          ]}
+        >
+          <Feather
+            name="navigation"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, styles.fullWidth]}
+          >
+            حساسية التمرير:
+          </ThemedText>
+        </ThemedView>
+        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
+          <SegmentedControl
+            options={SENSITIVITY_LABELS}
+            initialSelectedIndex={swipeSensitivityValue}
+            activeColor={primaryColor}
+            textColor={primaryColor}
+            onSelectionChange={(index: number) =>
+              setSwipeSensitivityValue(index)
+            }
           />
         </Pressable>
       </ThemedView>
