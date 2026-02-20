@@ -151,6 +151,25 @@ export default function MoreScreen() {
           <Text style={styles.buttonText}>شارك التطبيق</Text>
         </View>
       </ThemedButton>
+      {Platform.OS === 'android' && (
+        <ThemedButton
+          onPress={async () => {
+            const url =
+              'https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative';
+            const supported = await Linking.canOpenURL(url);
+            if (supported) {
+              await Linking.openURL(url);
+            }
+          }}
+          variant="primary"
+          style={styles.button}
+        >
+          <View style={styles.buttonContent}>
+            <Feather name="star" size={24} color="white" style={styles.svg} />
+            <Text style={styles.buttonText}>قيّم التطبيق</Text>
+          </View>
+        </ThemedButton>
+      )}
 
       {/* Error Modal */}
       <Modal
