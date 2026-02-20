@@ -359,16 +359,6 @@ export function MushafPage() {
     );
   }
 
-  if (assetIsLoading) {
-    return (
-      <ThemedView
-        style={[styles.loadingContainer, { backgroundColor: ivoryColor }]}
-      >
-        <ActivityIndicator size="large" color={tintColor} />
-      </ThemedView>
-    );
-  }
-
   return (
     <>
       <Seo

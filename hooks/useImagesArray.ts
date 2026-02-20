@@ -58,7 +58,7 @@ export function useImagesArray() {
           setError(
             error instanceof Error
               ? error.message
-              : `الصفحة ${page} غير موجودة`,
+              : ERROR_PAGE_NOT_FOUND(page),
           );
           setAsset(null);
         }

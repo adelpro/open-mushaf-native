@@ -12,7 +12,7 @@ export const ERROR_PAGE_NOT_FOUND = (page: number) =>
 
 /** Returns a formatted error message with additional details. */
 export const ERROR_WITH_DETAILS = (details: string) =>
-  `حدث خطأ: ${details}`;
+  `حدث خطأ: ${details}.`;
 
 /** Validation error for the name field (3–50 characters). */
 export const ERROR_NAME_VALIDATION = 'الاسم يجب أن يكون بين 3 و 50 حرفًا.';

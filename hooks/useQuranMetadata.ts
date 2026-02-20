@@ -93,6 +93,7 @@ export function useQuranMetadata(): QuranMetadata {
         ]);
         setQuranData(qurandata.default as QuranText[]);
       } catch (err) {
+        console.error('[useQuranMetadata] Failed to load metadata:', err);
         setError(ERROR_LOADING_METADATA);
       } finally {
         setIsLoading(false);

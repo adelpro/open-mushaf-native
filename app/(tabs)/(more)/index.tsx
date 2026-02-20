@@ -48,8 +48,9 @@ export default function MoreScreen() {
         title: 'Open Mushaf Native', // Optional, mainly for Android
       });
       // console.log('Share successful or dismissed'); // You can uncomment this if needed
-    } catch (error: any) {
-      setErrorMessage(error.message || ERROR_SHARE);
+    } catch (error) {
+      console.error('[handleShare]', error);
+      setErrorMessage(ERROR_SHARE);
       setErrorModalVisible(true);
     }
   };
