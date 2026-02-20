@@ -1,6 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 
+import { ERROR_WITH_DETAILS } from '@/constants/errorMessages';
 import { useColors, useQuranMetadata } from '@/hooks';
 
 import { SurahCard } from './SurahCard';
@@ -22,7 +23,7 @@ export function SurahList() {
   if (error) {
     return (
       <ThemedView style={styles.errorContainer}>
-        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${error}`}</ThemedText>
+        <ThemedText type="defaultSemiBold">{ERROR_WITH_DETAILS(error)}</ThemedText>
       </ThemedView>
     );
   }

@@ -4,6 +4,13 @@ import { ActivityIndicator, StyleSheet, Text } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
 import { CONTACT_FORM_RATE_LIMIT_CONFIG } from '@/constants/ratelimitConfig';
+import {
+  ERROR_EMAIL_VALIDATION,
+  ERROR_FORM_SUBMIT,
+  ERROR_MESSAGE_VALIDATION,
+  ERROR_NAME_VALIDATION,
+  SUCCESS_FORM_SUBMIT,
+} from '@/constants/errorMessages';
 import { useColors } from '@/hooks';
 import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
 
@@ -41,21 +48,17 @@ export function ContactForm() {
 
     // Check all fields and show notifications for each error
     if (name.trim().length < 3 || name.trim().length > 50) {
-      notify('الإسم يجب أن يكون بين 3 و 50 حرفًا.', 'name_validation', 'error');
+      notify(ERROR_NAME_VALIDATION, 'name_validation', 'error');
       isValid = false;
     }
 
     if (!isValidEmail(email)) {
-      notify('البريد الألكتروني غير صحيح.', 'email_validation', 'error');
+      notify(ERROR_EMAIL_VALIDATION, 'email_validation', 'error');
       isValid = false;
     }
 
     if (message.trim().length < 10 || message.trim().length > 500) {
-      notify(
-        'الرسالة يجب أن تكون بين 10 و 500 حرفًا.',
-        'message_validation',
-        'error',
-      );
+      notify(ERROR_MESSAGE_VALIDATION, 'message_validation', 'error');
       isValid = false;
     }
 
@@ -132,7 +135,7 @@ export function ContactForm() {
 
       await sendToTelegram(messageText);
       setFormData({ name: '', email: '', message: '' });
-      notify('تم الإرسال بنجاح!', 'form_success', 'success');
+      notify(SUCCESS_FORM_SUBMIT, 'form_success', 'success');
     } catch (error) {
       if (error instanceof RateLimitError) {
         notify(
@@ -141,11 +144,7 @@ export function ContactForm() {
           'error',
         );
       } else {
-        notify(
-          'فشل في إرسال الرسالة! يرجى المحاولة مرة أخرى لاحقًا.',
-          'form_error',
-          'error',
-        );
+        notify(ERROR_FORM_SUBMIT, 'form_error', 'error');
       }
     } finally {
       setIsLoading(false);

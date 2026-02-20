@@ -11,6 +11,7 @@ import {
   ThemedText,
   ThemedView,
 } from '@/components';
+import { ERROR_WITH_DETAILS } from '@/constants/errorMessages';
 import { useColors, useCurrentPage, useQuranMetadata } from '@/hooks';
 
 export default function Navigation() {
@@ -108,7 +109,7 @@ export default function Navigation() {
     return (
       <ThemedView style={styles.container}>
         <ThemedView style={styles.errorContainer}>
-          <ThemedText type="defaultSemiBold">{`حدث خطأ: ${error}`}</ThemedText>
+          <ThemedText type="defaultSemiBold">{ERROR_WITH_DETAILS(error)}</ThemedText>
         </ThemedView>
       </ThemedView>
     );

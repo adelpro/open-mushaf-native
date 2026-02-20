@@ -21,6 +21,7 @@ import SettingsSVG from '@/assets/svgs/settings.svg';
 import ShareSVG from '@/assets/svgs/share.svg';
 import WelcomeSVG from '@/assets/svgs/welcome.svg';
 import { ThemedButton, ThemedText, ThemedView } from '@/components';
+import { ERROR_SHARE } from '@/constants/errorMessages';
 import { useColors } from '@/hooks';
 import { isWeb } from '@/utils/isWeb';
 
@@ -48,7 +49,7 @@ export default function MoreScreen() {
       });
       // console.log('Share successful or dismissed'); // You can uncomment this if needed
     } catch (error: any) {
-      setErrorMessage(error.message || 'An unexpected error occurred.');
+      setErrorMessage(error.message || ERROR_SHARE);
       setErrorModalVisible(true);
     }
   };

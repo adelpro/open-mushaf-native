@@ -20,6 +20,7 @@ import {
   ThemedTextInput,
   ThemedView,
 } from '@/components';
+import { ERROR_WITH_DETAILS } from '@/constants/errorMessages';
 import {
   useColors,
   useDebounce,
@@ -107,7 +108,7 @@ export default function Search() {
   if (error)
     return (
       <ThemedView style={styles.container}>
-        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${error}`}</ThemedText>
+        <ThemedText type="defaultSemiBold">{ERROR_WITH_DETAILS(error)}</ThemedText>
       </ThemedView>
     );
 

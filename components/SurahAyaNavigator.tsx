@@ -3,6 +3,7 @@ import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 
+import { ERROR_WITH_DETAILS } from '@/constants/errorMessages';
 import { useQuranMetadata } from '@/hooks';
 import { Surah } from '@/types';
 import { isWeb } from '@/utils';
@@ -63,7 +64,7 @@ export function SurahAyaNavigator({
       <ThemedView
         style={[styles.container, { backgroundColor: 'transparent' }]}
       >
-        <ThemedText>{`حدث خطأ: ${error}`}</ThemedText>
+        <ThemedText>{ERROR_WITH_DETAILS(error)}</ThemedText>
       </ThemedView>
     );
   }

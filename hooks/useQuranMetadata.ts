@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useAtomValue } from 'jotai/react';
 
+import { ERROR_LOADING_METADATA } from '@/constants/errorMessages';
 import { mushafRiwaya } from '@/jotai/atoms';
 import { Chapter, Hizb, Page, QuranText, Specs, Surah, Thumn } from '@/types';
 
@@ -92,9 +93,7 @@ export function useQuranMetadata(): QuranMetadata {
         ]);
         setQuranData(qurandata.default as QuranText[]);
       } catch (err) {
-        setError(
-          `Failed to load Quran metadata: ${err instanceof Error ? err.message : String(err)}`,
-        );
+        setError(ERROR_LOADING_METADATA);
       } finally {
         setIsLoading(false);
       }
