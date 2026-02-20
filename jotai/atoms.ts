@@ -88,14 +88,13 @@ observe((get, set) => {
       // Archive the previous day's data if there was any reading
       if (stored.value > 0) {
         const history = await get(readingHistory);
-        const alreadyArchived = history.some((r) => r.date === stored.date);
-        if (!alreadyArchived) {
-          const updated = [
-            ...history,
-            { date: stored.date, hizbsCompleted: stored.value },
-          ].slice(-MAX_HISTORY_DAYS);
-          set(readingHistory, updated);
-        }
+        const existingIndex = history.findIndex((r) => r.date === stored.date);
+        const entry = { date: stored.date, hizbsCompleted: stored.value };
+        const updated =
+          existingIndex >= 0
+            ? history.map((r, i) => (i === existingIndex ? entry : r))
+            : [...history, entry].slice(-MAX_HISTORY_DAYS);
+        set(readingHistory, updated);
       }
 
       set(dailyTrackerCompleted, { value: 0, date: today });

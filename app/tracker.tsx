@@ -70,15 +70,28 @@ export default function TrackerScreen() {
       });
     }
 
-    // Archive today's progress before clearing so it appears in history
+    // Archive today's progress before clearing (upsert to keep highest value)
     if (dailyTrackerCompletedValue.value > 0) {
       setReadingHistoryValue((prev) => {
-        const alreadyArchived = prev.some((r) => r.date === today);
-        if (alreadyArchived) return prev;
-        return [
-          ...prev,
-          { date: today, hizbsCompleted: dailyTrackerCompletedValue.value },
-        ].slice(-MAX_HISTORY_DAYS);
+        const entry = {
+          date: today,
+          hizbsCompleted: dailyTrackerCompletedValue.value,
+        };
+        const existingIndex = prev.findIndex((r) => r.date === today);
+        if (existingIndex >= 0) {
+          return prev.map((r, i) =>
+            i === existingIndex
+              ? {
+                  ...r,
+                  hizbsCompleted: Math.max(
+                    r.hizbsCompleted,
+                    entry.hizbsCompleted,
+                  ),
+                }
+              : r,
+          );
+        }
+        return [...prev, entry].slice(-MAX_HISTORY_DAYS);
       });
     }
 

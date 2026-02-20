@@ -37,8 +37,6 @@ export const calculateHizbsBetweenPages = (
     .length;
 };
 
-// Add this function to your existing hizbProgress.ts file
-
 export function calculateThumnsBetweenPages(
   startPage: number,
   endPage: number,
