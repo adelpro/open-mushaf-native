@@ -123,6 +123,12 @@ observe((get, set) => {
   }
 });
 
+// Reading theme: 'default' | 'sepia' | 'highContrast'
+export const readingTheme = createAtomWithStorage<string>(
+  'ReadingTheme',
+  'default',
+);
+
 // ReadingPositionBanner
 export const readingBannerCollapsedState = createAtomWithStorage<boolean>(
   'ReadingBannerCollapsedState',
