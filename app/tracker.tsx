@@ -243,6 +243,8 @@ export default function TrackerScreen() {
                 <TouchableOpacity
                   style={styles.closeButton}
                   onPress={() => setConfirmModalVisible(false)}
+                  accessibilityRole="button"
+                  accessibilityLabel="إغلاق نافذة التأكيد"
                 >
                   <Feather name="x" size={24} color={iconColor} />
                 </TouchableOpacity>

@@ -138,7 +138,12 @@ export default function Search() {
           color={primaryColor}
           style={styles.icon}
         />
-        <Pressable onPress={() => setShowOptions(!showOptions)}>
+        <Pressable
+          onPress={() => setShowOptions(!showOptions)}
+          accessibilityRole="button"
+          accessibilityLabel="خيارات البحث المتقدم"
+          accessibilityState={{ expanded: showOptions }}
+        >
           <Ionicons
             name="options"
             size={20}
