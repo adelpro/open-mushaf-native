@@ -3,33 +3,67 @@ import { runOnJS, useSharedValue, withSpring } from 'react-native-reanimated';
 
 import useOrientation from './useOrientation';
 
+// Default gesture threshold constants
+// These define the minimum swipe distance (in pixels) needed to trigger a page change
+
+// Maximum translation allowed during pan gesture (prevents excessive visual feedback)
+const MAX_TRANSLATION = 100;
+
+// Spring animation configuration for smooth return to original position
+const SPRING_DAMPING = 20; // Controls how quickly the animation settles
+const SPRING_STIFFNESS = 90; // Controls the spring tension
+
+type GestureConfig = {
+  // Minimum swipe distance for portrait orientation
+  thresholdPortrait?: number;
+  // Minimum swipe distance for landscape orientation
+  thresholdLandscape?: number;
+};
+
 export const usePanGestureHandler = (
   currentPage: number,
   onPageChange: (page: number) => void,
   maxPages: number,
+  config?: GestureConfig,
 ) => {
   const translateX = useSharedValue(0);
   const { isLandscape } = useOrientation();
 
+  // Use configurable thresholds or defaults
+  // Landscape typically needs higher threshold due to larger screen width
+  const thresholdPortrait = config?.thresholdPortrait ?? 100;
+  const thresholdLandscape = config?.thresholdLandscape ?? 150;
+
   const panGestureHandler = Gesture.Pan()
     .onUpdate((e) => {
-      translateX.value = Math.max(-100, Math.min(100, e.translationX));
+      // Limit translation to MAX_TRANSLATION in both directions to prevent excessive visual feedback
+      translateX.value = Math.max(
+        -MAX_TRANSLATION,
+        Math.min(MAX_TRANSLATION, e.translationX),
+      );
     })
     .onEnd((e) => {
-      const threshold = isLandscape ? 150 : 100;
+      // Select appropriate threshold based on device orientation
+      const threshold = isLandscape ? thresholdLandscape : thresholdPortrait;
+
+      // Determine target page based on swipe direction and threshold
       const targetPage =
         e.translationX > threshold
-          ? Math.min(currentPage + 1, maxPages) // Swipe Right
+          ? Math.min(currentPage + 1, maxPages) // Swipe Right - Next page
           : e.translationX < -threshold
-            ? Math.max(currentPage - 1, 1) // Swipe Left
-            : currentPage; // No page change
+            ? Math.max(currentPage - 1, 1) // Swipe Left - Previous page
+            : currentPage; // No page change - threshold not met
 
       // Only change the page if it differs from the current one
       if (targetPage !== currentPage) {
         runOnJS(onPageChange)(targetPage);
       }
 
-      translateX.value = withSpring(0, { damping: 20, stiffness: 90 }); // Smooth return
+      // Animate return to original position with spring physics
+      translateX.value = withSpring(0, {
+        damping: SPRING_DAMPING,
+        stiffness: SPRING_STIFFNESS,
+      });
     });
 
   return { translateX, panGestureHandler };
