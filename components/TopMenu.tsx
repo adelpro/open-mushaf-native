@@ -187,6 +187,7 @@ export default function TopMenu() {
             accessibilityLabel={
               showBottomMenuState ? 'وضع ملء الشاشة' : 'إظهار القائمة'
             }
+            accessibilityState={{ expanded: showBottomMenuState }}
           >
             {showBottomMenuState ? (
               <MaterialCommunityIcons

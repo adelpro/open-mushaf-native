@@ -148,6 +148,8 @@ export default function TrackerScreen() {
                   <TouchableOpacity
                     style={styles.controlButton}
                     onPress={decrementDailyGoal}
+                    accessibilityRole="button"
+                    accessibilityLabel="تقليل الهدف اليومي"
                   >
                     <Feather name="minus" size={20} color={primaryColor} />
                   </TouchableOpacity>
@@ -157,6 +159,8 @@ export default function TrackerScreen() {
                   <TouchableOpacity
                     style={styles.controlButton}
                     onPress={incrementDailyGoal}
+                    accessibilityRole="button"
+                    accessibilityLabel="زيادة الهدف اليومي"
                   >
                     <Feather name="plus" size={20} color={primaryColor} />
                   </TouchableOpacity>

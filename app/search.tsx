@@ -162,6 +162,8 @@ export default function Search() {
                 advancedOptions.lemma && styles.optionActive,
               ]}
               onPress={() => toggleOption('lemma')}
+              accessibilityRole="button"
+              accessibilityState={{ selected: advancedOptions.lemma }}
             >
               <ThemedText
                 style={
@@ -178,6 +180,8 @@ export default function Search() {
                 advancedOptions.root && styles.optionActive,
               ]}
               onPress={() => toggleOption('root')}
+              accessibilityRole="button"
+              accessibilityState={{ selected: advancedOptions.root }}
             >
               <ThemedText
                 style={
@@ -193,6 +197,8 @@ export default function Search() {
                 advancedOptions.fuzzy && styles.optionActive,
               ]}
               onPress={() => toggleOption('fuzzy')}
+              accessibilityRole="button"
+              accessibilityState={{ selected: advancedOptions.fuzzy }}
             >
               <ThemedText
                 style={
