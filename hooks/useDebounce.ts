@@ -5,6 +5,11 @@ export function useDebounce<T extends (...args: any[]) => void>(
   delay: number,
 ) {
   const timeoutRef = useRef<number | null>(null);
+  const fnRef = useRef(fn);
+
+  useEffect(() => {
+    fnRef.current = fn;
+  });
 
   const debouncedFunction = useCallback(
     (...args: Parameters<T>) => {
@@ -12,10 +17,10 @@ export function useDebounce<T extends (...args: any[]) => void>(
         clearTimeout(timeoutRef.current);
       }
       timeoutRef.current = setTimeout(() => {
-        fn(...args);
+        fnRef.current(...args);
       }, delay);
     },
-    [fn, delay],
+    [delay],
   );
 
   useEffect(() => {
