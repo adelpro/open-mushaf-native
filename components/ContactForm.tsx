@@ -5,7 +5,6 @@ import { FontAwesome } from '@expo/vector-icons';
 
 import { useColors } from '@/hooks/useColors';
 import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
-import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
 
 import { useNotification } from './NotificationProvider';
 import { ThemedButton } from './ThemedButton';
