@@ -48,10 +48,10 @@ export const usePanGestureHandler = (
 
       // Determine target page based on swipe direction and threshold
       const targetPage =
-        e.translationX > threshold
-          ? Math.min(currentPage + 1, maxPages) // Swipe Right - Next page
-          : e.translationX < -threshold
-            ? Math.max(currentPage - 1, 1) // Swipe Left - Previous page
+        e.translationX < -threshold
+          ? Math.min(currentPage + 1, maxPages) // Swipe Left - Next page (RTL)
+          : e.translationX > threshold
+            ? Math.max(currentPage - 1, 1) // Swipe Right - Previous page (RTL)
             : currentPage; // No page change - threshold not met
 
       // Only change the page if it differs from the current one

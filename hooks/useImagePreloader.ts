@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Alert } from 'react-native';
 
 import { useAtomValue } from 'jotai/react';
 
@@ -45,34 +46,34 @@ export default function useImagePreloader(currentPage: number) {
     // Preload new pages
     const preloadImages = async () => {
       try {
-        console.log(
+        /* console.log(
           `[Preloader] 🔄 Starting to load pages: ${newPagesToPreload.join(', ')} (Current: ${currentPage})`,
-        );
+         ); */
 
         // Start downloading all assets in parallel
         await Promise.all(
           newPagesToPreload.map(async (page) => {
             const imageModule = imagesMap[page];
             if (!imageModule) {
-              console.log(`[Preloader] ⚠️ No image module for page ${page}`);
+              // console.log(`[Preloader] ⚠️ No image module for page ${page}`);
               return;
             }
 
             const asset = getOrCreateAsset(page, imageModule);
 
             if (!asset.downloaded) {
-              console.log(`[Preloader] ⬇️ Downloading page ${page}...`);
+              // console.log(`[Preloader] ⬇️ Downloading page ${page}...`);
               await asset.downloadAsync();
-              console.log(`[Preloader] ✅ Downloaded page ${page}`);
+              // console.log(`[Preloader] ✅ Downloaded page ${page}`);
             } else {
-              console.log(`[Preloader] ✓ Page ${page} already cached`);
+              // console.log(`[Preloader] ✓ Page ${page} already cached`);
             }
           }),
         );
 
-        console.log(
+        /* console.log(
           `[Preloader] 🎉 Successfully loaded ${newPagesToPreload.length} pages`,
-        );
+        ); */
 
         // Mark these pages as preloaded
         newPagesToPreload.forEach((page) => {
@@ -96,8 +97,11 @@ export default function useImagePreloader(currentPage: number) {
             pagesToKeep.has(page),
           ),
         );
-      } catch (error) {
-        console.error('Error preloading images:', error);
+      } catch (error: any) {
+        Alert.alert(
+          'Error preloading images: ',
+          error.message || 'Unknown error',
+        );
       }
     };
 

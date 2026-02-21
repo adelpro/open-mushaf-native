@@ -44,25 +44,25 @@ export default function useImagesArray() {
         if (!image) throw new Error(`الصفحة ${page} غير موجودة`);
 
         const assetToLoad = getOrCreateAsset(page, image);
-        
+
         // Check if already downloaded (cached) - no loading indicator needed
         if (assetToLoad.downloaded) {
-          console.log(`[ImagesArray] Page ${page} loaded from cache ✓`);
+          // console.log(`[ImagesArray] Page ${page} loaded from cache ✓`);
           if (isMounted.current) {
             setAsset(assetToLoad);
           }
           return;
         }
-        
-        console.log(`[ImagesArray] Page ${page} not cached, downloading...`);
-        
+
+        // console.log(`[ImagesArray] Page ${page} not cached, downloading...`);
+
         // Only show loading if not cached
         if (isMounted.current) setIsLoading(true);
-        
+
         await assetToLoad.downloadAsync();
-        
-        console.log(`[ImagesArray] Page ${page} download complete ✓`);
-        
+
+        // console.log(`[ImagesArray] Page ${page} download complete ✓`);
+
         // Only set asset if mounted
         if (isMounted.current) {
           setAsset(assetToLoad);

@@ -1,9 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   ActivityIndicator,
   Platform,
   StyleSheet,
   useColorScheme,
+  View,
 } from 'react-native';
 
 import { useAudioPlayer } from 'expo-audio';
@@ -19,11 +26,13 @@ import { useAtomValue, useSetAtom } from 'jotai/react';
 import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
+import { imagesMapHafs, imagesMapWarsh } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagePreloader from '@/hooks/useImagePreloader';
 import useImagesArray from '@/hooks/useImagesArray';
 import useOrientation from '@/hooks/useOrientation';
+import { usePageFlipWeb } from '@/hooks/usePageFlipWeb';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 import {
@@ -34,9 +43,11 @@ import {
   gestureThresholdPortrait,
   hizbNotification,
   mushafContrast,
+  mushafRiwaya,
   showTrackerNotification,
   yesterdayPage,
 } from '@/jotai/atoms';
+import { getOrCreateAsset } from '@/utils/assetCache';
 import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
 import { getSEOMetadataByPage } from '@/utils/quranMetadataUtils';
 
@@ -157,6 +168,51 @@ export default function MushafPage() {
   // Preload adjacent pages for smoother navigation
   useImagePreloader(currentPage);
 
+  // Load adjacent page assets from cache for background rendering during flip
+  const mushafRiwayaValue = useAtomValue(mushafRiwaya);
+  const imagesMap = useMemo(
+    () =>
+      mushafRiwayaValue === 'hafs'
+        ? imagesMapHafs
+        : mushafRiwayaValue === 'warsh'
+          ? imagesMapWarsh
+          : null,
+    [mushafRiwayaValue],
+  );
+
+  const getAdjacentAsset = useCallback(
+    (page: number) => {
+      if (
+        !imagesMap ||
+        page < 1 ||
+        page > defaultNumberOfPages ||
+        !imagesMap[page]
+      )
+        return null;
+      const cachedAsset = getOrCreateAsset(page, imagesMap[page]);
+      return cachedAsset.downloaded ? cachedAsset : null;
+    },
+    [imagesMap, defaultNumberOfPages],
+  );
+
+  const nextPageAsset = useMemo(
+    () => getAdjacentAsset(currentPage + 1),
+    [currentPage, getAdjacentAsset],
+  );
+  const prevPageAsset = useMemo(
+    () => getAdjacentAsset(currentPage - 1),
+    [currentPage, getAdjacentAsset],
+  );
+
+  // Track drag direction for showing correct background page (web only)
+  const [bgDirection, setBgDirection] = useState<'next' | 'prev' | null>(null);
+  const bgAsset =
+    bgDirection === 'next'
+      ? nextPageAsset
+      : bgDirection === 'prev'
+        ? prevPageAsset
+        : null;
+
   const handleImageLayout = (event: any) => {
     const { width, height } = event.nativeEvent.layout;
     setDimensions({ customPageWidth: width, customPageHeight: height });
@@ -191,6 +247,33 @@ export default function MushafPage() {
     },
   );
 
+  // GSAP-based page flip for web platform
+  const {
+    pageRef: gsapPageRef,
+    overlayRef: gsapOverlayRef,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
+    isWeb: isWebPlatform,
+  } = usePageFlipWeb({
+    currentPage,
+    maxPages: defaultNumberOfPages,
+    onPageChange: handlePageChange,
+    onDirectionChange: setBgDirection,
+    sensitivity: 0.5,
+    flipThreshold: 60,
+    flipDuration: 0.5,
+    snapBackDuration: 0.35,
+  });
+
+  // Animated visibility for native background pages during flip
+  const nextBgOpacity = useAnimatedStyle(() => ({
+    opacity: translateX.value < -5 ? 1 : 0,
+  }));
+  const prevBgOpacity = useAnimatedStyle(() => ({
+    opacity: translateX.value > 5 ? 1 : 0,
+  }));
+
   const animatedStyle = useAnimatedStyle(() => {
     const maxTranslateX = 80;
     const clampedTranslateX = Math.max(
@@ -202,8 +285,8 @@ export default function MushafPage() {
     const progress = Math.abs(clampedTranslateX) / maxTranslateX;
     const direction = clampedTranslateX > 0 ? 1 : -1;
 
-    // Realistic page turn effect - rotation up to 45 degrees
-    const rotationAngle = (clampedTranslateX / maxTranslateX) * 45;
+    // Realistic page turn effect - rotation up to 45 degrees (reversed for RTL)
+    const rotationAngle = -(clampedTranslateX / maxTranslateX) * 45;
 
     // Lift the page up as it rotates (book page lifting effect)
     const translateY = -progress * 30;
@@ -385,35 +468,88 @@ export default function MushafPage() {
         description={seoMetadata.description}
         keywords={seoMetadata.keywords}
       />
-      <GestureDetector gesture={panGestureHandler}>
-        <Animated.View
-          style={[
-            styles.imageContainer,
-            animatedStyle,
-            {
-              backgroundColor:
-                colorScheme === 'dark'
-                  ? `rgba(26, 26, 26, ${1 - mushafContrastValue})`
-                  : ivoryColor,
-            },
-          ]}
-          onLayout={handleImageLayout}
-        >
-          {/* Page turn gradient overlay */}
-          <Animated.View style={overlayStyle} />
+      {isWebPlatform ? (
+        /* Web: GSAP-based page flip with background page */
+        <View style={styles.flipContainer}>
+          {/* Background page revealed during flip */}
+          {bgAsset?.localUri && (
+            <View
+              style={[
+                styles.imageContainer,
+                styles.bgPage,
+                {
+                  backgroundColor:
+                    colorScheme === 'dark'
+                      ? `rgba(26, 26, 26, ${1 - mushafContrastValue})`
+                      : ivoryColor,
+                },
+              ]}
+            >
+              <Image
+                source={{ uri: bgAsset.localUri }}
+                style={[styles.image, { width: '100%' }]}
+                contentFit="fill"
+                cachePolicy="memory-disk"
+                transition={0}
+              />
+            </View>
+          )}
+          {/* Current page with GSAP flip */}
+          <View
+            ref={gsapPageRef}
+            style={[
+              styles.imageContainer,
+              webPageStyle as any,
+              {
+                backgroundColor:
+                  colorScheme === 'dark'
+                    ? `rgba(26, 26, 26, ${1 - mushafContrastValue})`
+                    : ivoryColor,
+              },
+            ]}
+            onLayout={handleImageLayout}
+            // @ts-ignore - Web-specific pointer events
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerLeave={handlePointerUp}
+          >
+            {/* GSAP gradient overlay for depth effect */}
+            <View
+              ref={gsapOverlayRef}
+              style={styles.gsapOverlay}
+              pointerEvents="none"
+            />
 
-          {asset?.localUri ? (
-            <>
-              {isLandscape ? (
-                <ScrollView style={styles.scrollContainer}>
+            {asset?.localUri ? (
+              <>
+                {isLandscape ? (
+                  <ScrollView style={styles.scrollContainer}>
+                    <Image
+                      style={[
+                        styles.image,
+                        {
+                          width: '100%',
+                          height: undefined,
+                          aspectRatio: 0.7,
+                        },
+                        colorScheme === 'dark' && {
+                          opacity: mushafContrastValue,
+                        },
+                      ]}
+                      source={{ uri: asset?.localUri }}
+                      contentFit="fill"
+                      placeholder={ivoryColor}
+                      placeholderContentFit="cover"
+                      transition={0}
+                      cachePolicy="memory-disk"
+                    />
+                  </ScrollView>
+                ) : (
                   <Image
                     style={[
                       styles.image,
-                      {
-                        width: '100%',
-                        height: undefined,
-                        aspectRatio: 0.7,
-                      },
+                      { width: '100%' },
                       colorScheme === 'dark' && {
                         opacity: mushafContrastValue,
                       },
@@ -425,41 +561,156 @@ export default function MushafPage() {
                     transition={0}
                     cachePolicy="memory-disk"
                   />
-                </ScrollView>
-              ) : (
-                <Image
-                  style={[
-                    styles.image,
-                    { width: '100%' },
-                    colorScheme === 'dark' && {
-                      opacity: mushafContrastValue,
-                    },
-                  ]}
-                  source={{ uri: asset?.localUri }}
-                  contentFit="fill"
-                  placeholder={ivoryColor}
-                  placeholderContentFit="cover"
-                  transition={0}
-                  cachePolicy="memory-disk"
-                />
-              )}
-            </>
-          ) : (
-            <ActivityIndicator size="large" color={tintColor} />
+                )}
+              </>
+            ) : (
+              <ActivityIndicator size="large" color={tintColor} />
+            )}
+            <PageOverlay index={currentPage} dimensions={dimensions} />
+          </View>
+        </View>
+      ) : (
+        /* Native: Gesture handler with background pages */
+        <View style={styles.flipContainer}>
+          {/* Next page background (shown when swiping left) */}
+          {nextPageAsset?.localUri && (
+            <Animated.View
+              style={[
+                styles.imageContainer,
+                styles.bgPage,
+                nextBgOpacity,
+                {
+                  backgroundColor:
+                    colorScheme === 'dark'
+                      ? `rgba(26, 26, 26, ${1 - mushafContrastValue})`
+                      : ivoryColor,
+                },
+              ]}
+            >
+              <Image
+                source={{ uri: nextPageAsset.localUri }}
+                style={[styles.image, { width: '100%' }]}
+                contentFit="fill"
+                cachePolicy="memory-disk"
+                transition={0}
+              />
+            </Animated.View>
           )}
-          <PageOverlay index={currentPage} dimensions={dimensions} />
-        </Animated.View>
-      </GestureDetector>
+          {/* Prev page background (shown when swiping right) */}
+          {prevPageAsset?.localUri && (
+            <Animated.View
+              style={[
+                styles.imageContainer,
+                styles.bgPage,
+                prevBgOpacity,
+                {
+                  backgroundColor:
+                    colorScheme === 'dark'
+                      ? `rgba(26, 26, 26, ${1 - mushafContrastValue})`
+                      : ivoryColor,
+                },
+              ]}
+            >
+              <Image
+                source={{ uri: prevPageAsset.localUri }}
+                style={[styles.image, { width: '100%' }]}
+                contentFit="fill"
+                cachePolicy="memory-disk"
+                transition={0}
+              />
+            </Animated.View>
+          )}
+          {/* Current page with gesture */}
+          <GestureDetector gesture={panGestureHandler}>
+            <Animated.View
+              style={[
+                styles.imageContainer,
+                animatedStyle,
+                {
+                  backgroundColor:
+                    colorScheme === 'dark'
+                      ? `rgba(26, 26, 26, ${1 - mushafContrastValue})`
+                      : ivoryColor,
+                },
+              ]}
+              onLayout={handleImageLayout}
+            >
+              {/* Page turn gradient overlay */}
+              <Animated.View style={overlayStyle} />
+
+              {asset?.localUri ? (
+                <>
+                  {isLandscape ? (
+                    <ScrollView style={styles.scrollContainer}>
+                      <Image
+                        style={[
+                          styles.image,
+                          {
+                            width: '100%',
+                            height: undefined,
+                            aspectRatio: 0.7,
+                          },
+                          colorScheme === 'dark' && {
+                            opacity: mushafContrastValue,
+                          },
+                        ]}
+                        source={{ uri: asset?.localUri }}
+                        contentFit="fill"
+                        placeholder={ivoryColor}
+                        placeholderContentFit="cover"
+                        transition={0}
+                        cachePolicy="memory-disk"
+                      />
+                    </ScrollView>
+                  ) : (
+                    <Image
+                      style={[
+                        styles.image,
+                        { width: '100%' },
+                        colorScheme === 'dark' && {
+                          opacity: mushafContrastValue,
+                        },
+                      ]}
+                      source={{ uri: asset?.localUri }}
+                      contentFit="fill"
+                      placeholder={ivoryColor}
+                      placeholderContentFit="cover"
+                      transition={0}
+                      cachePolicy="memory-disk"
+                    />
+                  )}
+                </>
+              ) : (
+                <ActivityIndicator size="large" color={tintColor} />
+              )}
+              <PageOverlay index={currentPage} dimensions={dimensions} />
+            </Animated.View>
+          </GestureDetector>
+        </View>
+      )}
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  flipContainer: {
+    width: '100%',
+    height: '100%',
+    maxWidth: 640,
+  },
   imageContainer: {
     width: '100%',
     height: '100%',
     maxWidth: 640,
     overflow: 'hidden',
+  },
+  bgPage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 0,
   },
   scrollContainer: {
     width: '100%',
@@ -482,4 +733,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  gsapOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0,
+  },
 });
+
+// Web-specific styles applied inline (not compatible with StyleSheet.create typing)
+const webPageStyle =
+  Platform.OS === 'web'
+    ? {
+        cursor: 'grab' as const,
+        userSelect: 'none' as const,
+        touchAction: 'none' as const,
+        WebkitTransformStyle: 'preserve-3d' as const,
+        transformStyle: 'preserve-3d' as const,
+      }
+    : {};
