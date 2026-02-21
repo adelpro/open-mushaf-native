@@ -3,20 +3,20 @@
  * Implements a sliding window algorithm per action key.
  */
 
-interface RateLimitEntry {
+type RateLimitEntry = {
   timestamps: number[];
-}
+};
 
-interface RateLimitConfig {
+type RateLimitConfig = {
   maxRequests: number;
   windowMs: number;
-}
+};
 
-interface RateLimitResult {
+type RateLimitResult = {
   allowed: boolean;
   remaining: number;
   retryAfterMs: number;
-}
+};
 
 const store = new Map<string, RateLimitEntry>();
 

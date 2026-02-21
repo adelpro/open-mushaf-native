@@ -121,8 +121,9 @@ export default function ContactForm() {
           'rate_limit_error',
           'error',
         );
+        return;
       }
-      return;
+      throw error;
     }
 
     setIsLoading(true);
