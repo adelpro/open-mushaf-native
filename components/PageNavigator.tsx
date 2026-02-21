@@ -173,6 +173,7 @@ export default function PageNavigator({
           <TouchableOpacity
             style={styles.goToPageButton}
             onPress={toggleInput}
+            accessibilityRole="button"
             accessibilityLabel="الانتقال إلى صفحة محددة"
           >
             <Feather
