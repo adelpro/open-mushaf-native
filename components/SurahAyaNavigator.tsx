@@ -20,6 +20,7 @@ interface SurahAyaNavigatorProps {
   iconColor: string;
   cardColor: string;
 }
+
 export default function SurahAyaNavigator({
   currentSurah,
   currentAya,
@@ -47,13 +48,14 @@ export default function SurahAyaNavigator({
     setAyaModalVisible(false);
   };
 
-  // Show loading or error state if needed
   if (isLoading) {
     return (
       <ThemedView
         style={[styles.container, { backgroundColor: 'transparent' }]}
       >
-        <ThemedText>جاري التحميل...</ThemedText>
+        <ThemedText accessible={true} accessibilityRole="alert">
+          جاري التحميل...
+        </ThemedText>
       </ThemedView>
     );
   }
@@ -63,7 +65,10 @@ export default function SurahAyaNavigator({
       <ThemedView
         style={[styles.container, { backgroundColor: 'transparent' }]}
       >
-        <ThemedText>{`حدث خطأ: ${error}`}</ThemedText>
+        <ThemedText
+          accessible={true}
+          accessibilityRole="alert"
+        >{`حدث خطأ: ${error}`}</ThemedText>
       </ThemedView>
     );
   }
@@ -77,21 +82,15 @@ export default function SurahAyaNavigator({
         },
       ]}
       onPress={() => handleSurahSelect(item.number)}
+      // تحسين الوصول للسور
+      accessible={true}
+      accessibilityRole="button"
       accessibilityLabel={`سورة ${item.name}`}
+      accessibilityHint={`عدد آياتها ${item.numberOfAyahs} آية، اضغط للانتقال إليها`}
+      accessibilityState={{ selected: item.number === currentSurah }}
     >
       <ThemedText style={styles.surahNumber}>{item.number}</ThemedText>
-      <ThemedView
-        style={[
-          styles.separator,
-          {
-            backgroundColor: 'transparent',
-            borderColor: primaryColor + '40',
-            borderLeftWidth: 1,
-            borderRightWidth: 1,
-            borderStyle: 'dotted',
-          },
-        ]}
-      />
+      <ThemedView style={styles.separatorLine} />
       <ThemedText style={styles.surahName}>{item.name}</ThemedText>
       <ThemedText style={styles.surahInfo}>{item.numberOfAyahs} آية</ThemedText>
     </TouchableOpacity>
@@ -104,7 +103,11 @@ export default function SurahAyaNavigator({
         item === currentAya && { backgroundColor: primaryColor + '20' },
       ]}
       onPress={() => handleAyaSelect(item)}
-      accessibilityLabel={`آية ${item}`}
+      // تحسين الوصول للآيات
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel={`آية رقم ${item}`}
+      accessibilityState={{ selected: item === currentAya }}
     >
       <ThemedText style={styles.ayaNumber}>{item}</ThemedText>
     </TouchableOpacity>
@@ -119,8 +122,10 @@ export default function SurahAyaNavigator({
         <TouchableOpacity
           style={[styles.selector, { borderColor: primaryColor }]}
           onPress={() => setSurahModalVisible(true)}
-          accessibilityLabel="اختر سورة"
-          accessibilityHint="اضغط لفتح قائمة السور"
+          accessible={true}
+          accessibilityRole="combobox"
+          accessibilityLabel={`السورة الحالية: ${currentSurahName}`}
+          accessibilityHint="اضغط لفتح قائمة اختيار السور"
         >
           <ThemedText style={[styles.selectorText, { color: primaryColor }]}>
             {currentSurahName}
@@ -128,18 +133,9 @@ export default function SurahAyaNavigator({
           <Feather name="chevron-down" size={18} color={primaryColor} />
         </TouchableOpacity>
       </ThemedView>
-      <ThemedView
-        style={[
-          styles.separator,
-          {
-            backgroundColor: 'transparent',
-            borderColor: primaryColor + '40',
-            borderLeftWidth: 1,
-            borderRightWidth: 1,
-            borderStyle: 'dotted',
-          },
-        ]}
-      />
+
+      <ThemedView style={styles.verticalDivider} />
+
       {/* Aya Selector */}
       <ThemedView
         style={[styles.selectorContainer, { backgroundColor: 'transparent' }]}
@@ -147,8 +143,10 @@ export default function SurahAyaNavigator({
         <TouchableOpacity
           style={[styles.selector, { borderColor: primaryColor }]}
           onPress={() => setAyaModalVisible(true)}
-          accessibilityLabel="اختر آية"
-          accessibilityHint="اضغط لفتح قائمة الآيات"
+          accessible={true}
+          accessibilityRole="combobox"
+          accessibilityLabel={`الآية الحالية: ${currentAya}`}
+          accessibilityHint="اضغط لفتح قائمة اختيار الآيات"
         >
           <ThemedText style={[styles.selectorText, { color: primaryColor }]}>
             {currentAya}
@@ -168,6 +166,7 @@ export default function SurahAyaNavigator({
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setSurahModalVisible(false)}
+          accessibilityLabel="إغلاق القائمة"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
@@ -178,6 +177,7 @@ export default function SurahAyaNavigator({
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setSurahModalVisible(false)}
+                accessibilityLabel="إغلاق قائمة السور"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
@@ -188,7 +188,7 @@ export default function SurahAyaNavigator({
               renderItem={renderSurahItem}
               keyExtractor={(item) => item.number.toString()}
               showsVerticalScrollIndicator={isWeb}
-              initialScrollIndex={currentSurah - 1}
+              initialScrollIndex={currentSurah > 0 ? currentSurah - 1 : 0}
               getItemLayout={(_data, index) => ({
                 length: 60,
                 offset: 60 * index,
@@ -210,6 +210,7 @@ export default function SurahAyaNavigator({
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setAyaModalVisible(false)}
+          accessibilityLabel="إغلاق القائمة"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
@@ -220,6 +221,7 @@ export default function SurahAyaNavigator({
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setAyaModalVisible(false)}
+                accessibilityLabel="إغلاق قائمة الآيات"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
@@ -231,12 +233,6 @@ export default function SurahAyaNavigator({
               keyExtractor={(item) => item.toString()}
               showsVerticalScrollIndicator={isWeb}
               numColumns={5}
-              initialScrollIndex={Math.floor((currentAya - 1) / 5)}
-              getItemLayout={(_data, index) => ({
-                length: 50,
-                offset: 50 * Math.floor(index / 5),
-                index,
-              })}
               contentContainerStyle={styles.ayaGrid}
             />
           </ThemedView>
@@ -281,17 +277,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 5,
-    paddingVertical: 20,
+    paddingHorizontal: 10,
   },
   modalContent: {
-    width: '90%',
+    width: '95%',
     maxWidth: 640,
     maxHeight: '80%',
     borderRadius: 12,
     padding: 16,
     elevation: 5,
-    alignSelf: 'center',
   },
   modalHeader: {
     flexDirection: 'row',
@@ -301,17 +295,13 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
-    minHeight: 40,
   },
   modalTitle: {
     fontSize: 18,
     fontFamily: 'Tajawal_700Bold',
-    textAlignVertical: 'center',
   },
   closeButton: {
-    padding: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 8,
   },
   modalItem: {
     flexDirection: 'row',
@@ -322,40 +312,42 @@ const styles = StyleSheet.create({
     borderBottomColor: '#eee',
   },
   surahNumber: {
-    width: 30,
+    width: 35,
     fontSize: 16,
     fontFamily: 'Tajawal_700Bold',
   },
-  separator: {
-    width: 2,
-    height: '70%',
-    marginHorizontal: 12,
-    borderRadius: 4,
-    overflow: 'hidden',
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderStyle: 'dotted',
-    opacity: 0.8,
-    backgroundColor: 'transparent',
+  separatorLine: {
+    width: 1,
+    height: 20,
+    backgroundColor: '#ccc',
+    marginHorizontal: 10,
+  },
+  verticalDivider: {
+    width: 1,
+    height: 30,
+    backgroundColor: '#ddd',
+    marginHorizontal: 5,
   },
   surahName: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: 'Amiri_400Regular',
-    marginLeft: 5,
+    textAlign: 'right',
   },
   surahInfo: {
     fontSize: 14,
     color: '#666',
+    marginLeft: 10,
     fontFamily: 'Tajawal_400Regular',
   },
   ayaGrid: {
     paddingVertical: 8,
+    alignItems: 'center',
   },
   ayaItem: {
-    width: '18%',
-    aspectRatio: 1,
-    margin: '1%',
+    width: 50,
+    height: 50,
+    margin: 5,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,

@@ -38,8 +38,6 @@ export default function PageNavigator({
   const [inputValue, setInputValue] = useState(currentPage.toString());
   const [showInput, setShowInput] = useState(false);
 
-  // Pagination logic: iterate all pages, show page 1, last page, and pages around currentPage.
-  // Insert ellipsis only once in gaps (and avoid ellipsis adjacent to 1 or last page).
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
     for (let i = 1; i <= totalPages; i++) {
@@ -83,8 +81,11 @@ export default function PageNavigator({
   };
 
   return (
-    <ThemedView style={styles.container}>
-      {/* Navigation row with page selection/input */}
+    <ThemedView
+      style={styles.container}
+      accessible={true}
+      accessibilityLabel="أدوات الانتقال بين الصفحات"
+    >
       <ThemedView style={styles.navRow}>
         {showInput ? (
           <ThemedView style={[styles.inputContainer, { flex: 1 }]}>
@@ -101,11 +102,17 @@ export default function PageNavigator({
               autoFocus
               onBlur={handleInputSubmit}
               onSubmitEditing={handleInputSubmit}
-              accessibilityLabel="Page number input"
+              // تحسين الوصول لحقل الإدخال
+              accessible={true}
+              accessibilityLabel="أدخل رقم الصفحة"
+              accessibilityHint={`القيمة المتاحة من 1 إلى ${totalPages}`}
             />
             <TouchableOpacity
               style={styles.submitButton}
               onPress={handleInputSubmit}
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="تأكيد الانتقال"
             >
               <Feather name="check" size={18} color={primaryColor} />
             </TouchableOpacity>
@@ -121,29 +128,46 @@ export default function PageNavigator({
                   { flexGrow: 1 },
                 ]}
               >
-                {getPageNumbers().map((page, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    style={[
-                      styles.pageNumber,
-                      { backgroundColor: cardColor },
-                      page === currentPage && styles.currentPageNumber,
-                      page === currentPage && { backgroundColor: primaryColor },
-                      page === '...' && styles.ellipsis,
-                    ]}
-                    onPress={() => handlePageNumberPress(page)}
-                    disabled={page === '...'}
-                  >
-                    <ThemedText
+                {getPageNumbers().map((page, index) => {
+                  const isCurrent = page === currentPage;
+                  const isEllipsis = page === '...';
+
+                  return (
+                    <TouchableOpacity
+                      key={index}
                       style={[
-                        styles.pageNumberText,
-                        page === currentPage && styles.currentPageNumberText,
+                        styles.pageNumber,
+                        { backgroundColor: cardColor },
+                        isCurrent && styles.currentPageNumber,
+                        isCurrent && { backgroundColor: primaryColor },
+                        isEllipsis && styles.ellipsis,
                       ]}
+                      onPress={() => handlePageNumberPress(page)}
+                      disabled={isEllipsis}
+                      // خصائص الوصول لأرقام الصفحات
+                      accessible={!isEllipsis}
+                      accessibilityRole="button"
+                      accessibilityLabel={
+                        isEllipsis ? 'فجوة صفحات' : `صفحة ${page}`
+                      }
+                      accessibilityState={{ selected: isCurrent }}
+                      accessibilityHint={
+                        isCurrent
+                          ? 'أنت تشاهد هذه الصفحة حالياً'
+                          : 'اضغط للانتقال لهذه الصفحة'
+                      }
                     >
-                      {page}
-                    </ThemedText>
-                  </TouchableOpacity>
-                ))}
+                      <ThemedText
+                        style={[
+                          styles.pageNumberText,
+                          isCurrent && styles.currentPageNumberText,
+                        ]}
+                      >
+                        {page}
+                      </ThemedText>
+                    </TouchableOpacity>
+                  );
+                })}
               </ScrollView>
             ) : (
               <ThemedView style={styles.compactContainer}>
@@ -153,6 +177,10 @@ export default function PageNavigator({
                     { borderColor: primaryColor },
                   ]}
                   onPress={toggleInput}
+                  accessible={true}
+                  accessibilityRole="button"
+                  accessibilityLabel={`الصفحة الحالية ${currentPage}`}
+                  accessibilityHint="اضغط لكتابة رقم الصفحة يدوياً"
                 >
                   <ThemedText
                     style={[styles.compactPageText, { color: primaryColor }]}
@@ -171,7 +199,10 @@ export default function PageNavigator({
           <TouchableOpacity
             style={styles.goToPageButton}
             onPress={toggleInput}
-            accessibilityLabel="Go to specific page"
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="الانتقال لصفحة محددة"
+            accessibilityHint="يفتح حقل كتابة رقم الصفحة"
           >
             <Feather
               name="edit"
@@ -189,7 +220,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     alignSelf: 'center',
-    // Increased vertical padding for more spacing
     paddingVertical: 15,
     width: '95%',
     maxWidth: 640,
@@ -197,13 +227,10 @@ const styles = StyleSheet.create({
   navRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    // Center content now that arrows are removed
     justifyContent: 'center',
     width: '100%',
-    marginBottom: 5, // Add some space between page numbers and edit icon
+    marginBottom: 5,
   },
-  // Removed navIcon style as it's no longer used
-
   pageNumbersContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -211,41 +238,42 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
   pageNumber: {
-    // Increased size for better touch targets
-    minWidth: 36,
-    height: 36,
-    borderRadius: 18,
+    minWidth: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 5, // Increased horizontal spacing
-    paddingHorizontal: 4, // Added padding for numbers with multiple digits
+    marginHorizontal: 4,
   },
   pageNumberText: {
-    fontSize: 14, // Slightly larger font
+    fontSize: 15,
     fontFamily: 'Tajawal_500Medium',
   },
-
   currentPageNumber: {
-    minWidth: 44,
-    height: 44,
-    borderRadius: 22,
+    minWidth: 46,
+    height: 46,
+    borderRadius: 23,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   currentPageNumberText: {
-    fontSize: 16,
+    fontSize: 17,
     color: '#fff',
-    fontWeight: '500', // Added for better emphasis
+    fontFamily: 'Tajawal_700Bold',
   },
   ellipsis: {
     backgroundColor: 'transparent',
     minWidth: 20,
   },
   editContainer: {
-    // Reduced top margin as container padding increased
     marginTop: 5,
     alignItems: 'center',
   },
   goToPageButton: {
-    padding: 4,
+    padding: 10, // زيادة مساحة اللمس
   },
   inputContainer: {
     flexDirection: 'row',
@@ -256,15 +284,16 @@ const styles = StyleSheet.create({
   pageInput: {
     borderWidth: 1,
     borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    minWidth: 60,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    minWidth: 80,
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: 16,
+    fontFamily: 'Tajawal_500Medium',
   },
   submitButton: {
-    padding: 6,
-    marginLeft: 4,
+    padding: 10,
+    marginLeft: 8,
   },
   compactContainer: {
     flex: 1,
@@ -273,17 +302,16 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   compactPageIndicator: {
-    minWidth: 50,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 1.5,
+    minWidth: 60,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 12,
   },
   compactPageText: {
-    fontSize: 16,
-    fontFamily: 'Tajawal_500Medium',
-    fontWeight: '500',
+    fontSize: 18,
+    fontFamily: 'Tajawal_700Bold',
   },
 });

@@ -22,6 +22,13 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
     <ThemedView style={styles.container}>
       <TouchableOpacity
         onPress={() => handleTabPress('surahs')}
+        // --- تحسينات الوصول ---
+        accessible={true}
+        accessibilityRole="tab" // نستخدم tab بدلاً من button ليعرف القارئ أنها قائمة تبويبات
+        accessibilityLabel="قائمة السور"
+        accessibilityState={{ selected: activeTab === 'surahs' }} // يخبر المستخدم "مختار" أو "غير مختار"
+        accessibilityHint="يعرض قائمة بجميع سور القرآن الكريم"
+        // -----------------------
         style={[
           styles.tab,
           activeTab === 'surahs' && {
@@ -44,6 +51,13 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
 
       <TouchableOpacity
         onPress={() => handleTabPress('juzs')}
+        // --- تحسينات الوصول ---
+        accessible={true}
+        accessibilityRole="tab"
+        accessibilityLabel="قائمة الأجزاء"
+        accessibilityState={{ selected: activeTab === 'juzs' }}
+        accessibilityHint="يعرض قائمة بأجزاء القرآن الكريم الثلاثين"
+        // -----------------------
         style={[
           styles.tab,
           activeTab === 'juzs' && {
@@ -68,6 +82,7 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
 }
 
 const styles = StyleSheet.create({
+  // ... (نفس الـ styles السابقة بدون تغيير)
   container: {
     flexDirection: 'row-reverse',
     justifyContent: 'space-around',

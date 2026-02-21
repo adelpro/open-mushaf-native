@@ -1,4 +1,3 @@
-// Import useState, Modal, and Feather
 import React, { useState } from 'react';
 import {
   Modal,
@@ -6,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
@@ -26,9 +26,9 @@ import {
 } from '@/jotai/atoms';
 
 export default function TrackerScreen() {
-  const { iconColor, cardColor, primaryColor } = useColors();
+  const { iconColor, cardColor, primaryColor, textColor, primaryLightColor } =
+    useColors();
   const { currentSavedPage: savedPage } = useCurrentPage();
-
   const { updateAndroidWidget } = useUpdateAndroidWidget();
 
   const [dailyTrackerGoalValue, setdailyTrackerGoalValue] =
@@ -37,9 +37,10 @@ export default function TrackerScreen() {
     dailyTrackerCompleted,
   );
   const [yesterdayPageValue, setYesterdayPageValue] = useAtom(yesterdayPage);
-  // Add state for modal visibility
+
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
+  // حساب نسبة الإنجاز
   const dailyProgress =
     dailyTrackerGoalValue > 0
       ? Math.min(
@@ -49,12 +50,10 @@ export default function TrackerScreen() {
         )
       : 0;
 
-  // Should change by full hizb (8 thumns)
   const incrementDailyGoal = () => setdailyTrackerGoalValue((prev) => prev + 1);
   const decrementDailyGoal = () =>
     setdailyTrackerGoalValue((prev) => Math.max(1, prev - 1));
 
-  // Consolidated reset logic into one function
   const performReset = async () => {
     if (typeof savedPage === 'number' && savedPage > 0) {
       setYesterdayPageValue({
@@ -67,161 +66,154 @@ export default function TrackerScreen() {
       value: 0,
       date: new Date().toDateString(),
     });
-    // Update Android widget
+
     await updateAndroidWidget();
-    setConfirmModalVisible(false); // Close modal after reset
+    setConfirmModalVisible(false);
   };
 
-  // Removed the old resetAllProgress function that used Alert/confirm
-
   const getHizbText = (count: number) => {
-    const hizbCount = count;
-
-    if (hizbCount === 0) return '0 أحزاب';
-    if (hizbCount === 1) return 'حزب واحد';
-    if (hizbCount === 2) return 'حزبين';
-    if (hizbCount >= 3 && hizbCount <= 10) return `${hizbCount} أحزاب`;
-    return `${hizbCount} حزباً`;
+    if (count === 0) return '0 أحزاب';
+    if (count === 1) return 'حزب واحد';
+    if (count === 2) return 'حزبين';
+    if (count >= 3 && count <= 10) return `${count} أحزاب`;
+    return `${count} حزباً`;
   };
 
   return (
     <>
-      <Stack.Screen options={{ title: 'الورد' }} />
-      <SEO title="الورد - المصحف المفتوح" description="الورد في تطبيق المصحف" />
+      <Stack.Screen options={{ title: 'الورد اليومي' }} />
+      <SEO
+        title="الورد - المصحف المفتوح"
+        description="متابعة الورد اليومي في تطبيق المصحف"
+      />
+
       <ThemedView style={styles.container}>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
         >
+          {/* بطاقة الإنجاز اليومي */}
           <ThemedView
-            style={[styles.navigationSection, { backgroundColor: cardColor }]}
+            style={[styles.card, { backgroundColor: cardColor }]}
+            accessible={true}
+            accessibilityLabel={`إنجازك اليومي هو ${dailyProgress.toFixed(0)} بالمائة. قرأت ${getHizbText(dailyTrackerCompletedValue.value)}.`}
           >
-            <ThemedView
-              style={[styles.labelContainer, { backgroundColor: cardColor }]}
-            >
-              <Feather
-                name="book-open"
-                size={24}
-                color={iconColor}
-                style={[styles.icon, { color: primaryColor }]}
-              />
-              <ThemedText style={styles.label}>الورد اليومي:</ThemedText>
-            </ThemedView>
+            <View style={styles.labelContainer}>
+              <Feather name="trending-up" size={22} color={primaryColor} />
+              <ThemedText style={styles.label}>تقدمك اليومي</ThemedText>
+            </View>
 
-            <ThemedView style={styles.progressContainer}>
-              <ThemedView
-                style={[
-                  styles.progressBar,
-                  { width: `${dailyProgress}%`, backgroundColor: primaryColor },
-                ]}
-              />
-              <ThemedText
-                style={[
-                  styles.progressText,
-                  { color: dailyProgress > 50 ? 'white' : 'black' },
-                ]}
-              >
+            <View
+              style={styles.progressWrapper}
+              accessible={true}
+              accessibilityRole="progressbar"
+              accessibilityValue={{
+                now: dailyProgress,
+                min: 0,
+                max: 100,
+                text: `${dailyProgress.toFixed(0)}%`,
+              }}
+            >
+              <View style={styles.progressBackground}>
+                <View
+                  style={[
+                    styles.progressBar,
+                    {
+                      width: `${dailyProgress}%`,
+                      backgroundColor: primaryColor,
+                    },
+                  ]}
+                />
+              </View>
+              <ThemedText style={styles.progressPercentText}>
                 {dailyProgress.toFixed(1)}%
               </ThemedText>
-            </ThemedView>
+            </View>
 
             <ThemedText style={styles.infoText}>
-              قراءة{' '}
-              {Number.isInteger(dailyTrackerCompletedValue.value)
-                ? getHizbText(dailyTrackerCompletedValue.value)
-                : `${dailyTrackerCompletedValue.value.toFixed(1)} حزباً`}{' '}
+              أتممت قراءة{' '}
+              <ThemedText
+                type="defaultSemiBold"
+                style={{ color: primaryColor }}
+              >
+                {Number.isInteger(dailyTrackerCompletedValue.value)
+                  ? getHizbText(dailyTrackerCompletedValue.value)
+                  : `${dailyTrackerCompletedValue.value.toFixed(1)} حزباً`}
+              </ThemedText>{' '}
               من أصل {getHizbText(dailyTrackerGoalValue)}
             </ThemedText>
 
             {yesterdayPageValue.value > 0 && (
-              <ThemedText style={[styles.infoText, { fontSize: 14 }]}>
-                آخر صفحة من الأمس: {yesterdayPageValue.value}
+              <ThemedText style={styles.yesterdayText}>
+                آخر صفحة قرأتها بالأمس: {yesterdayPageValue.value}
               </ThemedText>
             )}
 
-            <ThemedView style={styles.controlsContainer}>
-              <ThemedView style={styles.controlGroup}>
-                <ThemedText style={styles.controlLabel}>
-                  الهدف اليومي:
+            <View style={styles.divider} />
+
+            {/* التحكم في الهدف */}
+            <View style={styles.controlsSection}>
+              <ThemedText style={styles.controlLabel}>
+                تعديل الهدف اليومي:
+              </ThemedText>
+              <View style={styles.counterContainer}>
+                <TouchableOpacity
+                  style={[
+                    styles.counterButton,
+                    { borderColor: primaryLightColor },
+                  ]}
+                  onPress={decrementDailyGoal}
+                  accessibilityLabel="تقليل الهدف بمقدار حزب"
+                >
+                  <Feather name="minus" size={18} color={primaryColor} />
+                </TouchableOpacity>
+
+                <ThemedText style={styles.counterValue}>
+                  {getHizbText(dailyTrackerGoalValue)}
                 </ThemedText>
-                <ThemedView style={styles.controls}>
-                  <TouchableOpacity
-                    style={styles.controlButton}
-                    onPress={decrementDailyGoal}
-                  >
-                    <Feather name="minus" size={20} color={primaryColor} />
-                  </TouchableOpacity>
-                  <ThemedText style={styles.controlValue}>
-                    {getHizbText(dailyTrackerGoalValue)}
-                  </ThemedText>
-                  <TouchableOpacity
-                    style={styles.controlButton}
-                    onPress={incrementDailyGoal}
-                  >
-                    <Feather name="plus" size={20} color={primaryColor} />
-                  </TouchableOpacity>
-                </ThemedView>
-              </ThemedView>
-            </ThemedView>
+
+                <TouchableOpacity
+                  style={[
+                    styles.counterButton,
+                    { borderColor: primaryLightColor },
+                  ]}
+                  onPress={incrementDailyGoal}
+                  accessibilityLabel="زيادة الهدف بمقدار حزب"
+                >
+                  <Feather name="plus" size={18} color={primaryColor} />
+                </TouchableOpacity>
+              </View>
+            </View>
           </ThemedView>
 
-          <ThemedView
-            style={[styles.navigationSection, { backgroundColor: cardColor }]}
-          >
-            <ThemedView
-              style={[styles.labelContainer, { backgroundColor: cardColor }]}
+          {/* بطاقة معلومات التقسيم */}
+          <ThemedView style={[styles.card, { backgroundColor: cardColor }]}>
+            <View style={styles.labelContainer}>
+              <Feather name="info" size={22} color={primaryColor} />
+              <ThemedText style={styles.label}>كيف يتم الحساب؟</ThemedText>
+            </View>
+
+            <ThemedText style={styles.descriptionText}>
+              يُحسب الورد تلقائياً بمقارنة الصفحة التي وصلت إليها الآن (صفحة{' '}
+              {savedPage}) مع الصفحة التي توقفت عندها بالأمس.
+            </ThemedText>
+
+            <ThemedButton
+              variant="primary"
+              style={styles.resetButton}
+              onPress={() => setConfirmModalVisible(true)}
+              accessibilityLabel="إعادة تعيين الورد اليومي"
             >
-              <Feather
-                name="info"
-                size={24}
-                color={iconColor}
-                style={[styles.icon, { color: primaryColor }]}
-              />
-              <ThemedText style={styles.label}>عن تقسيم القرآن:</ThemedText>
-            </ThemedView>
-
-            <ThemedText style={styles.infoText}>
-              القرآن الكريم مقسم إلى 60 حزباً لتسهيل القراءة والمراجعة.
-            </ThemedText>
-
-            <ThemedText style={[styles.infoText, { color: primaryColor }]}>
-              يُحسب الورد الْيَوْمِيُّ من خلال مقارنة الصفحة الحالية (صفحة{' '}
-              {typeof savedPage === 'number' ? savedPage : 'غير محددة'}) بآخر
-              صفحة قرأتها بالأمس، وتحديد عدد الأحزاب المقروءة.
-            </ThemedText>
-
-            <ThemedView style={styles.resetButtonsContainer}>
-              <ThemedButton
-                variant="primary"
-                style={styles.resetButton}
-                // Update onPress to show the modal
-                onPress={() => setConfirmModalVisible(true)}
-              >
-                <ThemedView
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    backgroundColor: 'transparent',
-                    justifyContent: 'center',
-                    gap: 10,
-                  }}
-                >
-                  <Feather name="refresh-cw" size={16} />
-                  <Text
-                    style={{
-                      fontFamily: 'Tajawal_400Regular',
-                      fontSize: 18,
-                    }}
-                  >
-                    إعادة التعيين
-                  </Text>
-                </ThemedView>
-              </ThemedButton>
-            </ThemedView>
+              <View style={styles.resetButtonContent}>
+                <Feather name="refresh-cw" size={18} color="white" />
+                <Text style={styles.resetButtonText}>إعادة تعيين اليوم</Text>
+              </View>
+            </ThemedButton>
           </ThemedView>
         </ScrollView>
 
-        {/* Confirmation Modal */}
+        {/* مودال التأكيد */}
         <Modal
           animationType="fade"
           transparent={true}
@@ -231,43 +223,48 @@ export default function TrackerScreen() {
           <TouchableOpacity
             style={styles.modalOverlay}
             activeOpacity={1}
-            onPress={() => setConfirmModalVisible(false)} // Close on overlay press
+            onPress={() => setConfirmModalVisible(false)}
           >
-            {/* Prevent modal closing when pressing inside content */}
             <ThemedView
-              style={[styles.modalContent, { backgroundColor: cardColor }]}
+              style={[
+                styles.modalContent,
+                {
+                  backgroundColor: cardColor,
+                  borderColor: primaryLightColor,
+                  borderWidth: 1,
+                },
+              ]}
               onStartShouldSetResponder={() => true}
             >
-              <ThemedView style={styles.modalHeader}>
-                <ThemedText style={styles.modalTitle}>تأكيد</ThemedText>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setConfirmModalVisible(false)}
-                >
-                  <Feather name="x" size={24} color={iconColor} />
+              <View style={styles.modalHeader}>
+                <ThemedText type="defaultSemiBold" style={styles.modalTitle}>
+                  تأكيد الإجراء
+                </ThemedText>
+                <TouchableOpacity onPress={() => setConfirmModalVisible(false)}>
+                  <Feather name="x" size={22} color={iconColor} />
                 </TouchableOpacity>
-              </ThemedView>
+              </View>
 
               <ThemedText style={styles.modalMessage}>
-                هل أنت متأكد من رغبتك في إعادة تعيين التقدم؟
+                هل تريد حقاً تصفير تقدمك لهذا اليوم والبدء من جديد؟
               </ThemedText>
 
-              <ThemedView style={styles.modalActions}>
+              <View style={styles.modalActions}>
                 <ThemedButton
                   variant="outlined-primary"
-                  onPress={() => setConfirmModalVisible(false)} // Just close modal
-                  style={styles.modalButton}
+                  onPress={() => setConfirmModalVisible(false)}
+                  style={styles.modalBtn}
                 >
                   إلغاء
                 </ThemedButton>
                 <ThemedButton
                   variant="primary"
-                  onPress={() => performReset()} // Call the reset logic
-                  style={styles.modalButton}
+                  onPress={performReset}
+                  style={styles.modalBtn}
                 >
                   تأكيد
                 </ThemedButton>
-              </ThemedView>
+              </View>
             </ThemedView>
           </TouchableOpacity>
         </Modal>
@@ -279,139 +276,155 @@ export default function TrackerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
-    margin: 2,
+  },
+  scrollView: {
+    width: '100%',
+  },
+  scrollContent: {
+    padding: 20,
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    maxWidth: 600,
     alignSelf: 'center',
     width: '100%',
-    maxWidth: 640,
   },
-  scrollView: { width: '100%' },
-  scrollContent: { alignItems: 'center', paddingBottom: 40 },
-  navigationSection: {
-    width: '90%',
-    borderRadius: 12,
-    padding: 16,
-    marginTop: 16,
+  card: {
+    width: '100%',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 20,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
-    marginBottom: 12,
+    gap: 10,
+    marginBottom: 20,
   },
-  icon: { marginEnd: 10 },
-  label: { fontSize: 18, fontWeight: 'bold' },
-  progressContainer: {
-    height: 24,
-    width: '100%',
-    borderRadius: 12,
-    backgroundColor: '#E5E7EB',
+  label: {
+    fontSize: 20,
+    fontFamily: 'Tajawal_700Bold',
+  },
+  progressWrapper: {
+    marginBottom: 15,
+  },
+  progressBackground: {
+    height: 12,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 6,
     overflow: 'hidden',
-    justifyContent: 'center',
-    marginBottom: 8,
   },
   progressBar: {
-    position: 'absolute',
     height: '100%',
-    left: 0,
-    borderRadius: 12,
+    borderRadius: 6,
   },
-  progressText: {
-    width: '100%',
-    textAlign: 'center',
-    fontSize: 12,
-    zIndex: 1,
+  progressPercentText: {
+    textAlign: 'left',
+    fontSize: 14,
+    marginTop: 5,
+    fontFamily: 'Tajawal_700Bold',
   },
-  infoText: { marginTop: 4, fontSize: 16, lineHeight: 24 },
-  controlsContainer: {
-    marginTop: 12,
+  infoText: {
+    fontSize: 17,
+    fontFamily: 'Tajawal_400Regular',
+    lineHeight: 26,
+    textAlign: 'right',
+  },
+  yesterdayText: {
+    fontSize: 14,
+    opacity: 0.7,
+    marginTop: 8,
+    textAlign: 'right',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#eee',
+    marginVertical: 20,
+  },
+  controlsSection: {
     alignItems: 'center',
   },
-  controlGroup: { flexDirection: 'row', alignItems: 'center' },
-  controlLabel: { marginEnd: 8, fontSize: 16 },
-  controls: {
+  controlLabel: {
+    fontSize: 16,
+    marginBottom: 15,
+    fontFamily: 'Tajawal_500Medium',
+  },
+  counterContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 5,
+    gap: 20,
   },
-  controlButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
+  counterButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 10,
   },
-  controlValue: {
-    fontSize: 16,
+  counterValue: {
+    fontSize: 18,
     fontFamily: 'Tajawal_700Bold',
-    minWidth: 60,
+    minWidth: 80,
     textAlign: 'center',
   },
-  resetButtonsContainer: {
-    marginTop: 20,
-    alignItems: 'center',
-    backgroundColor: 'transparent',
+  descriptionText: {
+    fontSize: 15,
+    lineHeight: 24,
+    marginBottom: 25,
+    textAlign: 'right',
   },
-  resetButton: { paddingHorizontal: 16, paddingVertical: 8 }, // This padding controls the space around the icon and text
-
-  // Add Modal Styles (copied from settings.tsx and adjusted slightly)
+  resetButton: {
+    height: 50,
+    borderRadius: 12,
+  },
+  resetButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  resetButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontFamily: 'Tajawal_700Bold',
+  },
+  // Modal Styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 5,
-    paddingVertical: 20,
   },
   modalContent: {
-    width: '90%',
-    maxWidth: 400,
-    borderRadius: 12,
-    padding: 16,
-    elevation: 5,
-    alignSelf: 'center',
+    width: '85%',
+    maxWidth: 380,
+    borderRadius: 20,
+    padding: 24,
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee', // Consider using a theme color here
-    minHeight: 40,
-    backgroundColor: 'transparent', // Ensure header background is transparent if content has color
+    marginBottom: 15,
   },
   modalTitle: {
-    fontSize: 18,
-    fontFamily: 'Tajawal_700Bold',
-    textAlignVertical: 'center',
-  },
-  closeButton: {
-    padding: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
+    fontSize: 20,
   },
   modalMessage: {
     fontSize: 16,
-    marginBottom: 20,
+    lineHeight: 24,
+    marginBottom: 30,
     textAlign: 'center',
     fontFamily: 'Tajawal_400Regular',
   },
   modalActions: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    backgroundColor: 'transparent', // Ensure actions background is transparent
+    justifyContent: 'space-between',
   },
-  modalButton: {
-    width: '40%', // Use percentage for better responsiveness
-    maxWidth: 120, // Add maxWidth to prevent buttons getting too large
+  modalBtn: {
+    width: '48%',
   },
 });

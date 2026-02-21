@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  Modal,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import { Entypo, Feather } from '@expo/vector-icons';
 import { useAtom } from 'jotai/react';
@@ -32,7 +38,8 @@ export default function SettingsScreen() {
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const [HizbNotificationValue, setHizbNotificationValue] =
     useAtom(hizbNotification);
-  const { textColor, primaryColor, cardColor, iconColor } = useColors();
+  const { textColor, primaryColor, cardColor, iconColor, primaryLightColor } =
+    useColors();
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
@@ -46,12 +53,7 @@ export default function SettingsScreen() {
   };
 
   const handleHizbNotificationValueChange = (value: number) => {
-    if (value === 1 || value === 2) {
-      setHizbNotificationValue(value);
-      return;
-    }
-
-    setHizbNotificationValue(0);
+    setHizbNotificationValue(value === 1 || value === 2 ? value : 0);
   };
 
   return (
@@ -60,85 +62,56 @@ export default function SettingsScreen() {
         title="المصحف المفتوح - الإعدادات"
         description="إعدادات التطبيق - تخصيص المظهر والإشعارات والرواية"
       />
+
+      {/* صوت قلب الصفحة */}
       <Pressable
-        style={[
-          styles.settingsSection,
-          { borderColor: textColor, backgroundColor: cardColor },
-        ]}
+        style={[styles.settingsSection, { backgroundColor: cardColor }]}
         onPress={toggleFlipSoundSwitch}
-        accessibilityRole="button"
-        accessibilityLabel="تفعيل صوت قلب الصفحة"
-        accessibilityHint="اضغط لتفعيل أو تعطيل صوت قلب الصفحة"
-        accessibilityState={{ selected: isFlipSoundEnabled }}
+        accessible={true}
+        accessibilityRole="switch"
+        accessibilityLabel="صوت قلب الصفحة"
+        accessibilityState={{ checked: isFlipSoundEnabled }}
+        accessibilityHint="يفعل صوت محاكاة قلب الورق عند التنقل"
       >
-        <ThemedView style={styles.iconTextContainer}>
-          <Feather
-            name="volume-2"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
-          />
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.itemText, { backgroundColor: cardColor }]}
-          >
+        <View style={styles.iconTextContainer}>
+          <Feather name="volume-2" size={24} color={iconColor} />
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
             صوت قلب الصفحة:
           </ThemedText>
-        </ThemedView>
+        </View>
         <Toggle
           color={primaryColor}
           size={40}
-          circleColor={primaryColor}
           toggle={isFlipSoundEnabled}
           setToggle={toggleFlipSoundSwitch}
-          aria-checked={isFlipSoundEnabled}
-          aria-label="صوت قلب الصفحة"
-          accessibilityLabel="تبديل صوت قلب الصفحة"
-          accessibilityState={{ checked: isFlipSoundEnabled }}
         />
       </Pressable>
 
-      {/* New Toggle for showDailyHizbCompletedBorder */}
+      {/* تنبيه الورد اليومي */}
       <Pressable
-        style={[
-          styles.settingsSection,
-          { borderColor: textColor, backgroundColor: cardColor },
-        ]}
+        style={[styles.settingsSection, { backgroundColor: cardColor }]}
         onPress={toggleTrackerSwitch}
-        accessibilityRole="button"
-        accessibilityLabel="تفعيل تنبيه إتمام الورد اليومي"
-        accessibilityHint="اضغط لتفعيل أو تعطيل تنبه إتمام الورد اليومي"
-        accessibilityState={{
-          selected: showTrackerNotificationValue,
-        }}
+        accessible={true}
+        accessibilityRole="switch"
+        accessibilityLabel="تنبيه الورد اليومي"
+        accessibilityState={{ checked: showTrackerNotificationValue }}
+        accessibilityHint="يظهر تنبيهاً عند إتمام حزبك المعتاد"
       >
-        <ThemedView style={styles.iconTextContainer}>
-          <Feather
-            name="bell"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
-          />
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.itemText, { backgroundColor: cardColor }]}
-          >
+        <View style={styles.iconTextContainer}>
+          <Feather name="bell" size={24} color={iconColor} />
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
             تنبيه الورد اليومي:
           </ThemedText>
-        </ThemedView>
+        </View>
         <Toggle
           color={primaryColor}
           size={40}
-          circleColor={primaryColor}
           toggle={showTrackerNotificationValue}
           setToggle={toggleTrackerSwitch}
-          aria-checked={showTrackerNotificationValue}
-          aria-label="إظهار تنبيه إتمام الحزب اليومي"
-          accessibilityLabel="تنبيه إتمام الحزب اليومي"
-          accessibilityState={{ checked: showTrackerNotificationValue }}
         />
       </Pressable>
 
+      {/* سطوع الوضع الليلي */}
       <ThemedView
         style={[
           styles.settingsSection,
@@ -146,35 +119,34 @@ export default function SettingsScreen() {
           { backgroundColor: cardColor },
         ]}
       >
-        <ThemedView
-          style={[
-            styles.rowContainer,
-            styles.iconTextContainer,
-            { backgroundColor: cardColor },
-          ]}
-        >
-          <Entypo
-            name="light-up"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
-          />
+        <View style={styles.iconTextContainer}>
+          <Entypo name="light-up" size={24} color={iconColor} />
           <ThemedText type="defaultSemiBold" style={styles.itemText}>
-            {` سطوع الوضع الليلي: (${Number(mushafContrastValue * 100).toFixed(0)}%)`}
+            {`سطوع الوضع الليلي: (${(mushafContrastValue * 100).toFixed(0)}%)`}
           </ThemedText>
-        </ThemedView>
-
-        <ThemedView
-          style={[styles.sliderContainer, { backgroundColor: cardColor }]}
+        </View>
+        <View
+          style={styles.sliderContainer}
+          accessible={true}
+          accessibilityRole="adjustable"
+          accessibilityLabel="مستوى سطوع الوضع الليلي"
+          accessibilityValue={{
+            now: mushafContrastValue * 100,
+            min: 0,
+            max: 100,
+            text: `${(mushafContrastValue * 100).toFixed(0)} بالمائة`,
+          }}
+          accessibilityHint="اسحب لليمين أو اليسار لتعديل السطوع"
         >
           <AwesomeSlider
             value={mushafContrastValue}
             onValueChange={setMushafContrastValue}
             primaryColor={primaryColor}
           />
-        </ThemedView>
+        </View>
       </ThemedView>
 
+      {/* تفعيل التنبيهات */}
       <ThemedView
         style={[
           styles.settingsSection,
@@ -182,40 +154,28 @@ export default function SettingsScreen() {
           { backgroundColor: cardColor },
         ]}
       >
-        <ThemedView
-          style={[
-            styles.fullWidthContainer,
-            styles.iconTextContainer,
-            { backgroundColor: cardColor },
-          ]}
-        >
-          <Feather
-            name="bell"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
-          />
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.itemText, styles.fullWidth]}
-          >
-            تفعيل التنبيهات:
+        <View style={styles.iconTextContainer}>
+          <Feather name="bell" size={24} color={iconColor} />
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
+            تذكير الورد (حسب):
           </ThemedText>
-        </ThemedView>
-        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
+        </View>
+        <View
+          style={styles.fullWidth}
+          accessible={true}
+          accessibilityLabel="خيارات نوع التنبيه"
+        >
           <SegmentedControlWithDisabled
             options={notificationOptions}
             initialSelectedIndex={HizbNotificationValue}
             activeColor={primaryColor}
-            textColor={primaryColor}
-            disabledTextColor={primaryColor}
-            onSelectionChange={(index: number) =>
-              handleHizbNotificationValueChange(index)
-            }
+            textColor={textColor}
+            onSelectionChange={handleHizbNotificationValueChange}
           />
-        </Pressable>
+        </View>
       </ThemedView>
 
+      {/* اختيار الرواية */}
       <ThemedView
         style={[
           styles.settingsSection,
@@ -223,51 +183,42 @@ export default function SettingsScreen() {
           { backgroundColor: cardColor },
         ]}
       >
-        <ThemedView
-          style={[
-            styles.fullWidthContainer,
-            styles.iconTextContainer,
-            { backgroundColor: cardColor },
-          ]}
-        >
-          <Feather
-            name="book-open"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
-          />
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.itemText, styles.fullWidth]}
-          >
-            إختيار الرواية :
+        <View style={styles.iconTextContainer}>
+          <Feather name="book-open" size={24} color={iconColor} />
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
+            اختيار الرواية:
           </ThemedText>
-        </ThemedView>
-        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
+        </View>
+        <View
+          style={styles.fullWidth}
+          accessible={true}
+          accessibilityLabel="اختر رواية المصحف"
+        >
           <SegmentedControl
             options={riwayaOptions}
             initialSelectedIndex={RiwayaByIndice(mushafRiwayaValue)}
             activeColor={primaryColor}
-            textColor={primaryColor}
-            onSelectionChange={(index: number) => {
-              const selectedRiwaya = RiwayaByValue(index);
-              setMushafRiwayaValue(selectedRiwaya);
-            }}
+            textColor={textColor}
+            onSelectionChange={(index: number) =>
+              setMushafRiwayaValue(RiwayaByValue(index))
+            }
           />
-        </Pressable>
+        </View>
       </ThemedView>
 
+      {/* إعادة الضبط */}
       <ThemedView
         style={[
           styles.settingsSection,
-          styles.columnSection,
-          { backgroundColor: cardColor },
+          { backgroundColor: 'transparent', elevation: 0 },
         ]}
       >
         <ThemedButton
-          role="button"
           variant="danger"
           onPress={() => setConfirmModalVisible(true)}
+          style={styles.fullWidth}
+          accessibilityLabel="إعادة ضبط التطبيق بالكامل"
+          accessibilityHint="سيؤدي هذا لمسح جميع الإعدادات والمواضع المحفوظة"
         >
           إعادة ضبط التطبيق
         </ThemedButton>
@@ -275,35 +226,39 @@ export default function SettingsScreen() {
 
       {/* Confirmation Modal */}
       <Modal
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         visible={confirmModalVisible}
         onRequestClose={() => setConfirmModalVisible(false)}
       >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setConfirmModalVisible(false)}
-        >
+        <View style={styles.modalOverlay}>
           <ThemedView
-            style={[styles.modalContent, { backgroundColor: cardColor }]}
-            onStartShouldSetResponder={() => true}
+            style={[
+              styles.modalContent,
+              {
+                backgroundColor: cardColor,
+                borderColor: primaryLightColor,
+                borderWidth: 1,
+              },
+            ]}
           >
-            <ThemedView style={styles.modalHeader}>
-              <ThemedText style={styles.modalTitle}>تأكيد</ThemedText>
+            <View style={styles.modalHeader}>
+              <ThemedText style={styles.modalTitle}>تأكيد الحذف</ThemedText>
               <TouchableOpacity
-                style={styles.closeButton}
                 onPress={() => setConfirmModalVisible(false)}
+                accessibilityLabel="إغلاق"
+                accessibilityRole="button"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
-            </ThemedView>
+            </View>
 
             <ThemedText style={styles.modalMessage}>
-              هل أنت متأكد من رغبتك في إعادة ضبط التطبيق؟
+              هل أنت متأكد من رغبتك في إعادة ضبط التطبيق؟ سيتم فقدان جميع
+              بياناتك المحلية.
             </ThemedText>
 
-            <ThemedView style={styles.modalActions}>
+            <View style={styles.modalActions}>
               <ThemedButton
                 variant="outlined-primary"
                 onPress={() => setConfirmModalVisible(false)}
@@ -321,9 +276,9 @@ export default function SettingsScreen() {
               >
                 تأكيد
               </ThemedButton>
-            </ThemedView>
+            </View>
           </ThemedView>
-        </TouchableOpacity>
+        </View>
       </Modal>
     </ScrollView>
   );
@@ -332,111 +287,83 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 15,
-    margin: 2,
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    alignSelf: 'center',
     width: '100%',
     maxWidth: 640,
+    alignSelf: 'center',
   },
   settingsSection: {
     width: '100%',
     marginBottom: 15,
-    padding: 12,
-    borderRadius: 8,
-    elevation: 3,
+    padding: 15,
+    borderRadius: 12,
+    elevation: 2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   columnSection: {
     flexDirection: 'column',
+    alignItems: 'flex-start',
   },
-  rowContainer: {
-    alignItems: 'center',
-    gap: 1,
+  iconTextContainer: {
     flexDirection: 'row',
-    width: '100%',
-  },
-  fullWidthContainer: {
     alignItems: 'center',
-    width: '100%',
+    gap: 10,
+    marginBottom: 5,
+  },
+  itemText: {
+    fontSize: 18,
+    fontFamily: 'Tajawal_700Bold',
   },
   fullWidth: {
     width: '100%',
-  },
-  itemText: {
-    fontSize: 20,
-    fontFamily: 'Tajawal_700Bold',
-    paddingVertical: 8,
-    paddingHorizontal: 5,
-    textAlignVertical: 'center',
-    alignItems: 'baseline',
+    marginTop: 10,
   },
   sliderContainer: {
     width: '100%',
-    position: 'relative',
+    paddingVertical: 15,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 5,
-    paddingVertical: 20,
   },
   modalContent: {
-    width: '90%',
+    width: '85%',
     maxWidth: 400,
-    borderRadius: 12,
-    padding: 16,
-    elevation: 5,
-    alignSelf: 'center',
+    borderRadius: 20,
+    padding: 20,
+    elevation: 10,
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    minHeight: 40,
+    marginBottom: 20,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: 'Tajawal_700Bold',
-    textAlignVertical: 'center',
-  },
-  closeButton: {
-    padding: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   modalMessage: {
     fontSize: 16,
-    marginBottom: 20,
+    marginBottom: 30,
     textAlign: 'center',
     fontFamily: 'Tajawal_400Regular',
+    lineHeight: 24,
   },
   modalActions: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: 'transparent',
+    justifyContent: 'space-between',
     width: '100%',
   },
   modalButton: {
-    width: '40%',
-    maxWidth: 100,
-  },
-  iconTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    margin: 2,
-    marginBottom: 5,
-  },
-  iconStyle: {
-    paddingVertical: 8,
+    width: '48%',
   },
 });

@@ -32,7 +32,7 @@ export default function SearchResultItem({
   getPositiveTokens,
   onSelectAya,
 }: SearchResultItemProps) {
-  const { directColor, fuzzyColor, relatedColor } = useColors();
+  const { directColor, fuzzyColor, relatedColor, iconColor } = useColors();
   const cleanQuery = query.trim();
   const mapEntry = wordMap[cleanQuery];
 
@@ -97,11 +97,18 @@ export default function SearchResultItem({
     }
   }
 
+  // إعداد نص وصفي للمكفوفين يلخص النتيجة
+  const accessibilityLabelText = `سورة ${item.sura_name}، آية ${item.aya_id}. النص: ${item.standard}.`;
+
   return (
     <TouchableOpacity
       onPress={() => onSelectAya({ aya: item.aya_id, surah: item.sura_id })}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabelText}
+      accessibilityHint="اضغط لعرض الآية في المصحف"
     >
-      <ThemedView style={styles.item}>
+      <ThemedView style={[styles.item, { borderBottomColor: iconColor }]}>
         <View style={styles.header}>
           <Pressable
             onPress={() =>
@@ -110,21 +117,30 @@ export default function SearchResultItem({
                 params: { page: item.page_id.toString(), temporary: 'true' },
               })
             }
+            accessible={true}
+            accessibilityRole="link"
+            accessibilityLabel={`الانتقال إلى صفحة ${item.page_id} في المصحف`}
           >
-            <ThemedText type="link">{`سورة: ${item.sura_name} - الآية: ${item.aya_id}`}</ThemedText>
+            <ThemedText type="link" style={styles.headerText}>
+              {`سورة: ${item.sura_name} - الآية: ${item.aya_id}`}
+            </ThemedText>
           </Pressable>
         </View>
 
-        <ThemedText type="default" style={styles.uthmani}>
+        <ThemedText
+          type="default"
+          style={styles.uthmani}
+          importantForAccessibility="no-hide-descendants" // نخفي النص الداخلي لأننا قرأناه في الـ Label بالأعلى لمنع التكرار
+        >
           <HighlightText
             text={item.standard}
             tokens={directTokens}
             relatedWords={relatedTokens}
             fuzzyWords={fuzzyTokens}
-            color={directColor} // main tokens
-            relatedColor={relatedColor} // if HighlightText supports it
-            fuzzyColor={fuzzyColor} // fuzzy matches
-            style={{ fontSize: 18 }}
+            color={directColor}
+            relatedColor={relatedColor}
+            fuzzyColor={fuzzyColor}
+            style={{ fontSize: 20 }}
           />
         </ThemedText>
       </ThemedView>
@@ -142,11 +158,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderBottomWidth: 1,
   },
-  uthmani: { paddingVertical: 10, fontFamily: 'Amiri_400Regular' },
+  uthmani: {
+    paddingVertical: 10,
+    fontFamily: 'Amiri_400Regular',
+    textAlign: 'right',
+    width: '100%',
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
     width: '100%',
+  },
+  headerText: {
+    fontFamily: 'Tajawal_500Medium',
+    fontSize: 14,
   },
 });

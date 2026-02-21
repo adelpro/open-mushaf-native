@@ -4,6 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   useColorScheme,
+  View,
 } from 'react-native';
 
 import PrivacyContentArabic from '@/components/PrivacyContentArabic';
@@ -15,10 +16,14 @@ import { Colors } from '@/constants/Colors';
 import { isRTL } from '@/utils';
 
 export default function PrivacyScreen() {
-  const [selectedTab, setSelectedTab] = useState('arabic'); // Default to Arabic
+  const [selectedTab, setSelectedTab] = useState<'arabic' | 'english'>(
+    'arabic',
+  );
   const colorScheme = useColorScheme();
-  const currentColor = Colors[colorScheme ?? 'light'].tint;
-  const backgroundColor = Colors[colorScheme ?? 'light'].background;
+  const theme = colorScheme ?? 'light';
+
+  const currentColor = Colors[theme].tint;
+  const backgroundColor = Colors[theme].background;
 
   return (
     <ThemedView style={styles.container}>
@@ -26,59 +31,80 @@ export default function PrivacyScreen() {
         title="المصحف المفتوح - سياسة الخصوصية"
         description="سياسة الخصوصية للمصحف المفتوح - معلومات حول كيفية جمع واستخدام وحماية بياناتك"
       />
-      {/* Tab Selection */}
-      <ThemedView style={styles.tabContainer}>
+
+      {/* اختيار اللغة (Tabs) */}
+      <View
+        style={styles.tabContainer}
+        accessible={true}
+        accessibilityRole="tablist" // تعريف القائمة كقائمة تبويبات
+      >
         <TouchableOpacity
           style={[
             styles.tab,
             selectedTab === 'arabic' && {
               backgroundColor,
-              borderBottomWidth: 2,
+              borderBottomWidth: 3, // زيادة السمك قليلاً للوضوح البصري
               borderBottomColor: currentColor,
             },
           ]}
           onPress={() => setSelectedTab('arabic')}
-          accessibilityRole="button"
-          accessibilityLabel="Switch to Arabic tab"
+          accessible={true}
+          accessibilityRole="tab"
+          accessibilityLabel="عرض السياسة باللغة العربية"
           accessibilityState={{ selected: selectedTab === 'arabic' }}
-          accessibilityHint="Select this tab to view the privacy policy in Arabic."
         >
           <ThemedText
             style={[
               styles.tabText,
-              selectedTab === 'arabic' && { color: currentColor },
+              selectedTab === 'arabic' && {
+                color: currentColor,
+                fontWeight: 'bold',
+              },
             ]}
           >
             العربية
           </ThemedText>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={[
             styles.tab,
             selectedTab === 'english' && {
               backgroundColor,
-              borderBottomWidth: 2,
+              borderBottomWidth: 3,
               borderBottomColor: currentColor,
             },
           ]}
           onPress={() => setSelectedTab('english')}
-          accessibilityRole="button"
-          accessibilityLabel="Switch to English tab"
+          accessible={true}
+          accessibilityRole="tab"
+          accessibilityLabel="View policy in English"
           accessibilityState={{ selected: selectedTab === 'english' }}
-          accessibilityHint="Select this tab to view the privacy policy in English."
         >
           <ThemedText
             style={[
               styles.tabText,
-              selectedTab === 'english' && { color: currentColor },
+              selectedTab === 'english' && {
+                color: currentColor,
+                fontWeight: 'bold',
+              },
             ]}
           >
             English
           </ThemedText>
         </TouchableOpacity>
-      </ThemedView>
+      </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        accessible={true}
+        // هذا التنبيه يخبر المستخدم أن المحتوى يتغير بناءً على التبويب المختار
+        accessibilityLabel={
+          selectedTab === 'arabic'
+            ? 'محتوى سياسة الخصوصية بالعربية'
+            : 'Privacy Policy Content in English'
+        }
+      >
         {selectedTab === 'arabic' ? (
           <PrivacyContentArabic />
         ) : (
@@ -86,15 +112,17 @@ export default function PrivacyScreen() {
         )}
       </ScrollView>
 
+      {/* الرابط السفلي */}
       <TouchableOpacity
         style={styles.link}
         onPress={() => console.log('Privacy policy link clicked')}
+        accessible={true}
         accessibilityRole="link"
-        accessibilityLabel="عرض تفاصيل سياسة الخصوصية"
-        accessibilityHint="ينقلك إلى صفحة تحتوي على تفاصيل سياسة الخصوصية كاملة"
+        accessibilityLabel="زيارة موقع سياسة الخصوصية"
+        accessibilityHint="يفتح المتصفح لعرض تفاصيل إضافية"
       >
-        <ThemedText style={styles.linkText}>
-          سياسة الخصوصية - عرض التفاصيل
+        <ThemedText style={[styles.linkText, { color: currentColor }]}>
+          سياسة الخصوصية - عرض التفاصيل الكاملة
         </ThemedText>
       </TouchableOpacity>
     </ThemedView>
@@ -104,35 +132,39 @@ export default function PrivacyScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 0, // أزلنا الـ padding من هنا لنعطي مساحة للـ Tabs
   },
   tabContainer: {
     flexDirection: isRTL ? 'row' : 'row-reverse',
     justifyContent: 'space-around',
-    marginBottom: 20,
+    backgroundColor: 'rgba(0,0,0,0.02)', // تمييز بسيط لمنطقة التبويبات
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
   tab: {
     flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingVertical: 15,
     alignItems: 'center',
-  },
-  tabText: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  scrollContent: {
-    paddingBottom: 40,
-  },
-  link: {
-    marginTop: 20,
-    alignItems: 'center',
-    height: 48,
     justifyContent: 'center',
   },
-  linkText: {
+  tabText: {
     fontSize: 16,
-    color: Colors.light.tint,
+    fontFamily: 'Tajawal_500Medium',
+  },
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 60,
+  },
+  link: {
+    padding: 15,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    marginBottom: 10,
+  },
+  linkText: {
+    fontSize: 15,
     textDecorationLine: 'underline',
+    fontFamily: 'Tajawal_500Medium',
   },
 });

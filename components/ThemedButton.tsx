@@ -11,6 +11,7 @@ import { useColors } from '@/hooks/useColors';
 export type ThemedButtonProps = TouchableOpacityProps & {
   lightColor?: string;
   darkColor?: string;
+  children?: React.ReactNode; // إضافة تعريف للأطفال لضمان توافق الأنواع
   variant?:
     | 'default'
     | 'primary'
@@ -29,6 +30,8 @@ export function ThemedButton({
   darkColor,
   variant = 'default',
   children,
+  accessibilityLabel,
+  disabled,
   ...rest
 }: ThemedButtonProps) {
   const { primaryColor, secondaryColor, dangerColor, dangerLightColor } =
@@ -73,13 +76,13 @@ export function ThemedButton({
         };
       case 'outlined-danger':
         return {
-          backgroundColor: 'transparent',
+          backgroundColor: 'transparent' as const,
           borderColor: dangerColor,
           color: dangerColor,
         };
       case 'outlined-danger-secondary':
         return {
-          backgroundColor: 'transparent',
+          backgroundColor: 'transparent' as const,
           borderColor: dangerLightColor,
           color: dangerLightColor,
         };
@@ -94,7 +97,7 @@ export function ThemedButton({
   };
 
   const variantStyles = getVariantStyles();
-
+  const autoLabel = typeof children === 'string' ? children : undefined;
   return (
     <TouchableOpacity
       style={[
@@ -104,12 +107,23 @@ export function ThemedButton({
           borderWidth: 1,
         },
         isPressed && { opacity: 0.8 },
+        disabled && { opacity: 0.5 },
         styles.base,
         style,
       ]}
       activeOpacity={0.8}
       onPressIn={() => setIsPressed(true)}
       onPressOut={() => setIsPressed(false)}
+      disabled={disabled}
+      // --- خصائص إمكانية الوصول (Accessibility) ---
+      accessible={true}
+      accessibilityRole="button"
+      // ينطق الـ Label الممرر يدوياً، وإذا لم يوجد ينطق النص الموجود داخل الزر
+      accessibilityLabel={accessibilityLabel || autoLabel}
+      // يخبر المستخدم بحالة الزر (هل هو معطل حالياً؟)
+      accessibilityState={{ disabled: !!disabled }}
+      // -------------------------------------------
+
       {...rest}
     >
       <Text

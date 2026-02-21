@@ -32,28 +32,43 @@ export default function SegmentedControl({
   };
 
   return (
-    <ThemedView style={styles.container}>
-      {options.map((option, index) => (
-        <TouchableOpacity
-          key={index}
-          style={[
-            styles.option,
-            index === selectedIndex && { backgroundColor: activeColor },
-          ]}
-          onPress={() => handlePress(index)}
-        >
-          <ThemedText
+    <ThemedView
+      style={styles.container}
+      accessible={true}
+      accessibilityRole="tablist" // تعريف المجموعة كقائمة تبويبات
+    >
+      {options.map((option, index) => {
+        const isSelected = index === selectedIndex;
+
+        return (
+          <TouchableOpacity
+            key={index}
             style={[
-              styles.optionText,
-              {
-                color: index === selectedIndex ? activeTextColor : textColor,
-              },
+              styles.option,
+              isSelected && { backgroundColor: activeColor },
             ]}
+            onPress={() => handlePress(index)}
+            // --- خصائص الوصول ---
+            accessible={true}
+            accessibilityRole="tab"
+            accessibilityLabel={option}
+            accessibilityState={{ selected: isSelected }}
+            accessibilityHint={`اضغط لتفعيل خيار ${option}`}
+            // ---------------------
           >
-            {option}
-          </ThemedText>
-        </TouchableOpacity>
-      ))}
+            <ThemedText
+              style={[
+                styles.optionText,
+                {
+                  color: isSelected ? activeTextColor : textColor,
+                },
+              ]}
+            >
+              {option}
+            </ThemedText>
+          </TouchableOpacity>
+        );
+      })}
     </ThemedView>
   );
 }
@@ -64,6 +79,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
     borderRadius: 8,
     overflow: 'hidden',
+    marginVertical: 8,
   },
   option: {
     flex: 1,
@@ -74,7 +90,7 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
-    fontWeight: '400',
+    fontFamily: 'Tajawal_500Medium', // توحيد الخط مع هوية التطبيق
     textAlign: 'center',
   },
 });

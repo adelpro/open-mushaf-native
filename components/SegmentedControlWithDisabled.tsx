@@ -25,47 +25,70 @@ export default function SegmentedControlWithDisabled({
   disabledTextColor = '#999',
   activeDisabledColor = '#E0E0E0',
 }: BaseProps) {
-  // Default to -1;
   const [selectedIndex, setSelectedIndex] = useState(
     initialSelectedIndex !== undefined ? initialSelectedIndex : -1,
   );
 
   const handlePress = (index: number) => {
+    // إذا كان العنصر هو الأول (index === 0) وهو معطل برمجياً في منطقك
+    // يمكننا إضافة شرط هنا لمنع التغيير إذا أردت، لكن سأبقي المنطق كما هو مع تحسين الوصول
     setSelectedIndex(index);
     onSelectionChange(index);
   };
 
   return (
-    <ThemedView style={styles.container}>
-      {options.map((option, index) => (
-        <TouchableOpacity
-          key={index}
-          style={[
-            styles.option,
-            index === selectedIndex &&
-              index !== 0 && { backgroundColor: activeColor },
-            index === selectedIndex &&
-              index === 0 && { backgroundColor: activeDisabledColor },
-          ]}
-          onPress={() => handlePress(index)}
-        >
-          <ThemedText
+    <ThemedView
+      style={styles.container}
+      // تحسين الوصول للحاوية الأساسية
+      accessible={true}
+      accessibilityRole="tablist" // يعامل المجموعة كقائمة تبويبات أو اختيارات
+    >
+      {options.map((option, index) => {
+        const isSelected = index === selectedIndex;
+        const isDisabled = index === 0; // بناءً على منطق الكود الأصلي بأن العنصر 0 هو المعطل
+
+        return (
+          <TouchableOpacity
+            key={index}
             style={[
-              styles.optionText,
-              {
-                color:
-                  index === 0
+              styles.option,
+              isSelected && !isDisabled && { backgroundColor: activeColor },
+              isSelected &&
+                isDisabled && { backgroundColor: activeDisabledColor },
+            ]}
+            onPress={() => handlePress(index)}
+            // --- تحسينات الوصول ---
+            accessible={true}
+            accessibilityRole="tab" // يعامل كل خيار كتبويب
+            accessibilityLabel={option}
+            accessibilityState={{
+              selected: isSelected,
+              disabled: isDisabled,
+            }}
+            accessibilityHint={
+              isDisabled
+                ? 'هذا الخيار غير متاح حالياً'
+                : `اضغط لاختيار ${option}`
+            }
+            // -----------------------
+          >
+            <ThemedText
+              style={[
+                styles.optionText,
+                {
+                  color: isDisabled
                     ? disabledTextColor
-                    : index === selectedIndex
+                    : isSelected
                       ? activeTextColor
                       : textColor,
-              },
-            ]}
-          >
-            {option}
-          </ThemedText>
-        </TouchableOpacity>
-      ))}
+                },
+              ]}
+            >
+              {option}
+            </ThemedText>
+          </TouchableOpacity>
+        );
+      })}
     </ThemedView>
   );
 }
@@ -76,17 +99,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
     borderRadius: 8,
     overflow: 'hidden',
+    // إضافة ارتفاع ثابت للحاوية لضمان محاذاة العناصر
+    height: 50,
+    marginVertical: 10,
   },
   option: {
     flex: 1,
     paddingVertical: 8,
-    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },
   optionText: {
     fontSize: 16,
-    fontWeight: '400',
+    fontFamily: 'Tajawal_500Medium', // استخدام خط المشروع الموحد
     textAlign: 'center',
   },
 });

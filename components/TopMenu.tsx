@@ -79,12 +79,17 @@ export default function TopMenu() {
         <View style={styles.rightSection}>
           <Text
             style={[styles.surahName, { color: tintColor }]}
+            accessible={true}
             accessibilityLabel={`السورة الحالية: ${currentSurahName}`}
             accessibilityRole="header"
           >
             {removeTashkeel(currentSurahName)}
           </Text>
-          <View style={styles.secondLineContainer}>
+          <View
+            style={styles.secondLineContainer}
+            accessible={true}
+            accessibilityLabel={`الجزء ${juzNumber}، الموقع ${thumnInJuz} من 16`}
+          >
             <Text style={[styles.juzPosition, { color: tintColor }]}>
               الجزء - {juzNumber}
             </Text>
@@ -92,29 +97,13 @@ export default function TopMenu() {
               <Text style={[styles.thumnPosition, { color: tintColor }]}>
                 {thumnInJuz}
               </Text>
-              <Text
-                style={[
-                  styles.thumnSeparator,
-                  {
-                    color: tintColor,
-                    includeFontPadding: false,
-                    textAlignVertical: 'center',
-                  },
-                ]}
-              >
-                /
+              <Text style={[styles.thumnSeparator, { color: tintColor }]}>
+                {' '}
+                /{' '}
               </Text>
-              <Text
-                style={[
-                  styles.thumnTotal,
-                  {
-                    color: tintColor,
-                    includeFontPadding: false,
-                    textAlignVertical: 'center',
-                  },
-                ]}
-              >
-                16
+              <Text style={[styles.thumnTotal, { color: tintColor }]}>
+                {' '}
+                16{' '}
               </Text>
             </View>
           </View>
@@ -128,16 +117,18 @@ export default function TopMenu() {
                 setShowTopMenuState(false);
                 router.push('/tracker');
               }}
+              // تحسين الوصول لمتتبع الإنجاز
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="متتبع الإنجاز اليومي"
+              accessibilityHint={`نسبة الإنجاز الحالي هي ${Math.round(progressValue * 100)} بالمئة`}
             >
               <View style={styles.progressContainer}>
                 <Progress.Circle
                   size={26}
                   progress={progressValue}
                   color={tintColor}
-                  showsText={false}
                   thickness={3.5}
-                  borderWidth={0}
-                  unfilledColor={'rgba(128, 128, 128, 0.4)'}
                 />
                 {progressValue === 1 && (
                   <View style={styles.checkmarkContainer}>
@@ -154,6 +145,11 @@ export default function TopMenu() {
               setShowTopMenuState(false);
               router.push('/navigation');
             }}
+            // تحسين الوصول لزر التنقل
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="الانتقال إلى سورة أو صفحة"
+            accessibilityHint="يفتح قائمة السور والأجزاء والصفحات"
           >
             <Ionicons
               name="navigate-circle-outline"
@@ -168,15 +164,30 @@ export default function TopMenu() {
               setShowTopMenuState(false);
               router.push('/search');
             }}
+            // تحسين الوصول لزر البحث
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="البحث"
+            accessibilityHint="البحث في آيات القرآن الكريم"
           >
             <Ionicons name="search" size={ICON_SIZE} color={tintColor} />
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.icon}
             onPress={() => {
               setShowTopMenuState(false);
               toggleMenu();
             }}
+            // تحسين الوصول لزر وضع القراءة (ملء الشاشة)
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel={
+              showBottomMenuState
+                ? 'تفعيل وضع القراءة الكاملة'
+                : 'إلغاء وضع القراءة الكاملة'
+            }
+            accessibilityHint="يخفي أو يظهر أدوات التحكم في القراءة"
           >
             {showBottomMenuState ? (
               <MaterialCommunityIcons

@@ -60,11 +60,20 @@ export default function ReadingPositionBanner() {
   return (
     <ThemedView
       style={[styles.container, { height: HEIGHT, backgroundColor: cardColor }]}
+      // تنبيه قارئ الشاشة بوجود منطقة معلومات جديدة
+      accessible={true}
+      accessibilityRole="summary"
+      accessibilityLabel={`شريط موضع القراءة. الصفحة المحفوظة حالياً هي ${currentSavedPage}`}
     >
       <TouchableOpacity
         style={styles.toggleIcon}
         onPress={toggleCollapse}
-        accessibilityLabel={isCollapsed ? 'Expand banner' : 'Collapse banner'}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel={
+          isCollapsed ? 'توسيع شريط موضع القراءة' : 'طوي شريط موضع القراءة'
+        }
+        accessibilityState={{ expanded: !isCollapsed }}
       >
         <ThemedView
           style={[styles.headerContainer, { backgroundColor: 'transparent' }]}
@@ -93,16 +102,18 @@ export default function ReadingPositionBanner() {
             variant="primary"
             style={[styles.button]}
             onPress={handleSaveCurrentPosition}
-            accessibilityLabel="حفظ موضع الحالي"
-            accessibilityHint={`حفظ موضع الحالي ${currentPage}`}
+            // قمنا بتعريب نصوص الوصول لضمان تجربة مستخدم عربية كاملة
+            accessibilityLabel="حفظ الموضع الحالي"
+            accessibilityHint={`سيتم حفظ الصفحة رقم ${currentPage} كموضع قراءة جديد`}
           >
             <ThemedView style={styles.buttonContent}>
-              <FontAwesome6 name="bookmark" size={24} color="white" />
+              <FontAwesome6 name="bookmark" size={20} color="white" />
               <ThemedText
                 style={{
                   fontFamily: 'Tajawal_400Regular',
                   backgroundColor: 'transparent',
                   color: 'white',
+                  fontSize: 16,
                 }}
               >
                 حفظ
@@ -114,18 +125,19 @@ export default function ReadingPositionBanner() {
             variant="outlined-primary"
             style={[styles.button, { backgroundColor: cardColor }]}
             onPress={handleReturnToSavedPosition}
-            accessibilityLabel="العودة إلى موضع القراءة"
-            accessibilityHint={`العودة إلى موضع القراءة ${currentSavedPage}`}
+            accessibilityLabel="العودة للموضع السابق"
+            accessibilityHint={`العودة لصفحة رقم ${currentSavedPage}`}
           >
             <ThemedView
               style={[styles.buttonContent, { backgroundColor: 'transparent' }]}
             >
-              <Feather name="arrow-up-right" size={24} color={primaryColor} />
+              <Feather name="arrow-up-right" size={20} color={primaryColor} />
               <ThemedText
                 style={{
                   fontFamily: 'Tajawal_400Regular',
                   color: primaryColor,
                   backgroundColor: 'transparent',
+                  fontSize: 16,
                 }}
               >
                 العودة
@@ -147,10 +159,15 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     marginHorizontal: 'auto',
     elevation: 2,
-    gap: 15,
+    gap: 10,
+    // إضافة ظل خفيف للـ iOS ليتناسب مع الـ elevation في الأندرويد
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
   headerContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse', // جعل الأيقونة والنص متوافقين مع اللغة العربية
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
@@ -160,17 +177,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'right',
     flexShrink: 1,
-    marginRight: 10,
   },
   button: {
-    width: 150,
+    width: '45%', // استخدام نسبة مئوية لضمان التجاوب
     minWidth: 120,
+    height: 45,
   },
   buttonsContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse', // ترتيب الأزرار لتبدأ من اليمين
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 10,
+    gap: 15,
     width: '100%',
     marginTop: 5,
   },
@@ -179,11 +196,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
-    gap: 10,
+    gap: 8,
   },
   toggleIcon: {
     width: '100%',
-    padding: 2,
-    margin: 2,
+    paddingVertical: 5,
   },
 });
