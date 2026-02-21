@@ -5,20 +5,13 @@ import { FontAwesome } from '@expo/vector-icons';
 
 import { useColors } from '@/hooks/useColors';
 import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
+import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
 
 import { useNotification } from './NotificationProvider';
 import { ThemedButton } from './ThemedButton';
 import { ThemedTextInput } from './ThemedInput';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
-
-// Allow 3 submissions per 5 minutes per device session
-const RATE_LIMIT_CONFIG = {
-  key: 'contact_form_submit',
-  maxRequests: 3,
-  windowMs: 5 * 60 * 1000,
-} as const;
 
 // Allow 3 submissions per 5 minutes per device session
 const RATE_LIMIT_CONFIG = {
