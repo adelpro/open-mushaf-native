@@ -24,6 +24,8 @@ import { riwayaOptions } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import {
   flipSound,
+  gestureThresholdLandscape,
+  gestureThresholdPortrait,
   hizbNotification,
   mushafContrast,
   mushafRiwaya,
@@ -43,6 +45,10 @@ export default function SettingsScreen() {
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const [gestureThresholdPortraitValue, setGestureThresholdPortraitValue] =
+    useAtom(gestureThresholdPortrait);
+  const [gestureThresholdLandscapeValue, setGestureThresholdLandscapeValue] =
+    useAtom(gestureThresholdLandscape);
 
   const toggleFlipSoundSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
@@ -177,6 +183,82 @@ export default function SettingsScreen() {
           <AwesomeSlider
             value={mushafContrastValue}
             onValueChange={setMushafContrastValue}
+            primaryColor={primaryColor}
+          />
+        </ThemedView>
+      </ThemedView>
+
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
+      >
+        <ThemedView
+          style={[
+            styles.rowContainer,
+            styles.iconTextContainer,
+            { backgroundColor: cardColor },
+          ]}
+        >
+          <Feather
+            name="smartphone"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
+            {` حساسية التمرير (عمودي): (${Math.round(gestureThresholdPortraitValue)} بكسل)`}
+          </ThemedText>
+        </ThemedView>
+
+        <ThemedView
+          style={[styles.sliderContainer, { backgroundColor: cardColor }]}
+        >
+          <AwesomeSlider
+            value={gestureThresholdPortraitValue / 200}
+            onValueChange={(val) =>
+              setGestureThresholdPortraitValue(Math.round(val * 200))
+            }
+            primaryColor={primaryColor}
+          />
+        </ThemedView>
+      </ThemedView>
+
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
+      >
+        <ThemedView
+          style={[
+            styles.rowContainer,
+            styles.iconTextContainer,
+            { backgroundColor: cardColor },
+          ]}
+        >
+          <Feather
+            name="tablet"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
+            {` حساسية التمرير (أفقي): (${Math.round(gestureThresholdLandscapeValue)} بكسل)`}
+          </ThemedText>
+        </ThemedView>
+
+        <ThemedView
+          style={[styles.sliderContainer, { backgroundColor: cardColor }]}
+        >
+          <AwesomeSlider
+            value={gestureThresholdLandscapeValue / 300}
+            onValueChange={(val) =>
+              setGestureThresholdLandscapeValue(Math.round(val * 300))
+            }
             primaryColor={primaryColor}
           />
         </ThemedView>

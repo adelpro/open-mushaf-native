@@ -1,16 +1,16 @@
 import { useEffect, useRef } from 'react';
 
-import { Asset } from 'expo-asset';
 import { useAtomValue } from 'jotai/react';
 
 import { imagesMapHafs, imagesMapWarsh } from '@/constants';
 import { mushafRiwaya } from '@/jotai/atoms';
+import { cleanupAssetCache, getOrCreateAsset } from '@/utils/assetCache';
 
 import useQuranMetadata from './useQuranMetadata';
 
 /**
  * Hook to preload images for smoother page navigation
- * Preloads the current page, next two pages, and previous page
+ * Preloads 5 pages before and 5 pages after the current page
  */
 export default function useImagePreloader(currentPage: number) {
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);
@@ -26,13 +26,14 @@ export default function useImagePreloader(currentPage: number) {
       mushafRiwayaValue === 'hafs' ? imagesMapHafs : imagesMapWarsh;
     if (!imagesMap) return;
 
-    // Calculate pages to preload (current, previous one, next two)
-    const pagesToPreload = [
-      currentPage,
-      Math.max(currentPage - 1, 1),
-      Math.min(currentPage + 1, defaultNumberOfPages),
-      Math.min(currentPage + 2, defaultNumberOfPages),
-    ];
+    // Calculate pages to preload (current, 5 before, 5 after)
+    const pagesToPreload: number[] = [];
+    for (let i = -5; i <= 5; i++) {
+      const page = currentPage + i;
+      if (page >= 1 && page <= defaultNumberOfPages) {
+        pagesToPreload.push(page);
+      }
+    }
 
     // Filter out already preloaded pages
     const newPagesToPreload = pagesToPreload.filter(
@@ -44,18 +45,33 @@ export default function useImagePreloader(currentPage: number) {
     // Preload new pages
     const preloadImages = async () => {
       try {
-        const assetsToLoad = newPagesToPreload
-          .map((page) => imagesMap[page])
-          .filter(Boolean)
-          .map((image) => Asset.fromModule(image));
+        console.log(
+          `[Preloader] 🔄 Starting to load pages: ${newPagesToPreload.join(', ')} (Current: ${currentPage})`,
+        );
 
         // Start downloading all assets in parallel
         await Promise.all(
-          assetsToLoad.map(async (asset) => {
+          newPagesToPreload.map(async (page) => {
+            const imageModule = imagesMap[page];
+            if (!imageModule) {
+              console.log(`[Preloader] ⚠️ No image module for page ${page}`);
+              return;
+            }
+
+            const asset = getOrCreateAsset(page, imageModule);
+
             if (!asset.downloaded) {
+              console.log(`[Preloader] ⬇️ Downloading page ${page}...`);
               await asset.downloadAsync();
+              console.log(`[Preloader] ✅ Downloaded page ${page}`);
+            } else {
+              console.log(`[Preloader] ✓ Page ${page} already cached`);
             }
           }),
+        );
+
+        console.log(
+          `[Preloader] 🎉 Successfully loaded ${newPagesToPreload.length} pages`,
         );
 
         // Mark these pages as preloaded
@@ -64,13 +80,16 @@ export default function useImagePreloader(currentPage: number) {
         });
 
         // Limit the cache size by removing pages that are far from current view
-        // Keep only the current page, previous 1 page, and next 2 pages
-        const pagesToKeep = new Set<number>([
-          currentPage,
-          Math.max(currentPage - 1, 1),
-          Math.min(currentPage + 1, defaultNumberOfPages),
-          Math.min(currentPage + 2, defaultNumberOfPages),
-        ]);
+        // Keep only pages within 5 pages range
+        const pagesToKeep = new Set<number>();
+        for (let i = -5; i <= 5; i++) {
+          const page = currentPage + i;
+          if (page >= 1 && page <= defaultNumberOfPages) {
+            pagesToKeep.add(page);
+          }
+        }
+
+        cleanupAssetCache(pagesToKeep);
 
         preloadedPagesRef.current = new Set(
           [...preloadedPagesRef.current].filter((page) =>

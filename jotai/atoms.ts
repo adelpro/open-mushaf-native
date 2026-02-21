@@ -168,3 +168,16 @@ export const remindersAtom = createAtomWithStorage<Reminder[]>(
   'Reminders',
   DEFAULT_REMINDERS,
 );
+
+// Gesture Thresholds
+// Swipe threshold for portrait mode (minimum swipe distance to trigger page change)
+export const gestureThresholdPortrait = createAtomWithStorage<number>(
+  'GestureThresholdPortrait',
+  100,
+);
+
+// Swipe threshold for landscape mode (minimum swipe distance to trigger page change)
+export const gestureThresholdLandscape = createAtomWithStorage<number>(
+  'GestureThresholdLandscape',
+  150,
+);

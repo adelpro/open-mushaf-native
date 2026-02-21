@@ -30,6 +30,8 @@ import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
   flipSound,
+  gestureThresholdLandscape,
+  gestureThresholdPortrait,
   hizbNotification,
   mushafContrast,
   showTrackerNotification,
@@ -176,31 +178,83 @@ export default function MushafPage() {
     }
   };
 
+  const thresholdPortrait = useAtomValue(gestureThresholdPortrait);
+  const thresholdLandscape = useAtomValue(gestureThresholdLandscape);
+
   const { translateX, panGestureHandler } = usePanGestureHandler(
     currentPage,
     handlePageChange,
     defaultNumberOfPages,
+    {
+      thresholdPortrait,
+      thresholdLandscape,
+    },
   );
 
   const animatedStyle = useAnimatedStyle(() => {
-    const maxTranslateX = 20;
+    const maxTranslateX = 80;
     const clampedTranslateX = Math.max(
       -maxTranslateX,
       Math.min(translateX.value, maxTranslateX),
     );
-    const shadowOpacity = Math.min(
-      0.5,
-      Math.abs(clampedTranslateX) / maxTranslateX,
-    );
-    const opacity = Math.max(
-      0.85,
-      1 - Math.abs(clampedTranslateX) / maxTranslateX,
-    );
+
+    // Calculate progress (0 to 1)
+    const progress = Math.abs(clampedTranslateX) / maxTranslateX;
+    const direction = clampedTranslateX > 0 ? 1 : -1;
+
+    // Realistic page turn effect - rotation up to 45 degrees
+    const rotationAngle = (clampedTranslateX / maxTranslateX) * 45;
+
+    // Lift the page up as it rotates (book page lifting effect)
+    const translateY = -progress * 30;
+
+    // Scale down slightly for depth
+    const scale = 1 - progress * 0.08;
+
+    // Perspective for 3D effect
+    const perspective = 800;
 
     return {
-      transform: [{ translateX: clampedTranslateX }],
-      shadowOpacity,
-      opacity,
+      transform: [
+        { perspective },
+        { translateX: clampedTranslateX },
+        { translateY },
+        { rotateY: `${rotationAngle}deg` },
+        { scale },
+      ],
+      // Enhanced shadow for realistic page lift
+      shadowColor: '#000',
+      shadowOffset: {
+        width: direction * progress * 20,
+        height: progress * 15,
+      },
+      shadowOpacity: progress * 0.6,
+      shadowRadius: progress * 25,
+      elevation: progress * 15,
+    };
+  });
+
+  // Gradient overlay animation for page turn depth effect
+  const overlayStyle = useAnimatedStyle(() => {
+    const maxTranslateX = 80;
+    const clampedTranslateX = Math.max(
+      -maxTranslateX,
+      Math.min(translateX.value, maxTranslateX),
+    );
+
+    const progress = Math.abs(clampedTranslateX) / maxTranslateX;
+    const direction = clampedTranslateX > 0 ? 1 : -1;
+
+    return {
+      position: 'absolute' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      opacity: progress * 0.4,
+      backgroundColor:
+        direction > 0 ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.2)',
+      pointerEvents: 'none' as const,
     };
   });
 
@@ -345,6 +399,9 @@ export default function MushafPage() {
           ]}
           onLayout={handleImageLayout}
         >
+          {/* Page turn gradient overlay */}
+          <Animated.View style={overlayStyle} />
+
           {asset?.localUri ? (
             <>
               {isLandscape ? (
@@ -363,6 +420,10 @@ export default function MushafPage() {
                     ]}
                     source={{ uri: asset?.localUri }}
                     contentFit="fill"
+                    placeholder={ivoryColor}
+                    placeholderContentFit="cover"
+                    transition={0}
+                    cachePolicy="memory-disk"
                   />
                 </ScrollView>
               ) : (
@@ -376,6 +437,10 @@ export default function MushafPage() {
                   ]}
                   source={{ uri: asset?.localUri }}
                   contentFit="fill"
+                  placeholder={ivoryColor}
+                  placeholderContentFit="cover"
+                  transition={0}
+                  cachePolicy="memory-disk"
                 />
               )}
             </>
