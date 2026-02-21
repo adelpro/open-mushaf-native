@@ -107,7 +107,7 @@ export function PrivacyContentEnglish() {
         Email: adelpro@gmail.com
       </ThemedText>
       <ExternalLink
-        href={'https://adelpro.github.io/open-mushaf/privacy-policy-ar.html'}
+        href={'https://adelpro.github.io/open-mushaf/privacy-policy-en.html'}
         style={[styles.linkContainer]}
       >
         <ThemedText style={[styles.link, styles.englishText]}>
