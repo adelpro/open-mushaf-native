@@ -177,14 +177,13 @@ export default function MushafPage() {
     if (isFlipSoundEnabled) {
       player.play();
     }
-    if (isHapticEnabled && Platform.OS !== 'web') {
-      if (Platform.OS === 'android') {
-        Haptics.performAndroidHapticsAsync(
-          Haptics.AndroidHaptics.Keyboard_Press,
-        ).catch(() => {});
-      } else {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-      }
+    if (!isHapticEnabled || Platform.OS === 'web') return;
+    if (Platform.OS === 'android') {
+      Haptics.performAndroidHapticsAsync(
+        Haptics.AndroidHaptics.Keyboard_Press,
+      ).catch(() => {});
+    } else {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
     }
   };
 
