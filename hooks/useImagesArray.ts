@@ -55,11 +55,8 @@ export function useImagesArray() {
         }
       } catch (error) {
         if (isMounted.current) {
-          setError(
-            error instanceof Error
-              ? error.message
-              : ERROR_PAGE_NOT_FOUND(page),
-          );
+          console.error('[useImagesArray] Failed to load page asset:', error);
+          setError(ERROR_PAGE_NOT_FOUND(page));
           setAsset(null);
         }
       } finally {
