@@ -1,5 +1,5 @@
 // Import useState, Modal, and Feather
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Modal,
   ScrollView,
@@ -92,7 +92,10 @@ export default function TrackerScreen() {
     return `${hizbCount} حزباً`;
   };
 
-  const styles = createStyles({ borderLightColor, overlayColor, textColor });
+  const styles = useMemo(
+    () => createStyles({ borderLightColor, overlayColor, textColor }),
+    [borderLightColor, overlayColor, textColor],
+  );
 
   return (
     <>

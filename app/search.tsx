@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -43,13 +43,23 @@ export default function Search() {
     activeOptionTextColor,
   } = useColors();
 
-  const styles = createStyles({
-    borderColor,
-    subtleBgColor,
-    activeOptionBgColor,
-    activeOptionBorderColor,
-    activeOptionTextColor,
-  });
+  const styles = useMemo(
+    () =>
+      createStyles({
+        borderColor,
+        subtleBgColor,
+        activeOptionBgColor,
+        activeOptionBorderColor,
+        activeOptionTextColor,
+      }),
+    [
+      borderColor,
+      subtleBgColor,
+      activeOptionBgColor,
+      activeOptionBorderColor,
+      activeOptionTextColor,
+    ],
+  );
 
   const PAGE_SIZE = 50;
 
@@ -346,7 +356,10 @@ const createStyles = (colors: {
       backgroundColor: colors.activeOptionBgColor,
       borderColor: colors.activeOptionBorderColor,
     },
-    optionActiveText: { color: colors.activeOptionTextColor, fontWeight: '600' },
+    optionActiveText: {
+      color: colors.activeOptionTextColor,
+      fontWeight: '600',
+    },
     emptyContainer: {
       flex: 1,
       justifyContent: 'center',

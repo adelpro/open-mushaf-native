@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { ScrollView } from 'react-native-gesture-handler';
@@ -9,7 +10,10 @@ import { getAppVersion, getBuildVersion } from '@/utils';
 
 export default function AboutScreen() {
   const { inactiveIconColor, primaryLightColor } = useColors();
-  const styles = createStyles({ inactiveIconColor, primaryLightColor });
+  const styles = useMemo(
+    () => createStyles({ inactiveIconColor, primaryLightColor }),
+    [inactiveIconColor, primaryLightColor],
+  );
   const appVersion = getAppVersion();
   const buildVersion = getBuildVersion();
 
@@ -149,57 +153,57 @@ const createStyles = (colors: {
   primaryLightColor: string;
 }) =>
   StyleSheet.create({
-  scrollContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    maxWidth: 640,
-    alignSelf: 'center',
-    margin: 2,
-  },
-  mainContent: {
-    flex: 1,
-    height: '100%',
-    maxWidth: 600,
-    paddingHorizontal: 22,
-    alignSelf: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginVertical: 5,
-  },
-  listContainer: {
-    marginBottom: 5,
-    paddingLeft: 16,
-  },
-  listItem: {
-    marginBottom: 10,
-    flexDirection: 'row',
-  },
-  bullet: {
-    marginStart: 10,
-    marginEnd: 5,
-    fontWeight: '500',
-  },
-  listText: {
-    fontSize: 16,
-    lineHeight: 22,
-  },
-  link: {
-    color: colors.primaryLightColor,
-    textDecorationLine: 'underline',
-  },
-  versionText: {
-    fontSize: 12,
-    color: colors.inactiveIconColor,
-    textAlign: 'center',
-    marginTop: 5,
-  },
-  copyright: {
-    fontSize: 12,
-    color: colors.inactiveIconColor,
-    textAlign: 'center',
-    marginTop: 10,
-  },
+    scrollContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
+      maxWidth: 640,
+      alignSelf: 'center',
+      margin: 2,
+    },
+    mainContent: {
+      flex: 1,
+      height: '100%',
+      maxWidth: 600,
+      paddingHorizontal: 22,
+      alignSelf: 'center',
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: '600',
+      marginVertical: 5,
+    },
+    listContainer: {
+      marginBottom: 5,
+      paddingLeft: 16,
+    },
+    listItem: {
+      marginBottom: 10,
+      flexDirection: 'row',
+    },
+    bullet: {
+      marginStart: 10,
+      marginEnd: 5,
+      fontWeight: '500',
+    },
+    listText: {
+      fontSize: 16,
+      lineHeight: 22,
+    },
+    link: {
+      color: colors.primaryLightColor,
+      textDecorationLine: 'underline',
+    },
+    versionText: {
+      fontSize: 12,
+      color: colors.inactiveIconColor,
+      textAlign: 'center',
+      marginTop: 5,
+    },
+    copyright: {
+      fontSize: 12,
+      color: colors.inactiveIconColor,
+      textAlign: 'center',
+      marginTop: 10,
+    },
   });
