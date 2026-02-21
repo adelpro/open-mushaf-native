@@ -30,6 +30,16 @@ export default function MoreScreen() {
   const [errorMessage, setErrorMessage] = useState('');
   const { cardColor, iconColor, textColor } = useColors(); // Added textColor for modal message
 
+  const handleRateOnStore = () => {
+    const url =
+      'https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative';
+    if (Platform.OS === 'web') {
+      window.open(url, '_blank');
+    } else {
+      Linking.openURL(url);
+    }
+  };
+
   const handleShare = async () => {
     let shareUrl = 'https://www.quran.us.kg'; // Default/Web URL
 
@@ -133,7 +143,16 @@ export default function MoreScreen() {
           <Text style={styles.buttonText}>شارك التطبيق</Text>
         </View>
       </ThemedButton>
-
+      <ThemedButton
+        onPress={handleRateOnStore}
+        variant="primary"
+        style={styles.button}
+      >
+        <View style={styles.buttonContent}>
+          <ShareSVG width={24} height={24} style={styles.svg} />
+          <Text style={styles.buttonText}>قيّمنا على المتجر</Text>
+        </View>
+      </ThemedButton>
       {/* Error Modal */}
       <Modal
         animationType="fade"

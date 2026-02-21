@@ -1,7 +1,14 @@
 import { useState } from 'react';
-import { Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  Linking,
+  Modal,
+  Platform,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
-import { Entypo, Feather } from '@expo/vector-icons';
+import { Entypo, Feather, FontAwesome } from '@expo/vector-icons';
 import { useAtom } from 'jotai/react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
@@ -256,6 +263,41 @@ export default function SettingsScreen() {
           />
         </Pressable>
       </ThemedView>
+
+      <Pressable
+        style={[
+          styles.settingsSection,
+          { borderColor: textColor, backgroundColor: cardColor },
+        ]}
+        onPress={() => {
+          const storeUrl = Platform.select({
+            android:
+              'https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative',
+            default:
+              'https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative',
+          });
+          Linking.openURL(storeUrl);
+        }}
+        accessibilityRole="button"
+        accessibilityLabel="قيّمنا على المتجر"
+        accessibilityHint="اضغط لفتح صفحة التطبيق في المتجر لتقييمه"
+      >
+        <ThemedView style={styles.iconTextContainer}>
+          <FontAwesome
+            name="star"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, { backgroundColor: cardColor }]}
+          >
+            قيّمنا على المتجر
+          </ThemedText>
+        </ThemedView>
+        <Feather name="external-link" size={20} color={iconColor} />
+      </Pressable>
 
       <ThemedView
         style={[
