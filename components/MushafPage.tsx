@@ -327,13 +327,27 @@ export function MushafPage() {
     setdailyTrackerCompletedValue,
   ]);
 
-  // Handle errors from metadata loading
+  // Handle errors before showing loading state
   if (metadataError) {
     return (
       <ThemedView
         style={[styles.errorContainer, { backgroundColor: ivoryColor }]}
       >
-        <ThemedText type="defaultSemiBold">{ERROR_WITH_DETAILS(metadataError)}</ThemedText>
+        <ThemedText type="defaultSemiBold">
+          {ERROR_WITH_DETAILS(metadataError)}
+        </ThemedText>
+      </ThemedView>
+    );
+  }
+
+  if (assetError) {
+    return (
+      <ThemedView
+        style={[styles.errorContainer, { backgroundColor: ivoryColor }]}
+      >
+        <ThemedText type="defaultSemiBold">
+          {ERROR_WITH_DETAILS(assetError)}
+        </ThemedText>
       </ThemedView>
     );
   }
@@ -345,16 +359,6 @@ export function MushafPage() {
         style={[styles.loadingContainer, { backgroundColor: ivoryColor }]}
       >
         <ActivityIndicator size="large" color={tintColor} />
-      </ThemedView>
-    );
-  }
-
-  if (assetError) {
-    return (
-      <ThemedView
-        style={[styles.errorContainer, { backgroundColor: ivoryColor }]}
-      >
-        <ThemedText type="defaultSemiBold">{ERROR_WITH_DETAILS(assetError)}</ThemedText>
       </ThemedView>
     );
   }
