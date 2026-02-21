@@ -27,7 +27,14 @@ import {
 } from '@/jotai/atoms';
 
 export default function TrackerScreen() {
-  const { iconColor, cardColor, primaryColor, borderLightColor, overlayColor, textColor } = useColors();
+  const {
+    iconColor,
+    cardColor,
+    primaryColor,
+    borderLightColor,
+    overlayColor,
+    textColor,
+  } = useColors();
   const { currentSavedPage: savedPage } = useCurrentPage();
 
   const { updateAndroidWidget } = useUpdateAndroidWidget();
@@ -85,7 +92,7 @@ export default function TrackerScreen() {
     return `${hizbCount} حزباً`;
   };
 
-  const styles = createStyles({ borderLightColor, overlayColor });
+  const styles = createStyles({ borderLightColor, overlayColor, textColor });
 
   return (
     <>
@@ -121,7 +128,7 @@ export default function TrackerScreen() {
               <ThemedText
                 style={[
                   styles.progressText,
-                  { color: dailyProgress > 50 ? 'white' : 'black' },
+                  { color: dailyProgress > 50 ? 'white' : textColor },
                 ]}
               >
                 {dailyProgress.toFixed(1)}%
@@ -294,6 +301,7 @@ export default function TrackerScreen() {
 const createStyles = (colors: {
   borderLightColor: string;
   overlayColor: string;
+  textColor: string;
 }) =>
   StyleSheet.create({
   container: {
@@ -377,58 +385,58 @@ const createStyles = (colors: {
   },
   resetButton: { paddingHorizontal: 16, paddingVertical: 8 }, // This padding controls the space around the icon and text
 
-  // Add Modal Styles (copied from settings.tsx and adjusted slightly)
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: colors.overlayColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 5,
-    paddingVertical: 20,
-  },
-  modalContent: {
-    width: '90%',
-    maxWidth: 400,
-    borderRadius: 12,
-    padding: 16,
-    elevation: 5,
-    alignSelf: 'center',
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLightColor,
-    minHeight: 40,
-    backgroundColor: 'transparent', // Ensure header background is transparent if content has color
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontFamily: 'Tajawal_700Bold',
-    textAlignVertical: 'center',
-  },
-  closeButton: {
-    padding: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalMessage: {
-    fontSize: 16,
-    marginBottom: 20,
-    textAlign: 'center',
-    fontFamily: 'Tajawal_400Regular',
-  },
-  modalActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    backgroundColor: 'transparent', // Ensure actions background is transparent
-  },
-  modalButton: {
-    width: '40%', // Use percentage for better responsiveness
-    maxWidth: 120, // Add maxWidth to prevent buttons getting too large
-  },
+    // Add Modal Styles (copied from settings.tsx and adjusted slightly)
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: colors.overlayColor,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 5,
+      paddingVertical: 20,
+    },
+    modalContent: {
+      width: '90%',
+      maxWidth: 400,
+      borderRadius: 12,
+      padding: 16,
+      elevation: 5,
+      alignSelf: 'center',
+    },
+    modalHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 16,
+      paddingBottom: 8,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.borderLightColor,
+      minHeight: 40,
+      backgroundColor: 'transparent', // Ensure header background is transparent if content has color
+    },
+    modalTitle: {
+      fontSize: 18,
+      fontFamily: 'Tajawal_700Bold',
+      textAlignVertical: 'center',
+    },
+    closeButton: {
+      padding: 4,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    modalMessage: {
+      fontSize: 16,
+      marginBottom: 20,
+      textAlign: 'center',
+      fontFamily: 'Tajawal_400Regular',
+    },
+    modalActions: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      width: '100%',
+      backgroundColor: 'transparent', // Ensure actions background is transparent
+    },
+    modalButton: {
+      width: '40%', // Use percentage for better responsiveness
+      maxWidth: 120, // Add maxWidth to prevent buttons getting too large
+    },
   });
