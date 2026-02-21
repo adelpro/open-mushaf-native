@@ -27,10 +27,10 @@ const store = new Map<string, RateLimitEntry>();
  * @param config  - Rate limit configuration
  * @returns       RateLimitResult describing whether the request is allowed
  */
-export function checkRateLimit(
+export const checkRateLimit = (
   key: string,
   config: RateLimitConfig,
-): RateLimitResult {
+): RateLimitResult => {
   const { maxRequests, windowMs } = config;
   const now = Date.now();
   const windowStart = now - windowMs;
@@ -53,14 +53,14 @@ export function checkRateLimit(
   store.set(key, entry);
 
   return { allowed: true, remaining: remaining - 1, retryAfterMs: 0 };
-}
+};
 
 /**
  * Reset the rate limit for a given key.
  */
-export function resetRateLimit(key: string): void {
+export const resetRateLimit = (key: string): void => {
   store.delete(key);
-}
+};
 
 /**
  * Structured error thrown when a rate limit is exceeded.
