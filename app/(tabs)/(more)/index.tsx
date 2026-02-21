@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import { Feather, FontAwesome } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 
@@ -24,6 +24,7 @@ import WelcomeSVG from '@/assets/svgs/welcome.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { PLAY_STORE_URL } from '@/constants/storeUrls';
 import { useColors } from '@/hooks/useColors';
 import { isWeb } from '@/utils/isWeb';
 
@@ -32,13 +33,19 @@ export default function MoreScreen() {
   const [errorMessage, setErrorMessage] = useState('');
   const { cardColor, iconColor, textColor } = useColors(); // Added textColor for modal message
 
-  const handleRateOnStore = () => {
-    const url =
-      'https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative';
-    if (Platform.OS === 'web') {
-      window.open(url, '_blank');
-    } else {
-      Linking.openURL(url);
+  /**
+   * Opens the app's Play Store page for users to rate the app
+   */
+  const handleRateOnStore = async () => {
+    try {
+      if (Platform.OS === 'web') {
+        window.open(PLAY_STORE_URL, '_blank');
+      } else {
+        await Linking.openURL(PLAY_STORE_URL);
+      }
+    } catch (error: any) {
+      setErrorMessage(error.message || 'An unexpected error occurred.');
+      setErrorModalVisible(true);
     }
   };
 
@@ -167,7 +174,7 @@ export default function MoreScreen() {
         style={styles.button}
       >
         <View style={styles.buttonContent}>
-          <ShareSVG width={24} height={24} style={styles.svg} />
+          <FontAwesome name="star" size={24} color="white" />
           <Text style={styles.buttonText}>قيّمنا على المتجر</Text>
         </View>
       </ThemedButton>

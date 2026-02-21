@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  Linking,
   Modal,
   Platform,
   Pressable,
@@ -9,6 +8,7 @@ import {
 } from 'react-native';
 
 import { Entypo, Feather, FontAwesome } from '@expo/vector-icons';
+import * as Linking from 'expo-linking';
 import { useAtom } from 'jotai/react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
@@ -21,6 +21,7 @@ import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { riwayaOptions } from '@/constants';
+import { PLAY_STORE_URL } from '@/constants/storeUrls';
 import { useColors } from '@/hooks/useColors';
 import {
   flipSound,
@@ -65,6 +66,22 @@ export default function SettingsScreen() {
     }
 
     setHizbNotificationValue(0);
+  };
+
+  /**
+   * Opens the app's Play Store page for users to rate the app
+   */
+  const handleRateOnStore = async () => {
+    try {
+      if (Platform.OS === 'web') {
+        window.open(PLAY_STORE_URL, '_blank');
+      } else {
+        await Linking.openURL(PLAY_STORE_URL);
+      }
+    } catch (error) {
+      console.error('Failed to open store URL:', error);
+      // Optionally show user-facing error message
+    }
   };
 
   return (
@@ -351,15 +368,7 @@ export default function SettingsScreen() {
           styles.settingsSection,
           { borderColor: textColor, backgroundColor: cardColor },
         ]}
-        onPress={() => {
-          const storeUrl = Platform.select({
-            android:
-              'https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative',
-            default:
-              'https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative',
-          });
-          Linking.openURL(storeUrl);
-        }}
+        onPress={handleRateOnStore}
         accessibilityRole="button"
         accessibilityLabel="قيّمنا على المتجر"
         accessibilityHint="اضغط لفتح صفحة التطبيق في المتجر لتقييمه"
