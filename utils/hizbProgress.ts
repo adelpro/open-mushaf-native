@@ -1,10 +1,16 @@
 import { Hizb, Thumn } from '@/types';
 
 /**
+ * Counts the number of hizb boundaries crossed when navigating between two
+ * mushaf pages.
  *
- * @param previousPage the page number of the previous page
- * @param currentPage the page number of the current page
- * @returns the number of hizbs between the two pages
+ * A hizb boundary is crossed when a hizb's `startingPage` lies strictly
+ * between `previousPage` and `currentPage` (exclusive lower, inclusive upper).
+ *
+ * @param previousPage - The page the reader was on before navigation.
+ * @param currentPage  - The page the reader navigated to.
+ * @param hizbs        - Ordered array of hizb metadata.
+ * @returns The number of hizb boundaries crossed (always ≥ 0).
  */
 export const calculateHizbsBetweenPages = (
   previousPage: number,
@@ -18,20 +24,28 @@ export const calculateHizbsBetweenPages = (
     .length;
 };
 
-// Add this function to your existing hizbProgress.ts file
-
+/**
+ * Counts the number of thumn (eighth-of-hizb) units between two mushaf pages.
+ *
+ * Finds the thumn sections that contain `startPage` and `endPage`
+ * respectively, then returns the difference in their indices within the
+ * `thumnData` array.  Returns `0` when `startPage ≥ endPage` or when
+ * `thumnData` is empty.
+ *
+ * @param startPage - The starting mushaf page (inclusive).
+ * @param endPage   - The ending mushaf page (inclusive).
+ * @param thumnData - Ordered array of thumn metadata.
+ * @returns The number of thumns between the two pages (always ≥ 0).
+ */
 export function calculateThumnsBetweenPages(
   startPage: number,
   endPage: number,
   thumnData: Thumn[],
 ): number {
-  // Ensure we have valid data
   if (!thumnData || thumnData.length === 0) return 0;
 
-  // Handle case where pages are the same or in reverse order
   if (startPage >= endPage) return 0;
 
-  // Find the thumn positions for start and end pages
   let startThumnIndex = -1;
   let endThumnIndex = -1;
 
@@ -42,7 +56,6 @@ export function calculateThumnsBetweenPages(
       break;
     }
   }
-  // If we didn't find a thumn before the start page, use the first thumn
   if (startThumnIndex === -1) startThumnIndex = 0;
 
   // Find the thumn that contains the end page
@@ -52,12 +65,7 @@ export function calculateThumnsBetweenPages(
       break;
     }
   }
-  // If we didn't find a thumn after the end page, use the last thumn
   if (endThumnIndex === -1) endThumnIndex = thumnData.length - 1;
 
-  // Calculate the number of thumns between the two pages
-  const thumnCount = endThumnIndex - startThumnIndex;
-
-  // Ensure we don't return negative values
-  return Math.max(0, thumnCount);
+  return Math.max(0, endThumnIndex - startThumnIndex);
 }

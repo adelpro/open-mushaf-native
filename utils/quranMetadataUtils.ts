@@ -1,5 +1,16 @@
 import { Surah, Thumn } from '@/types';
 
+/**
+ * Returns the Arabic name of the surah that contains the given page.
+ *
+ * Scans the ordered `surahs` array and returns the name of the last surah
+ * whose `startingPage` is less than or equal to `page`. Returns an empty
+ * string when no matching surah is found.
+ *
+ * @param surahs - Ordered array of surah metadata.
+ * @param page   - Mushaf page number (1-based).
+ * @returns The Arabic surah name, or `''` if not found.
+ */
 export function getSurahNameByPage(surahs: Surah[], page: number): string {
   const surah = surahs.find(
     (s, index) =>
@@ -9,6 +20,16 @@ export function getSurahNameByPage(surahs: Surah[], page: number): string {
   return surah ? surah.name : '';
 }
 
+/**
+ * Returns the surah number (as a string) for the surah that contains the
+ * given page.
+ *
+ * Falls back to `1` when no matching surah is found.
+ *
+ * @param surahs - Ordered array of surah metadata.
+ * @param page   - Mushaf page number (1-based).
+ * @returns The surah number string, or `1` as a default fallback.
+ */
 export function getSurahNumberByPage(surahs: Surah[], page: number): string {
   const surah = surahs.find(
     (s, index) =>
@@ -18,6 +39,18 @@ export function getSurahNumberByPage(surahs: Surah[], page: number): string {
   return surah ? surah.number : 1;
 }
 
+/**
+ * Returns the Juz number and the thumn position within that Juz for a given
+ * mushaf page.
+ *
+ * Each Juz comprises 2 hizbs, and each hizb is divided into 8 thumns,
+ * giving 16 thumns per Juz.
+ *
+ * @param thumns - Ordered array of thumn metadata.
+ * @param page   - Mushaf page number (1-based).
+ * @returns An object with `juzNumber` (1-based) and `thumnInJuz` (1–16).
+ *          Defaults to `{ thumnInJuz: 1, juzNumber: 1 }` when not found.
+ */
 export function getJuzPositionByPage(thumns: Thumn[], page: number) {
   const thumn = thumns.find(
     (t, index) =>
@@ -34,6 +67,15 @@ export function getJuzPositionByPage(thumns: Thumn[], page: number) {
   return { thumnInJuz, juzNumber };
 }
 
+/**
+ * Generates SEO metadata (title, description, keywords) for a mushaf page,
+ * incorporating the surah name and Juz number where available.
+ *
+ * @param surahs - Ordered array of surah metadata.
+ * @param thumns - Ordered array of thumn metadata.
+ * @param page   - Mushaf page number (1-based).
+ * @returns An object with `title`, `description`, and `keywords` strings in Arabic.
+ */
 export function getSEOMetadataByPage(
   surahs: Surah[],
   thumns: Thumn[],
