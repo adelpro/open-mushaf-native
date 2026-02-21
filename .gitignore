@@ -40,3 +40,11 @@ firebase-debug.log
 
 #Ignore vscode AI rules
 .github\copilot-instructions.md
+
+
+# Pnpm Files
+pnpm-lock.yaml
+.pnpm-store/
+.pnpm-debug.log*
+pnpm-debug.log*
+.pnpm/
