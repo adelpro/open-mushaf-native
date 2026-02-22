@@ -168,3 +168,13 @@ export const remindersAtom = createAtomWithStorage<Reminder[]>(
   'Reminders',
   DEFAULT_REMINDERS,
 );
+
+// Multi-bookmark system
+export type Bookmark = {
+  id: string;
+  page: number;
+  label: string;
+  createdAt: string;
+};
+
+export const bookmarks = createAtomWithStorage<Bookmark[]>('Bookmarks', []);
