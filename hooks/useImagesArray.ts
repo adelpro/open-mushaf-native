@@ -55,6 +55,7 @@ export function useImagesArray() {
         }
       } catch (error) {
         if (isMounted.current) {
+          // eslint-disable-next-line no-console
           console.error('[useImagesArray] Failed to load page asset:', error);
           setError(ERROR_PAGE_NOT_FOUND(page));
           setAsset(null);
