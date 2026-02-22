@@ -58,9 +58,7 @@ export default function BookmarksScreen() {
   };
 
   const renderBookmark = ({ item }: { item: Bookmark }) => (
-    <ThemedView
-      style={[styles.bookmarkItem, { backgroundColor: cardColor }]}
-    >
+    <ThemedView style={[styles.bookmarkItem, { backgroundColor: cardColor }]}>
       <TouchableOpacity
         style={styles.bookmarkContent}
         onPress={() => navigateToBookmark(item.page)}
@@ -75,9 +73,7 @@ export default function BookmarksScreen() {
         />
         <ThemedView style={styles.bookmarkTextContainer}>
           <ThemedText style={styles.bookmarkLabel}>{item.label}</ThemedText>
-          <ThemedText style={styles.bookmarkPage}>
-            صفحة {item.page}
-          </ThemedText>
+          <ThemedText style={styles.bookmarkPage}>صفحة {item.page}</ThemedText>
         </ThemedView>
       </TouchableOpacity>
       <TouchableOpacity
