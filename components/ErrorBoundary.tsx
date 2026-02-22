@@ -76,11 +76,12 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
         marginBottom: 24,
       },
       title: {
-        fontSize: 22,
+        fontSize: 28,
         fontFamily: 'Tajawal_700Bold',
         color: colors.text,
         marginBottom: 12,
         writingDirection: 'rtl',
+        textAlign: 'center',
       },
       subtitle: {
         fontSize: 16,
@@ -89,6 +90,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
         marginBottom: 32,
         lineHeight: 24,
         writingDirection: 'rtl',
+        textAlign: 'center',
       },
       errorDetails: {
         width: '100%',
@@ -134,10 +136,10 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
           <Ionicons name="book-outline" size={80} color={colors.danger} />
         </View>
 
-        <Text style={styles.title}>حدث خطأ غير متوقع</Text>
+        <Text style={styles.title}>عذراً، حدث انقطاع بسيط</Text>
 
         <Text style={styles.subtitle}>
-          مشكلة في واجهة التطبيق.يُرجى المحاولة مرة أخرى.
+          واجهنا مشكلة تقنية تعيق عرض الصفحة. يرجى إعادة المحاولة للمتابعة.
         </Text>
 
         {__DEV__ && error && (
@@ -156,9 +158,9 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
           onPress={this.resetError}
           variant="primary"
           accessibilityRole="button"
-          accessibilityLabel="حاول مجدداً"
+          accessibilityLabel="إعادة المحاولة"
         >
-          <Text style={styles.retryButtonText}>حاول مجدداً</Text>
+          <Text style={styles.retryButtonText}>إعادة المحاولة</Text>
         </ThemedButton>
       </View>
     );
