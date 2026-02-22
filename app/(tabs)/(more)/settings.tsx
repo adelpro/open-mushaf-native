@@ -294,6 +294,8 @@ export default function SettingsScreen() {
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setConfirmModalVisible(false)}
+                accessibilityRole="button"
+                accessibilityLabel="إغلاق نافذة التأكيد"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
