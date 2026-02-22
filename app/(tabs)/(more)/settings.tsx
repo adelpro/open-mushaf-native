@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  Linking,
+  Modal,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 import { Entypo, Feather } from '@expo/vector-icons';
 import { useAtom } from 'jotai/react';
@@ -256,6 +262,37 @@ export default function SettingsScreen() {
           />
         </Pressable>
       </ThemedView>
+
+      <Pressable
+        style={[
+          styles.settingsSection,
+          { borderColor: textColor, backgroundColor: cardColor },
+        ]}
+        onPress={() => {
+          const url =
+            'https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative';
+          Linking.openURL(url);
+        }}
+        accessibilityRole="button"
+        accessibilityLabel="قيّم التطبيق على المتجر"
+        accessibilityHint="اضغط لفتح صفحة التطبيق على متجر جوجل بلاي لتقييمه"
+      >
+        <ThemedView style={styles.iconTextContainer}>
+          <Feather
+            name="star"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, { backgroundColor: cardColor }]}
+          >
+            قيّم التطبيق
+          </ThemedText>
+        </ThemedView>
+        <Feather name="external-link" size={20} color={iconColor} />
+      </Pressable>
 
       <ThemedView
         style={[
