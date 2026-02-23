@@ -105,7 +105,9 @@
   },
   "pnpm": {
     "overrides": {
-      "react-native-worklets": "0.5.1"
+      "react-native-worklets": "0.5.1",
+      "minimatch": ">=10.2.1",
+      "fast-xml-parser": ">=5.3.6"
     }
   },
   "devDependencies": {
