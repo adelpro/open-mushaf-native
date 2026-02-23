@@ -79,17 +79,19 @@ export default function TrackerScreen() {
         };
         const existingIndex = prev.findIndex((r) => r.date === today);
         if (existingIndex >= 0) {
-          return prev.map((r, i) =>
-            i === existingIndex
-              ? {
-                  ...r,
-                  hizbsCompleted: Math.max(
-                    r.hizbsCompleted,
-                    entry.hizbsCompleted,
-                  ),
-                }
-              : r,
-          );
+          return prev
+            .map((r, i) =>
+              i === existingIndex
+                ? {
+                    ...r,
+                    hizbsCompleted: Math.max(
+                      r.hizbsCompleted,
+                      entry.hizbsCompleted,
+                    ),
+                  }
+                : r,
+            )
+            .slice(-MAX_HISTORY_DAYS);
         }
         return [...prev, entry].slice(-MAX_HISTORY_DAYS);
       });
