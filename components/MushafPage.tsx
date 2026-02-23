@@ -26,12 +26,14 @@ import useImagesArray from '@/hooks/useImagesArray';
 import useOrientation from '@/hooks/useOrientation';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
+import { READING_THEME_KEYS, READING_THEMES } from '@/constants/readingThemes';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
   flipSound,
   hizbNotification,
   mushafContrast,
+  readingTheme,
   showTrackerNotification,
   yesterdayPage,
 } from '@/jotai/atoms';
@@ -50,6 +52,8 @@ export default function MushafPage() {
   const player = useAudioPlayer(audioSource);
   const isFlipSoundEnabled = useAtomValue(flipSound);
   const mushafContrastValue = useAtomValue(mushafContrast);
+  const readingThemeValue = useAtomValue(readingTheme);
+  const themeConfig = READING_THEMES[readingThemeValue] || READING_THEMES.default;
 
   const hizbNotificationValue = useAtomValue(hizbNotification);
   const [showHizbNotification, setShowHizbNotification] = useState(false);
@@ -340,7 +344,7 @@ export default function MushafPage() {
               backgroundColor:
                 colorScheme === 'dark'
                   ? `rgba(26, 26, 26, ${1 - mushafContrastValue})`
-                  : ivoryColor,
+                  : themeConfig.backgroundColor || ivoryColor,
             },
           ]}
           onLayout={handleImageLayout}
@@ -360,6 +364,10 @@ export default function MushafPage() {
                       colorScheme === 'dark' && {
                         opacity: mushafContrastValue,
                       },
+                      colorScheme !== 'dark' &&
+                        themeConfig.imageOpacity < 1 && {
+                          opacity: themeConfig.imageOpacity,
+                        },
                     ]}
                     source={{ uri: asset?.localUri }}
                     contentFit="fill"
@@ -373,6 +381,10 @@ export default function MushafPage() {
                     colorScheme === 'dark' && {
                       opacity: mushafContrastValue,
                     },
+                    colorScheme !== 'dark' &&
+                      themeConfig.imageOpacity < 1 && {
+                        opacity: themeConfig.imageOpacity,
+                      },
                   ]}
                   source={{ uri: asset?.localUri }}
                   contentFit="fill"
