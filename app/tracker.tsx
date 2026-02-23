@@ -93,8 +93,8 @@ export default function TrackerScreen() {
   };
 
   const styles = useMemo(
-    () => createStyles({ borderLightColor, overlayColor, textColor }),
-    [borderLightColor, overlayColor, textColor],
+    () => createStyles({ borderLightColor, overlayColor }),
+    [borderLightColor, overlayColor],
   );
 
   return (
@@ -304,7 +304,6 @@ export default function TrackerScreen() {
 const createStyles = (colors: {
   borderLightColor: string;
   overlayColor: string;
-  textColor: string;
 }) =>
   StyleSheet.create({
   container: {
