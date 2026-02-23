@@ -2,13 +2,13 @@ import { useState } from 'react';
 import {
   Linking,
   Modal,
-  Platform,
   Pressable,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 
 import { Entypo, Feather } from '@expo/vector-icons';
+import * as StoreReview from 'expo-store-review';
 import { useAtom } from 'jotai/react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
@@ -29,7 +29,7 @@ import {
   mushafRiwaya,
   showTrackerNotification,
 } from '@/jotai/atoms';
-import { RiwayaByIndice, RiwayaByValue } from '@/utils';
+import { isWeb, RiwayaByIndice, RiwayaByValue } from '@/utils';
 import { clearStorageAndReload } from '@/utils/storage/clearStorage';
 
 export default function SettingsScreen() {
@@ -264,36 +264,33 @@ export default function SettingsScreen() {
         </Pressable>
       </ThemedView>
 
-      <Pressable
-        style={[
-          styles.settingsSection,
-          { borderColor: textColor, backgroundColor: cardColor },
-        ]}
-        onPress={() => {
-          const url =
-            'https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative';
-          Linking.openURL(url);
-        }}
-        accessibilityRole="button"
-        accessibilityLabel="قيّم التطبيق على المتجر"
-        accessibilityHint="اضغط لفتح صفحة التطبيق على متجر جوجل بلاي لتقييمه"
-      >
-        <ThemedView style={styles.iconTextContainer}>
-          <Feather
-            name="star"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
-          />
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.itemText, { backgroundColor: cardColor }]}
-          >
-            قيّم التطبيق
-          </ThemedText>
-        </ThemedView>
-        <Feather name="external-link" size={20} color={iconColor} />
-      </Pressable>
+      {!isWeb && (
+        <Pressable
+          style={[
+            styles.settingsSection,
+            { borderColor: textColor, backgroundColor: cardColor },
+          ]}
+          onPress={async () => {
+            const url = StoreReview.storeUrl();
+            if (url) {
+              await Linking.openURL(url);
+            }
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="قيّم التطبيق على المتجر"
+          accessibilityHint="اضغط لتقييم التطبيق"
+        >
+          <ThemedView style={styles.iconTextContainer}>
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.itemText, { backgroundColor: cardColor }]}
+            >
+              قيّم التطبيق
+            </ThemedText>
+          </ThemedView>
+          <Feather name="star" size={20} color={iconColor} />
+        </Pressable>
+      )}
 
       <ThemedView
         style={[
