@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   Linking,
   Modal,
+  Platform,
   Pressable,
   StyleSheet,
   TouchableOpacity,
