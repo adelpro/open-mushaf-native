@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
@@ -165,27 +165,52 @@ export default function MushafPage() {
     setDimensions({ customPageWidth: width, customPageHeight: height });
   };
 
-  const handlePageChange = (page: number) => {
-    if (page === currentPage) return;
-    setCurrentPage(page);
-    router.replace({
-      pathname: '/',
-      params: {
-        page: page.toString(),
-        ...(temporary ? { temporary: temporary.toString() } : {}),
-      },
-    });
+  const handlePageChange = useCallback(
+    (page: number) => {
+      if (page === currentPage) return;
+      setCurrentPage(page);
+      router.replace({
+        pathname: '/',
+        params: {
+          page: page.toString(),
+          ...(temporary ? { temporary: temporary.toString() } : {}),
+        },
+      });
 
-    if (isFlipSoundEnabled) {
-      player.play();
-    }
-  };
+      if (isFlipSoundEnabled) {
+        player.play();
+      }
+    },
+    [
+      currentPage,
+      router,
+      temporary,
+      isFlipSoundEnabled,
+      player,
+      setCurrentPage,
+    ],
+  );
 
   const { translateX, panGestureHandler } = usePanGestureHandler(
     currentPage,
     handlePageChange,
     defaultNumberOfPages,
   );
+
+  React.useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        handlePageChange(currentPage + 1);
+      } else if (e.key === 'ArrowRight') {
+        handlePageChange(currentPage - 1);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [currentPage, handlePageChange]);
 
   const animatedStyle = useAnimatedStyle(() => {
     const maxTranslateX = 20;
