@@ -12,6 +12,7 @@
     "start:clear": "expo start --reset-cache",
     "web": "expo start --web",
     "prebuild": "npx expo prebuild --clean",
+    "build": "expo build",
     "android": "expo run:android -d",
     "android:prod": "npx expo run:android --variant Release -d",
     "ios": "expo run:ios",

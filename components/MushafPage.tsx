@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
@@ -165,21 +165,31 @@ export default function MushafPage() {
     setDimensions({ customPageWidth: width, customPageHeight: height });
   };
 
-  const handlePageChange = (page: number) => {
-    if (page === currentPage) return;
-    setCurrentPage(page);
-    router.replace({
-      pathname: '/',
-      params: {
-        page: page.toString(),
-        ...(temporary ? { temporary: temporary.toString() } : {}),
-      },
-    });
+  const handlePageChange = useCallback(
+    (page: number) => {
+      if (page === currentPage) return;
+      setCurrentPage(page);
+      router.replace({
+        pathname: '/',
+        params: {
+          page: page.toString(),
+          ...(temporary ? { temporary: temporary.toString() } : {}),
+        },
+      });
 
-    if (isFlipSoundEnabled) {
-      player.play();
-    }
-  };
+      if (isFlipSoundEnabled) {
+        player.play();
+      }
+    },
+    [
+      currentPage,
+      router,
+      temporary,
+      isFlipSoundEnabled,
+      player,
+      setCurrentPage,
+    ],
+  );
 
   const { translateX, panGestureHandler } = usePanGestureHandler(
     currentPage,
