@@ -163,6 +163,10 @@ export default function MushafPage() {
     setDimensions({ customPageWidth: width, customPageHeight: height });
   };
 
+  /**
+   * Navigates to the given page, plays flip sound and
+   * triggers haptic feedback based on user preferences.
+   */
   const handlePageChange = (page: number) => {
     if (page === currentPage) return;
     setCurrentPage(page);
@@ -293,24 +297,13 @@ export default function MushafPage() {
     setdailyTrackerCompletedValue,
   ]);
 
-  // Handle errors from metadata loading
+  // Handle errors before showing loading state
   if (metadataError) {
     return (
       <ThemedView
         style={[styles.errorContainer, { backgroundColor: ivoryColor }]}
       >
         <ThemedText type="defaultSemiBold">{`حدث خطأ: ${metadataError}`}</ThemedText>
-      </ThemedView>
-    );
-  }
-
-  // Show loading state if either asset or metadata is loading
-  if (assetIsLoading || metadataIsLoading) {
-    return (
-      <ThemedView
-        style={[styles.loadingContainer, { backgroundColor: ivoryColor }]}
-      >
-        <ActivityIndicator size="large" color={tintColor} />
       </ThemedView>
     );
   }
@@ -325,7 +318,8 @@ export default function MushafPage() {
     );
   }
 
-  if (assetIsLoading) {
+  // Show loading state if either asset or metadata is loading
+  if (assetIsLoading || metadataIsLoading) {
     return (
       <ThemedView
         style={[styles.loadingContainer, { backgroundColor: ivoryColor }]}
