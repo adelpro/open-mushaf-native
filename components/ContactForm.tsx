@@ -9,8 +9,8 @@ import {
   ERROR_FORM_SUBMIT,
   ERROR_MESSAGE_VALIDATION,
   ERROR_NAME_VALIDATION,
-  SUCCESS_FORM_SUBMIT,
 } from '@/constants/errorMessages';
+import { SUCCESS_FORM_SUBMIT } from '@/constants/uiMessages';
 import { useColors } from '@/hooks';
 import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
 
