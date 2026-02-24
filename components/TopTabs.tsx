@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Tajawal_700Bold',
     fontWeight: '500',
   },
+  
   activeTabText: {
     fontWeight: '700',
   },

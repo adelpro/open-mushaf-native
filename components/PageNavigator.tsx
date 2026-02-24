@@ -101,13 +101,11 @@ export default function PageNavigator({
               autoFocus
               onBlur={handleInputSubmit}
               onSubmitEditing={handleInputSubmit}
-              accessibilityLabel="أدخل رقم الصفحة"
+              accessibilityLabel="Page number input"
             />
             <TouchableOpacity
               style={styles.submitButton}
               onPress={handleInputSubmit}
-              accessibilityRole="button"
-              accessibilityLabel="تأكيد رقم الصفحة"
             >
               <Feather name="check" size={18} color={primaryColor} />
             </TouchableOpacity>
@@ -173,8 +171,7 @@ export default function PageNavigator({
           <TouchableOpacity
             style={styles.goToPageButton}
             onPress={toggleInput}
-            accessibilityRole="button"
-            accessibilityLabel="الانتقال إلى صفحة محددة"
+            accessibilityLabel="Go to specific page"
           >
             <Feather
               name="edit"

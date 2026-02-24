@@ -44,13 +44,12 @@ export default function PrivacyContentEnglish() {
       </ThemedText>
 
       <ThemedText style={[styles.subtitle, styles.englishText]}>
-        We Respect Your Child&apos;s Privacy
+        We Respect Your Child's Privacy
       </ThemedText>
       <ThemedText style={[styles.content, styles.englishText]}>
         Open Mushaf is designed for children aged 6 and above who can read
-        Arabic. We are committed to protecting children&apos;s privacy. Since
-        our app does not collect any data, children&apos;s information is
-        completely safe.
+        Arabic. We are committed to protecting children's privacy. Since our app
+        does not collect any data, children's information is completely safe.
       </ThemedText>
 
       <ThemedText style={[styles.subtitle, styles.englishText]}>
@@ -64,7 +63,7 @@ export default function PrivacyContentEnglish() {
       </ThemedText>
 
       <ThemedText style={[styles.subtitle, styles.englishText]}>
-        We Don&apos;t Share Your Data
+        We Don't Share Your Data
       </ThemedText>
       <ThemedText style={[styles.content, styles.englishText]}>
         As Open Mushaf collects no data, there is nothing to share with third

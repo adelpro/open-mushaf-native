@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  
   optionText: {
     fontSize: 16,
     fontWeight: '400',

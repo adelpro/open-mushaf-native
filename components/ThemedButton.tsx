@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Tajawal_500Medium',
     fontSize: 18,
   },
+  
   center: {
     display: 'flex',
     alignItems: 'center',
