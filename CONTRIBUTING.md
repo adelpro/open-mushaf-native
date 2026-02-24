@@ -20,7 +20,7 @@ We are committed to providing a welcoming and inspiring community for all.
 
 ### Development Setup
 
-This project uses **pnpm** for package management.
+This project uses **yarn** for package management.
 
 1. **Fork the Repository**
 2. **Clone Your Fork**
@@ -33,7 +33,7 @@ This project uses **pnpm** for package management.
 3. **Install Dependencies**
 
    ```bash
-   pnpm install
+   yarn install
    ```
 
 4. **Start the App**
@@ -46,8 +46,9 @@ This project uses **pnpm** for package management.
 
 1. **Create a Branch**: Use a descriptive name like `feature/your-feature-name`.
 2. **Make Your Changes**: Ensure your code follows the project's style guidelines.
-3. **Commit Your Changes**: Use conventional commit messages if possible.
-4. **Push to Your Fork** and open a Pull Request.
+3. **Run Lint & Format**: Run `yarn lint` and `yarn format` to ensure no ESLint or Prettier errors.
+4. **Commit Your Changes**: Use conventional commit messages if possible.
+5. **Push to Your Fork** and open a Pull Request.
 
 ---
 
