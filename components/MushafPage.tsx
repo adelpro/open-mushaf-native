@@ -197,7 +197,9 @@ export default function MushafPage() {
       }
     };
     window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
   }, [currentPage, handlePageChange]);
 
   const animatedStyle = useAnimatedStyle(() => {
