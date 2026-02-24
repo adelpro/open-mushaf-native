@@ -224,7 +224,7 @@ export default function BookmarksScreen() {
               </ThemedView>
 
               <ThemedText style={styles.modalMessage}>
-                هل تريد حذف "{selectedBookmark?.label}"؟
+                هل تريد حذف &quot;{selectedBookmark?.label}&quot;؟
               </ThemedText>
 
               <ThemedView style={styles.modalActions}>

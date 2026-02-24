@@ -23,8 +23,10 @@ import {
   dailyTrackerGoal,
   topMenuState,
 } from '@/jotai/atoms';
-import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
-import { getJuzPositionByPage } from '@/utils/quranMetadataUtils';
+import {
+  getJuzPositionByPage,
+  getSurahNameByPage,
+} from '@/utils/quranMetadataUtils';
 
 const ICON_SIZE = 32;
 export default function TopMenu() {

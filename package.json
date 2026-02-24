@@ -31,26 +31,29 @@
     "deploy:local": "yarn run predeploy && firebase emulators:start --only hosting",
     "deploy:preview": "yarn run predeploy && firebase hosting:channel:deploy preview",
     "deploy:live": "yarn run predeploy && firebase deploy --only hosting",
-    "test": "jest --watchAll",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
     "scan": "expo start & npx react-scan@latest localhost:8081",
     "doctor": "npx expo-doctor",
     "react-compiler-check": "npx react-compiler-healthcheck@latest",
     "commit": "git-cz",
-    "prepare": "husky",
-    "clean": "rimraf node_modules && rimraf .expo",
+    "lint": "eslint . --cache --concurrency=auto --max-warnings=0",
+    "lint:fix": "eslint . --fix --cache --concurrency=auto",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky || true",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "clean": "rimraf .next node_modules && rimraf .expo",
     "clean:all": "rimraf node_modules .expo android ios"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": [
-      "npx prettier --write",
-      "npx eslint --fix"
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix --cache --concurrency=auto",
+      "prettier --write"
     ]
   },
   "dependencies": {
@@ -117,7 +120,7 @@
     "babel-plugin-transform-remove-console": "^6.9.4",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.21.0",
     "eslint-config-expo": "~10.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.30.0",

@@ -1,4 +1,3 @@
-/* global document */
 document.addEventListener('DOMContentLoaded', function () {
   const currentPath = window.location.pathname.split('/').pop();
   const langArButton = document.getElementById('lang-ar');
