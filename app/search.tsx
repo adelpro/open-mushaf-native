@@ -12,7 +12,7 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 import morphologyDataRaw from '@/assets/search/quran-morphology.json';
 import wordMapJSON from '@/assets/search/word-map.json';
 import { SearchColorLegend } from '@/components/searchColorLegend';
-import { SearchResultItem } from '@/components/searchResultItem';
+import { SearchResultItem } from '@/components/SearchResultItem';
 import { SEO } from '@/components/seo';
 import { TafseerPopup } from '@/components/TafseerPopup';
 import { ThemedTextInput } from '@/components/ThemedInput';

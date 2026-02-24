@@ -4,7 +4,7 @@ export function useDebounce<T extends (...args: any[]) => void>(
   fn: T,
   delay: number,
 ) {
-  const timeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fnRef = useRef(fn);
 
   useEffect(() => {

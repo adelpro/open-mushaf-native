@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
 
 import { AwesomeSlider } from '@/components/awesomeSlider';
-import { SegmentedControl } from '@/components/SegmentControl';
+import { SegmentedControl } from '@/components/SegmentedControl';
 import { SegmentedControlWithDisabled } from '@/components/SegmentedControlWithDisabled';
 import { SEO } from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';

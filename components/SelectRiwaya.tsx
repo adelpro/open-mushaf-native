@@ -8,7 +8,7 @@ import { useColors } from '@/hooks/useColors';
 import { mushafRiwaya } from '@/jotai/atoms';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
 
-import { SegmentedControl } from './SegmentControl';
+import { SegmentedControl } from './SegmentedControl';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
