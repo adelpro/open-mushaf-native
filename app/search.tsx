@@ -30,6 +30,14 @@ import {
 const MORPH = morphologyDataRaw;
 const WORD_MAP = wordMapJSON;
 
+type SearchStyleColors = {
+  borderColor: string;
+  subtleBgColor: string;
+  activeOptionBgColor: string;
+  activeOptionBorderColor: string;
+  activeOptionTextColor: string;
+};
+
 export default function Search() {
   const { quranData, isLoading, error } = useQuranMetadata();
   const {
@@ -272,7 +280,7 @@ export default function Search() {
         onEndReachedThreshold={0.5}
         ListFooterComponent={
           isLoadingMore ? (
-            <ThemedView style={{ paddingVertical: 12 }}>
+            <ThemedView style={styles.listFooter}>
               <ActivityIndicator size="small" color={tintColor} />
             </ThemedView>
           ) : null
@@ -313,13 +321,7 @@ export default function Search() {
   );
 }
 
-const createStyles = (colors: {
-  borderColor: string;
-  subtleBgColor: string;
-  activeOptionBgColor: string;
-  activeOptionBorderColor: string;
-  activeOptionTextColor: string;
-}) =>
+const createStyles = (colors: SearchStyleColors) =>
   StyleSheet.create({
     container: { flex: 1, padding: 20 },
     searchContainer: {
@@ -388,4 +390,5 @@ const createStyles = (colors: {
       opacity: 0.8,
     },
     resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14 },
+    listFooter: { paddingVertical: 12 },
   });

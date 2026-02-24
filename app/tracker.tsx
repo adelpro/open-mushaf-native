@@ -25,6 +25,7 @@ import {
   dailyTrackerGoal,
   yesterdayPage,
 } from '@/jotai/atoms';
+import { createModalStyles } from '@/styles/modalStyles';
 
 export default function TrackerScreen() {
   const {
@@ -92,9 +93,14 @@ export default function TrackerScreen() {
     return `${hizbCount} حزباً`;
   };
 
+  const modalStyles = useMemo(
+    () => createModalStyles({ overlayColor, borderLightColor }),
+    [overlayColor, borderLightColor],
+  );
+
   const styles = useMemo(
-    () => createStyles({ borderLightColor, overlayColor }),
-    [borderLightColor, overlayColor],
+    () => createStyles({ borderLightColor }),
+    [borderLightColor],
   );
 
   return (
@@ -215,27 +221,11 @@ export default function TrackerScreen() {
               <ThemedButton
                 variant="primary"
                 style={styles.resetButton}
-                // Update onPress to show the modal
                 onPress={() => setConfirmModalVisible(true)}
               >
-                <ThemedView
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    backgroundColor: 'transparent',
-                    justifyContent: 'center',
-                    gap: 10,
-                  }}
-                >
+                <ThemedView style={styles.resetButtonContent}>
                   <Feather name="refresh-cw" size={16} />
-                  <Text
-                    style={{
-                      fontFamily: 'Tajawal_400Regular',
-                      fontSize: 18,
-                    }}
-                  >
-                    إعادة التعيين
-                  </Text>
+                  <Text style={styles.resetButtonText}>إعادة التعيين</Text>
                 </ThemedView>
               </ThemedButton>
             </ThemedView>
@@ -250,21 +240,23 @@ export default function TrackerScreen() {
           onRequestClose={() => setConfirmModalVisible(false)}
         >
           <TouchableOpacity
-            style={styles.modalOverlay}
+            style={modalStyles.modalOverlay}
             activeOpacity={1}
-            onPress={() => setConfirmModalVisible(false)} // Close on overlay press
+            onPress={() => setConfirmModalVisible(false)}
             accessibilityLabel="إغلاق نافذة التأكيد"
             accessibilityRole="button"
           >
-            {/* Prevent modal closing when pressing inside content */}
             <ThemedView
-              style={[styles.modalContent, { backgroundColor: cardColor }]}
+              style={[
+                modalStyles.modalContent,
+                { backgroundColor: cardColor },
+              ]}
               onStartShouldSetResponder={() => true}
             >
-              <ThemedView style={styles.modalHeader}>
-                <ThemedText style={styles.modalTitle}>تأكيد</ThemedText>
+              <ThemedView style={modalStyles.modalHeader}>
+                <ThemedText style={modalStyles.modalTitle}>تأكيد</ThemedText>
                 <TouchableOpacity
-                  style={styles.closeButton}
+                  style={modalStyles.closeButton}
                   onPress={() => setConfirmModalVisible(false)}
                   accessibilityRole="button"
                   accessibilityLabel="إغلاق نافذة التأكيد"
@@ -273,22 +265,22 @@ export default function TrackerScreen() {
                 </TouchableOpacity>
               </ThemedView>
 
-              <ThemedText style={styles.modalMessage}>
+              <ThemedText style={modalStyles.modalMessage}>
                 هل أنت متأكد من رغبتك في إعادة تعيين التقدم؟
               </ThemedText>
 
-              <ThemedView style={styles.modalActions}>
+              <ThemedView style={modalStyles.modalActions}>
                 <ThemedButton
                   variant="outlined-primary"
-                  onPress={() => setConfirmModalVisible(false)} // Just close modal
-                  style={styles.modalButton}
+                  onPress={() => setConfirmModalVisible(false)}
+                  style={modalStyles.modalButton}
                 >
                   إلغاء
                 </ThemedButton>
                 <ThemedButton
                   variant="primary"
-                  onPress={() => performReset()} // Call the reset logic
-                  style={styles.modalButton}
+                  onPress={() => performReset()}
+                  style={modalStyles.modalButton}
                 >
                   تأكيد
                 </ThemedButton>
@@ -301,10 +293,7 @@ export default function TrackerScreen() {
   );
 }
 
-const createStyles = (colors: {
-  borderLightColor: string;
-  overlayColor: string;
-}) =>
+const createStyles = (colors: { borderLightColor: string }) =>
   StyleSheet.create({
   container: {
     flex: 1,
@@ -385,60 +374,16 @@ const createStyles = (colors: {
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
-  resetButton: { paddingHorizontal: 16, paddingVertical: 8 }, // This padding controls the space around the icon and text
-
-    // Add Modal Styles (copied from settings.tsx and adjusted slightly)
-    modalOverlay: {
-      flex: 1,
-      backgroundColor: colors.overlayColor,
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingHorizontal: 5,
-      paddingVertical: 20,
-    },
-    modalContent: {
-      width: '90%',
-      maxWidth: 400,
-      borderRadius: 12,
-      padding: 16,
-      elevation: 5,
-      alignSelf: 'center',
-    },
-    modalHeader: {
+  resetButton: { paddingHorizontal: 16, paddingVertical: 8 },
+  resetButtonContent: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: 16,
-      paddingBottom: 8,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.borderLightColor,
-      minHeight: 40,
-      backgroundColor: 'transparent', // Ensure header background is transparent if content has color
-    },
-    modalTitle: {
-      fontSize: 18,
-      fontFamily: 'Tajawal_700Bold',
-      textAlignVertical: 'center',
-    },
-    closeButton: {
-      padding: 4,
+      backgroundColor: 'transparent',
       justifyContent: 'center',
-      alignItems: 'center',
+      gap: 10,
     },
-    modalMessage: {
-      fontSize: 16,
-      marginBottom: 20,
-      textAlign: 'center',
+    resetButtonText: {
       fontFamily: 'Tajawal_400Regular',
-    },
-    modalActions: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      width: '100%',
-      backgroundColor: 'transparent', // Ensure actions background is transparent
-    },
-    modalButton: {
-      width: '40%', // Use percentage for better responsiveness
-      maxWidth: 120, // Add maxWidth to prevent buttons getting too large
+      fontSize: 18,
     },
   });

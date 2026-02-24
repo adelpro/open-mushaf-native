@@ -37,6 +37,7 @@ import {
   readingTheme,
   showTrackerNotification,
 } from '@/jotai/atoms';
+import { createModalStyles } from '@/styles/modalStyles';
 import { isWeb, RiwayaByIndice, RiwayaByValue } from '@/utils';
 import { clearStorageAndReload } from '@/utils/storage/clearStorage';
 
@@ -55,10 +56,14 @@ export default function SettingsScreen() {
     overlayColor,
     borderLightColor,
   } = useColors();
-  const styles = useMemo(
-    () => createStyles({ overlayColor, borderLightColor }),
+
+  const modalStyles = useMemo(
+    () => createModalStyles({ overlayColor, borderLightColor }),
     [overlayColor, borderLightColor],
   );
+
+  const styles = useMemo(() => createStyles(), []);
+
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
   const [panGestureSensitivityValue, setPanGestureSensitivityValue] = useAtom(
     panGestureSensitivity,
@@ -411,20 +416,23 @@ export default function SettingsScreen() {
         onRequestClose={() => setConfirmModalVisible(false)}
       >
         <TouchableOpacity
-          style={styles.modalOverlay}
+          style={modalStyles.modalOverlay}
           activeOpacity={1}
           onPress={() => setConfirmModalVisible(false)}
           accessibilityLabel="إغلاق نافذة التأكيد"
           accessibilityRole="button"
         >
           <ThemedView
-            style={[styles.modalContent, { backgroundColor: cardColor }]}
+            style={[
+              modalStyles.modalContent,
+              { backgroundColor: cardColor },
+            ]}
             onStartShouldSetResponder={() => true}
           >
-            <ThemedView style={styles.modalHeader}>
-              <ThemedText style={styles.modalTitle}>تأكيد</ThemedText>
+            <ThemedView style={modalStyles.modalHeader}>
+              <ThemedText style={modalStyles.modalTitle}>تأكيد</ThemedText>
               <TouchableOpacity
-                style={styles.closeButton}
+                style={modalStyles.closeButton}
                 onPress={() => setConfirmModalVisible(false)}
                 accessibilityRole="button"
                 accessibilityLabel="إغلاق نافذة التأكيد"
@@ -433,15 +441,15 @@ export default function SettingsScreen() {
               </TouchableOpacity>
             </ThemedView>
 
-            <ThemedText style={styles.modalMessage}>
+            <ThemedText style={modalStyles.modalMessage}>
               هل أنت متأكد من رغبتك في إعادة ضبط التطبيق؟
             </ThemedText>
 
-            <ThemedView style={styles.modalActions}>
+            <ThemedView style={modalStyles.modalActions}>
               <ThemedButton
                 variant="outlined-primary"
                 onPress={() => setConfirmModalVisible(false)}
-                style={styles.modalButton}
+                style={modalStyles.modalButton}
               >
                 إلغاء
               </ThemedButton>
@@ -451,7 +459,7 @@ export default function SettingsScreen() {
                   setConfirmModalVisible(false);
                   clearStorageAndReload();
                 }}
-                style={styles.modalButton}
+                style={modalStyles.modalButton}
               >
                 تأكيد
               </ThemedButton>
@@ -463,10 +471,7 @@ export default function SettingsScreen() {
   );
 }
 
-const createStyles = (colors: {
-  overlayColor: string;
-  borderLightColor: string;
-}) =>
+const createStyles = () =>
   StyleSheet.create({
     container: {
       padding: 15,
@@ -514,58 +519,6 @@ const createStyles = (colors: {
     sliderContainer: {
       width: '100%',
       position: 'relative',
-    },
-    modalOverlay: {
-      flex: 1,
-      backgroundColor: colors.overlayColor,
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingHorizontal: 5,
-      paddingVertical: 20,
-    },
-    modalContent: {
-      width: '90%',
-      maxWidth: 400,
-      borderRadius: 12,
-      padding: 16,
-      elevation: 5,
-      alignSelf: 'center',
-    },
-    modalHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: 16,
-      paddingBottom: 8,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.borderLightColor,
-      minHeight: 40,
-    },
-    modalTitle: {
-      fontSize: 18,
-      fontFamily: 'Tajawal_700Bold',
-      textAlignVertical: 'center',
-    },
-    closeButton: {
-      padding: 4,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    modalMessage: {
-      fontSize: 16,
-      marginBottom: 20,
-      textAlign: 'center',
-      fontFamily: 'Tajawal_400Regular',
-    },
-    modalActions: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      backgroundColor: 'transparent',
-      width: '100%',
-    },
-    modalButton: {
-      width: '40%',
-      maxWidth: 100,
     },
     iconTextContainer: {
       flexDirection: 'row',
