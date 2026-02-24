@@ -5,7 +5,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -50,7 +49,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       } else {
         await Updates.reloadAsync();
       }
-    } catch (e) {
+    } catch {
       this.setState({ hasError: false, error: null });
     }
   };

@@ -34,11 +34,15 @@
     "test": "jest --watchAll",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "scan": "expo start & npx react-scan@latest localhost:8081",
     "doctor": "npx expo-doctor",
     "react-compiler-check": "npx react-compiler-healthcheck@latest",
     "commit": "git-cz",
-    "prepare": "husky"
+    "prepare": "husky",
+    "clean": "rimraf node_modules && rimraf .expo",
+    "clean:all": "rimraf node_modules .expo android ios"
   },
   "jest": {
     "preset": "jest-expo"
@@ -103,6 +107,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@eslint/plugin-kit": "^0.6.0",
     "@types/jest": "^29.5.12",
     "@types/react": "~19.1.17",
     "@types/react-native-htmlview": "^0.16.5",
@@ -126,6 +131,7 @@
     "prettier": "^3.3.3",
     "react-native-svg-transformer": "^1.5.0",
     "react-test-renderer": "18.2.0",
+    "rimraf": "^6.0.0",
     "typescript": "~5.9.3"
   },
   "config": {

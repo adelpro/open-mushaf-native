@@ -13,7 +13,11 @@ import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { riwayaOptions, READING_THEME_KEYS, READING_THEME_LABELS } from '@/constants';
+import {
+  READING_THEME_KEYS,
+  READING_THEME_LABELS,
+  riwayaOptions,
+} from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import {
   flipSound,

@@ -19,6 +19,7 @@ import { useAtomValue, useSetAtom } from 'jotai/react';
 import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
+import { READING_THEMES } from '@/constants/readingThemes';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagePreloader from '@/hooks/useImagePreloader';
@@ -26,7 +27,6 @@ import useImagesArray from '@/hooks/useImagesArray';
 import useOrientation from '@/hooks/useOrientation';
 import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
-import { READING_THEME_KEYS, READING_THEMES } from '@/constants/readingThemes';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
@@ -53,7 +53,8 @@ export default function MushafPage() {
   const isFlipSoundEnabled = useAtomValue(flipSound);
   const mushafContrastValue = useAtomValue(mushafContrast);
   const readingThemeValue = useAtomValue(readingTheme);
-  const themeConfig = READING_THEMES[readingThemeValue] || READING_THEMES.default;
+  const themeConfig =
+    READING_THEMES[readingThemeValue] || READING_THEMES.default;
 
   const hizbNotificationValue = useAtomValue(hizbNotification);
   const [showHizbNotification, setShowHizbNotification] = useState(false);
