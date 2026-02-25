@@ -5,8 +5,8 @@ import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
+import { scheduleOnRN } from 'react-native-worklets';
 import {
-  runOnJS,
   useAnimatedReaction,
   useSharedValue,
 } from 'react-native-reanimated';
@@ -34,7 +34,7 @@ export function TafseerPopup({ show, setShow, aya, surah }: Props) {
     () => animatedPosition.value,
     (currentValue) => {
       const isResizing = currentValue % 1 !== 0;
-      runOnJS(setOpacity)(isResizing ? 0.8 : 1);
+      scheduleOnRN(setOpacity, isResizing ? 0.8 : 1);
     },
   );
 

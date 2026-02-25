@@ -78,6 +78,10 @@ export function ContactForm() {
     }
   };
 
+  // Security note: EXPO_PUBLIC_* variables are compiled into the JS bundle and are
+  // visible to anyone who inspects the app binary. Using a server-side proxy to
+  // hold the bot token securely is the proper long-term fix, but is out of scope
+  // for this PR. Tracked for future work.
   const sendToTelegram = async (text: string) => {
     const url = `https://api.telegram.org/bot${process.env.EXPO_PUBLIC_BOT_TOKEN}/sendMessage`;
     const response = await fetch(url, {

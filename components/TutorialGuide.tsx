@@ -11,12 +11,12 @@ import {
 import { usePathname, useRouter } from 'expo-router';
 import { useSetAtom } from 'jotai/react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { scheduleOnRN } from 'react-native-worklets';
 import Animated, {
   FadeInLeft,
   FadeInRight,
   FadeOutLeft,
   FadeOutRight,
-  runOnJS,
 } from 'react-native-reanimated';
 
 import CheckedSVG from '@/assets/svgs/checked.svg';
@@ -49,9 +49,9 @@ export function TutorialGuide() {
     const threshold = isLandscape ? 150 : 100;
 
     if (e.translationX < -threshold && index > 0) {
-      runOnJS(setIndex)(index - 1);
+      scheduleOnRN(setIndex, index - 1);
     } else if (e.translationX > threshold && index < SLIDES.length - 1) {
-      runOnJS(setIndex)(index + 1);
+      scheduleOnRN(setIndex, index + 1);
     }
   });
 

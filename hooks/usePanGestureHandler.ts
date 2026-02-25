@@ -1,5 +1,6 @@
 import { Gesture } from 'react-native-gesture-handler';
-import { runOnJS, useSharedValue, withSpring } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
+import { useSharedValue, withSpring } from 'react-native-reanimated';
 
 import { useOrientation } from './useOrientation';
 
@@ -26,7 +27,7 @@ export const usePanGestureHandler = (
 
       // Only change the page if it differs from the current one
       if (targetPage !== currentPage) {
-        runOnJS(onPageChange)(targetPage);
+        scheduleOnRN(onPageChange, targetPage);
       }
 
       translateX.value = withSpring(0, { damping: 20, stiffness: 90 }); // Smooth return
