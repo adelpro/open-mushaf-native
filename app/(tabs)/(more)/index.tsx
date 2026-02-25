@@ -187,7 +187,7 @@ export default function MoreScreen() {
                 style={styles.closeButton}
                 onPress={() => setErrorModalVisible(false)}
                 accessibilityRole="button"
-                accessibilityLabel="إغلاق رسالة الخطأ"
+                accessibilityLabel="إغلاق"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>

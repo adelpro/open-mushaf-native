@@ -182,6 +182,7 @@ export default function Search() {
               onPress={() => toggleOption('root')}
               accessibilityRole="togglebutton"
               accessibilityState={{ checked: advancedOptions.root }}
+              accessibilityLabel="بحث"
             >
               <ThemedText
                 style={
