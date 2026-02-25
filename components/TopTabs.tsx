@@ -17,7 +17,6 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
   const handleTabPress = (tab: ListTabs) => {
     setActiveTab(tab);
   };
-
   return (
     <ThemedView style={styles.container}>
       <TouchableOpacity

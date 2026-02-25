@@ -182,7 +182,6 @@ export default function SurahAyaNavigator({
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
             </ThemedView>
-
             <FlatList
               data={surahData}
               renderItem={renderSurahItem}
