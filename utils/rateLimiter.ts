@@ -32,6 +32,16 @@ export const checkRateLimit = (
   config: RateLimitConfig,
 ): RateLimitResult => {
   const { maxRequests, windowMs } = config;
+  if (
+    !Number.isFinite(maxRequests) ||
+    maxRequests < 1 ||
+    !Number.isFinite(windowMs) ||
+    windowMs < 1
+  ) {
+    throw new Error(
+      'Invalid rate limit config: maxRequests and windowMs must be positive numbers.',
+    );
+  }
   const now = Date.now();
   const windowStart = now - windowMs;
 

@@ -3,6 +3,7 @@ import { ActivityIndicator, StyleSheet, Text } from 'react-native';
 
 import { FontAwesome } from '@expo/vector-icons';
 
+import { CONTACT_FORM_RATE_LIMIT_CONFIG } from '@/constants/ratelimitConfig';
 import { useColors } from '@/hooks/useColors';
 import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
 
@@ -11,13 +12,6 @@ import { ThemedButton } from './ThemedButton';
 import { ThemedTextInput } from './ThemedInput';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-
-// Allow 3 submissions per 5 minutes per device session
-const RATE_LIMIT_CONFIG = {
-  key: 'contact_form_submit',
-  maxRequests: 3,
-  windowMs: 5 * 60 * 1000,
-} as const;
 
 export default function ContactForm() {
   const { textColor, secondaryColor } = useColors();
@@ -74,9 +68,9 @@ export default function ContactForm() {
    * in handleSubmit and surfaced to the user via notify().
    */
   const enforceRateLimit = () => {
-    const result = checkRateLimit(RATE_LIMIT_CONFIG.key, {
-      maxRequests: RATE_LIMIT_CONFIG.maxRequests,
-      windowMs: RATE_LIMIT_CONFIG.windowMs,
+    const result = checkRateLimit(CONTACT_FORM_RATE_LIMIT_CONFIG.key, {
+      maxRequests: CONTACT_FORM_RATE_LIMIT_CONFIG.maxRequests,
+      windowMs: CONTACT_FORM_RATE_LIMIT_CONFIG.windowMs,
     });
 
     if (!result.allowed) {
@@ -110,6 +104,7 @@ export default function ContactForm() {
   };
 
   const handleSubmit = async () => {
+    if (isLoading) return;
     if (!isFormValid()) return;
 
     try {
