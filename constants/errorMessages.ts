@@ -7,11 +7,12 @@
 export const ERROR_LOADING_METADATA = 'فشل في تحميل بيانات القرآن الكريم.';
 
 /** Returns an error message for a missing mushaf page. */
-export const ERROR_PAGE_NOT_FOUND = (page: number) =>
+export const ERROR_PAGE_NOT_FOUND = (page: number): string =>
   `الصفحة ${page} غير موجودة.`;
 
 /** Returns a formatted error message with additional details. */
-export const ERROR_WITH_DETAILS = (details: string) => `حدث خطأ: ${details}.`;
+export const ERROR_WITH_DETAILS = (details: string): string =>
+  `حدث خطأ: ${details}.`;
 
 /** Validation error for the name field (3-50 characters). */
 export const ERROR_NAME_VALIDATION = 'الاسم يجب أن يكون بين 3 و 50 حرفًا.';
