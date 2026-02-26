@@ -92,7 +92,7 @@ export function useQuranMetadata(): QuranMetadata {
           import('@/assets/quran-metadata/shared/quran.json'),
         ]);
         setQuranData(qurandata.default as QuranText[]);
-      } catch (err) {
+      } catch {
         setError(ERROR_LOADING_METADATA);
       } finally {
         setIsLoading(false);

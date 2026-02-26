@@ -53,7 +53,7 @@ export function useImagesArray() {
         if (isMounted.current) {
           setAsset(assetToLoad);
         }
-      } catch (error) {
+      } catch {
         if (isMounted.current) {
           setError(ERROR_PAGE_NOT_FOUND(page));
           setAsset(null);
