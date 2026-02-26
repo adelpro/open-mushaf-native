@@ -51,6 +51,11 @@ export const showTrackerNotification = createAtomWithStorage<boolean>(
   false,
 );
 
+// Rate on Store feature
+export const appLaunchCount = createAtomWithStorage<number>('AppLaunchCount', 0);
+export const hasUserRatedApp = createAtomWithStorage<boolean>('HasUserRatedApp', false);
+export const ratePromptLastShown = createAtomWithStorage<number>('RatePromptLastShown', 0);
+
 // Type declarations
 type DailyTrackerProgress = {
   value: number;

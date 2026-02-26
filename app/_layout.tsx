@@ -31,6 +31,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import Notification from '@/components/Notification';
 import SEO from '@/components/seo';
+import { useRateApp } from '@/hooks/useRateApp';
 import { isRTL } from '@/utils';
 
 import { NotificationProvider } from '../components/NotificationProvider';
@@ -43,6 +44,7 @@ SplashScreen.setOptions({ fade: true, duration: 1000 });
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const { isReadyToShowPrompt, showRatePrompt } = useRateApp();
 
   const [fontLoaded, fontError] = useFonts({
     Amiri_400Regular,
@@ -81,6 +83,18 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [fontError, fontLoaded]);
+
+  // Show rate prompt after app has been used 5+ times
+  useEffect(() => {
+    if (fontLoaded && isReadyToShowPrompt) {
+      // Delay the prompt to avoid showing it immediately on app launch
+      const timer = setTimeout(() => {
+        showRatePrompt();
+      }, 5000); // Show after 5 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [fontLoaded, isReadyToShowPrompt, showRatePrompt]);
 
   if (!fontLoaded && !fontError) {
     return null;

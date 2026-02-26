@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { Entypo, Feather } from '@expo/vector-icons';
+import { Entypo, Feather, FontAwesome } from '@expo/vector-icons';
 import { useAtom } from 'jotai/react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
@@ -15,6 +15,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { riwayaOptions } from '@/constants';
 import { useColors } from '@/hooks/useColors';
+import { useRateApp } from '@/hooks/useRateApp';
 import {
   flipSound,
   hizbNotification,
@@ -36,6 +37,7 @@ export default function SettingsScreen() {
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const { rateAppManually, launchCount, hasRated } = useRateApp();
 
   const toggleFlipSoundSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
@@ -254,6 +256,36 @@ export default function SettingsScreen() {
               setMushafRiwayaValue(selectedRiwaya);
             }}
           />
+        </Pressable>
+      </ThemedView>
+
+      {/* Rate App Section */}
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
+      >
+        <Pressable
+          style={styles.iconTextContainer}
+          accessibilityRole="button"
+          accessibilityLabel="قيّم التطبيق على المتجر"
+          accessibilityHint="افتح المتجر لتقييم التطبيق"
+          onPress={rateAppManually}
+        >
+          <FontAwesome
+            name="star"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, { backgroundColor: cardColor }]}
+          >
+            قيّم التطبيق {hasRated ? '(تم التقييم)' : `(${launchCount} استخدامات)`}
+          </ThemedText>
         </Pressable>
       </ThemedView>
 
