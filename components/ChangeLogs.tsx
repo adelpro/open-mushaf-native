@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet, useColorScheme } from 'react-native';
 
 import { useSetAtom } from 'jotai/react';
 
@@ -14,8 +14,13 @@ import changeLogsJSON from '../assets/changelogs.json';
 export default function ChangeLogs() {
   const setCurrentVersionValue = useSetAtom(currentAppVersion);
   const appVersion = useMemo(() => getAppVersion(), []);
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
 
-  const changeLogs = changeLogsJSON.logs;
+  // Get platform-specific changelogs
+  const platform = Platform.OS;
+  const platformLogs = changeLogsJSON[platform as keyof typeof changeLogsJSON] || changeLogsJSON.logs;
+  const changeLogs = Array.isArray(platformLogs) ? platformLogs : changeLogsJSON.logs;
 
   const handleClose = () => {
     setCurrentVersionValue(appVersion);
@@ -23,11 +28,11 @@ export default function ChangeLogs() {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedView style={styles.content}>
+      <ThemedView style={[styles.content, isDark && styles.contentDark]}>
         <ThemedText style={styles.title}>ما الجديد</ThemedText>
         {changeLogs?.map((log, index) => (
           <ThemedText key={index} style={styles.changeLogItem}>
-            {log}
+            • {log}
           </ThemedText>
         ))}
         <ThemedButton variant="primary" onPress={handleClose}>
@@ -45,21 +50,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 20,
   },
   content: {
-    width: '80%',
-    padding: 20,
-    borderRadius: 5,
+    width: '100%',
     maxWidth: 400,
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    padding: 24,
+    borderRadius: 12,
+    backgroundColor: '#ffffff',
+    // Add shadow for iOS
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    // Add elevation for Android
+    elevation: 5,
+  },
+  contentDark: {
+    backgroundColor: '#1c1c1e',
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 16,
+    textAlign: 'right',
   },
   changeLogItem: {
     fontSize: 16,
-    marginBottom: 20,
+    marginBottom: 12,
+    textAlign: 'right',
+    lineHeight: 24,
+    writingDirection: 'rtl',
   },
 });
