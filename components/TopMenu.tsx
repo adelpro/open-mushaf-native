@@ -13,7 +13,7 @@ import { removeTashkeel } from 'quran-search-engine';
 import * as Progress from 'react-native-progress';
 
 import { ThemedView } from '@/components/ThemedView';
-import {} from '@/constants';
+import { } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 import {
@@ -43,9 +43,9 @@ export default function TopMenu() {
     const newProgress =
       dailyTrackerGoalValue > 0
         ? Math.min(
-            1,
-            dailyTrackerCompletedValue.value / 8 / (dailyTrackerGoalValue / 8),
-          )
+          1,
+          dailyTrackerCompletedValue.value / 8 / (dailyTrackerGoalValue / 8),
+        )
         : 0;
     setProgressValue(newProgress);
   }, [dailyTrackerGoalValue, dailyTrackerCompletedValue.value]);
@@ -128,6 +128,8 @@ export default function TopMenu() {
                 setShowTopMenuState(false);
                 router.push('/tracker');
               }}
+              accessibilityRole="button"
+              accessibilityLabel="فتح سجل المتابعة والإنجاز"
             >
               <View style={styles.progressContainer}>
                 <Progress.Circle
@@ -154,6 +156,8 @@ export default function TopMenu() {
               setShowTopMenuState(false);
               router.push('/navigation');
             }}
+            accessibilityRole="button"
+            accessibilityLabel="الانتقال السريع للسور والأجزاء"
           >
             <Ionicons
               name="navigate-circle-outline"
@@ -168,6 +172,8 @@ export default function TopMenu() {
               setShowTopMenuState(false);
               router.push('/search');
             }}
+            accessibilityRole="button"
+            accessibilityLabel="فتح صفحة البحث"
           >
             <Ionicons name="search" size={ICON_SIZE} color={tintColor} />
           </TouchableOpacity>
@@ -177,6 +183,8 @@ export default function TopMenu() {
               setShowTopMenuState(false);
               toggleMenu();
             }}
+            accessibilityRole="button"
+            accessibilityLabel={showBottomMenuState ? "تصغير الشاشة" : "عرض ملء الشاشة"}
           >
             {showBottomMenuState ? (
               <MaterialCommunityIcons

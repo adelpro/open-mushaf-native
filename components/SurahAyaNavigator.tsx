@@ -78,6 +78,7 @@ export default function SurahAyaNavigator({
       ]}
       onPress={() => handleSurahSelect(item.number)}
       accessibilityLabel={`سورة ${item.name}`}
+      accessibilityRole="button"
     >
       <ThemedText style={styles.surahNumber}>{item.number}</ThemedText>
       <ThemedView
@@ -105,6 +106,7 @@ export default function SurahAyaNavigator({
       ]}
       onPress={() => handleAyaSelect(item)}
       accessibilityLabel={`آية ${item}`}
+      accessibilityRole="button"
     >
       <ThemedText style={styles.ayaNumber}>{item}</ThemedText>
     </TouchableOpacity>
@@ -119,6 +121,7 @@ export default function SurahAyaNavigator({
         <TouchableOpacity
           style={[styles.selector, { borderColor: primaryColor }]}
           onPress={() => setSurahModalVisible(true)}
+          accessibilityRole="combobox"
           accessibilityLabel="اختر سورة"
           accessibilityHint="اضغط لفتح قائمة السور"
         >
@@ -147,6 +150,7 @@ export default function SurahAyaNavigator({
         <TouchableOpacity
           style={[styles.selector, { borderColor: primaryColor }]}
           onPress={() => setAyaModalVisible(true)}
+          accessibilityRole="combobox"
           accessibilityLabel="اختر آية"
           accessibilityHint="اضغط لفتح قائمة الآيات"
         >
@@ -178,6 +182,8 @@ export default function SurahAyaNavigator({
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setSurahModalVisible(false)}
+                accessibilityRole="button"
+                accessibilityLabel="إغلاق القائمة"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
@@ -361,7 +367,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#eee',
   },
-  
+
   ayaNumber: {
     fontSize: 16,
     fontFamily: 'Tajawal_500Medium',
