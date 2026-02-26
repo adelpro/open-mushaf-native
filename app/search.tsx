@@ -26,13 +26,6 @@ import useQuranSearch from '@/hooks/useQuranSearch';
 const MORPH = morphologyDataRaw;
 const WORD_MAP = wordMapJSON;
 
-// Constant lookup for advanced search option labels
-const OPTION_LABELS: Record<'lemma' | 'root' | 'fuzzy', string> = {
-  lemma: 'الصيغة',
-  root: 'الجذر',
-  fuzzy: 'التقريب',
-};
-
 export default function Search() {
   const { quranData, isLoading, error } = useQuranMetadata();
   const { tintColor, primaryColor } = useColors();
@@ -56,12 +49,13 @@ export default function Search() {
 
   const listRef = useRef<FlatList>(null);
 
+  // تحديث الـ Query مع الـ Debounce
   const handleSearch = useDebounce((text: string) => {
     setPage(1);
     setResults([]);
     setHasMore(false);
     setQuery(text);
-    // Note: isSearching is toggled off in the useEffect once results are fetched
+    // ملاحظة: حالة isSearching سيتم إغلاقها داخل useEffect عند وصول النتائج
   }, 300);
 
   const { pageResults, counts, getPositiveTokens } = useQuranSearch({
@@ -76,6 +70,7 @@ export default function Search() {
   });
 
   useEffect(() => {
+    // إذا كان البحث فارغاً
     if (!query.trim()) {
       setResults([]);
       setHasMore(false);
@@ -93,6 +88,8 @@ export default function Search() {
     const more = pageResults.length === PAGE_SIZE;
     setHasMore(more);
     setIsLoadingMore(false);
+    
+    // إيقاف حالة الـ Skeleton فوراً عند استلام النتائج
     setIsSearching(false);
 
     if (page === 1 && listRef.current) {
@@ -100,8 +97,7 @@ export default function Search() {
     }
   }, [pageResults, page, query]);
 
-  /** Toggles the specified advanced search option on/off */
-  const handleToggleOption = (option: keyof typeof advancedOptions) => {
+  const toggleOption = (option: keyof typeof advancedOptions) => {
     setAdvancedOptions((prev) => ({ ...prev, [option]: !prev[option] }));
   };
 
@@ -123,7 +119,7 @@ export default function Search() {
   if (advancedOptions.lemma) selectedLabels.push(`صيغة: ${counts.lemma}`);
   if (advancedOptions.root) selectedLabels.push(`جذر: ${counts.root}`);
   if (advancedOptions.fuzzy) selectedLabels.push(`تقريبي: ${counts.fuzzy}`);
-
+  
   const counterText =
     query.trim() === ''
       ? ''
@@ -140,10 +136,11 @@ export default function Search() {
           placeholder="البحث..."
           value={inputText}
           onChangeText={(text) => {
+            // تنظيف النص (عربي فقط)
             const arabicOnly = text.replace(/[^\u0621-\u064A\s]/g, '');
             setInputText(arabicOnly);
             
-            // Perceived performance: trigger searching UI immediately
+            // تفعيل الـ Skeleton فوراً عند الكتابة لتحسين تجربة المستخدم (Perceived Performance)
             if (arabicOnly.trim().length > 0) {
               setIsSearching(true);
             } else {
@@ -179,7 +176,7 @@ export default function Search() {
                   styles.optionButton,
                   advancedOptions[opt] && styles.optionActive,
                 ]}
-                onPress={() => handleToggleOption(opt)}
+                onPress={() => toggleOption(opt)}
               >
                 <ThemedText
                   style={
@@ -188,7 +185,11 @@ export default function Search() {
                       : undefined
                   }
                 >
-                  {OPTION_LABELS[opt]}
+                  {opt === 'lemma'
+                    ? 'الصيغة'
+                    : opt === 'root'
+                    ? 'الجذر'
+                    : 'التقريب'}
                 </ThemedText>
               </Pressable>
             ))}
@@ -202,9 +203,9 @@ export default function Search() {
 
       <SearchColorLegend />
 
-      {/* Display Skeleton loaders during active search */}
+      {/* ✅ عرض الـ Skeleton أثناء البحث النشط */}
       {isSearching && (
-        <ThemedView style={styles.skeletonContainer}>
+        <ThemedView style={{ paddingVertical: 12 }}>
           {[1, 2, 3, 4].map((item) => (
             <View key={item} style={styles.skeletonCard} />
           ))}
@@ -213,7 +214,7 @@ export default function Search() {
 
       <FlatList
         ref={listRef}
-        // Hide actual list data during initial search to show skeletons clearly
+        // إخفاء القائمة الأصلية أثناء البحث لإظهار الـ Skeleton بوضوح
         data={isSearching ? [] : results}
         keyExtractor={(item) => item.gid.toString()}
         renderItem={({ item }) => (
@@ -301,7 +302,8 @@ const styles = StyleSheet.create({
   optionActiveText: { color: '#1976d2', fontWeight: '600' },
   emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 40 },
   resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14, opacity: 0.7 },
-  skeletonContainer: { paddingVertical: 12 },
+  
+  // ستايل الـ Skeleton
   skeletonCard: {
     height: 80,
     backgroundColor: '#f0f0f0',
