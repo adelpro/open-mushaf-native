@@ -108,7 +108,9 @@ export default function Search() {
   if (error)
     return (
       <ThemedView style={styles.container}>
-        <ThemedText type="defaultSemiBold">{ERROR_WITH_DETAILS(error)}</ThemedText>
+        <ThemedText type="defaultSemiBold">
+          {ERROR_WITH_DETAILS(error)}
+        </ThemedText>
       </ThemedView>
     );
 

@@ -23,7 +23,9 @@ export function SurahList() {
   if (error) {
     return (
       <ThemedView style={styles.errorContainer}>
-        <ThemedText type="defaultSemiBold">{ERROR_WITH_DETAILS(error)}</ThemedText>
+        <ThemedText type="defaultSemiBold">
+          {ERROR_WITH_DETAILS(error)}
+        </ThemedText>
       </ThemedView>
     );
   }

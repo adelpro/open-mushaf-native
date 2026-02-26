@@ -109,7 +109,9 @@ export default function Navigation() {
     return (
       <ThemedView style={styles.container}>
         <ThemedView style={styles.errorContainer}>
-          <ThemedText type="defaultSemiBold">{ERROR_WITH_DETAILS(error)}</ThemedText>
+          <ThemedText type="defaultSemiBold">
+            {ERROR_WITH_DETAILS(error)}
+          </ThemedText>
         </ThemedView>
       </ThemedView>
     );
