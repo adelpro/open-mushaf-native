@@ -1,11 +1,22 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
 interface ModalStyleColors {
   overlayColor: string;
   borderLightColor: string;
 }
 
-export const createModalStyles = (colors: ModalStyleColors) =>
+interface ModalStyles {
+  modalOverlay: ViewStyle;
+  modalContent: ViewStyle;
+  modalHeader: ViewStyle;
+  modalTitle: TextStyle;
+  closeButton: ViewStyle;
+  modalMessage: TextStyle;
+  modalActions: ViewStyle;
+  modalButton: ViewStyle;
+}
+
+export const createModalStyles = (colors: ModalStyleColors): ModalStyles =>
   StyleSheet.create({
     modalOverlay: {
       flex: 1,
