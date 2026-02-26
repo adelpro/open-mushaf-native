@@ -51,6 +51,8 @@ export default function useQuranSearch({
     fuzzy: 0,
     total: 0,
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Convert morphology array to Map format for the package
   const morphologyMap = useMemo(() => {
@@ -104,6 +106,8 @@ export default function useQuranSearch({
     if (!quranData || quranData.length === 0) {
       setPageResults([]);
       setCounts({ simple: 0, lemma: 0, root: 0, fuzzy: 0, total: 0 });
+      setIsLoading(false);
+      setError(null);
       return;
     }
 
@@ -112,8 +116,13 @@ export default function useQuranSearch({
     if (!arabicOnly) {
       setPageResults([]);
       setCounts({ simple: 0, lemma: 0, root: 0, fuzzy: 0, total: 0 });
+      setIsLoading(false);
+      setError(null);
       return;
     }
+
+    setIsLoading(true);
+    setError(null);
 
     try {
       const response: SearchResponse = search(
@@ -141,12 +150,16 @@ export default function useQuranSearch({
       });
 
       setPageResults(response.results as QuranText[]);
-    } catch (error) {
-      console.error('Search error:', error);
+      setError(null);
+    } catch (err) {
+      console.error('Search error:', err);
       setPageResults([]);
       setCounts({ simple: 0, lemma: 0, root: 0, fuzzy: 0, total: 0 });
+      setError(err instanceof Error ? err.message : 'حدث خطأ في البحث');
+    } finally {
+      setIsLoading(false);
     }
   }, [query, quranData, morphologyMap, wordMap, advancedOptions, page, limit]);
 
-  return { pageResults, counts, getPositiveTokens };
+  return { pageResults, counts, getPositiveTokens, isLoading, error };
 }

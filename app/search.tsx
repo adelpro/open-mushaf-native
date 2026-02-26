@@ -55,7 +55,7 @@ export default function Search() {
     setQuery(text);
   }, 200);
 
-  const { pageResults, counts, getPositiveTokens } = useQuranSearch({
+  const { pageResults, counts, getPositiveTokens, isLoading: isSearchLoading, error: searchError } = useQuranSearch({
     quranData,
     morphologyData: MORPH,
     wordMap: WORD_MAP,
@@ -205,6 +205,13 @@ export default function Search() {
         <ThemedText style={styles.resultCount}>{counterText}</ThemedText>
       ) : null}
 
+      {searchError ? (
+        <ThemedView style={styles.errorContainer}>
+          <Ionicons name="alert-circle-outline" size={24} color="#dc2626" style={styles.errorIcon} />
+          <ThemedText style={styles.errorText}>{searchError}</ThemedText>
+        </ThemedView>
+      ) : null}
+
       <SearchColorLegend />
       <FlatList
         ref={listRef}
@@ -229,14 +236,14 @@ export default function Search() {
         }}
         onEndReachedThreshold={0.5}
         ListFooterComponent={
-          isLoadingMore ? (
+          isLoadingMore || isSearchLoading ? (
             <ThemedView style={{ paddingVertical: 12 }}>
               <ActivityIndicator size="small" color={tintColor} />
             </ThemedView>
           ) : null
         }
         ListEmptyComponent={
-          query && !isLoading ? (
+          query && !isLoading && !isSearchLoading && !searchError ? (
             <ThemedView style={styles.emptyContainer}>
               <ThemedText type="default">لا توجد نتائج</ThemedText>
             </ThemedView>
@@ -295,4 +302,17 @@ const styles = StyleSheet.create({
   optionActiveText: { color: '#1976d2', fontWeight: '600' },
   emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14 },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 12,
+    marginBottom: 12,
+    backgroundColor: '#fef2f2',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#fecaca',
+  },
+  errorIcon: { marginLeft: 8 },
+  errorText: { color: '#dc2626', fontSize: 14, textAlign: 'center' },
 });
