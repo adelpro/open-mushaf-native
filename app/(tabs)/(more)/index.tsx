@@ -49,8 +49,6 @@ export default function MoreScreen() {
       });
       // console.log('Share successful or dismissed'); // You can uncomment this if needed
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('[handleShare]', error);
       setErrorMessage(ERROR_SHARE);
       setErrorModalVisible(true);
     }
