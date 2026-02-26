@@ -423,10 +423,7 @@ export default function SettingsScreen() {
           accessibilityRole="button"
         >
           <ThemedView
-            style={[
-              modalStyles.modalContent,
-              { backgroundColor: cardColor },
-            ]}
+            style={[modalStyles.modalContent, { backgroundColor: cardColor }]}
             onStartShouldSetResponder={() => true}
           >
             <ThemedView style={modalStyles.modalHeader}>
