@@ -26,6 +26,13 @@ import useQuranSearch from '@/hooks/useQuranSearch';
 const MORPH = morphologyDataRaw;
 const WORD_MAP = wordMapJSON;
 
+// Constant lookup for advanced search option labels
+const OPTION_LABELS: Record<'lemma' | 'root' | 'fuzzy', string> = {
+  lemma: 'الصيغة',
+  root: 'الجذر',
+  fuzzy: 'التقريب',
+};
+
 export default function Search() {
   const { quranData, isLoading, error } = useQuranMetadata();
   const { tintColor, primaryColor } = useColors();
@@ -45,6 +52,7 @@ export default function Search() {
   const [results, setResults] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const listRef = useRef<FlatList>(null);
 
@@ -53,7 +61,8 @@ export default function Search() {
     setResults([]);
     setHasMore(false);
     setQuery(text);
-  }, 200);
+    // Note: isSearching is toggled off in the useEffect once results are fetched
+  }, 300);
 
   const { pageResults, counts, getPositiveTokens } = useQuranSearch({
     quranData,
@@ -71,6 +80,7 @@ export default function Search() {
       setResults([]);
       setHasMore(false);
       setIsLoadingMore(false);
+      setIsSearching(false);
       return;
     }
 
@@ -83,13 +93,15 @@ export default function Search() {
     const more = pageResults.length === PAGE_SIZE;
     setHasMore(more);
     setIsLoadingMore(false);
+    setIsSearching(false);
 
     if (page === 1 && listRef.current) {
       listRef.current.scrollToOffset({ offset: 0, animated: false });
     }
   }, [pageResults, page, query]);
 
-  const toggleOption = (option: keyof typeof advancedOptions) => {
+  /** Toggles the specified advanced search option on/off */
+  const handleToggleOption = (option: keyof typeof advancedOptions) => {
     setAdvancedOptions((prev) => ({ ...prev, [option]: !prev[option] }));
   };
 
@@ -111,6 +123,7 @@ export default function Search() {
   if (advancedOptions.lemma) selectedLabels.push(`صيغة: ${counts.lemma}`);
   if (advancedOptions.root) selectedLabels.push(`جذر: ${counts.root}`);
   if (advancedOptions.fuzzy) selectedLabels.push(`تقريبي: ${counts.fuzzy}`);
+
   const counterText =
     query.trim() === ''
       ? ''
@@ -129,6 +142,14 @@ export default function Search() {
           onChangeText={(text) => {
             const arabicOnly = text.replace(/[^\u0621-\u064A\s]/g, '');
             setInputText(arabicOnly);
+            
+            // Perceived performance: trigger searching UI immediately
+            if (arabicOnly.trim().length > 0) {
+              setIsSearching(true);
+            } else {
+              setIsSearching(false);
+            }
+            
             handleSearch(arabicOnly);
           }}
         />
@@ -151,64 +172,49 @@ export default function Search() {
       {showOptions && (
         <ThemedView style={styles.advancedOptions}>
           <View style={styles.optionRow}>
-            <Pressable
-              style={[
-                styles.optionButton,
-                advancedOptions.lemma && styles.optionActive,
-              ]}
-              onPress={() => toggleOption('lemma')}
-            >
-              <ThemedText
-                style={
-                  advancedOptions.lemma ? styles.optionActiveText : undefined
-                }
+            {(['lemma', 'root', 'fuzzy'] as const).map((opt) => (
+              <Pressable
+                key={opt}
+                style={[
+                  styles.optionButton,
+                  advancedOptions[opt] && styles.optionActive,
+                ]}
+                onPress={() => handleToggleOption(opt)}
               >
-                الصيغة
-              </ThemedText>
-            </Pressable>
-
-            <Pressable
-              style={[
-                styles.optionButton,
-                advancedOptions.root && styles.optionActive,
-              ]}
-              onPress={() => toggleOption('root')}
-            >
-              <ThemedText
-                style={
-                  advancedOptions.root ? styles.optionActiveText : undefined
-                }
-              >
-                الجذر
-              </ThemedText>
-            </Pressable>
-            <Pressable
-              style={[
-                styles.optionButton,
-                advancedOptions.fuzzy && styles.optionActive,
-              ]}
-              onPress={() => toggleOption('fuzzy')}
-            >
-              <ThemedText
-                style={
-                  advancedOptions.fuzzy ? styles.optionActiveText : undefined
-                }
-              >
-                التقريب
-              </ThemedText>
-            </Pressable>
+                <ThemedText
+                  style={
+                    advancedOptions[opt]
+                      ? styles.optionActiveText
+                      : undefined
+                  }
+                >
+                  {OPTION_LABELS[opt]}
+                </ThemedText>
+              </Pressable>
+            ))}
           </View>
         </ThemedView>
       )}
 
-      {query ? (
+      {query && !isSearching ? (
         <ThemedText style={styles.resultCount}>{counterText}</ThemedText>
       ) : null}
 
       <SearchColorLegend />
+
+      {/* Display Skeleton loaders during active search */}
+      {isSearching && (
+        <ThemedView style={styles.skeletonContainer}>
+          {[1, 2, 3, 4].map((item) => (
+            <View key={item} style={styles.skeletonCard} />
+          ))}
+        </ThemedView>
+      )}
+
       <FlatList
         ref={listRef}
-        data={results}
+        // Hide actual list data during initial search to show skeletons clearly
+        data={isSearching ? [] : results}
         keyExtractor={(item) => item.gid.toString()}
         renderItem={({ item }) => (
           <SearchResultItem
@@ -223,7 +229,7 @@ export default function Search() {
           />
         )}
         onEndReached={() => {
-          if (!hasMore || isLoadingMore) return;
+          if (!hasMore || isLoadingMore || isSearching) return;
           setIsLoadingMore(true);
           setPage((prev) => prev + 1);
         }}
@@ -236,7 +242,7 @@ export default function Search() {
           ) : null
         }
         ListEmptyComponent={
-          query && !isLoading ? (
+          query && !isSearching ? (
             <ThemedView style={styles.emptyContainer}>
               <ThemedText type="default">لا توجد نتائج</ThemedText>
             </ThemedView>
@@ -293,6 +299,16 @@ const styles = StyleSheet.create({
   },
   optionActive: { backgroundColor: '#e3f2fd', borderColor: '#1976d2' },
   optionActiveText: { color: '#1976d2', fontWeight: '600' },
-  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14 },
+  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 40 },
+  resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14, opacity: 0.7 },
+  skeletonContainer: { paddingVertical: 12 },
+  skeletonCard: {
+    height: 80,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    marginBottom: 12,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ececec',
+  },
 });
