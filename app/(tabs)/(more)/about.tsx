@@ -7,7 +7,7 @@ import SEO from '@/components/seo';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { ExternalLinkType } from '@/types';
-import { getAppVersion, getBuildVersion } from '@/utils';
+import { getAppVersion, getBuildVersion, isRTL } from '@/utils';
 
 export default function AboutScreen() {
   const appVersion = getAppVersion();
@@ -167,11 +167,11 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     marginBottom: 5,
-    paddingLeft: 16,
+    paddingStart: 16,
   },
   listItem: {
     marginBottom: 10,
-    flexDirection: 'row',
+    flexDirection: isRTL ? 'row-reverse' : 'row',
   },
   bullet: {
     marginStart: 10,
@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
   listText: {
     fontSize: 16,
     lineHeight: 22,
+    textAlign: isRTL ? 'right' : 'left',
   },
   link: {
     color: '#1E90FF',

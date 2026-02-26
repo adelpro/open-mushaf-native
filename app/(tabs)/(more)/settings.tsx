@@ -24,6 +24,7 @@ import {
   showTrackerNotification,
 } from '@/jotai/atoms';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
+import { isRTL } from '@/utils';
 import { clearStorageAndReload } from '@/utils/storage/clearStorage';
 
 export default function SettingsScreen() {
@@ -377,7 +378,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     elevation: 3,
-    flexDirection: 'row',
+    flexDirection: isRTL ? 'row-reverse' : 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -387,11 +388,12 @@ const styles = StyleSheet.create({
   rowContainer: {
     alignItems: 'center',
     gap: 1,
-    flexDirection: 'row',
+    flexDirection: isRTL ? 'row-reverse' : 'row',
     width: '100%',
   },
   fullWidthContainer: {
     alignItems: 'center',
+    flexDirection: isRTL ? 'row-reverse' : 'row',
     width: '100%',
   },
   fullWidth: {
@@ -426,7 +428,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   modalHeader: {
-    flexDirection: 'row',
+    flexDirection: isRTL ? 'row-reverse' : 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
@@ -452,7 +454,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Tajawal_400Regular',
   },
   modalActions: {
-    flexDirection: 'row',
+    flexDirection: isRTL ? 'row-reverse' : 'row',
     justifyContent: 'space-around',
     backgroundColor: 'transparent',
     width: '100%',
@@ -462,7 +464,7 @@ const styles = StyleSheet.create({
     maxWidth: 100,
   },
   iconTextContainer: {
-    flexDirection: 'row',
+    flexDirection: isRTL ? 'row-reverse' : 'row',
     alignItems: 'center',
     backgroundColor: 'transparent',
     margin: 2,
