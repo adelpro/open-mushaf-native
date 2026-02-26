@@ -45,15 +45,15 @@ export default function Search() {
   const [results, setResults] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const listRef = useRef<FlatList>(null);
-
   const handleSearch = useDebounce((text: string) => {
     setPage(1);
     setResults([]);
     setHasMore(false);
     setQuery(text);
-  }, 200);
+  }, 300);
 
   const { pageResults, counts, getPositiveTokens } = useQuranSearch({
     quranData,
@@ -67,10 +67,12 @@ export default function Search() {
   });
 
   useEffect(() => {
+    // إذا كان البحث فارغاً
     if (!query.trim()) {
       setResults([]);
       setHasMore(false);
       setIsLoadingMore(false);
+      setIsSearching(false);
       return;
     }
 
@@ -83,6 +85,9 @@ export default function Search() {
     const more = pageResults.length === PAGE_SIZE;
     setHasMore(more);
     setIsLoadingMore(false);
+    
+    // إيقاف حالة الـ Skeleton فوراً عند استلام النتائج
+    setIsSearching(false);
 
     if (page === 1 && listRef.current) {
       listRef.current.scrollToOffset({ offset: 0, animated: false });
@@ -111,6 +116,7 @@ export default function Search() {
   if (advancedOptions.lemma) selectedLabels.push(`صيغة: ${counts.lemma}`);
   if (advancedOptions.root) selectedLabels.push(`جذر: ${counts.root}`);
   if (advancedOptions.fuzzy) selectedLabels.push(`تقريبي: ${counts.fuzzy}`);
+  
   const counterText =
     query.trim() === ''
       ? ''
@@ -127,8 +133,17 @@ export default function Search() {
           placeholder="البحث..."
           value={inputText}
           onChangeText={(text) => {
+            // تنظيف النص (عربي فقط)
             const arabicOnly = text.replace(/[^\u0621-\u064A\s]/g, '');
             setInputText(arabicOnly);
+            
+            // تفعيل الـ Skeleton فوراً عند الكتابة لتحسين تجربة المستخدم (Perceived Performance)
+            if (arabicOnly.trim().length > 0) {
+              setIsSearching(true);
+            } else {
+              setIsSearching(false);
+            }
+            
             handleSearch(arabicOnly);
           }}
         />
@@ -151,64 +166,52 @@ export default function Search() {
       {showOptions && (
         <ThemedView style={styles.advancedOptions}>
           <View style={styles.optionRow}>
-            <Pressable
-              style={[
-                styles.optionButton,
-                advancedOptions.lemma && styles.optionActive,
-              ]}
-              onPress={() => toggleOption('lemma')}
-            >
-              <ThemedText
-                style={
-                  advancedOptions.lemma ? styles.optionActiveText : undefined
-                }
+            {(['lemma', 'root', 'fuzzy'] as const).map((opt) => (
+              <Pressable
+                key={opt}
+                style={[
+                  styles.optionButton,
+                  advancedOptions[opt] && styles.optionActive,
+                ]}
+                onPress={() => toggleOption(opt)}
               >
-                الصيغة
-              </ThemedText>
-            </Pressable>
-
-            <Pressable
-              style={[
-                styles.optionButton,
-                advancedOptions.root && styles.optionActive,
-              ]}
-              onPress={() => toggleOption('root')}
-            >
-              <ThemedText
-                style={
-                  advancedOptions.root ? styles.optionActiveText : undefined
-                }
-              >
-                الجذر
-              </ThemedText>
-            </Pressable>
-            <Pressable
-              style={[
-                styles.optionButton,
-                advancedOptions.fuzzy && styles.optionActive,
-              ]}
-              onPress={() => toggleOption('fuzzy')}
-            >
-              <ThemedText
-                style={
-                  advancedOptions.fuzzy ? styles.optionActiveText : undefined
-                }
-              >
-                التقريب
-              </ThemedText>
-            </Pressable>
+                <ThemedText
+                  style={
+                    advancedOptions[opt]
+                      ? styles.optionActiveText
+                      : undefined
+                  }
+                >
+                  {opt === 'lemma'
+                    ? 'الصيغة'
+                    : opt === 'root'
+                    ? 'الجذر'
+                    : 'التقريب'}
+                </ThemedText>
+              </Pressable>
+            ))}
           </View>
         </ThemedView>
       )}
 
-      {query ? (
+      {query && !isSearching ? (
         <ThemedText style={styles.resultCount}>{counterText}</ThemedText>
       ) : null}
 
       <SearchColorLegend />
+
+      {/* ✅ عرض الـ Skeleton أثناء البحث النشط */}
+      {isSearching && (
+        <ThemedView style={{ paddingVertical: 12 }}>
+          {[1, 2, 3, 4].map((item) => (
+            <View key={item} style={styles.skeletonCard} />
+          ))}
+        </ThemedView>
+      )}
+
       <FlatList
         ref={listRef}
-        data={results}
+        data={isSearching ? [] : results}
         keyExtractor={(item) => item.gid.toString()}
         renderItem={({ item }) => (
           <SearchResultItem
@@ -223,7 +226,7 @@ export default function Search() {
           />
         )}
         onEndReached={() => {
-          if (!hasMore || isLoadingMore) return;
+          if (!hasMore || isLoadingMore || isSearching) return;
           setIsLoadingMore(true);
           setPage((prev) => prev + 1);
         }}
@@ -236,7 +239,7 @@ export default function Search() {
           ) : null
         }
         ListEmptyComponent={
-          query && !isLoading ? (
+          query && !isSearching ? (
             <ThemedView style={styles.emptyContainer}>
               <ThemedText type="default">لا توجد نتائج</ThemedText>
             </ThemedView>
@@ -293,6 +296,15 @@ const styles = StyleSheet.create({
   },
   optionActive: { backgroundColor: '#e3f2fd', borderColor: '#1976d2' },
   optionActiveText: { color: '#1976d2', fontWeight: '600' },
-  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14 },
+  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 40 },
+  resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14, opacity: 0.7 },
+  skeletonCard: {
+    height: 80,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    marginBottom: 12,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ececec',
+  },
 });
