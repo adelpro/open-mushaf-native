@@ -30,14 +30,6 @@ import {
 const MORPH = morphologyDataRaw;
 const WORD_MAP = wordMapJSON;
 
-type SearchStyleColors = {
-  borderColor: string;
-  subtleBgColor: string;
-  activeOptionBgColor: string;
-  activeOptionBorderColor: string;
-  activeOptionTextColor: string;
-};
-
 export default function Search() {
   const { quranData, isLoading, error } = useQuranMetadata();
   const {
@@ -321,7 +313,13 @@ export default function Search() {
   );
 }
 
-const createStyles = (colors: SearchStyleColors) =>
+const createStyles = (colors: {
+  borderColor: string;
+  subtleBgColor: string;
+  activeOptionBgColor: string;
+  activeOptionBorderColor: string;
+  activeOptionTextColor: string;
+}) =>
   StyleSheet.create({
     container: { flex: 1, padding: 20 },
     searchContainer: {
