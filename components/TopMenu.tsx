@@ -175,6 +175,7 @@ export default function TopMenu() {
             accessibilityRole="button"
             accessibilityLabel="فتح صفحة البحث"
           >
+            
             <Ionicons name="search" size={ICON_SIZE} color={tintColor} />
           </TouchableOpacity>
           <TouchableOpacity

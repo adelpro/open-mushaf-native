@@ -168,6 +168,7 @@ export default function SurahAyaNavigator({
         visible={surahModalVisible}
         onRequestClose={() => setSurahModalVisible(false)}
       >
+        
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
