@@ -43,10 +43,9 @@ export default function ReadingChart() {
 
   const maxRatio = Math.max(...GRID_RATIOS);
   const extra = maxRatio - 1;
-  const paddingTop = Math.ceil(
-    (extra * (chartHeight - CHART_PADDING.bottom)) / (1 + extra),
-  );
-  const drawableHeight = chartHeight - paddingTop - CHART_PADDING.bottom - 10;
+  const paddingTop =
+    Math.ceil((extra * (chartHeight - CHART_PADDING.bottom)) / (1 + extra)) + 8;
+  const drawableHeight = chartHeight - paddingTop - CHART_PADDING.bottom;
 
   const barGap =
     period <= 7
@@ -68,7 +67,6 @@ export default function ReadingChart() {
     (index: number) => {
       setPeriodIndex(index);
       setSelectedBar(CHART_PERIODS[index].days - 1);
-      setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
     },
     [setPeriodIndex],
   );
