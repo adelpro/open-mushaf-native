@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     paddingHorizontal: 22,
     alignSelf: 'center',
+    writingDirection: 'rtl',
   },
   title: {
     fontSize: 20,
@@ -167,7 +168,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     marginBottom: 5,
-    paddingLeft: 16,
+    paddingStart: 16,
   },
   listItem: {
     marginBottom: 10,
@@ -179,6 +180,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   listText: {
+    flex: 1,
     fontSize: 16,
     lineHeight: 22,
   },

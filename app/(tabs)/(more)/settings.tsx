@@ -386,6 +386,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
     maxWidth: 640,
+    writingDirection: 'rtl',
   },
   settingsSection: {
     width: '100%',
