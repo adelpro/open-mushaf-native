@@ -6,18 +6,21 @@ import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
-type ChangeLogsProps = {
+interface ChangeLogsProps {
   visible: boolean;
   onClose: () => void;
-};
+}
 
-type PlatformKey = keyof typeof changeLogsJSON;
+const platformLogsMap: Record<string, string[]> = {
+  android: changeLogsJSON.android,
+  ios: changeLogsJSON.ios,
+  web: changeLogsJSON.web,
+};
 
 export default function ChangeLogs({ visible, onClose }: ChangeLogsProps) {
   const changeLogs = useMemo(() => {
-    const platform = Platform.OS as PlatformKey;
     const allLogs = changeLogsJSON.all ?? [];
-    const platformLogs = changeLogsJSON[platform] ?? [];
+    const platformLogs = platformLogsMap[Platform.OS] ?? [];
     return [...allLogs, ...platformLogs];
   }, []);
 
