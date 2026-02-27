@@ -4,7 +4,9 @@ import {
   Modal,
   Pressable,
   StyleSheet,
+  TextStyle,
   TouchableOpacity,
+  ViewStyle,
 } from 'react-native';
 
 import { Entypo, Feather } from '@expo/vector-icons';
@@ -468,7 +470,20 @@ export default function SettingsScreen() {
   );
 }
 
-const createStyles = () =>
+interface SettingsStyles {
+  container: ViewStyle;
+  settingsSection: ViewStyle;
+  columnSection: ViewStyle;
+  rowContainer: ViewStyle;
+  fullWidthContainer: ViewStyle;
+  fullWidth: ViewStyle;
+  itemText: TextStyle;
+  sliderContainer: ViewStyle;
+  iconTextContainer: ViewStyle;
+  iconStyle: ViewStyle;
+}
+
+const createStyles = (): SettingsStyles =>
   StyleSheet.create({
     container: {
       padding: 15,
