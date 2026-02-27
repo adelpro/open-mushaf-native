@@ -46,6 +46,8 @@ const formatTimeArabic = (hour: number, minute: number): string => {
   return `${arabicNumerals(displayHour)}:${arabicNumerals(minute)} ${period}`;
 };
 
+// Screen component intentionally coordinates multiple tracker/reminder flows.
+// eslint-disable-next-line max-lines-per-function
 export default function TrackerScreen() {
   const { iconColor, cardColor, primaryColor } = useColors();
   const { currentSavedPage: savedPage } = useCurrentPage();
@@ -117,6 +119,7 @@ export default function TrackerScreen() {
     setConfirmModalVisible(false); // Close modal after reset
   };
 
+  // eslint-disable-next-line max-lines-per-function
   const handleToggleWirdReminder = async () => {
     if (!wirdReminder) return;
 
