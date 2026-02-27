@@ -1,7 +1,9 @@
 // Import useState, Modal, and Feather
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,19 +13,38 @@ import {
 import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useAtom } from 'jotai/react';
+import Toggle from 'react-native-toggle-input';
 
 import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import TimePicker from '@/components/TimePicker';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import { useUpdateAndroidWidget } from '@/hooks/useUpdateAndroidWidget';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
+  remindersAtom,
   yesterdayPage,
 } from '@/jotai/atoms';
+import {
+  cancelReminder,
+  requestNotificationPermissions,
+  scheduleReminder,
+} from '@/utils/notifications';
+
+const formatTimeArabic = (hour: number, minute: number): string => {
+  const period = hour >= 12 ? 'م' : 'ص';
+  const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+  const arabicNumerals = (n: number) =>
+    n
+      .toString()
+      .padStart(2, '0')
+      .replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[parseInt(d, 10)]);
+  return `${arabicNumerals(displayHour)}:${arabicNumerals(minute)} ${period}`;
+};
 
 export default function TrackerScreen() {
   const { iconColor, cardColor, primaryColor } = useColors();
@@ -37,8 +58,32 @@ export default function TrackerScreen() {
     dailyTrackerCompleted,
   );
   const [yesterdayPageValue, setYesterdayPageValue] = useAtom(yesterdayPage);
+  const [reminders, setReminders] = useAtom(remindersAtom);
   // Add state for modal visibility
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const [timePickerVisible, setTimePickerVisible] = useState(false);
+  const [permissionGranted, setPermissionGranted] = useState<boolean | null>(
+    null,
+  );
+  const [reminderHour, setReminderHour] = useState(20);
+  const [reminderMinute, setReminderMinute] = useState(0);
+
+  const wirdReminder = reminders.find((reminder) => reminder.preset === 'wird');
+
+  useEffect(() => {
+    if (!wirdReminder) return;
+    setReminderHour(wirdReminder.hour);
+    setReminderMinute(wirdReminder.minute);
+  }, [wirdReminder]);
+
+  useEffect(() => {
+    const checkPermissions = async () => {
+      if (Platform.OS === 'web') return;
+      const granted = await requestNotificationPermissions();
+      setPermissionGranted(granted);
+    };
+    checkPermissions();
+  }, []);
 
   const dailyProgress =
     dailyTrackerGoalValue > 0
@@ -70,6 +115,104 @@ export default function TrackerScreen() {
     // Update Android widget
     await updateAndroidWidget();
     setConfirmModalVisible(false); // Close modal after reset
+  };
+
+  const handleToggleWirdReminder = async () => {
+    if (!wirdReminder) return;
+
+    const previousReminders = reminders;
+    try {
+      const updatedReminders = await Promise.all(
+        reminders.map(async (reminder) => {
+          if (reminder.preset !== 'wird') return reminder;
+
+          if (reminder.enabled) {
+            if (reminder.notificationId) {
+              await cancelReminder(reminder.notificationId);
+            }
+            return { ...reminder, enabled: false, notificationId: undefined };
+          }
+
+          if (Platform.OS !== 'web' && !permissionGranted) {
+            const granted = await requestNotificationPermissions();
+            setPermissionGranted(granted);
+            if (!granted) {
+              Alert.alert(
+                'الإذن مطلوب',
+                'يجب السماح بالإشعارات لتفعيل تذكير الورد.',
+              );
+              return reminder;
+            }
+          }
+
+          if (Platform.OS === 'web') {
+            return {
+              ...reminder,
+              enabled: true,
+              hour: reminderHour,
+              minute: reminderMinute,
+              notificationId: undefined,
+            };
+          }
+
+          const notificationId = await scheduleReminder({
+            ...reminder,
+            enabled: true,
+            hour: reminderHour,
+            minute: reminderMinute,
+          });
+          return {
+            ...reminder,
+            enabled: true,
+            hour: reminderHour,
+            minute: reminderMinute,
+            notificationId,
+          };
+        }),
+      );
+      setReminders(updatedReminders);
+    } catch (error) {
+      console.error('Failed to toggle wird reminder:', error);
+      setReminders(previousReminders);
+      Alert.alert('خطأ', 'تعذر تحديث تذكير الورد. حاول مرة أخرى.');
+    }
+  };
+
+  const handleSaveReminderTime = async () => {
+    if (!wirdReminder) return;
+
+    const previousReminders = reminders;
+    try {
+      const updatedReminders = await Promise.all(
+        reminders.map(async (reminder) => {
+          if (reminder.preset !== 'wird') return reminder;
+
+          if (reminder.notificationId) {
+            await cancelReminder(reminder.notificationId);
+          }
+
+          const updatedReminder = {
+            ...reminder,
+            hour: reminderHour,
+            minute: reminderMinute,
+          };
+
+          if (!updatedReminder.enabled || Platform.OS === 'web') {
+            return { ...updatedReminder, notificationId: undefined };
+          }
+
+          const notificationId = await scheduleReminder(updatedReminder);
+          return { ...updatedReminder, notificationId };
+        }),
+      );
+
+      setReminders(updatedReminders);
+      setTimePickerVisible(false);
+    } catch (error) {
+      console.error('Failed to save wird reminder time:', error);
+      setReminders(previousReminders);
+      Alert.alert('خطأ', 'تعذر حفظ وقت تذكير الورد. حاول مرة أخرى.');
+    }
   };
 
   // Removed the old resetAllProgress function that used Alert/confirm
@@ -166,6 +309,46 @@ export default function TrackerScreen() {
                   </TouchableOpacity>
                 </ThemedView>
               </ThemedView>
+            </ThemedView>
+
+            <ThemedView style={styles.reminderContainer}>
+              <ThemedView style={styles.reminderHeader}>
+                <ThemedView
+                  style={[styles.labelContainer, { marginBottom: 0, gap: 8 }]}
+                >
+                  <Feather name="clock" size={20} color={primaryColor} />
+                  <ThemedText style={styles.controlLabel}>
+                    تذكير الورد اليومي
+                  </ThemedText>
+                </ThemedView>
+                <Toggle
+                  color={primaryColor}
+                  size={32}
+                  circleColor={primaryColor}
+                  toggle={Boolean(wirdReminder?.enabled)}
+                  setToggle={handleToggleWirdReminder}
+                  aria-checked={Boolean(wirdReminder?.enabled)}
+                  aria-label="تفعيل تذكير الورد اليومي"
+                  accessibilityLabel="تفعيل تذكير الورد اليومي"
+                  accessibilityState={{
+                    checked: Boolean(wirdReminder?.enabled),
+                  }}
+                />
+              </ThemedView>
+
+              <TouchableOpacity
+                style={[
+                  styles.reminderTimeButton,
+                  { borderColor: primaryColor + '66' },
+                ]}
+                onPress={() => setTimePickerVisible(true)}
+                accessibilityRole="button"
+                accessibilityLabel="تعديل وقت تذكير الورد اليومي"
+              >
+                <ThemedText style={styles.reminderTimeText}>
+                  وقت التذكير: {formatTimeArabic(reminderHour, reminderMinute)}
+                </ThemedText>
+              </TouchableOpacity>
             </ThemedView>
           </ThemedView>
 
@@ -277,6 +460,64 @@ export default function TrackerScreen() {
             </ThemedView>
           </TouchableOpacity>
         </Modal>
+
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={timePickerVisible}
+          onRequestClose={() => setTimePickerVisible(false)}
+        >
+          <TouchableOpacity
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={() => setTimePickerVisible(false)}
+          >
+            <ThemedView
+              style={[styles.modalContent, { backgroundColor: cardColor }]}
+              onStartShouldSetResponder={() => true}
+            >
+              <ThemedView style={styles.modalHeader}>
+                <ThemedText style={styles.modalTitle}>
+                  وقت تذكير الورد
+                </ThemedText>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setTimePickerVisible(false)}
+                  accessibilityRole="button"
+                  accessibilityLabel="إغلاق اختيار وقت التذكير"
+                >
+                  <Feather name="x" size={24} color={iconColor} />
+                </TouchableOpacity>
+              </ThemedView>
+
+              <TimePicker
+                hour={reminderHour}
+                minute={reminderMinute}
+                onChange={({ hour, minute }) => {
+                  setReminderHour(hour);
+                  setReminderMinute(minute);
+                }}
+              />
+
+              <ThemedView style={styles.modalActions}>
+                <ThemedButton
+                  variant="outlined-primary"
+                  onPress={() => setTimePickerVisible(false)}
+                  style={styles.modalButton}
+                >
+                  إلغاء
+                </ThemedButton>
+                <ThemedButton
+                  variant="primary"
+                  onPress={handleSaveReminderTime}
+                  style={styles.modalButton}
+                >
+                  حفظ
+                </ThemedButton>
+              </ThemedView>
+            </ThemedView>
+          </TouchableOpacity>
+        </Modal>
       </ThemedView>
     </>
   );
@@ -335,6 +576,18 @@ const styles = StyleSheet.create({
     marginTop: 12,
     alignItems: 'center',
   },
+  reminderContainer: {
+    marginTop: 14,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+    paddingTop: 12,
+    gap: 10,
+  },
+  reminderHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   controlGroup: { flexDirection: 'row', alignItems: 'center' },
   controlLabel: { marginEnd: 8, fontSize: 16 },
   controls: {
@@ -358,6 +611,17 @@ const styles = StyleSheet.create({
     fontFamily: 'Tajawal_700Bold',
     minWidth: 60,
     textAlign: 'center',
+  },
+  reminderTimeButton: {
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+  },
+  reminderTimeText: {
+    fontSize: 15,
+    fontFamily: 'Tajawal_400Regular',
   },
   resetButtonsContainer: {
     marginTop: 20,
