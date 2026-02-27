@@ -138,7 +138,12 @@ export default function Search() {
           color={primaryColor}
           style={styles.icon}
         />
-        <Pressable onPress={() => setShowOptions(!showOptions)}>
+        <Pressable
+          onPress={() => setShowOptions(!showOptions)}
+          accessibilityRole="button"
+          accessibilityLabel="خيارات البحث المتقدم"
+          accessibilityState={{ expanded: showOptions }}
+        >
           <Ionicons
             name="options"
             size={20}
@@ -157,6 +162,8 @@ export default function Search() {
                 advancedOptions.lemma && styles.optionActive,
               ]}
               onPress={() => toggleOption('lemma')}
+              accessibilityRole="togglebutton"
+              accessibilityState={{ checked: advancedOptions.lemma }}
             >
               <ThemedText
                 style={
@@ -173,6 +180,8 @@ export default function Search() {
                 advancedOptions.root && styles.optionActive,
               ]}
               onPress={() => toggleOption('root')}
+              accessibilityRole="togglebutton"
+              accessibilityState={{ checked: advancedOptions.root }}
             >
               <ThemedText
                 style={
@@ -188,6 +197,8 @@ export default function Search() {
                 advancedOptions.fuzzy && styles.optionActive,
               ]}
               onPress={() => toggleOption('fuzzy')}
+              accessibilityRole="togglebutton"
+              accessibilityState={{ checked: advancedOptions.fuzzy }}
             >
               <ThemedText
                 style={

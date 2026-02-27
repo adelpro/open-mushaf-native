@@ -1,6 +1,6 @@
 import { observe } from 'jotai-effect';
 
-import { TafseerTabs } from '@/types';
+import { Reminder, TafseerTabs } from '@/types';
 import { Riwaya } from '@/types/riwaya';
 
 import { createAtomWithStorage } from './createAtomWithStorage';
@@ -123,8 +123,64 @@ observe((get, set) => {
   }
 });
 
+// Reading theme: 'default' | 'sepia' | 'highContrast'
+export const readingTheme = createAtomWithStorage<string>(
+  'ReadingTheme',
+  'default',
+);
+
 // ReadingPositionBanner
 export const readingBannerCollapsedState = createAtomWithStorage<boolean>(
   'ReadingBannerCollapsedState',
   false,
 );
+
+// Reading reminders
+const DEFAULT_REMINDERS: Reminder[] = [
+  {
+    id: 'preset-wird',
+    title: 'الورد اليومي',
+    body: 'حان وقت قراءة وردك اليومي',
+    enabled: false,
+    hour: 20,
+    minute: 0,
+    type: 'daily',
+    preset: 'wird',
+  },
+  {
+    id: 'preset-mulk',
+    title: 'سورة الملك',
+    body: 'لا تنسَ قراءة سورة الملك قبل النوم',
+    enabled: false,
+    hour: 21,
+    minute: 0,
+    type: 'daily',
+    preset: 'mulk',
+  },
+  {
+    id: 'preset-kahf',
+    title: 'سورة الكهف',
+    body: 'لا تنسَ قراءة سورة الكهف — يوم الجمعة',
+    enabled: false,
+    hour: 10,
+    minute: 0,
+    type: 'weekly',
+    dayOfWeek: 6,
+    preset: 'kahf',
+  },
+];
+
+export const remindersAtom = createAtomWithStorage<Reminder[]>(
+  'Reminders',
+  DEFAULT_REMINDERS,
+);
+
+// Multi-bookmark system
+export type Bookmark = {
+  id: string;
+  page: number;
+  label: string;
+  createdAt: string;
+};
+
+export const bookmarks = createAtomWithStorage<Bookmark[]>('Bookmarks', []);

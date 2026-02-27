@@ -3,7 +3,9 @@ import { ActivityIndicator, StyleSheet, Text } from 'react-native';
 
 import { FontAwesome } from '@expo/vector-icons';
 
+import { CONTACT_FORM_RATE_LIMIT_CONFIG } from '@/constants/ratelimitConfig';
 import { useColors } from '@/hooks/useColors';
+import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
 
 import { useNotification } from './NotificationProvider';
 import { ThemedButton } from './ThemedButton';
@@ -43,7 +45,7 @@ export default function ContactForm() {
       isValid = false;
     }
 
-    if (isValidEmail(email) === false) {
+    if (!isValidEmail(email)) {
       notify('البريد الألكتروني غير صحيح.', 'email_validation', 'error');
       isValid = false;
     }
@@ -60,23 +62,64 @@ export default function ContactForm() {
     return isValid;
   };
 
+  /**
+   * Enforce client-side rate limiting before sending to Telegram.
+   * Throws RateLimitError if the limit is exceeded, which is caught
+   * in handleSubmit and surfaced to the user via notify().
+   */
+  const enforceRateLimit = () => {
+    const result = checkRateLimit(CONTACT_FORM_RATE_LIMIT_CONFIG.key, {
+      maxRequests: CONTACT_FORM_RATE_LIMIT_CONFIG.maxRequests,
+      windowMs: CONTACT_FORM_RATE_LIMIT_CONFIG.windowMs,
+    });
+
+    if (!result.allowed) {
+      throw new RateLimitError(result.retryAfterMs);
+    }
+  };
+
   const sendToTelegram = async (text: string) => {
     const url = `https://api.telegram.org/bot${process.env.EXPO_PUBLIC_BOT_TOKEN}/sendMessage`;
     const response = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chat_id: process.env.EXPO_PUBLIC_CHAT_ID,
-        text: text,
+        text,
       }),
     });
+
+    // Telegram itself is rate-limiting us — surface a friendly error
+    if (response.status === 429) {
+      const data = await response.json().catch(() => ({}));
+      const retryAfterMs = (data?.parameters?.retry_after ?? 60) * 1000;
+      throw new RateLimitError(retryAfterMs);
+    }
+
+    if (!response.ok) {
+      throw new Error(`Telegram API error: ${response.status}`);
+    }
+
     return response.json();
   };
 
   const handleSubmit = async () => {
+    if (isLoading) return;
     if (!isFormValid()) return;
+
+    try {
+      enforceRateLimit();
+    } catch (error) {
+      if (error instanceof RateLimitError) {
+        notify(
+          `لقد تجاوزت الحد المسموح به. يرجى المحاولة بعد ${error.retryAfterSeconds} ثانية.`,
+          'rate_limit_error',
+          'error',
+        );
+        return;
+      }
+      throw error;
+    }
 
     setIsLoading(true);
     try {
@@ -89,14 +132,21 @@ export default function ContactForm() {
 
       await sendToTelegram(messageText);
       setFormData({ name: '', email: '', message: '' });
-
       notify('تم الإرسال بنجاح!', 'form_success', 'success');
-    } catch {
-      notify(
-        'فشل في إرسال الرسالة! يرجى المحاولة مرة أخرى لاحقًا.',
-        'form_error',
-        'error',
-      );
+    } catch (error) {
+      if (error instanceof RateLimitError) {
+        notify(
+          `لقد تجاوزت الحد المسموح به. يرجى المحاولة بعد ${error.retryAfterSeconds} ثانية.`,
+          'rate_limit_error',
+          'error',
+        );
+      } else {
+        notify(
+          'فشل في إرسال الرسالة! يرجى المحاولة مرة أخرى لاحقًا.',
+          'form_error',
+          'error',
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -167,7 +217,6 @@ export default function ContactForm() {
           </Text>
         )}
       </ThemedButton>
-      {/* Remove Toast component */}
     </ThemedView>
   );
 }

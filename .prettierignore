@@ -5,6 +5,7 @@ design/
 screenshots/
 assets/
 .expo/
+.agent/
 node_modules/
 
 *-lock.json 
