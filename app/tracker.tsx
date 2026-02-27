@@ -46,8 +46,6 @@ const formatTimeArabic = (hour: number, minute: number): string => {
   return `${arabicNumerals(displayHour)}:${arabicNumerals(minute)} ${period}`;
 };
 
-// Screen component intentionally coordinates multiple tracker/reminder flows.
-// eslint-disable-next-line max-lines-per-function
 export default function TrackerScreen() {
   const { iconColor, cardColor, primaryColor } = useColors();
   const { currentSavedPage: savedPage } = useCurrentPage();
@@ -71,6 +69,7 @@ export default function TrackerScreen() {
   const [reminderMinute, setReminderMinute] = useState(0);
 
   const wirdReminder = reminders.find((reminder) => reminder.preset === 'wird');
+  const isWirdReminderEnabled = Boolean(wirdReminder?.enabled);
 
   useEffect(() => {
     if (!wirdReminder) return;
@@ -119,7 +118,6 @@ export default function TrackerScreen() {
     setConfirmModalVisible(false); // Close modal after reset
   };
 
-  // eslint-disable-next-line max-lines-per-function
   const handleToggleWirdReminder = async () => {
     if (!wirdReminder) return;
 
@@ -230,6 +228,8 @@ export default function TrackerScreen() {
     return `${hizbCount} حزباً`;
   };
 
+  const formattedReminderTime = formatTimeArabic(reminderHour, reminderMinute);
+
   return (
     <>
       <Stack.Screen options={{ title: 'الورد' }} />
@@ -328,13 +328,13 @@ export default function TrackerScreen() {
                   color={primaryColor}
                   size={32}
                   circleColor={primaryColor}
-                  toggle={Boolean(wirdReminder?.enabled)}
+                  toggle={isWirdReminderEnabled}
                   setToggle={handleToggleWirdReminder}
-                  aria-checked={Boolean(wirdReminder?.enabled)}
+                  aria-checked={isWirdReminderEnabled}
                   aria-label="تفعيل تذكير الورد اليومي"
                   accessibilityLabel="تفعيل تذكير الورد اليومي"
                   accessibilityState={{
-                    checked: Boolean(wirdReminder?.enabled),
+                    checked: isWirdReminderEnabled,
                   }}
                 />
               </ThemedView>
@@ -351,7 +351,7 @@ export default function TrackerScreen() {
                 accessibilityLabel="تعديل وقت تذكير الورد اليومي"
               >
                 <ThemedText style={styles.reminderTimeText}>
-                  وقت التذكير: {formatTimeArabic(reminderHour, reminderMinute)}
+                  وقت التذكير: {formattedReminderTime}
                 </ThemedText>
               </TouchableOpacity>
             </ThemedView>
