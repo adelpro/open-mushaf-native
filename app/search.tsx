@@ -257,10 +257,10 @@ export default function Search() {
                 />
               </ThemedView>
               <ThemedText type="defaultSemiBold" style={styles.emptyTitle}>
-                لا توجد نتائج
+                لم يتم العثور على نتائج
               </ThemedText>
               <ThemedText style={styles.emptySubtitle}>
-                جرّب البحث باسم السورة أو رقم الآية.
+                تأكد من كتابة الكلمة بشكل صحيح، أو حاول البحث بكلمة أخرى.
               </ThemedText>
             </ThemedView>
           ) : null
