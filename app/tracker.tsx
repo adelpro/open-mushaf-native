@@ -82,7 +82,7 @@ export default function TrackerScreen() {
       const granted = await requestNotificationPermissions();
       setPermissionGranted(granted);
     };
-    checkPermissions();
+    void checkPermissions();
   }, []);
 
   const dailyProgress =
@@ -341,7 +341,9 @@ export default function TrackerScreen() {
                   styles.reminderTimeButton,
                   { borderColor: primaryColor + '66' },
                 ]}
-                onPress={() => setTimePickerVisible(true)}
+                onPress={() => {
+                  setTimePickerVisible(true);
+                }}
                 accessibilityRole="button"
                 accessibilityLabel="تعديل وقت تذكير الورد اليومي"
               >
@@ -382,7 +384,9 @@ export default function TrackerScreen() {
                 variant="primary"
                 style={styles.resetButton}
                 // Update onPress to show the modal
-                onPress={() => setConfirmModalVisible(true)}
+                onPress={() => {
+                  setConfirmModalVisible(true);
+                }}
               >
                 <ThemedView
                   style={{
@@ -413,12 +417,16 @@ export default function TrackerScreen() {
           animationType="fade"
           transparent={true}
           visible={confirmModalVisible}
-          onRequestClose={() => setConfirmModalVisible(false)}
+          onRequestClose={() => {
+            setConfirmModalVisible(false);
+          }}
         >
           <TouchableOpacity
             style={styles.modalOverlay}
             activeOpacity={1}
-            onPress={() => setConfirmModalVisible(false)} // Close on overlay press
+            onPress={() => {
+              setConfirmModalVisible(false);
+            }} // Close on overlay press
           >
             {/* Prevent modal closing when pressing inside content */}
             <ThemedView
@@ -429,7 +437,9 @@ export default function TrackerScreen() {
                 <ThemedText style={styles.modalTitle}>تأكيد</ThemedText>
                 <TouchableOpacity
                   style={styles.closeButton}
-                  onPress={() => setConfirmModalVisible(false)}
+                  onPress={() => {
+                    setConfirmModalVisible(false);
+                  }}
                   accessibilityRole="button"
                   accessibilityLabel="إغلاق نافذة التأكيد"
                 >
@@ -444,14 +454,18 @@ export default function TrackerScreen() {
               <ThemedView style={styles.modalActions}>
                 <ThemedButton
                   variant="outlined-primary"
-                  onPress={() => setConfirmModalVisible(false)} // Just close modal
+                  onPress={() => {
+                    setConfirmModalVisible(false);
+                  }} // Just close modal
                   style={styles.modalButton}
                 >
                   إلغاء
                 </ThemedButton>
                 <ThemedButton
                   variant="primary"
-                  onPress={() => performReset()} // Call the reset logic
+                  onPress={() => {
+                    void performReset();
+                  }} // Call the reset logic
                   style={styles.modalButton}
                 >
                   تأكيد
@@ -465,12 +479,16 @@ export default function TrackerScreen() {
           animationType="fade"
           transparent={true}
           visible={timePickerVisible}
-          onRequestClose={() => setTimePickerVisible(false)}
+          onRequestClose={() => {
+            setTimePickerVisible(false);
+          }}
         >
           <TouchableOpacity
             style={styles.modalOverlay}
             activeOpacity={1}
-            onPress={() => setTimePickerVisible(false)}
+            onPress={() => {
+              setTimePickerVisible(false);
+            }}
           >
             <ThemedView
               style={[styles.modalContent, { backgroundColor: cardColor }]}
@@ -482,7 +500,9 @@ export default function TrackerScreen() {
                 </ThemedText>
                 <TouchableOpacity
                   style={styles.closeButton}
-                  onPress={() => setTimePickerVisible(false)}
+                  onPress={() => {
+                    setTimePickerVisible(false);
+                  }}
                   accessibilityRole="button"
                   accessibilityLabel="إغلاق اختيار وقت التذكير"
                 >
@@ -502,7 +522,9 @@ export default function TrackerScreen() {
               <ThemedView style={styles.modalActions}>
                 <ThemedButton
                   variant="outlined-primary"
-                  onPress={() => setTimePickerVisible(false)}
+                  onPress={() => {
+                    setTimePickerVisible(false);
+                  }}
                   style={styles.modalButton}
                 >
                   إلغاء
