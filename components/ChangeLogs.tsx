@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Modal, Platform, Pressable, StyleSheet } from 'react-native';
 
 import changeLogsJSON from '@/assets/changelogs.json';
