@@ -4,7 +4,9 @@ import {
   FlatList,
   Pressable,
   StyleSheet,
+  TextStyle,
   View,
+  ViewStyle,
 } from 'react-native';
 
 import { Feather, Ionicons } from '@expo/vector-icons';
@@ -313,13 +315,28 @@ export default function Search() {
   );
 }
 
+interface SearchStyles {
+  container: ViewStyle;
+  searchContainer: ViewStyle;
+  searchInput: TextStyle;
+  icon: ViewStyle;
+  advancedOptions: ViewStyle;
+  optionRow: ViewStyle;
+  optionButton: ViewStyle;
+  optionActive: ViewStyle;
+  optionActiveText: TextStyle;
+  emptyContainer: ViewStyle;
+  resultCount: TextStyle;
+  listFooter: ViewStyle;
+}
+
 const createStyles = (colors: {
   borderColor: string;
   subtleBgColor: string;
   activeOptionBgColor: string;
   activeOptionBorderColor: string;
   activeOptionTextColor: string;
-}) =>
+}): SearchStyles =>
   StyleSheet.create({
     container: { flex: 1, padding: 20 },
     searchContainer: {

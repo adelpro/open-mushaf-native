@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -148,10 +148,23 @@ export default function AboutScreen() {
   );
 }
 
+interface AboutStyles {
+  scrollContainer: ViewStyle;
+  mainContent: ViewStyle;
+  title: TextStyle;
+  listContainer: ViewStyle;
+  listItem: ViewStyle;
+  bullet: TextStyle;
+  listText: TextStyle;
+  link: TextStyle;
+  versionText: TextStyle;
+  copyright: TextStyle;
+}
+
 const createStyles = (colors: {
   inactiveIconColor: string;
   primaryLightColor: string;
-}) =>
+}): AboutStyles =>
   StyleSheet.create({
     scrollContainer: {
       justifyContent: 'center',

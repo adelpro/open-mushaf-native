@@ -5,7 +5,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
+  ViewStyle,
 } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
@@ -290,7 +292,31 @@ export default function TrackerScreen() {
   );
 }
 
-const createStyles = (colors: { borderLightColor: string }) =>
+interface TrackerStyles {
+  container: ViewStyle;
+  scrollView: ViewStyle;
+  scrollContent: ViewStyle;
+  navigationSection: ViewStyle;
+  labelContainer: ViewStyle;
+  icon: ViewStyle;
+  label: TextStyle;
+  progressContainer: ViewStyle;
+  progressBar: ViewStyle;
+  progressText: TextStyle;
+  infoText: TextStyle;
+  controlsContainer: ViewStyle;
+  controlGroup: ViewStyle;
+  controlLabel: TextStyle;
+  controls: ViewStyle;
+  controlButton: ViewStyle;
+  controlValue: TextStyle;
+  resetButtonsContainer: ViewStyle;
+  resetButton: ViewStyle;
+  resetButtonContent: ViewStyle;
+  resetButtonText: TextStyle;
+}
+
+const createStyles = (colors: { borderLightColor: string }): TrackerStyles =>
   StyleSheet.create({
   container: {
     flex: 1,
