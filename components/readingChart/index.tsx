@@ -1,5 +1,11 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import {
+  Pressable,
+  ScrollView,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 
 import Svg, { Line, Rect, Text as SvgText } from 'react-native-svg';
 
@@ -10,10 +16,9 @@ import {
   CHART_PADDING,
   CHART_PERIODS,
   GRID_RATIOS,
-  INACTIVE_BAR_COLOR,
 } from '@/constants/readingChart';
 import { useColors } from '@/hooks/useColors';
-import { useReadingChartData } from '@/hooks/useReadingChartData';
+import { ChartMetric, useReadingChartData } from '@/hooks/useReadingChartData';
 import { formatLabel, shouldShowLabel } from '@/utils';
 
 import SegmentedControl from '../SegmentControl';
@@ -22,17 +27,24 @@ import { ThemedView } from '../ThemedView';
 import { styles } from './styles';
 
 export default function ReadingChart() {
-  const { primaryColor, textColor, cardColor } = useColors();
+  const { primaryColor, textColor, cardColor, tabIconDefaultColor } =
+    useColors();
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const [metric, setMetric] = useState<ChartMetric>('hizbs');
   const {
     data,
     maxValue,
-    totalHizbs,
+    total,
     dailyAvg,
     period,
     periodIndex,
     setPeriodIndex,
-  } = useReadingChartData();
+    getValue,
+  } = useReadingChartData(metric);
+
+  const isPages = metric === 'pages';
+  const unitLabel = isPages ? 'صفحة' : 'حزب';
+  const totalLabel = isPages ? 'إجمالي الصفحات' : 'إجمالي الأحزاب';
 
   const [selectedBar, setSelectedBar] = useState<number>(period - 1);
   const scrollRef = useRef<ScrollView>(null);
@@ -60,7 +72,9 @@ export default function ReadingChart() {
 
   const selectedData = selectedBar !== null ? data[selectedBar] : null;
   const selectedValue = selectedData
-    ? selectedData.hizbsCompleted.toFixed(1)
+    ? isPages
+      ? getValue(selectedData).toString()
+      : getValue(selectedData).toFixed(1)
     : '';
 
   const handlePeriodChange = useCallback(
@@ -81,22 +95,44 @@ export default function ReadingChart() {
     <ThemedView style={[styles.container, bg]}>
       <ThemedView style={[styles.headerRow, bg]}>
         <ThemedText style={styles.title}>إحصائيات القراءة</ThemedText>
+        <View style={[styles.metricToggle, { borderColor: primaryColor }]}>
+          {(['hizbs', 'pages'] as ChartMetric[]).map((m) => (
+            <TouchableOpacity
+              key={m}
+              onPress={() => setMetric(m)}
+              style={[
+                styles.metricBtn,
+                metric === m && { backgroundColor: primaryColor },
+              ]}
+            >
+              <ThemedText
+                style={[
+                  styles.metricBtnText,
+                  { color: metric === m ? '#fff' : primaryColor },
+                ]}
+              >
+                {m === 'hizbs' ? 'أحزاب' : 'صفحات'}
+              </ThemedText>
+            </TouchableOpacity>
+          ))}
+        </View>
       </ThemedView>
 
       <ThemedView style={[styles.statsContainer, bg]}>
         <ThemedText style={[styles.bigNumber, { color: primaryColor }]}>
-          {totalHizbs.toFixed(1)}
+          {isPages ? total : total.toFixed(1)}
         </ThemedText>
         <ThemedText
           style={[styles.statsLabel, { color: textColor, opacity: 0.6 }]}
         >
-          إجمالي الأحزاب في {CHART_PERIODS[periodIndex].label}
+          {totalLabel} في {CHART_PERIODS[periodIndex].label}
         </ThemedText>
-        {totalHizbs > 0 && (
+        {total > 0 && (
           <ThemedText
             style={[styles.avgLabel, { color: textColor, opacity: 0.4 }]}
           >
-            المعدل: {dailyAvg.toFixed(1)} حزب/يوم
+            المعدل: {isPages ? dailyAvg.toFixed(0) : dailyAvg.toFixed(1)}{' '}
+            {unitLabel}/يوم
           </ThemedText>
         )}
       </ThemedView>
@@ -163,9 +199,10 @@ export default function ReadingChart() {
                 );
               })}
               {data.map((d, i) => {
-                if (d.hizbsCompleted <= 0) return null;
+                const val = getValue(d);
+                if (val <= 0) return null;
                 const x = barOffset + i * (BAR_WIDTH + barGap);
-                const barH = (d.hizbsCompleted / maxValue) * drawableHeight;
+                const barH = (val / maxValue) * drawableHeight;
                 return (
                   <Rect
                     key={i}
@@ -174,8 +211,10 @@ export default function ReadingChart() {
                     width={BAR_WIDTH}
                     height={Math.max(barH, 0)}
                     rx={BAR_RADIUS}
-                    fill={selectedBar === i ? primaryColor : INACTIVE_BAR_COLOR}
-                    opacity={selectedBar === i ? 1 : 0.45}
+                    fill={
+                      selectedBar === i ? primaryColor : tabIconDefaultColor
+                    }
+                    opacity={selectedBar === i ? 1 : 0.25}
                   />
                 );
               })}
@@ -183,8 +222,9 @@ export default function ReadingChart() {
 
             <View style={[styles.touchLayer, { height: chartHeight }]}>
               {data.map((d, i) => {
+                const val = getValue(d);
                 const x = barOffset + i * (BAR_WIDTH + barGap);
-                const barH = (d.hizbsCompleted / maxValue) * drawableHeight;
+                const barH = (val / maxValue) * drawableHeight;
                 const barTop = paddingTop + drawableHeight - barH;
                 return (
                   <Pressable
@@ -198,7 +238,7 @@ export default function ReadingChart() {
                     }}
                     onPress={() => handleBarPress(i)}
                   >
-                    {selectedBar === i && d.hizbsCompleted > 0 && (
+                    {selectedBar === i && val > 0 && (
                       <View
                         style={[
                           styles.tooltip,
@@ -253,7 +293,7 @@ export default function ReadingChart() {
         </ScrollView>
       </ThemedView>
 
-      {totalHizbs === 0 && (
+      {total === 0 && (
         <ThemedText
           style={[styles.emptyText, { color: textColor, opacity: 0.4 }]}
         >

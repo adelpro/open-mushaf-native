@@ -65,29 +65,15 @@ export const dailyTrackerCompleted =
     date: new Date().toDateString(),
   });
 
-// TEMPORARY: Remove after testing
-function generateTestHistory(days: number): DailyReadingRecord[] {
-  const records: DailyReadingRecord[] = [];
-  for (let i = days; i > 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    records.push({
-      date: d.toDateString(),
-      hizbsCompleted: Math.random() > 0.3 ? +(Math.random() * 3).toFixed(1) : 0,
-      //                  ↑ 30% chance of empty day     ↑ 0 to 3 hizbs
-    });
-  }
-  return records;
-}
-
 export type DailyReadingRecord = {
   hizbsCompleted: number;
+  pagesRead: number;
   date: string;
 };
 
 export const readingHistory = createAtomWithStorage<DailyReadingRecord[]>(
   'ReadingHistory',
-  generateTestHistory(90),
+  [],
 );
 
 observe((get, set) => {
@@ -96,26 +82,39 @@ observe((get, set) => {
   const today = new Date().toDateString();
 
   if (stored.date !== today) {
-    if (stored.value > 0) {
+    const savedYesterday = get(yesterdayPage) as PageWithDate;
+    const lastPage = get(currentSavedPage) as number;
+    const pagesRead = Math.max(0, lastPage - savedYesterday.value);
+
+    if (stored.value > 0 || pagesRead > 0) {
+      const entry: DailyReadingRecord = {
+        hizbsCompleted: stored.value,
+        pagesRead,
+        date: stored.date,
+      };
+
       const currentIndex = history.findIndex(
         (record) => record.date === stored.date,
       );
-      const currentEntry = { hizbsCompleted: stored.value, date: stored.date };
 
       const updatedHistory =
         currentIndex !== -1
           ? [
               ...history.slice(0, currentIndex),
               {
-                ...currentEntry,
+                ...entry,
                 hizbsCompleted: Math.max(
-                  currentEntry.hizbsCompleted,
+                  entry.hizbsCompleted,
                   history[currentIndex].hizbsCompleted,
+                ),
+                pagesRead: Math.max(
+                  entry.pagesRead,
+                  history[currentIndex].pagesRead,
                 ),
               },
               ...history.slice(currentIndex + 1),
             ]
-          : [...history, currentEntry];
+          : [...history, entry];
 
       set(
         readingHistory,

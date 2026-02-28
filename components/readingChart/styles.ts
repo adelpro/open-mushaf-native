@@ -21,6 +21,20 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Tajawal_700Bold',
   },
+  metricToggle: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  metricBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  metricBtnText: {
+    fontSize: 12,
+    fontFamily: 'Tajawal_500Medium',
+  },
   statsContainer: {
     alignItems: 'center',
     marginBottom: 12,
