@@ -46,9 +46,85 @@ This project uses **yarn** for package management.
 
 1. **Create a Branch**: Use a descriptive name like `feature/your-feature-name`.
 2. **Make Your Changes**: Ensure your code follows the project's style guidelines.
-3. **Run Lint & Format**: Run `yarn lint` and `yarn format` to ensure no ESLint or Prettier errors.
-4. **Commit Your Changes**: Use conventional commit messages if possible.
-5. **Push to Your Fork** and open a Pull Request.
+3. **Test Locally**: Always run tests locally before pushing - do not rely solely on CI.
+   ```bash
+   yarn test
+   yarn type-check
+   ```
+4. **Run Lint & Format**: Ensure code quality passes locally.
+   ```bash
+   yarn lint
+   yarn format
+   ```
+5. **Build Check**: Verify the app builds successfully.
+   ```bash
+   yarn prebuild
+   ```
+6. **Commit Your Changes**: Use conventional commit messages (see below).
+7. **Push to Your Fork** and open a Pull Request.
+
+> ⚠️ **Important**: Always test your changes locally. Do not rely on CI or AI to catch all issues. AI assistants can help but may miss edge cases or introduce bugs. You are responsible for the code you submit.
+
+---
+
+## 📝 Commit Message Convention
+
+This project uses **Conventional Commits** with Husky and Commitlint to enforce consistent commit messages.
+
+### Format
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+### Types
+
+| Type       | Description                                             |
+| :--------- | :------------------------------------------------------ |
+| `feat`     | A new feature                                           |
+| `fix`      | A bug fix                                               |
+| `docs`     | Documentation only changes                              |
+| `style`    | Changes that don't affect code meaning (formatting)     |
+| `refactor` | Code change that neither fixes a bug nor adds a feature |
+| `test`     | Adding or updating tests                                |
+| `chore`    | Changes to build process, dependencies, or tooling      |
+| `ci`       | Changes to CI configuration                             |
+| `perf`     | Performance improvement                                 |
+| `revert`   | Reverting a previous commit                             |
+
+### Example
+
+```bash
+# Using yarn commit (interactive)
+yarn commit
+
+# Or manual commit
+git commit -m "feat(search): add fuzzy search for Quran verses"
+
+# With body and footer
+git commit -m "fix(tafseer): resolve popup not closing on swipe" -m "Closes #123"
+```
+
+### Commitlint Rules
+
+- Header max length: 200 characters
+- Type must be lowercase
+- Subject should be concise and descriptive
+
+---
+
+## 🪝 Git Hooks (Husky)
+
+This project uses Husky to run git hooks:
+
+- **pre-commit**: Runs lint-staged (ESLint + Prettier on staged files)
+- **commit-msg**: Validates commit messages using Commitlint
+
+Hooks are automatically installed via `yarn prepare`.
 
 ---
 
