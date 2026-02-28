@@ -1,65 +1,91 @@
-import React, { useMemo } from 'react';
-import { StyleSheet } from 'react-native';
+import { useEffect, useMemo } from 'react';
+import { Modal, Platform, Pressable, StyleSheet } from 'react-native';
 
-import { useSetAtom } from 'jotai/react';
+import changeLogsJSON from '@/assets/changelogs.json';
+import { ThemedButton } from '@/components/ThemedButton';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 
-import { currentAppVersion } from '@/jotai/atoms';
-import { getAppVersion } from '@/utils';
+interface ChangeLogsProps {
+  visible: boolean;
+  onClose: () => void;
+}
 
-import { ThemedButton } from './ThemedButton';
-import { ThemedText } from './ThemedText';
-import { ThemedView } from './ThemedView';
-import changeLogsJSON from '../assets/changelogs.json';
+const platformLogsMap: Record<string, string[]> = {
+  android: changeLogsJSON.android,
+  ios: changeLogsJSON.ios,
+  web: changeLogsJSON.web,
+};
 
-export default function ChangeLogs() {
-  const setCurrentVersionValue = useSetAtom(currentAppVersion);
-  const appVersion = useMemo(() => getAppVersion(), []);
+export default function ChangeLogs({ visible, onClose }: ChangeLogsProps) {
+  const changeLogs = useMemo(() => {
+    const allLogs = changeLogsJSON.all ?? [];
+    const platformLogs = platformLogsMap[Platform.OS] ?? [];
+    return [...allLogs, ...platformLogs];
+  }, []);
 
-  const changeLogs = changeLogsJSON.logs;
+  useEffect(() => {
+    if (visible && changeLogs.length === 0) {
+      onClose();
+    }
+  }, [visible, changeLogs.length, onClose]);
 
-  const handleClose = () => {
-    setCurrentVersionValue(appVersion);
-  };
+  if (changeLogs.length === 0) {
+    return null;
+  }
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={styles.content}>
-        <ThemedText style={styles.title}>ما الجديد</ThemedText>
-        {changeLogs?.map((log, index) => (
-          <ThemedText key={index} style={styles.changeLogItem}>
-            {log}
-          </ThemedText>
-        ))}
-        <ThemedButton variant="primary" onPress={handleClose}>
-          إغلاق
-        </ThemedButton>
-      </ThemedView>
-    </ThemedView>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <Pressable style={styles.overlay} onPress={onClose}>
+        <ThemedView
+          style={styles.content}
+          onStartShouldSetResponder={() => true}
+        >
+          <ThemedText style={styles.title}>ما الجديد</ThemedText>
+          {changeLogs.map((log, index) => (
+            <ThemedText key={index} style={styles.changeLogItem}>
+              {log}
+            </ThemedText>
+          ))}
+          <ThemedButton variant="primary" onPress={onClose}>
+            إغلاق
+          </ThemedButton>
+        </ThemedView>
+      </Pressable>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  overlay: {
     flex: 1,
-    width: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   content: {
     width: '80%',
     padding: 20,
-    borderRadius: 5,
+    borderRadius: 8,
     maxWidth: 400,
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    elevation: 5,
+    alignItems: 'center',
+    writingDirection: 'rtl',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    textAlign: 'right',
   },
   changeLogItem: {
     fontSize: 16,
     marginBottom: 20,
+    textAlign: 'right',
   },
 });

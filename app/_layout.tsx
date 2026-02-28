@@ -130,7 +130,7 @@ export default function RootLayout() {
                   >
                     <Stack.Screen
                       name="(tabs)"
-                      options={{ headerShown: false }}
+                      options={{ headerShown: false, title: 'الرئيسية' }}
                     />
                     <Stack.Screen name="+not-found" />
                     <Stack.Screen

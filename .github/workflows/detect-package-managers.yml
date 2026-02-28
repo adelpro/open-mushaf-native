@@ -1,0 +1,59 @@
+name: Detect Package Managers
+
+on:
+  pull_request:
+    branches: [develop, staging, main]
+  push:
+    branches: [develop, staging, main]
+
+jobs:
+  detect-unwanted-locks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Detect unwanted lock files
+        id: detect
+        run: |
+          FOUND_LOCKS=""
+          
+          if [ -f "package-lock.json" ]; then
+            FOUND_LOCKS="${FOUND_LOCKS}package-lock.json "
+          fi
+          
+          if [ -f "pnpm-lock.yaml" ]; then
+            FOUND_LOCKS="${FOUND_LOCKS}pnpm-lock.yaml "
+          fi
+          
+          if [ -f "bun.lockb" ]; then
+            FOUND_LOCKS="${FOUND_LOCKS}bun.lockb "
+          fi
+          
+          if [ -n "${FOUND_LOCKS}" ]; then
+            echo "found=true" >> $GITHUB_OUTPUT
+            echo "files=${FOUND_LOCKS}" >> $GITHUB_OUTPUT
+            echo "::warning::Found unwanted lock files: ${FOUND_LOCKS} Please use yarn.lock only"
+            exit 1
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+            echo "files=none" >> $GITHUB_OUTPUT
+            echo "No unwanted lock files found"
+          fi
+
+      - name: Report result
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          echo "## ❌ Unwanted Package Lock Files Detected" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The following lock files were found and should be removed:" >> $GITHUB_STEP_SUMMARY
+          echo "- ${steps.detect.outputs.files}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "This project uses **yarn**. Please remove the above files and use yarn.lock instead." >> $GITHUB_STEP_SUMMARY
+          exit 1
+
+      - name: Success
+        if: steps.detect.outputs.found == 'false'
+        run: |
+          echo "## ✅ Only yarn.lock detected" >> $GITHUB_STEP_SUMMARY
+          echo "This project correctly uses yarn as the package manager." >> $GITHUB_STEP_SUMMARY
