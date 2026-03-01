@@ -37,41 +37,43 @@ export default function SegmentedControlWithDisabled({
 
   return (
     <ThemedView style={styles.container}>
-      {options.map((option, index) => (
-        <TouchableOpacity
-          key={index}
-          style={[
-            styles.option,
-            index === selectedIndex &&
-              index !== 0 && { backgroundColor: activeColor },
-            index === selectedIndex &&
-              index === 0 && { backgroundColor: activeDisabledColor },
-          ]}
-          onPress={() => handlePress(index)}
-          accessibilityLabel={option}
-          accessibilityRole="radio"
-          accessibilityState={{
-            selected: index === selectedIndex,
-            disabled: index === 0,
-          }}
-        >
-          <ThemedText
+      {options.map((option, index) => {
+        const isDisabled = index === 0;
+        return (
+          <TouchableOpacity
+            key={index}
             style={[
-              styles.optionText,
-              {
-                color:
-                  index === 0
+              styles.option,
+              index === selectedIndex &&
+                !isDisabled && { backgroundColor: activeColor },
+              index === selectedIndex &&
+                isDisabled && { backgroundColor: activeDisabledColor },
+            ]}
+            onPress={() => !isDisabled && handlePress(index)}
+            accessibilityLabel={option}
+            accessibilityRole="radio"
+            accessibilityState={{
+              selected: index === selectedIndex,
+              disabled: isDisabled,
+            }}
+          >
+            <ThemedText
+              style={[
+                styles.optionText,
+                {
+                  color: isDisabled
                     ? disabledTextColor
                     : index === selectedIndex
                       ? activeTextColor
                       : textColor,
-              },
-            ]}
-          >
-            {option}
-          </ThemedText>
-        </TouchableOpacity>
-      ))}
+                },
+              ]}
+            >
+              {option}
+            </ThemedText>
+          </TouchableOpacity>
+        );
+      })}
     </ThemedView>
   );
 }
