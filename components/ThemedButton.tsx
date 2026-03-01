@@ -97,6 +97,7 @@ export function ThemedButton({
 
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       style={[
         {
           backgroundColor: variantStyles.backgroundColor,

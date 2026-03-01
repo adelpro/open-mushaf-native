@@ -330,6 +330,8 @@ export default function SettingsScreen() {
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setConfirmModalVisible(false)}
+          accessibilityLabel="إغلاق نافذة التأكيد"
+          accessibilityRole="button"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}

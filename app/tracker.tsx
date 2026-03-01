@@ -148,8 +148,9 @@ export default function TrackerScreen() {
                   <TouchableOpacity
                     style={styles.controlButton}
                     onPress={decrementDailyGoal}
-                    accessibilityRole="button"
                     accessibilityLabel="تقليل الهدف اليومي"
+                    accessibilityHint="اضغط لتقليل عدد الأحزاب في الهدف اليومي"
+                    accessibilityRole="button"
                   >
                     <Feather name="minus" size={20} color={primaryColor} />
                   </TouchableOpacity>
@@ -159,8 +160,9 @@ export default function TrackerScreen() {
                   <TouchableOpacity
                     style={styles.controlButton}
                     onPress={incrementDailyGoal}
-                    accessibilityRole="button"
                     accessibilityLabel="زيادة الهدف اليومي"
+                    accessibilityHint="اضغط لزيادة عدد الأحزاب في الهدف اليومي"
+                    accessibilityRole="button"
                   >
                     <Feather name="plus" size={20} color={primaryColor} />
                   </TouchableOpacity>
@@ -236,6 +238,8 @@ export default function TrackerScreen() {
             style={styles.modalOverlay}
             activeOpacity={1}
             onPress={() => setConfirmModalVisible(false)} // Close on overlay press
+            accessibilityLabel="إغلاق نافذة التأكيد"
+            accessibilityRole="button"
           >
             {/* Prevent modal closing when pressing inside content */}
             <ThemedView

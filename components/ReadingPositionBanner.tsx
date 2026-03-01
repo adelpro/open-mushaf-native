@@ -64,7 +64,11 @@ export default function ReadingPositionBanner() {
       <TouchableOpacity
         style={styles.toggleIcon}
         onPress={toggleCollapse}
-        accessibilityLabel={isCollapsed ? 'Expand banner' : 'Collapse banner'}
+        accessibilityRole="button"
+        accessibilityLabel={
+          isCollapsed ? 'توسيع شريط موضع القراءة' : 'طي شريط موضع القراءة'
+        }
+        accessibilityHint="اضغط لتبديل عرض خيارات موضع القراءة"
       >
         <ThemedView
           style={[styles.headerContainer, { backgroundColor: 'transparent' }]}
