@@ -5,6 +5,7 @@ import { useSetAtom } from 'jotai';
 
 import usePageOverlay from '@/hooks/usePageOverLay';
 import { topMenuState } from '@/jotai/atoms';
+import { triggerImpactHaptic } from '@/utils';
 
 import TafseerPopup from './TafseerPopup';
 
@@ -19,6 +20,7 @@ export default function PageOverlay({ index, dimensions }: Props) {
   const setShowTopMenu = useSetAtom(topMenuState);
 
   const handleAyaClick = ({ aya, surah }: { aya: number; surah: number }) => {
+    triggerImpactHaptic();
     setSelectedAya({ aya, surah });
     setShow(true);
   };

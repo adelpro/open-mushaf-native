@@ -39,6 +39,7 @@ import {
 } from '@/jotai/atoms';
 import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
 import { getSEOMetadataByPage } from '@/utils/quranMetadataUtils';
+import { triggerSelectionHaptic } from '@/utils/triggerHaptic';
 
 import { useNotification } from './NotificationProvider';
 import PageOverlay from './PageOverlay';
@@ -180,6 +181,11 @@ export default function MushafPage() {
       if (isFlipSoundEnabled) {
         player.play();
       }
+
+      const isSurahStart = surahData.some((s) => s.startingPage === page);
+      if (isSurahStart) {
+        triggerSelectionHaptic();
+      }
     },
     [
       currentPage,
@@ -188,6 +194,7 @@ export default function MushafPage() {
       isFlipSoundEnabled,
       player,
       setCurrentPage,
+      surahData,
     ],
   );
 
