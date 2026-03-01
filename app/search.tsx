@@ -138,7 +138,12 @@ export default function Search() {
           color={primaryColor}
           style={styles.icon}
         />
-        <Pressable onPress={() => setShowOptions(!showOptions)}>
+        <Pressable
+          onPress={() => setShowOptions(!showOptions)}
+          accessibilityRole="button"
+          accessibilityLabel="خيارات البحث المتقدم"
+          accessibilityState={{ expanded: showOptions }}
+        >
           <Ionicons
             name="options"
             size={20}
@@ -157,6 +162,8 @@ export default function Search() {
                 advancedOptions.lemma && styles.optionActive,
               ]}
               onPress={() => toggleOption('lemma')}
+              accessibilityRole="togglebutton"
+              accessibilityState={{ checked: advancedOptions.lemma }}
             >
               <ThemedText
                 style={
@@ -173,6 +180,8 @@ export default function Search() {
                 advancedOptions.root && styles.optionActive,
               ]}
               onPress={() => toggleOption('root')}
+              accessibilityRole="togglebutton"
+              accessibilityState={{ checked: advancedOptions.root }}
             >
               <ThemedText
                 style={
@@ -188,6 +197,8 @@ export default function Search() {
                 advancedOptions.fuzzy && styles.optionActive,
               ]}
               onPress={() => toggleOption('fuzzy')}
+              accessibilityRole="togglebutton"
+              accessibilityState={{ checked: advancedOptions.fuzzy }}
             >
               <ThemedText
                 style={
@@ -238,7 +249,19 @@ export default function Search() {
         ListEmptyComponent={
           query && !isLoading ? (
             <ThemedView style={styles.emptyContainer}>
-              <ThemedText type="default">لا توجد نتائج</ThemedText>
+              <ThemedView style={styles.emptyIconWrapper}>
+                <Ionicons
+                  name="search-outline"
+                  size={44}
+                  color={primaryColor}
+                />
+              </ThemedView>
+              <ThemedText type="defaultSemiBold" style={styles.emptyTitle}>
+                لم يتم العثور على نتائج
+              </ThemedText>
+              <ThemedText style={styles.emptySubtitle}>
+                تأكد من كتابة الكلمة بشكل صحيح، أو حاول البحث بكلمة أخرى.
+              </ThemedText>
             </ThemedView>
           ) : null
         }
@@ -293,6 +316,32 @@ const styles = StyleSheet.create({
   },
   optionActive: { backgroundColor: '#e3f2fd', borderColor: '#1976d2' },
   optionActiveText: { color: '#1976d2', fontWeight: '600' },
-  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 32,
+  },
+  emptyIconWrapper: {
+    width: 84,
+    height: 84,
+    borderRadius: 42,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+    backgroundColor: 'rgba(25, 118, 210, 0.12)',
+  },
+  emptyTitle: {
+    fontSize: 18,
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+  emptySubtitle: {
+    textAlign: 'center',
+    fontSize: 14,
+    lineHeight: 22,
+    opacity: 0.8,
+  },
   resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14 },
 });

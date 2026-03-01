@@ -42,16 +42,12 @@ const DAY_LABELS: Record<number, string> = {
   7: 'السبت',
 };
 
-/** Returns a formatted Arabic time string like ٨:٠٠ م */
+/** Returns a formatted time string based on system preferences */
 const formatTimeArabic = (hour: number, minute: number): string => {
   const period = hour >= 12 ? 'م' : 'ص';
   const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-  const arabicNumerals = (n: number) =>
-    n
-      .toString()
-      .padStart(2, '0')
-      .replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[parseInt(d)]);
-  return `${arabicNumerals(displayHour)}:${arabicNumerals(minute)} ${period}`;
+  const formatNumber = (n: number) => n.toString().padStart(2, '0');
+  return `${formatNumber(displayHour)}:${formatNumber(minute)} ${period}`;
 };
 
 /** Returns a preset icon name */

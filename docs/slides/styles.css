@@ -137,7 +137,9 @@
   padding: 6px 12px;
   font-size: 0.6rem;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
   text-decoration: none;
   margin: 0;
   display: block;
@@ -147,7 +149,7 @@
   background: #107869;
   color: #fff;
   font-weight: 700;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 .language-switcher .lang-button:not(.selected):hover {

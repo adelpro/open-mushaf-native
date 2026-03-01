@@ -13,13 +13,18 @@ import SEO from '@/components/seo';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { riwayaOptions } from '@/constants';
+import {
+  READING_THEME_KEYS,
+  READING_THEME_LABELS,
+  riwayaOptions,
+} from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import {
   flipSound,
   hizbNotification,
   mushafContrast,
   mushafRiwaya,
+  readingTheme,
   showTrackerNotification,
 } from '@/jotai/atoms';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
@@ -35,6 +40,7 @@ export default function SettingsScreen() {
   const { textColor, primaryColor, cardColor, iconColor } = useColors();
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
+  const [readingThemeValue, setReadingThemeValue] = useAtom(readingTheme);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
   const toggleFlipSoundSwitch = () => {
@@ -231,6 +237,46 @@ export default function SettingsScreen() {
           ]}
         >
           <Feather
+            name="eye"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, styles.fullWidth]}
+          >
+            سمة القراءة:
+          </ThemedText>
+        </ThemedView>
+        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
+          <SegmentedControl
+            options={READING_THEME_LABELS}
+            initialSelectedIndex={READING_THEME_KEYS.indexOf(readingThemeValue)}
+            activeColor={primaryColor}
+            textColor={primaryColor}
+            onSelectionChange={(index: number) => {
+              setReadingThemeValue(READING_THEME_KEYS[index]);
+            }}
+          />
+        </Pressable>
+      </ThemedView>
+
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
+      >
+        <ThemedView
+          style={[
+            styles.fullWidthContainer,
+            styles.iconTextContainer,
+            { backgroundColor: cardColor },
+          ]}
+        >
+          <Feather
             name="book-open"
             size={24}
             color={iconColor}
@@ -296,8 +342,8 @@ export default function SettingsScreen() {
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setConfirmModalVisible(false)}
-                accessibilityLabel="إغلاق"
                 accessibilityRole="button"
+                accessibilityLabel="إغلاق نافذة التأكيد"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>

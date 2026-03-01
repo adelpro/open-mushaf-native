@@ -23,8 +23,10 @@ import {
   dailyTrackerGoal,
   topMenuState,
 } from '@/jotai/atoms';
-import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
-import { getJuzPositionByPage } from '@/utils/quranMetadataUtils';
+import {
+  getJuzPositionByPage,
+  getSurahNameByPage,
+} from '@/utils/quranMetadataUtils';
 
 const ICON_SIZE = 32;
 export default function TopMenu() {
@@ -186,11 +188,11 @@ export default function TopMenu() {
               setShowTopMenuState(false);
               toggleMenu();
             }}
-            accessibilityLabel={
-              showBottomMenuState ? 'إخفاء شريط التنقل' : 'إظهار شريط التنقل'
-            }
-            accessibilityHint="اضغط لتبديل عرض شريط التنقل السفلي"
             accessibilityRole="button"
+            accessibilityLabel={
+              showBottomMenuState ? 'وضع ملء الشاشة' : 'إظهار القائمة'
+            }
+            accessibilityState={{ expanded: showBottomMenuState }}
           >
             {showBottomMenuState ? (
               <MaterialCommunityIcons
