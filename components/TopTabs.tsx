@@ -30,6 +30,10 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
             borderBottomColor: textColor,
           },
         ]}
+        accessibilityLabel="السور"
+        accessibilityHint="اضغط لعرض قائمة السور"
+        accessibilityRole="tab"
+        accessibilityState={{ selected: activeTab === 'surahs' }}
       >
         <ThemedText
           style={[
@@ -52,6 +56,10 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
             borderBottomColor: textColor,
           },
         ]}
+        accessibilityLabel="الأجزاء"
+        accessibilityHint="اضغط لعرض قائمة الأجزاء"
+        accessibilityRole="tab"
+        accessibilityState={{ selected: activeTab === 'juzs' }}
       >
         <ThemedText
           style={[

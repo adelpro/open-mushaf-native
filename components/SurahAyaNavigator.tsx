@@ -168,6 +168,8 @@ export default function SurahAyaNavigator({
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setSurahModalVisible(false)}
+          accessibilityLabel="إغلاق قائمة السور"
+          accessibilityRole="button"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
@@ -178,6 +180,8 @@ export default function SurahAyaNavigator({
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setSurahModalVisible(false)}
+                accessibilityLabel="إغلاق"
+                accessibilityRole="button"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
@@ -210,6 +214,8 @@ export default function SurahAyaNavigator({
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setAyaModalVisible(false)}
+          accessibilityLabel="إغلاق قائمة الآيات"
+          accessibilityRole="button"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
@@ -220,6 +226,8 @@ export default function SurahAyaNavigator({
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setAyaModalVisible(false)}
+                accessibilityLabel="إغلاق"
+                accessibilityRole="button"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>

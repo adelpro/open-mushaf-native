@@ -163,6 +163,8 @@ export default function MoreScreen() {
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setErrorModalVisible(false)}
+          accessibilityLabel="إغلاق نافذة الخطأ"
+          accessibilityRole="button"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
@@ -177,6 +179,8 @@ export default function MoreScreen() {
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setErrorModalVisible(false)}
+                accessibilityLabel="إغلاق"
+                accessibilityRole="button"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>

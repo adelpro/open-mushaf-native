@@ -280,6 +280,9 @@ export default function RemindersScreen() {
         style={styles.timeRow}
         onPress={() => handleEditTime(reminder)}
         activeOpacity={0.6}
+        accessibilityLabel={`تعديل وقت التذكير ${formatTimeArabic(reminder.hour, reminder.minute)}`}
+        accessibilityHint="اضغط لتغيير وقت التذكير"
+        accessibilityRole="button"
       >
         <Feather name="clock" size={16} color={iconColor} />
         <ThemedText style={[styles.timeText, { color: textColor }]}>
@@ -304,6 +307,9 @@ export default function RemindersScreen() {
           style={styles.deleteRow}
           onPress={() => setDeleteConfirmId(reminder.id)}
           activeOpacity={0.6}
+          accessibilityLabel={`حذف تذكير ${reminder.title}`}
+          accessibilityHint="اضغط لحذف هذا التذكير"
+          accessibilityRole="button"
         >
           <Feather name="trash-2" size={16} color={dangerColor} />
           <ThemedText style={[styles.deleteText, { color: dangerColor }]}>
@@ -401,6 +407,8 @@ export default function RemindersScreen() {
                   setTimePickerVisible(false);
                   setEditingReminder(null);
                 }}
+                accessibilityLabel="إغلاق"
+                accessibilityRole="button"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
@@ -452,7 +460,11 @@ export default function RemindersScreen() {
               <ThemedText style={[styles.modalTitle, { color: textColor }]}>
                 تذكير جديد
               </ThemedText>
-              <TouchableOpacity onPress={() => setAddModalVisible(false)}>
+              <TouchableOpacity
+                onPress={() => setAddModalVisible(false)}
+                accessibilityLabel="إغلاق"
+                accessibilityRole="button"
+              >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
             </ThemedView>
@@ -500,6 +512,8 @@ export default function RemindersScreen() {
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setDeleteConfirmId(null)}
+          accessibilityLabel="إغلاق نافذة تأكيد الحذف"
+          accessibilityRole="button"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
@@ -511,7 +525,11 @@ export default function RemindersScreen() {
               <ThemedText style={[styles.modalTitle, { color: textColor }]}>
                 حذف التذكير
               </ThemedText>
-              <TouchableOpacity onPress={() => setDeleteConfirmId(null)}>
+              <TouchableOpacity
+                onPress={() => setDeleteConfirmId(null)}
+                accessibilityLabel="إغلاق"
+                accessibilityRole="button"
+              >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
             </ThemedView>

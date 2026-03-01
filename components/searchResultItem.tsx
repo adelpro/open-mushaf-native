@@ -100,6 +100,9 @@ export default function SearchResultItem({
   return (
     <TouchableOpacity
       onPress={() => onSelectAya({ aya: item.aya_id, surah: item.sura_id })}
+      accessibilityLabel={`سورة ${item.sura_name} الآية ${item.aya_id}`}
+      accessibilityHint="اضغط لعرض التفسير"
+      accessibilityRole="button"
     >
       <ThemedView style={styles.item}>
         <View style={styles.header}>

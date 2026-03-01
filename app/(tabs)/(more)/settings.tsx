@@ -284,6 +284,8 @@ export default function SettingsScreen() {
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setConfirmModalVisible(false)}
+          accessibilityLabel="إغلاق نافذة التأكيد"
+          accessibilityRole="button"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
@@ -294,6 +296,8 @@ export default function SettingsScreen() {
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setConfirmModalVisible(false)}
+                accessibilityLabel="إغلاق"
+                accessibilityRole="button"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>

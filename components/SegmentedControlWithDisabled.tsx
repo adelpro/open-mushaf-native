@@ -48,6 +48,12 @@ export default function SegmentedControlWithDisabled({
               index === 0 && { backgroundColor: activeDisabledColor },
           ]}
           onPress={() => handlePress(index)}
+          accessibilityLabel={option}
+          accessibilityRole="radio"
+          accessibilityState={{
+            selected: index === selectedIndex,
+            disabled: index === 0,
+          }}
         >
           <ThemedText
             style={[
