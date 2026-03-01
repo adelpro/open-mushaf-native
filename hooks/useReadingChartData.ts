@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { useAtomValue } from 'jotai/react';
 
@@ -48,17 +48,20 @@ export function useReadingChartData(metric: ChartMetric = 'hizbs') {
     return result;
   }, [history, todayTracker, todayPagesRead, period]);
 
-  const getValue = (d: DailyReadingRecord) =>
-    metric === 'pages' ? d.pagesRead : d.hizbsCompleted;
+  const getValue = useCallback(
+    (d: DailyReadingRecord) =>
+      metric === 'pages' ? d.pagesRead : d.hizbsCompleted,
+    [metric],
+  );
 
   const maxValue = useMemo(
     () => Math.max(1, ...data.map(getValue)),
-    [data, metric],
+    [data, getValue],
   );
 
   const total = useMemo(
     () => data.reduce((sum, d) => sum + getValue(d), 0),
-    [data, metric],
+    [data, getValue],
   );
 
   const dailyAvg = period > 0 ? total / period : 0;
