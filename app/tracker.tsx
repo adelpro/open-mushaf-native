@@ -101,8 +101,8 @@ export default function TrackerScreen() {
   );
 
   const styles = useMemo(
-    () => createStyles({ borderLightColor }),
-    [borderLightColor],
+    () => createStyles({ borderLightColor, textColor }),
+    [borderLightColor, textColor],
   );
 
   return (
@@ -139,7 +139,7 @@ export default function TrackerScreen() {
               <ThemedText
                 style={[
                   styles.progressText,
-                  { color: dailyProgress > 50 ? 'white' : textColor },
+                  dailyProgress > 50 && { color: 'white' },
                 ]}
               >
                 {dailyProgress.toFixed(1)}%
@@ -316,7 +316,10 @@ interface TrackerStyles {
   resetButtonText: TextStyle;
 }
 
-const createStyles = (colors: { borderLightColor: string }): TrackerStyles =>
+const createStyles = (colors: {
+  borderLightColor: string;
+  textColor: string;
+}): TrackerStyles =>
   StyleSheet.create({
   container: {
     flex: 1,
@@ -362,6 +365,7 @@ const createStyles = (colors: { borderLightColor: string }): TrackerStyles =>
     textAlign: 'center',
     fontSize: 12,
     zIndex: 1,
+    color: colors.textColor,
   },
   infoText: { marginTop: 4, fontSize: 16, lineHeight: 24 },
   controlsContainer: {
