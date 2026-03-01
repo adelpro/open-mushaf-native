@@ -326,6 +326,9 @@ interface SearchStyles {
   optionActive: ViewStyle;
   optionActiveText: TextStyle;
   emptyContainer: ViewStyle;
+  emptyIconWrapper: ViewStyle;
+  emptyTitle: TextStyle;
+  emptySubtitle: TextStyle;
   resultCount: TextStyle;
   listFooter: ViewStyle;
 }
