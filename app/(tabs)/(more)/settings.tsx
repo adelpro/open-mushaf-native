@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Linking, Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  Linking,
+  Modal,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 import { Entypo, Feather } from '@expo/vector-icons';
 import * as StoreReview from 'expo-store-review';
@@ -28,7 +34,7 @@ import {
   readingTheme,
   showTrackerNotification,
 } from '@/jotai/atoms';
-import { RiwayaByIndice, RiwayaByValue } from '@/utils';
+import { isWeb, RiwayaByIndice, RiwayaByValue } from '@/utils';
 import { clearStorageAndReload } from '@/utils/storage/clearStorage';
 
 export default function SettingsScreen() {
@@ -303,27 +309,28 @@ export default function SettingsScreen() {
           />
         </Pressable>
       </ThemedView>
-
-      <ThemedView
-        style={[
-          styles.settingsSection,
-          styles.columnSection,
-          { backgroundColor: cardColor },
-        ]}
-      >
-        <ThemedButton
-          role="button"
-          variant="outlined-primary"
-          onPress={async () => {
-            const url = StoreReview.storeUrl();
-            if (url) {
-              await Linking.openURL(url);
-            }
-          }}
+      {!isWeb && (
+        <ThemedView
+          style={[
+            styles.settingsSection,
+            styles.columnSection,
+            { backgroundColor: cardColor },
+          ]}
         >
-          ⭐ تقييم التطبيق على المتجر
-        </ThemedButton>
-      </ThemedView>
+          <ThemedButton
+            role="button"
+            variant="outlined-primary"
+            onPress={async () => {
+              const url = StoreReview.storeUrl();
+              if (url) {
+                await Linking.openURL(url);
+              }
+            }}
+          >
+            ⭐ تقييم التطبيق على المتجر
+          </ThemedButton>
+        </ThemedView>
+      )}
 
       <ThemedView
         style={[
