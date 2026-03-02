@@ -14,8 +14,7 @@ import * as Progress from 'react-native-progress';
 
 import { ThemedView } from '@/components/ThemedView';
 import {} from '@/constants';
-import { useColors } from '@/hooks/useColors';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import { useColors, useQuranMetadata } from '@/hooks';
 import {
   bottomMenuState,
   currentSavedPage,
@@ -29,7 +28,7 @@ import {
 } from '@/utils/quranMetadataUtils';
 
 const ICON_SIZE = 32;
-export default function TopMenu() {
+export function TopMenu() {
   const { tintColor, backgroundColor } = useColors();
   const { surahData, thumnData } = useQuranMetadata();
   const [progressValue, setProgressValue] = useState<number>(0);

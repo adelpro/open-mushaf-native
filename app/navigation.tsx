@@ -4,14 +4,14 @@ import { ActivityIndicator, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
-import PageNavigator from '@/components/PageNavigator';
-import SEO from '@/components/seo';
-import SurahAyaNavigator from '@/components/SurahAyaNavigator';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import {
+  PageNavigator,
+  Seo,
+  SurahAyaNavigator,
+  ThemedText,
+  ThemedView,
+} from '@/components';
+import { useColors, useCurrentPage, useQuranMetadata } from '@/hooks';
 
 export default function Navigation() {
   const router = useRouter();
@@ -116,7 +116,7 @@ export default function Navigation() {
 
   return (
     <ThemedView style={styles.container}>
-      <SEO
+      <Seo
         title="المصحف المفتوح - التنقل"
         description="تصفح صفحات وسور وآيات القرآن الكريم بسهولة باستخدام واجهة التنقل في المصحف المفتوح"
       />

@@ -17,7 +17,7 @@ type QuranMetadata = {
   error: string | null;
 };
 
-export default function useQuranMetadata(): QuranMetadata {
+export function useQuranMetadata(): QuranMetadata {
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);
 
   const [thumnData, setThumnData] = useState<Thumn[]>([]);
@@ -57,7 +57,7 @@ export default function useQuranMetadata(): QuranMetadata {
 
           setThumnData(thumnModule.default);
           setHizbData(hizbModule.default);
-          setSurahData(surahModule.default);
+          setSurahData(surahModule.default as Surah[]);
           setAyaData(ayaModule.default.coordinates as Page[]);
           setSpecsData(specsModule.default);
           setChapterData(chapterModule.default);
@@ -81,7 +81,7 @@ export default function useQuranMetadata(): QuranMetadata {
 
           setThumnData(thumnModule.default);
           setHizbData(hizbModule.default);
-          setSurahData(surahModule.default);
+          setSurahData(surahModule.default as Surah[]);
           setAyaData(ayaModule.default.coordinates as Page[]);
           setSpecsData(specsModule.default);
           setChapterData(chapterModule.default);

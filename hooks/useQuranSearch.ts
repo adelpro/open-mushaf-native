@@ -33,7 +33,7 @@ interface UseQuranSearchProps {
   limit: number;
 }
 
-export default function useQuranSearch({
+export function useQuranSearch({
   quranData,
   morphologyData,
   wordMap,

@@ -5,10 +5,10 @@ import { useAtom } from 'jotai/react';
 
 import { currentSavedPage } from '@/jotai/atoms';
 
-import useQuranMetadata from './useQuranMetadata';
+import { useQuranMetadata } from './useQuranMetadata';
 import { useUpdateAndroidWidget } from './useUpdateAndroidWidget';
 
-export default function useCurrentPage() {
+export function useCurrentPage() {
   const { page: pageParam, temporary } = useLocalSearchParams();
   const [currentSavedPageValue, setCurrentSavedPageValue] =
     useAtom(currentSavedPage);

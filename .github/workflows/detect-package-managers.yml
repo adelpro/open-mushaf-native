@@ -17,19 +17,19 @@ jobs:
         id: detect
         run: |
           FOUND_LOCKS=""
-          
+
           if [ -f "package-lock.json" ]; then
             FOUND_LOCKS="${FOUND_LOCKS}package-lock.json "
           fi
-          
+
           if [ -f "pnpm-lock.yaml" ]; then
             FOUND_LOCKS="${FOUND_LOCKS}pnpm-lock.yaml "
           fi
-          
+
           if [ -f "bun.lockb" ]; then
             FOUND_LOCKS="${FOUND_LOCKS}bun.lockb "
           fi
-          
+
           if [ -n "${FOUND_LOCKS}" ]; then
             echo "found=true" >> $GITHUB_OUTPUT
             echo "files=${FOUND_LOCKS}" >> $GITHUB_OUTPUT

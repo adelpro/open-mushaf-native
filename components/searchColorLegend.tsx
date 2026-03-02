@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 
-export default function SearchColorLegend() {
+export function SearchColorLegend() {
   const { directColor, relatedColor, fuzzyColor, textColor } = useColors();
 
   const items = [

@@ -56,11 +56,11 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
 
     // Load metadata files based on Riwaya
     if (riwaya === 'hafs') {
-      surahs = hafsSurahs;
+      surahs = hafsSurahs as Surah[];
       thumns = hafsThumns;
     } else {
       // Default to Warsh
-      surahs = warshSurahs;
+      surahs = warshSurahs as Surah[];
       thumns = warshThumns;
     }
 
