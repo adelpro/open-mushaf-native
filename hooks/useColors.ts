@@ -15,6 +15,7 @@ export const useColors = () => {
   const dangerLightColor = Colors[colorScheme ?? 'light'].dangerLight;
   const cardColor = Colors[colorScheme ?? 'light'].card;
   const ivoryColor = Colors[colorScheme ?? 'light'].ivory;
+  const tabIconDefaultColor = Colors[colorScheme ?? 'light'].tabIconDefault;
 
   // Text Highlight colors
   const directColor = Colors[colorScheme ?? 'light'].directColor;
@@ -33,6 +34,7 @@ export const useColors = () => {
     dangerColor,
     dangerLightColor,
     ivoryColor,
+    tabIconDefaultColor,
 
     // Text Highlight colors
     directColor,

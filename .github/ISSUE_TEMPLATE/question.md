@@ -17,4 +17,3 @@ Why do you need this information?
 ## What have you already tried?
 
 ## Additional Context
-
