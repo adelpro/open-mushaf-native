@@ -1,54 +1,33 @@
-import React, { useState } from 'react';
-import { StyleSheet, TextInput, type TextInputProps } from 'react-native';
+import { StyleSheet, Text, type TextProps } from 'react-native';
 
-import { useColors } from '@/hooks';
+import { useThemeColor } from '@/hooks';
 
-export type ThemedInputProps = TextInputProps & {
+export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
-  variant?: 'default' | 'outlined' | 'rounded';
+  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
 };
 
-export function ThemedTextInput({
+export function ThemedText({
   style,
   lightColor,
   darkColor,
-  variant = 'default',
+  type = 'default',
   ...rest
-}: ThemedInputProps) {
-  const { primaryColor, secondaryColor, textColor: color } = useColors();
-  const [isFocused, setIsFocused] = useState<boolean>(false);
+}: ThemedTextProps) {
+  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
 
   return (
-    <TextInput
+    <Text
       style={[
-        {
-          color,
-          outline: 'none',
-          borderColor: isFocused ? primaryColor : secondaryColor,
-        },
-        variant === 'default' && [
-          styles.default,
-
-          { borderBottomWidth: isFocused ? 2 : 1 },
-        ],
-        variant === 'outlined' && {
-          ...styles.outlined,
-          borderWidth: isFocused ? 2 : 1,
-        },
-        variant === 'rounded' && {
-          ...styles.rounded,
-          borderWidth: isFocused ? 2 : 1,
-        },
+        { color },
+        type === 'default' ? styles.default : undefined,
+        type === 'title' ? styles.title : undefined,
+        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
+        type === 'subtitle' ? styles.subtitle : undefined,
+        type === 'link' ? styles.link : undefined,
         style,
       ]}
-      placeholderTextColor={secondaryColor}
-      onBlur={() => {
-        setIsFocused(false);
-      }}
-      onFocus={() => {
-        setIsFocused(true);
-      }}
       {...rest}
     />
   );
@@ -58,19 +37,29 @@ const styles = StyleSheet.create({
   default: {
     fontFamily: 'Tajawal_400Regular',
     fontSize: 16,
-    padding: 10,
+    lineHeight: 24,
   },
-  outlined: {
+  defaultSemiBold: {
     fontFamily: 'Tajawal_400Regular',
     fontSize: 16,
-    padding: 10,
-
-    borderRadius: 4,
+    lineHeight: 24,
+    fontWeight: '600',
   },
-  rounded: {
+  title: {
+    fontFamily: 'Tajawal_700Bold',
+    fontSize: 32,
+    fontWeight: 'bold',
+    lineHeight: 32,
+  },
+  subtitle: {
+    fontFamily: 'Tajawal_700Bold',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  link: {
     fontFamily: 'Tajawal_400Regular',
+    lineHeight: 30,
     fontSize: 16,
-    padding: 10,
-    borderRadius: 50,
+    color: '#0a7ea4',
   },
 });
