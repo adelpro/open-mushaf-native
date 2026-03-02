@@ -19,9 +19,7 @@ import {
   ThemedText,
   ThemedView,
 } from '@/components';
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
-import { useUpdateAndroidWidget } from '@/hooks/useUpdateAndroidWidget';
+import { useColors, useCurrentPage, useUpdateAndroidWidget } from '@/hooks';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,

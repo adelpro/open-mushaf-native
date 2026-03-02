@@ -4,7 +4,7 @@ import { ActivityIndicator, StyleSheet, Text } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
 import { CONTACT_FORM_RATE_LIMIT_CONFIG } from '@/constants/ratelimitConfig';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
 
 import { ThemedButton } from './ThemedButton';

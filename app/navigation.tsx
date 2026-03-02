@@ -11,9 +11,7 @@ import {
   ThemedText,
   ThemedView,
 } from '@/components';
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import { useColors, useCurrentPage, useQuranMetadata } from '@/hooks';
 
 export default function Navigation() {
   const router = useRouter();

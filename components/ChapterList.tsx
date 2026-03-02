@@ -1,8 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 
-import { useColors } from '@/hooks/useColors';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import { useColors, useQuranMetadata } from '@/hooks';
 
 import { ChapterCard } from './ChapterCard';
 import { ThemedText } from './ThemedText';

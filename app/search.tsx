@@ -20,10 +20,12 @@ import {
   ThemedTextInput,
   ThemedView,
 } from '@/components';
-import { useColors } from '@/hooks/useColors';
-import useDebounce from '@/hooks/useDebounce';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
-import useQuranSearch from '@/hooks/useQuranSearch';
+import {
+  useColors,
+  useDebounce,
+  useQuranMetadata,
+  useQuranSearch,
+} from '@/hooks';
 
 const MORPH = morphologyDataRaw;
 const WORD_MAP = wordMapJSON;

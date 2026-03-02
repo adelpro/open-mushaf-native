@@ -14,8 +14,7 @@ import * as Progress from 'react-native-progress';
 
 import { ThemedView } from '@/components/ThemedView';
 import {} from '@/constants';
-import { useColors } from '@/hooks/useColors';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import { useColors, useQuranMetadata } from '@/hooks';
 import {
   bottomMenuState,
   currentSavedPage,

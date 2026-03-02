@@ -12,8 +12,7 @@ import { Stack, useRouter } from 'expo-router';
 import { useAtom } from 'jotai/react';
 
 import { Seo, ThemedButton, ThemedText, ThemedView } from '@/components';
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
+import { useColors, useCurrentPage } from '@/hooks';
 import { Bookmark, bookmarks as bookmarksAtom } from '@/jotai/atoms';
 
 export default function BookmarksScreen() {

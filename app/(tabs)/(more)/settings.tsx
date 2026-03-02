@@ -20,7 +20,7 @@ import {
   READING_THEME_LABELS,
   riwayaOptions,
 } from '@/constants';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 import {
   flipSound,
   hizbNotification,

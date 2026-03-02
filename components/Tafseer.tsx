@@ -4,12 +4,12 @@ import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import { useAtom } from 'jotai/react';
 import HTMLView from 'react-native-htmlview';
 
-import { useColors } from '@/hooks/useColors';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
 import {
   hasNoTafseerContent,
+  useColors,
+  useQuranMetadata,
   useTafseerContent,
-} from '@/hooks/useTafseerContent';
+} from '@/hooks';
 import { tafseerTab } from '@/jotai/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
 

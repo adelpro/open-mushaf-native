@@ -17,8 +17,7 @@ import {
   CHART_PERIODS,
   GRID_RATIOS,
 } from '@/constants/readingChart';
-import { useColors } from '@/hooks/useColors';
-import { ChartMetric, useReadingChartData } from '@/hooks/useReadingChartData';
+import { ChartMetric, useColors, useReadingChartData } from '@/hooks';
 import { formatLabel, shouldShowLabel } from '@/utils';
 
 import { SegmentedControl } from '../SegmentControl';

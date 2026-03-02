@@ -17,7 +17,7 @@ type QuranMetadata = {
   error: string | null;
 };
 
-export default function useQuranMetadata(): QuranMetadata {
+export function useQuranMetadata(): QuranMetadata {
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);
 
   const [thumnData, setThumnData] = useState<Thumn[]>([]);

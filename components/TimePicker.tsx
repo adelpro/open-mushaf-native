@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 
 const ITEM_HEIGHT = 44;
 const VISIBLE_ITEMS = 5;

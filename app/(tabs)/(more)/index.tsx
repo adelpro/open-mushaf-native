@@ -21,7 +21,7 @@ import SettingsSVG from '@/assets/svgs/settings.svg';
 import ShareSVG from '@/assets/svgs/share.svg';
 import WelcomeSVG from '@/assets/svgs/welcome.svg';
 import { ThemedButton, ThemedText, ThemedView } from '@/components';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 import { isWeb } from '@/utils/isWeb';
 
 export default function MoreScreen() {

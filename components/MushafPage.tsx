@@ -20,13 +20,15 @@ import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
 import { READING_THEMES } from '@/constants/readingThemes';
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
-import useImagePreloader from '@/hooks/useImagePreloader';
-import useImagesArray from '@/hooks/useImagesArray';
-import useOrientation from '@/hooks/useOrientation';
-import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import {
+  useColors,
+  useCurrentPage,
+  useImagePreloader,
+  useImagesArray,
+  useOrientation,
+  usePanGestureHandler,
+  useQuranMetadata,
+} from '@/hooks';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,

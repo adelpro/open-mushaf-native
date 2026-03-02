@@ -23,7 +23,7 @@ import {
   ThemedView,
   TimePicker,
 } from '@/components';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 import { remindersAtom } from '@/jotai/atoms';
 import { Reminder, ReminderPreset } from '@/types/reminder';
 import {
