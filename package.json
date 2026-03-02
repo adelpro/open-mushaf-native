@@ -54,7 +54,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --fix --cache --concurrency=auto",
+      "npx eslint --fix --cache --concurrency=auto",
       "prettier --write"
     ]
   },
