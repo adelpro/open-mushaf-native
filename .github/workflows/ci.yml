@@ -117,4 +117,6 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build ${{ matrix.environment }}
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
         run: yarn build

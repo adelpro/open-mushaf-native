@@ -9,7 +9,7 @@ export function getSurahNameByPage(surahs: Surah[], page: number): string {
   return surah ? surah.name : '';
 }
 
-export function getSurahNumberByPage(surahs: Surah[], page: number): string {
+export function getSurahNumberByPage(surahs: Surah[], page: number): number {
   const surah = surahs.find(
     (s, index) =>
       page >= s.startingPage &&
