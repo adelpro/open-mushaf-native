@@ -38,10 +38,10 @@ export default function PrivacyScreen() {
             },
           ]}
           onPress={() => setSelectedTab('arabic')}
-          accessibilityRole="button"
-          accessibilityLabel="Switch to Arabic tab"
+          accessibilityRole="tab"
+          accessibilityLabel="العربية"
           accessibilityState={{ selected: selectedTab === 'arabic' }}
-          accessibilityHint="Select this tab to view the privacy policy in Arabic."
+          accessibilityHint="اضغط لعرض سياسة الخصوصية بالعربية"
         >
           <ThemedText
             style={[
@@ -62,10 +62,10 @@ export default function PrivacyScreen() {
             },
           ]}
           onPress={() => setSelectedTab('english')}
-          accessibilityRole="button"
-          accessibilityLabel="Switch to English tab"
+          accessibilityRole="tab"
+          accessibilityLabel="English"
           accessibilityState={{ selected: selectedTab === 'english' }}
-          accessibilityHint="Select this tab to view the privacy policy in English."
+          accessibilityHint="Press to view the privacy policy in English"
         >
           <ThemedText
             style={[

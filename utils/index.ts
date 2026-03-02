@@ -13,3 +13,4 @@ export * from './isWeb';
 export * from './quranMetadataUtils';
 
 export * from './readingChart';
+export * from './triggerHaptic';

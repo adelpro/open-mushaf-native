@@ -172,6 +172,8 @@ export default function MoreScreen() {
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setErrorModalVisible(false)}
+          accessibilityLabel="إغلاق نافذة الخطأ"
+          accessibilityRole="button"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
