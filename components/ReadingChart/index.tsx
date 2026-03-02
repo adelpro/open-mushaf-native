@@ -17,16 +17,15 @@ import {
   CHART_PERIODS,
   GRID_RATIOS,
 } from '@/constants/readingChart';
-import { useColors } from '@/hooks/useColors';
-import { ChartMetric, useReadingChartData } from '@/hooks/useReadingChartData';
+import { ChartMetric, useColors, useReadingChartData } from '@/hooks';
 import { formatLabel, shouldShowLabel } from '@/utils';
 
-import SegmentedControl from '../SegmentControl';
+import { SegmentedControl } from '../SegmentControl';
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
 import { styles } from './styles';
 
-export default function ReadingChart() {
+export function ReadingChart() {
   const { primaryColor, textColor, cardColor, tabIconDefaultColor } =
     useColors();
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();

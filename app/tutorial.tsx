@@ -1,10 +1,9 @@
-import SEO from '@/components/seo';
-import TutorialGuide from '@/components/TutorialGuide';
+import { Seo, TutorialGuide } from '@/components';
 
 export default function TutorialScreen() {
   return (
     <>
-      <SEO
+      <Seo
         title="تعليمي - المصحف المفتوح"
         description="دليل تعليمي لاستخدام تطبيق المصحف"
       />

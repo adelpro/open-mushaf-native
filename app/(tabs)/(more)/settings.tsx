@@ -6,19 +6,21 @@ import { useAtom } from 'jotai/react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
 
-import AwesomeSlider from '@/components/awesomeSlider';
-import SegmentedControl from '@/components/SegmentControl';
-import SegmentedControlWithDisabled from '@/components/SegmentedControlWithDisabled';
-import SEO from '@/components/seo';
-import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import {
+  AwesomeSlider,
+  SegmentedControl,
+  SegmentedControlWithDisabled,
+  Seo,
+  ThemedButton,
+  ThemedText,
+  ThemedView,
+} from '@/components';
 import {
   READING_THEME_KEYS,
   READING_THEME_LABELS,
   riwayaOptions,
 } from '@/constants';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 import {
   flipSound,
   hizbNotification,
@@ -62,7 +64,7 @@ export default function SettingsScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <SEO
+      <Seo
         title="المصحف المفتوح - الإعدادات"
         description="إعدادات التطبيق - تخصيص المظهر والإشعارات والرواية"
       />

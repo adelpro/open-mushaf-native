@@ -4,7 +4,7 @@ import { Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import IslamicMarkSVG from '@/assets/svgs/islamic-mark.svg';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 import { Chapter } from '@/types';
 
 import { ThemedText } from './ThemedText';
@@ -14,7 +14,7 @@ type Props = {
   chapter: Chapter;
 };
 
-export default function ChapterCard({ chapter }: Props) {
+export function ChapterCard({ chapter }: Props) {
   const router = useRouter();
   const { backgroundColor, textColor, secondaryColor } = useColors();
 

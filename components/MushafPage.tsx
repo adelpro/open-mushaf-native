@@ -20,13 +20,15 @@ import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
 import { READING_THEMES } from '@/constants/readingThemes';
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
-import useImagePreloader from '@/hooks/useImagePreloader';
-import useImagesArray from '@/hooks/useImagesArray';
-import useOrientation from '@/hooks/useOrientation';
-import { usePanGestureHandler } from '@/hooks/usePanGestureHandler';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import {
+  useColors,
+  useCurrentPage,
+  useImagePreloader,
+  useImagesArray,
+  useOrientation,
+  usePanGestureHandler,
+  useQuranMetadata,
+} from '@/hooks';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
@@ -41,15 +43,15 @@ import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
 import { getSEOMetadataByPage } from '@/utils/quranMetadataUtils';
 import { triggerSelectionHaptic } from '@/utils/triggerHaptic';
 
-import { useNotification } from './NotificationProvider';
-import PageOverlay from './PageOverlay';
-import SEO from './seo';
+import { PageOverlay } from './PageOverlay';
+import { Seo } from './Seo';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
+import { useNotification } from '../Context/NotificationProvider';
 
 const audioSource = require('@/assets/sounds/page-flip-sound.mp3');
 
-export default function MushafPage() {
+export function MushafPage() {
   const player = useAudioPlayer(audioSource);
   const isFlipSoundEnabled = useAtomValue(flipSound);
   const mushafContrastValue = useAtomValue(mushafContrast);
@@ -363,7 +365,7 @@ export default function MushafPage() {
 
   return (
     <>
-      <SEO
+      <Seo
         title={seoMetadata.title}
         description={seoMetadata.description}
         keywords={seoMetadata.keywords}
