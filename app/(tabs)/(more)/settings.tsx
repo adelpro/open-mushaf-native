@@ -1,7 +1,14 @@
 import { useState } from 'react';
-import { Modal, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  Linking,
+  Modal,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 import { Entypo, Feather } from '@expo/vector-icons';
+import * as StoreReview from 'expo-store-review';
 import { useAtom } from 'jotai/react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toggle from 'react-native-toggle-input';
@@ -29,7 +36,7 @@ import {
   readingTheme,
   showTrackerNotification,
 } from '@/jotai/atoms';
-import { RiwayaByIndice, RiwayaByValue } from '@/utils';
+import { isWeb, RiwayaByIndice, RiwayaByValue } from '@/utils';
 import { clearStorageAndReload } from '@/utils/storage/clearStorage';
 
 export default function SettingsScreen() {
@@ -304,6 +311,28 @@ export default function SettingsScreen() {
           />
         </Pressable>
       </ThemedView>
+      {!isWeb && (
+        <ThemedView
+          style={[
+            styles.settingsSection,
+            styles.columnSection,
+            { backgroundColor: cardColor },
+          ]}
+        >
+          <ThemedButton
+            role="button"
+            variant="outlined-primary"
+            onPress={async () => {
+              const url = StoreReview.storeUrl();
+              if (url) {
+                await Linking.openURL(url);
+              }
+            }}
+          >
+            ⭐ تقييم التطبيق على المتجر
+          </ThemedButton>
+        </ThemedView>
+      )}
 
       <ThemedView
         style={[
