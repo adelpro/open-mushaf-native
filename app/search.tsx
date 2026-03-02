@@ -11,13 +11,15 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 
 import morphologyDataRaw from '@/assets/search/quran-morphology.json';
 import wordMapJSON from '@/assets/search/word-map.json';
-import SearchColorLegend from '@/components/searchColorLegend';
-import SearchResultItem from '@/components/searchResultItem';
-import SEO from '@/components/seo';
-import TafseerPopup from '@/components/TafseerPopup';
-import { ThemedTextInput } from '@/components/ThemedInput';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import {
+  SearchColorLegend,
+  SearchResultItem,
+  Seo,
+  TafseerPopup,
+  ThemedText,
+  ThemedTextInput,
+  ThemedView,
+} from '@/components';
 import { useColors } from '@/hooks/useColors';
 import useDebounce from '@/hooks/useDebounce';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
@@ -274,7 +276,7 @@ export default function Search() {
         surah={selectedAya.surah}
       />
 
-      <SEO
+      <Seo
         title="البحث - المصحف المفتوح"
         description="البحث في آيات القرآن الكريم"
       />

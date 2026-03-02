@@ -170,7 +170,7 @@ const HOURS = Array.from({ length: 24 }, (_, i) => i);
 const MINUTES = Array.from({ length: 60 }, (_, i) => i);
 
 /** Custom scrollable time picker with hour and minute wheels */
-const TimePicker = ({ hour, minute, onChange }: TimePickerProps) => {
+export const TimePicker = ({ hour, minute, onChange }: TimePickerProps) => {
   const { textColor } = useColors();
 
   const handleHourChange = useCallback(
@@ -259,5 +259,3 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
 });
-
-export default TimePicker;

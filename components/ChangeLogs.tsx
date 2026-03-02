@@ -17,7 +17,7 @@ const platformLogsMap: Record<string, string[]> = {
   web: changeLogsJSON.web,
 };
 
-export default function ChangeLogs({ visible, onClose }: ChangeLogsProps) {
+export function ChangeLogs({ visible, onClose }: ChangeLogsProps) {
   const changeLogs = useMemo(() => {
     const allLogs = changeLogsJSON.all ?? [];
     const platformLogs = platformLogsMap[Platform.OS] ?? [];

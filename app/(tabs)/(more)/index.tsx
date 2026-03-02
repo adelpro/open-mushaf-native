@@ -20,9 +20,7 @@ import PageSVG from '@/assets/svgs/page.svg';
 import SettingsSVG from '@/assets/svgs/settings.svg';
 import ShareSVG from '@/assets/svgs/share.svg';
 import WelcomeSVG from '@/assets/svgs/welcome.svg';
-import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { ThemedButton, ThemedText, ThemedView } from '@/components';
 import { useColors } from '@/hooks/useColors';
 import { isWeb } from '@/utils/isWeb';
 

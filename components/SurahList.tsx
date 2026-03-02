@@ -4,11 +4,11 @@ import { ActivityIndicator, StyleSheet } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 
-import SurahCard from './SurahCard';
+import { SurahCard } from './SurahCard';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-export default function SurahsList() {
+export function SurahList() {
   const { tintColor } = useColors();
   const { surahData, isLoading, error } = useQuranMetadata();
 

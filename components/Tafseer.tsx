@@ -36,7 +36,7 @@ type Props = {
   opacity?: number | undefined;
 };
 
-export default function Tafseer({ aya, surah, opacity = undefined }: Props) {
+export function Tafseer({ aya, surah, opacity = undefined }: Props) {
   const { tintColor, textColor } = useColors();
   const { surahData } = useQuranMetadata();
   const [surahName, setSurahName] = useState<string>('');

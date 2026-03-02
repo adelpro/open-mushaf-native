@@ -8,11 +8,11 @@ import { useColors } from '@/hooks/useColors';
 import { mushafRiwaya } from '@/jotai/atoms';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
 
-import SegmentedControl from './SegmentControl';
+import { SegmentedControl } from './SegmentControl';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-export default function SelectRiwaya() {
+export function SelectRiwaya() {
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const { primaryColor } = useColors();
 

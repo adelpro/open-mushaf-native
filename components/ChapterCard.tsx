@@ -14,7 +14,7 @@ type Props = {
   chapter: Chapter;
 };
 
-export default function ChapterCard({ chapter }: Props) {
+export function ChapterCard({ chapter }: Props) {
   const router = useRouter();
   const { backgroundColor, textColor, secondaryColor } = useColors();
 

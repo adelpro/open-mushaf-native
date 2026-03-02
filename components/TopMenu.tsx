@@ -29,7 +29,7 @@ import {
 } from '@/utils/quranMetadataUtils';
 
 const ICON_SIZE = 32;
-export default function TopMenu() {
+export function TopMenu() {
   const { tintColor, backgroundColor } = useColors();
   const { surahData, thumnData } = useQuranMetadata();
   const [progressValue, setProgressValue] = useState<number>(0);

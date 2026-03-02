@@ -18,7 +18,7 @@ import { ThemedButton } from './ThemedButton';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-export default function ReadingPositionBanner() {
+export function ReadingPositionBanner() {
   const [isCollapsed, setIsCollapsed] = useAtom(readingBannerCollapsedState);
   const setYesterdayPageValue = useSetAtom(yesterdayPage);
 

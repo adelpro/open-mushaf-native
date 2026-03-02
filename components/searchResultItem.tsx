@@ -24,7 +24,7 @@ type SearchResultItemProps = {
   onSelectAya: (aya: { aya: number; surah: number }) => void;
 };
 
-export default function SearchResultItem({
+export function SearchResultItem({
   item,
   query,
   advancedOptions,

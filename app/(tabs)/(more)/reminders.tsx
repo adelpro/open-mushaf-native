@@ -16,11 +16,13 @@ import { Stack } from 'expo-router';
 import { useAtom } from 'jotai';
 import Toggle from 'react-native-toggle-input';
 
-import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedTextInput } from '@/components/ThemedInput';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import TimePicker from '@/components/TimePicker';
+import {
+  ThemedButton,
+  ThemedText,
+  ThemedTextInput,
+  ThemedView,
+  TimePicker,
+} from '@/components';
 import { useColors } from '@/hooks/useColors';
 import { remindersAtom } from '@/jotai/atoms';
 import { Reminder, ReminderPreset } from '@/types/reminder';

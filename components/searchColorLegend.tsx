@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { useColors } from '@/hooks/useColors';
 
-export default function SearchColorLegend() {
+export function SearchColorLegend() {
   const { directColor, relatedColor, fuzzyColor, textColor } = useColors();
 
   const items = [

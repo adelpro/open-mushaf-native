@@ -4,11 +4,11 @@ import { ActivityIndicator, StyleSheet } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 
-import ChapterCard from './ChapterCard';
+import { ChapterCard } from './ChapterCard';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-export default function ChapterList() {
+export function ChapterList() {
   const { tintColor } = useColors();
   const { chapterData, isLoading, error } = useQuranMetadata();
 

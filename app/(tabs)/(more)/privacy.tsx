@@ -6,11 +6,13 @@ import {
   useColorScheme,
 } from 'react-native';
 
-import PrivacyContentArabic from '@/components/PrivacyContentArabic';
-import PrivacyContentEnglish from '@/components/PrivacyContentEnglish';
-import SEO from '@/components/seo';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import {
+  PrivacyContentArabic,
+  PrivacyContentEnglish,
+  Seo,
+  ThemedText,
+  ThemedView,
+} from '@/components';
 import { Colors } from '@/constants/Colors';
 import { isRTL } from '@/utils';
 
@@ -22,7 +24,7 @@ export default function PrivacyScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <SEO
+      <Seo
         title="المصحف المفتوح - سياسة الخصوصية"
         description="سياسة الخصوصية للمصحف المفتوح - معلومات حول كيفية جمع واستخدام وحماية بياناتك"
       />

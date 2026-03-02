@@ -20,7 +20,7 @@ interface SurahAyaNavigatorProps {
   iconColor: string;
   cardColor: string;
 }
-export default function SurahAyaNavigator({
+export function SurahAyaNavigator({
   currentSurah,
   currentAya,
   ayaCount,

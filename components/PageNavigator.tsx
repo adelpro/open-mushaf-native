@@ -23,7 +23,7 @@ interface PageNavigatorProps {
   iconColor: string;
 }
 
-export default function PageNavigator({
+export function PageNavigator({
   currentPage,
   totalPages,
   onPageChange,

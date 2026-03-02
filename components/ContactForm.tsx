@@ -7,13 +7,13 @@ import { CONTACT_FORM_RATE_LIMIT_CONFIG } from '@/constants/ratelimitConfig';
 import { useColors } from '@/hooks/useColors';
 import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
 
-import { useNotification } from './NotificationProvider';
 import { ThemedButton } from './ThemedButton';
-import { ThemedTextInput } from './ThemedInput';
 import { ThemedText } from './ThemedText';
+import { ThemedTextInput } from './ThemedTextInput';
 import { ThemedView } from './ThemedView';
+import { useNotification } from '../Context/NotificationProvider';
 
-export default function ContactForm() {
+export function ContactForm() {
   const { textColor, secondaryColor } = useColors();
   const { notify } = useNotification();
   const [isLoading, setIsLoading] = useState(false);
