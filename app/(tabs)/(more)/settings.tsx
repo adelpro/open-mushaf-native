@@ -30,7 +30,7 @@ export default function SettingsScreen() {
   const [showTrackerNotificationValue, setShowTrackerNotificationValue] =
     useAtom(showTrackerNotification);
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
-  const [HizbNotificationValue, setHizbNotificationValue] =
+  const [hizbNotificationValue, setHizbNotificationValue] =
     useAtom(hizbNotification);
   const { textColor, primaryColor, cardColor, iconColor } = useColors();
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
@@ -205,7 +205,7 @@ export default function SettingsScreen() {
         <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
           <SegmentedControlWithDisabled
             options={notificationOptions}
-            initialSelectedIndex={HizbNotificationValue}
+            initialSelectedIndex={hizbNotificationValue}
             activeColor={primaryColor}
             textColor={primaryColor}
             disabledTextColor={primaryColor}
