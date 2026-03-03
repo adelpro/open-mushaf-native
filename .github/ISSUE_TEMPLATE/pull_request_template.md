@@ -26,4 +26,3 @@ Please include a summary of the changes and the related issue. Also include rele
 ## Screenshots (if applicable)
 
 ## Additional Context
-
