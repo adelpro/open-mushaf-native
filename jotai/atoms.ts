@@ -51,6 +51,10 @@ export const showTrackerNotification = createAtomWithStorage<boolean>(
   'ShowTrackerNotification',
   false,
 );
+export const panGestureSensitivity = createAtomWithStorage<number>(
+  'PanGestureSensitivity',
+  1.0,
+);
 
 // Type declarations
 type DailyTrackerProgress = {
@@ -94,7 +98,7 @@ observe((get, set) => {
       };
 
       const currentIndex = history.findIndex(
-        (record) => record.date === stored.date,
+        (record: DailyReadingRecord) => record.date === stored.date,
       );
 
       const updatedHistory =

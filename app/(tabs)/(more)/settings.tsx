@@ -33,6 +33,7 @@ import {
   hizbNotification,
   mushafContrast,
   mushafRiwaya,
+  panGestureSensitivity,
   readingTheme,
   showTrackerNotification,
 } from '@/jotai/atoms';
@@ -48,6 +49,9 @@ export default function SettingsScreen() {
     useAtom(hizbNotification);
   const { textColor, primaryColor, cardColor, iconColor } = useColors();
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
+  const [panGestureSensitivityValue, setPanGestureSensitivityValue] = useAtom(
+    panGestureSensitivity,
+  );
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const [readingThemeValue, setReadingThemeValue] = useAtom(readingTheme);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
@@ -185,6 +189,44 @@ export default function SettingsScreen() {
           <AwesomeSlider
             value={mushafContrastValue}
             onValueChange={setMushafContrastValue}
+            primaryColor={primaryColor}
+          />
+        </ThemedView>
+      </ThemedView>
+
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
+      >
+        <ThemedView
+          style={[
+            styles.rowContainer,
+            styles.iconTextContainer,
+            { backgroundColor: cardColor },
+          ]}
+        >
+          <Feather
+            name="sliders"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
+            {` حساسية السحب: (${Number(panGestureSensitivityValue).toFixed(1)}x)`}
+          </ThemedText>
+        </ThemedView>
+
+        <ThemedView
+          style={[styles.sliderContainer, { backgroundColor: cardColor }]}
+        >
+          <AwesomeSlider
+            value={panGestureSensitivityValue}
+            minimumValue={0.5}
+            maximumValue={2.0}
+            onValueChange={setPanGestureSensitivityValue}
             primaryColor={primaryColor}
           />
         </ThemedView>
