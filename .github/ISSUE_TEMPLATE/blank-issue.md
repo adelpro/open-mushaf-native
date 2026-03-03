@@ -31,4 +31,3 @@ Please include a summary of the issue and what you're trying to accomplish.
 - App version:
 
 ## Additional Context
-
