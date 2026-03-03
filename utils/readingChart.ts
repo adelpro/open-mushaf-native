@@ -1,3 +1,6 @@
+import { isRTL } from './isRTL';
+import { isWeb } from './isWeb';
+
 const AR_WEEKDAYS = ['أحد', 'إثنين', 'ثلاث', 'أربع', 'خميس', 'جمعة', 'سبت'];
 
 export function formatLabel(dateStr: string, period: number): string {
@@ -24,3 +27,8 @@ export function daysAgo(n: number): string {
   d.setDate(d.getDate() - n);
   return d.toDateString();
 }
+
+export const getPosStyle = (x: number) => {
+  if (isWeb) return { left: x };
+  return isRTL ? { right: x } : { left: x };
+};

@@ -65,8 +65,11 @@ export function TutorialGuide() {
         const threshold = baseThreshold / panGestureSensitivityValue;
 
         if (Math.abs(e.translationX) > threshold) {
-          const d = e.translationX > 0 ? 1 : -1;
-          runOnJS(handleNext)();
+          if (e.translationX < 0) {
+            runOnJS(handlePrev)();
+          } else {
+            runOnJS(handleNext)();
+          }
         }
       });
   }, [isLandscape, panGestureSensitivityValue]);

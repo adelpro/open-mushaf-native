@@ -18,7 +18,7 @@ import {
   GRID_RATIOS,
 } from '@/constants/readingChart';
 import { ChartMetric, useColors, useReadingChartData } from '@/hooks';
-import { formatLabel, shouldShowLabel } from '@/utils';
+import { formatLabel, getPosStyle, shouldShowLabel } from '@/utils';
 
 import { SegmentedControl } from '../SegmentControl';
 import { ThemedText } from '../ThemedText';
@@ -230,7 +230,7 @@ export function ReadingChart() {
                     key={i}
                     style={{
                       position: 'absolute',
-                      right: x - BAR_GAP / 2,
+                      ...getPosStyle(x - BAR_GAP / 2),
                       top: 0,
                       width: BAR_WIDTH + BAR_GAP,
                       height: chartHeight,
@@ -276,7 +276,7 @@ export function ReadingChart() {
                     style={[
                       styles.xLabel,
                       {
-                        right: x,
+                        ...getPosStyle(x),
                         width: BAR_WIDTH,
                         color: textColor,
                         fontSize: period <= 7 ? 10 : 9,
