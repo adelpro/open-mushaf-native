@@ -19,6 +19,7 @@ import { useAtomValue, useSetAtom } from 'jotai/react';
 import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
+import { PAN_GESTURE_CONFIG } from '@/constants';
 import { READING_THEMES } from '@/constants/readingThemes';
 import {
   useColors,
@@ -35,6 +36,7 @@ import {
   flipSound,
   hizbNotification,
   mushafContrast,
+  panGestureSensitivity,
   readingTheme,
   showTrackerNotification,
   yesterdayPage,
@@ -56,6 +58,7 @@ export function MushafPage() {
   const isFlipSoundEnabled = useAtomValue(flipSound);
   const mushafContrastValue = useAtomValue(mushafContrast);
   const readingThemeValue = useAtomValue(readingTheme);
+  const panGestureSensitivityValue = useAtomValue(panGestureSensitivity);
   const themeConfig =
     READING_THEMES[readingThemeValue] || READING_THEMES.default;
 
@@ -203,8 +206,10 @@ export function MushafPage() {
     ],
   );
 
-  const { translateX, panGestureHandler } =
-    usePanGestureHandler(handlePageChange);
+  const { translateX, panGestureHandler } = usePanGestureHandler(
+    handlePageChange,
+    panGestureSensitivityValue,
+  );
 
   React.useEffect(() => {
     if (Platform.OS !== 'web') return;
@@ -222,7 +227,7 @@ export function MushafPage() {
   }, [handlePageChange]);
 
   const animatedStyle = useAnimatedStyle(() => {
-    const maxTranslateX = 20;
+    const maxTranslateX = PAN_GESTURE_CONFIG.MAX_TRANSLATION_X;
     const clampedTranslateX = Math.max(
       -maxTranslateX,
       Math.min(translateX.value, maxTranslateX),
