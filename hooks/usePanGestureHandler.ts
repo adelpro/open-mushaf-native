@@ -7,16 +7,20 @@ export const usePanGestureHandler = (
   currentPage: number,
   onPageChange: (page: number) => void,
   maxPages: number,
+  sensitivity: number = 1,
 ) => {
   const translateX = useSharedValue(0);
   const { isLandscape } = useOrientation();
 
+  const safeSensitivity =
+    isNaN(sensitivity) || sensitivity <= 0 ? 1 : sensitivity;
   const panGestureHandler = Gesture.Pan()
     .onUpdate((e) => {
-      translateX.value = Math.max(-100, Math.min(100, e.translationX));
+      const clamp = 100 / safeSensitivity;
+      translateX.value = Math.max(-clamp, Math.min(clamp, e.translationX));
     })
     .onEnd((e) => {
-      const threshold = isLandscape ? 150 : 100;
+      const threshold = (isLandscape ? 150 : 100) / safeSensitivity;
       const targetPage =
         e.translationX > threshold
           ? Math.min(currentPage + 1, maxPages) // Swipe Right

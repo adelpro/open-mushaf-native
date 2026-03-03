@@ -7,16 +7,20 @@ type Props = {
   value: number;
   onValueChange: (value: number) => void;
   primaryColor: string;
+  minValue?: number;
+  maxValue?: number;
 };
 
 export default function AwesomeSlider({
   value,
   onValueChange,
   primaryColor,
+  minValue = 0.3,
+  maxValue = 1,
 }: Props) {
   const progress = useSharedValue(value);
-  const min = useSharedValue(0.3);
-  const max = useSharedValue(1);
+  const min = useSharedValue(minValue);
+  const max = useSharedValue(maxValue);
 
   useEffect(() => {
     progress.value = value;

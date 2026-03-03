@@ -33,6 +33,7 @@ import {
   hizbNotification,
   mushafContrast,
   showTrackerNotification,
+  swipeSensitivity,
   yesterdayPage,
 } from '@/jotai/atoms';
 import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
@@ -50,6 +51,7 @@ export default function MushafPage() {
   const player = useAudioPlayer(audioSource);
   const isFlipSoundEnabled = useAtomValue(flipSound);
   const mushafContrastValue = useAtomValue(mushafContrast);
+  const swipeSensitivityValue = useAtomValue(swipeSensitivity);
 
   const hizbNotificationValue = useAtomValue(hizbNotification);
   const [showHizbNotification, setShowHizbNotification] = useState(false);
@@ -180,6 +182,7 @@ export default function MushafPage() {
     currentPage,
     handlePageChange,
     defaultNumberOfPages,
+    swipeSensitivityValue,
   );
 
   const animatedStyle = useAnimatedStyle(() => {

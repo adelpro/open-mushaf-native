@@ -123,6 +123,11 @@ observe((get, set) => {
   }
 });
 
+export const swipeSensitivity = createAtomWithStorage<number>(
+  'SwipeSensitivity',
+  1.0,
+);
+
 // ReadingPositionBanner
 export const readingBannerCollapsedState = createAtomWithStorage<boolean>(
   'ReadingBannerCollapsedState',

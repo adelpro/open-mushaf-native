@@ -21,6 +21,7 @@ import {
   mushafContrast,
   mushafRiwaya,
   showTrackerNotification,
+  swipeSensitivity,
 } from '@/jotai/atoms';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
 import { clearStorageAndReload } from '@/utils/storage/clearStorage';
@@ -34,6 +35,8 @@ export default function SettingsScreen() {
     useAtom(hizbNotification);
   const { textColor, primaryColor, cardColor, iconColor } = useColors();
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
+  const [swipeSensitivityValue, setSwipeSensitivityValue] =
+    useAtom(swipeSensitivity);
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
@@ -171,6 +174,44 @@ export default function SettingsScreen() {
             value={mushafContrastValue}
             onValueChange={setMushafContrastValue}
             primaryColor={primaryColor}
+          />
+        </ThemedView>
+      </ThemedView>
+
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
+      >
+        <ThemedView
+          style={[
+            styles.rowContainer,
+            styles.iconTextContainer,
+            { backgroundColor: cardColor },
+          ]}
+        >
+          <Feather
+            name="navigation"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
+            {` حساسية التمرير: (${(swipeSensitivityValue || 1).toFixed(1)}x)`}
+          </ThemedText>
+        </ThemedView>
+
+        <ThemedView
+          style={[styles.sliderContainer, { backgroundColor: cardColor }]}
+        >
+          <AwesomeSlider
+            value={swipeSensitivityValue}
+            onValueChange={setSwipeSensitivityValue}
+            primaryColor={primaryColor}
+            minValue={0.5}
+            maxValue={2}
           />
         </ThemedView>
       </ThemedView>
