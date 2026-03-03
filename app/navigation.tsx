@@ -9,6 +9,7 @@ import SEO from '@/components/seo';
 import SurahAyaNavigator from '@/components/SurahAyaNavigator';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { ERROR_PREFIX } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
@@ -108,7 +109,7 @@ export default function Navigation() {
     return (
       <ThemedView style={styles.container}>
         <ThemedView style={styles.errorContainer}>
-          <ThemedText type="defaultSemiBold">{`حدث خطأ: ${error}`}</ThemedText>
+          <ThemedText type="defaultSemiBold">{`${ERROR_PREFIX}: ${error}`}</ThemedText>
         </ThemedView>
       </ThemedView>
     );

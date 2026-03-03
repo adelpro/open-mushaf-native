@@ -3,6 +3,7 @@ import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 
+import { ERROR_PREFIX, LOADING_TEXT } from '@/constants';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 import { Surah } from '@/types';
 import { isWeb } from '@/utils';
@@ -53,7 +54,7 @@ export default function SurahAyaNavigator({
       <ThemedView
         style={[styles.container, { backgroundColor: 'transparent' }]}
       >
-        <ThemedText>جاري التحميل...</ThemedText>
+        <ThemedText>{LOADING_TEXT}</ThemedText>
       </ThemedView>
     );
   }
@@ -63,7 +64,7 @@ export default function SurahAyaNavigator({
       <ThemedView
         style={[styles.container, { backgroundColor: 'transparent' }]}
       >
-        <ThemedText>{`حدث خطأ: ${error}`}</ThemedText>
+        <ThemedText>{`${ERROR_PREFIX}: ${error}`}</ThemedText>
       </ThemedView>
     );
   }

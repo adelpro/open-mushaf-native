@@ -3,6 +3,13 @@ import { ActivityIndicator, StyleSheet, Text } from 'react-native';
 
 import { FontAwesome } from '@expo/vector-icons';
 
+import {
+  ERROR_EMAIL_VALIDATION,
+  ERROR_FORM_SUBMIT,
+  ERROR_MESSAGE_VALIDATION,
+  ERROR_NAME_VALIDATION,
+  SUCCESS_FORM_SUBMIT,
+} from '@/constants';
 import { useColors } from '@/hooks/useColors';
 
 import { useNotification } from './NotificationProvider';
@@ -39,21 +46,17 @@ export default function ContactForm() {
 
     // Check all fields and show notifications for each error
     if (name.trim().length < 3 || name.trim().length > 50) {
-      notify('الإسم يجب أن يكون بين 3 و 50 حرفًا.', 'name_validation', 'error');
+      notify(ERROR_NAME_VALIDATION, 'name_validation', 'error');
       isValid = false;
     }
 
     if (isValidEmail(email) === false) {
-      notify('البريد الألكتروني غير صحيح.', 'email_validation', 'error');
+      notify(ERROR_EMAIL_VALIDATION, 'email_validation', 'error');
       isValid = false;
     }
 
     if (message.trim().length < 10 || message.trim().length > 500) {
-      notify(
-        'الرسالة يجب أن تكون بين 10 و 500 حرفًا.',
-        'message_validation',
-        'error',
-      );
+      notify(ERROR_MESSAGE_VALIDATION, 'message_validation', 'error');
       isValid = false;
     }
 
@@ -90,13 +93,9 @@ export default function ContactForm() {
       await sendToTelegram(messageText);
       setFormData({ name: '', email: '', message: '' });
 
-      notify('تم الإرسال بنجاح!', 'form_success', 'success');
+      notify(SUCCESS_FORM_SUBMIT, 'form_success', 'success');
     } catch {
-      notify(
-        'فشل في إرسال الرسالة! يرجى المحاولة مرة أخرى لاحقًا.',
-        'form_error',
-        'error',
-      );
+      notify(ERROR_FORM_SUBMIT, 'form_error', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -105,19 +104,19 @@ export default function ContactForm() {
   return (
     <ThemedView style={styles.container}>
       <ThemedText id="name" style={styles.label}>
-        الإسم
+        الاسم
       </ThemedText>
       <ThemedTextInput
         style={[styles.input]}
         value={formData.name}
         onChangeText={(text) => handleChange('name', text)}
-        placeholder="الإسم"
+        placeholder="الاسم"
         aria-labelledby="name"
         accessibilityLabel="اسم المستخدم - يرجى إدخال اسمك"
       />
 
       <ThemedText id="email" style={styles.label}>
-        البريد الالكتروني
+        البريد الإلكتروني
       </ThemedText>
       <ThemedTextInput
         style={[styles.input]}

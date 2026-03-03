@@ -270,6 +270,7 @@ if ('serviceWorker' in navigator) {
         .catch(error => {
           console.error('Service Worker registration failed:', error);
           if (notificationElement && statusMessageElement) {
+            // Note: Cannot use @/constants here — this runs as inline browser JS before React loads
             statusMessageElement.textContent = 'حدث خطأ أثناء تحميل التطبيق.';
             spinnerElement.style.display = 'none';
             setTimeout(() => {

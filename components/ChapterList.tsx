@@ -1,6 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 
+import { ERROR_PREFIX } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 
@@ -23,7 +24,7 @@ export default function ChapterList() {
   if (error) {
     return (
       <ThemedView style={styles.errorContainer}>
-        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${error}`}</ThemedText>
+        <ThemedText type="defaultSemiBold">{`${ERROR_PREFIX}: ${error}`}</ThemedText>
       </ThemedView>
     );
   }

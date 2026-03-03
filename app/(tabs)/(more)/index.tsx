@@ -23,6 +23,7 @@ import WelcomeSVG from '@/assets/svgs/welcome.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { ERROR_GENERIC, MODAL_TITLE_ERROR } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 
 export default function MoreScreen() {
@@ -49,7 +50,7 @@ export default function MoreScreen() {
       });
       // console.log('Share successful or dismissed'); // You can uncomment this if needed
     } catch (error: any) {
-      setErrorMessage(error.message || 'An unexpected error occurred.');
+      setErrorMessage(error.message || ERROR_GENERIC);
       setErrorModalVisible(true);
     }
   };
@@ -154,7 +155,7 @@ export default function MoreScreen() {
               style={[styles.modalHeader, { borderBottomColor: textColor }]}
             >
               <ThemedText style={[styles.modalTitle, { color: textColor }]}>
-                خطأ
+                {MODAL_TITLE_ERROR}
               </ThemedText>
               <TouchableOpacity
                 style={styles.closeButton}

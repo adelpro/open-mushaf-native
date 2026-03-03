@@ -3,7 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Asset } from 'expo-asset';
 import { useAtomValue } from 'jotai/react';
 
-import { imagesMapHafs, imagesMapWarsh } from '@/constants';
+import {
+  ERROR_GENERIC,
+  ERROR_PAGE_NOT_FOUND,
+  imagesMapHafs,
+  imagesMapWarsh,
+} from '@/constants';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import { mushafRiwaya } from '@/jotai/atoms';
 
@@ -41,7 +46,7 @@ export default function useImagesArray() {
         }
 
         const image = imagesMap[page];
-        if (!image) throw new Error(`الصفحة ${page} غير موجودة`);
+        if (!image) throw new Error(ERROR_PAGE_NOT_FOUND(page));
 
         const assetToLoad = Asset.fromModule(image);
         if (!assetToLoad.downloaded) {
@@ -53,11 +58,7 @@ export default function useImagesArray() {
         }
       } catch (error) {
         if (isMounted.current) {
-          setError(
-            error instanceof Error
-              ? error.message
-              : `الصفحة ${page} غير موجودة`,
-          );
+          setError(error instanceof Error ? error.message : ERROR_GENERIC);
           setAsset(null);
         }
       } finally {

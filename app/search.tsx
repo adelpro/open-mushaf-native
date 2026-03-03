@@ -18,6 +18,7 @@ import TafseerPopup from '@/components/TafseerPopup';
 import { ThemedTextInput } from '@/components/ThemedInput';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { ERROR_PREFIX } from '@/constants';
 import { useColors } from '@/hooks/useColors';
 import useDebounce from '@/hooks/useDebounce';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
@@ -103,7 +104,7 @@ export default function Search() {
   if (error)
     return (
       <ThemedView style={styles.container}>
-        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${error}`}</ThemedText>
+        <ThemedText type="defaultSemiBold">{`${ERROR_PREFIX}: ${error}`}</ThemedText>
       </ThemedView>
     );
 
