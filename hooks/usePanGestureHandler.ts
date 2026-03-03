@@ -3,30 +3,29 @@ import { runOnJS, useSharedValue, withSpring } from 'react-native-reanimated';
 
 import { useOrientation } from './useOrientation';
 
-export const usePanGestureHandler = (
-  currentPage: number,
-  onPageChange: (page: number) => void,
-  maxPages: number,
-) => {
+export const usePanGestureHandler = (onPageChange: (delta: number) => void) => {
   const translateX = useSharedValue(0);
   const { isLandscape } = useOrientation();
 
   const panGestureHandler = Gesture.Pan()
+    .activeOffsetX([-20, 20])
+    .failOffsetY([-30, 30])
     .onUpdate((e) => {
       translateX.value = Math.max(-100, Math.min(100, e.translationX));
     })
     .onEnd((e) => {
       const threshold = isLandscape ? 150 : 100;
-      const targetPage =
-        e.translationX > threshold
-          ? Math.min(currentPage + 1, maxPages) // Swipe Right
-          : e.translationX < -threshold
-            ? Math.max(currentPage - 1, 1) // Swipe Left
-            : currentPage; // No page change
 
-      // Only change the page if it differs from the current one
-      if (targetPage !== currentPage) {
-        runOnJS(onPageChange)(targetPage);
+      let delta = 0;
+      if (e.translationX > threshold) {
+        delta = 1; // Swipe Right -> Next
+      } else if (e.translationX < -threshold) {
+        delta = -1; // Swipe Left -> Prev
+      }
+
+      // Only change if a swipe was detected
+      if (delta !== 0) {
+        runOnJS(onPageChange)(delta);
       }
 
       translateX.value = withSpring(0, { damping: 20, stiffness: 90 }); // Smooth return

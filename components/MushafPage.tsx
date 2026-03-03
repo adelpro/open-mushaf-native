@@ -169,15 +169,17 @@ export function MushafPage() {
   };
 
   const handlePageChange = useCallback(
-    (page: number) => {
+    (delta: number) => {
+      const page = currentPage + delta;
+
+      // Bounds check
+      if (page < 1 || page > defaultNumberOfPages) return;
       if (page === currentPage) return;
+
       setCurrentPage(page);
-      router.replace({
-        pathname: '/',
-        params: {
-          page: page.toString(),
-          ...(temporary ? { temporary: temporary.toString() } : {}),
-        },
+      router.setParams({
+        page: page.toString(),
+        ...(temporary ? { temporary: temporary.toString() } : {}),
       });
 
       if (isFlipSoundEnabled) {
@@ -191,6 +193,7 @@ export function MushafPage() {
     },
     [
       currentPage,
+      defaultNumberOfPages,
       router,
       temporary,
       isFlipSoundEnabled,
@@ -200,26 +203,23 @@ export function MushafPage() {
     ],
   );
 
-  const { translateX, panGestureHandler } = usePanGestureHandler(
-    currentPage,
-    handlePageChange,
-    defaultNumberOfPages,
-  );
+  const { translateX, panGestureHandler } =
+    usePanGestureHandler(handlePageChange);
 
   React.useEffect(() => {
     if (Platform.OS !== 'web') return;
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') {
-        handlePageChange(currentPage + 1);
+        handlePageChange(1);
       } else if (e.key === 'ArrowRight') {
-        handlePageChange(currentPage - 1);
+        handlePageChange(-1);
       }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => {
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, [currentPage, handlePageChange]);
+  }, [handlePageChange]);
 
   const animatedStyle = useAnimatedStyle(() => {
     const maxTranslateX = 20;

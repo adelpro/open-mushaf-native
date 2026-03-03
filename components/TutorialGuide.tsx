@@ -44,15 +44,26 @@ export function TutorialGuide() {
     }
   };
 
-  const gestureHandler = Gesture.Pan().onEnd((e) => {
-    const threshold = isLandscape ? 150 : 100;
+  const handlePrev = () => {
+    setIndex((prev) => (prev > 0 ? prev - 1 : prev));
+  };
 
-    if (e.translationX < -threshold && index > 0) {
-      runOnJS(setIndex)(index - 1);
-    } else if (e.translationX > threshold && index < SLIDES.length - 1) {
-      runOnJS(setIndex)(index + 1);
-    }
-  });
+  const handleNext = () => {
+    setIndex((prev) => (prev < SLIDES.length - 1 ? prev + 1 : prev));
+  };
+
+  const gestureHandler = Gesture.Pan()
+    .activeOffsetX([-20, 20])
+    .failOffsetY([-30, 30])
+    .onEnd((e) => {
+      const threshold = isLandscape ? 150 : 100;
+
+      if (e.translationX < -threshold) {
+        runOnJS(handlePrev)();
+      } else if (e.translationX > threshold) {
+        runOnJS(handleNext)();
+      }
+    });
 
   return (
     <GestureDetector gesture={gestureHandler}>
