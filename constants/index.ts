@@ -13,3 +13,5 @@ export * from './riwayaOptions';
 export * from './readingThemes';
 
 export * from './readingChart';
+
+export * from './panGesture';

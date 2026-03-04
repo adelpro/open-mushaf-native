@@ -116,6 +116,8 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@eslint/plugin-kit": "^0.6.0",
+    "@expo/config-plugins": "^55.0.6",
+    "@expo/image-utils": "^0.8.12",
     "@types/jest": "^29.5.12",
     "@types/react": "~19.1.17",
     "@types/react-native-htmlview": "^0.16.5",
@@ -141,6 +143,7 @@
     "react-native-svg-transformer": "^1.5.0",
     "react-test-renderer": "18.2.0",
     "rimraf": "^6.0.0",
+    "temp-dir": "^3.0.0",
     "typescript": "~5.9.3",
     "vitest": "^4.0.18"
   },

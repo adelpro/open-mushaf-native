@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Image,
   Pressable,
@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import { usePathname, useRouter } from 'expo-router';
-import { useSetAtom } from 'jotai/react';
+import { useAtomValue, useSetAtom } from 'jotai/react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   FadeInLeft,
@@ -24,9 +24,9 @@ import NextSVG from '@/assets/svgs/next.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { SLIDES } from '@/constants';
+import { PAN_GESTURE_CONFIG, SLIDES } from '@/constants';
 import { useColors, useOrientation } from '@/hooks';
-import { finishedTutorial } from '@/jotai/atoms';
+import { finishedTutorial, panGestureSensitivity } from '@/jotai/atoms';
 import { isRTL } from '@/utils';
 
 export function TutorialGuide() {
@@ -35,6 +35,7 @@ export function TutorialGuide() {
   const { primaryColor, primaryLightColor } = useColors();
   const setFinishedTutorial = useSetAtom(finishedTutorial);
   const { isLandscape } = useOrientation();
+  const panGestureSensitivityValue = useAtomValue(panGestureSensitivity);
   const [index, setIndex] = useState(0);
 
   const finishTutorial = () => {
@@ -44,15 +45,34 @@ export function TutorialGuide() {
     }
   };
 
-  const gestureHandler = Gesture.Pan().onEnd((e) => {
-    const threshold = isLandscape ? 150 : 100;
+  const handlePrev = () => {
+    setIndex((prev) => (prev > 0 ? prev - 1 : prev));
+  };
 
-    if (e.translationX < -threshold && index > 0) {
-      runOnJS(setIndex)(index - 1);
-    } else if (e.translationX > threshold && index < SLIDES.length - 1) {
-      runOnJS(setIndex)(index + 1);
-    }
-  });
+  const handleNext = () => {
+    setIndex((prev) => (prev < SLIDES.length - 1 ? prev + 1 : prev));
+  };
+
+  const gestureHandler = useMemo(() => {
+    return Gesture.Pan()
+      .activeOffsetX(PAN_GESTURE_CONFIG.ACTIVATION_OFFSET_X)
+      .failOffsetY(PAN_GESTURE_CONFIG.FAIL_OFFSET_Y)
+      .onEnd((e) => {
+        const baseThreshold = isLandscape
+          ? PAN_GESTURE_CONFIG.LANDSCAPE_THRESHOLD
+          : PAN_GESTURE_CONFIG.PORTRAIT_THRESHOLD;
+
+        const threshold = baseThreshold / panGestureSensitivityValue;
+
+        if (Math.abs(e.translationX) > threshold) {
+          if (e.translationX < 0) {
+            runOnJS(handlePrev)();
+          } else {
+            runOnJS(handleNext)();
+          }
+        }
+      });
+  }, [isLandscape, panGestureSensitivityValue]);
 
   return (
     <GestureDetector gesture={gestureHandler}>
