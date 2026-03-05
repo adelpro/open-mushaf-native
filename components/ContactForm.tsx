@@ -3,13 +3,13 @@ import { ActivityIndicator, StyleSheet, Text } from 'react-native';
 
 import { FontAwesome } from '@expo/vector-icons';
 
-import { CONTACT_FORM_RATE_LIMIT_CONFIG } from '@/constants/ratelimitConfig';
 import {
   ERROR_EMAIL_VALIDATION,
   ERROR_FORM_SUBMIT,
   ERROR_MESSAGE_VALIDATION,
   ERROR_NAME_VALIDATION,
 } from '@/constants/errorMessages';
+import { CONTACT_FORM_RATE_LIMIT_CONFIG } from '@/constants/ratelimitConfig';
 import { SUCCESS_FORM_SUBMIT } from '@/constants/uiMessages';
 import { useColors } from '@/hooks';
 import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
