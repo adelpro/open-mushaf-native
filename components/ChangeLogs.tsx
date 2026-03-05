@@ -47,11 +47,14 @@ export function ChangeLogs({ visible, onClose }: ChangeLogsProps) {
           onStartShouldSetResponder={() => true}
         >
           <ThemedText style={styles.title}>ما الجديد</ThemedText>
-          {changeLogs.map((log, index) => (
-            <ThemedText key={index} style={styles.changeLogItem}>
-              {log}
-            </ThemedText>
-          ))}
+          <ThemedView style={styles.list}>
+            {changeLogs.map((log, index) => (
+              <ThemedText
+                key={index}
+                style={styles.listItemText}
+              >{`${index + 1}. ${log}`}</ThemedText>
+            ))}
+          </ThemedView>
           <ThemedButton variant="primary" onPress={onClose}>
             إغلاق
           </ThemedButton>
@@ -74,18 +77,24 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     maxWidth: 400,
     elevation: 5,
-    alignItems: 'center',
-    writingDirection: 'rtl',
+    direction: 'rtl',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'right',
+    writingDirection: 'rtl',
   },
-  changeLogItem: {
+  list: {
+    marginBottom: 12,
+    width: '100%',
+  },
+  listItemText: {
     fontSize: 16,
-    marginBottom: 20,
+    lineHeight: 24,
+    writingDirection: 'rtl',
     textAlign: 'right',
+    marginBottom: 8,
   },
 });
