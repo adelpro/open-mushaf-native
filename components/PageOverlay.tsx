@@ -16,7 +16,10 @@ type PageOverlayProps = {
 };
 
 export function PageOverlay({ index, dimensions }: PageOverlayProps) {
-  const [selectedAya, setSelectedAya] = useState<AyaReference>({ aya: 0, surah: 0 });
+  const [selectedAya, setSelectedAya] = useState<AyaReference>({
+    aya: 0,
+    surah: 0,
+  });
   const [show, setShow] = useState<boolean>(false);
   const setShowTopMenu = useSetAtom(topMenuState);
 
