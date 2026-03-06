@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, type ViewStyle } from 'react-native';
 
 import Animated, {
+  type AnimatedStyle,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -11,6 +12,29 @@ import Animated, {
 
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks';
+
+type SkeletonBarProps = {
+  width: number | `${number}%`;
+  height: number;
+  color: string;
+  animatedStyle: AnimatedStyle<ViewStyle>;
+};
+
+function SkeletonBar({
+  width,
+  height,
+  color,
+  animatedStyle,
+}: SkeletonBarProps) {
+  return (
+    <Animated.View
+      style={[
+        { width, height, borderRadius: 4, backgroundColor: color },
+        animatedStyle,
+      ]}
+    />
+  );
+}
 
 export function SearchSkeleton() {
   const { tintColor } = useColors();
@@ -27,49 +51,32 @@ export function SearchSkeleton() {
     );
   }, [opacity]);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-  }));
+  const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
 
   return (
     <ThemedView
       style={[styles.item, { borderBottomColor: 'rgba(0,0,0,0.05)' }]}
     >
       <View style={styles.header}>
-        <Animated.View
-          style={[
-            {
-              width: 120,
-              height: 18,
-              borderRadius: 4,
-              backgroundColor: tintColor,
-            },
-            animatedStyle,
-          ]}
+        <SkeletonBar
+          width={120}
+          height={18}
+          color={tintColor}
+          animatedStyle={animatedStyle}
         />
       </View>
       <View style={{ width: '100%', paddingVertical: 12, gap: 10 }}>
-        <Animated.View
-          style={[
-            {
-              width: '100%',
-              height: 22,
-              borderRadius: 4,
-              backgroundColor: tintColor,
-            },
-            animatedStyle,
-          ]}
+        <SkeletonBar
+          width="100%"
+          height={22}
+          color={tintColor}
+          animatedStyle={animatedStyle}
         />
-        <Animated.View
-          style={[
-            {
-              width: '70%',
-              height: 22,
-              borderRadius: 4,
-              backgroundColor: tintColor,
-            },
-            animatedStyle,
-          ]}
+        <SkeletonBar
+          width="70%"
+          height={22}
+          color={tintColor}
+          animatedStyle={animatedStyle}
         />
       </View>
     </ThemedView>
