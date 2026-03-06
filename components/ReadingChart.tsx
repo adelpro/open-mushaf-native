@@ -82,7 +82,7 @@ export default function ReadingChart() {
   const barGap =
     data.length + (data.length - 1) * baseGap > drawableWidth ? 0 : baseGap;
   const barWidth = Math.max(
-    0.5,
+    1,
     (drawableWidth - barGap * (data.length - 1)) / data.length,
   );
 
