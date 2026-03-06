@@ -103,7 +103,10 @@ export default function Search() {
       setIsSearching(true);
       setPage(1);
     }
-    setAdvancedOptions((prev) => ({ ...prev, [option]: !prev[option] }));
+
+    requestAnimationFrame(() => {
+      setAdvancedOptions((prev) => ({ ...prev, [option]: !prev[option] }));
+    });
   };
 
   if (isLoading)
