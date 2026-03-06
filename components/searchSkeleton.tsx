@@ -1,57 +1,14 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, View, type ViewStyle } from 'react-native';
-
-import Animated, {
-  type AnimatedStyle,
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import { ThemedView } from '@/components/ThemedView';
-import { useColors } from '@/hooks';
+import { useColors, useSkeletonAnimation } from '@/hooks';
 
-type SkeletonBarProps = {
-  width: number | `${number}%`;
-  height: number;
-  color: string;
-  animatedStyle: AnimatedStyle<ViewStyle>;
-};
-
-function SkeletonBar({
-  width,
-  height,
-  color,
-  animatedStyle,
-}: SkeletonBarProps) {
-  return (
-    <Animated.View
-      style={[
-        { width, height, borderRadius: 4, backgroundColor: color },
-        animatedStyle,
-      ]}
-    />
-  );
-}
+import { SkeletonBar } from './SearchSkeletonBar';
 
 export function SearchSkeleton() {
   const { tintColor } = useColors();
-  const opacity = useSharedValue(0.4);
-
-  useEffect(() => {
-    opacity.value = withRepeat(
-      withSequence(
-        withTiming(0.8, { duration: 800 }),
-        withTiming(0.4, { duration: 800 }),
-      ),
-      -1,
-      true,
-    );
-  }, [opacity]);
-
-  const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
+  const animatedStyle = useSkeletonAnimation();
 
   return (
     <ThemedView

@@ -1,24 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
-
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 
 import morphologyDataRaw from '@/assets/search/quran-morphology.json';
 import wordMapJSON from '@/assets/search/word-map.json';
 import {
+  SearchAdvancedOptions,
   SearchColorLegend,
+  SearchEmptyState,
+  SearchInput,
   SearchResultItem,
   SearchSkeleton,
   Seo,
   TafseerPopup,
   ThemedText,
-  ThemedTextInput,
   ThemedView,
 } from '@/components';
 import {
@@ -84,9 +78,12 @@ export default function Search() {
 
     if (!pageResults) return;
 
-    setResults((prev) =>
-      page === 1 ? pageResults : [...prev, ...pageResults],
-    );
+    setResults((prev) => {
+      if (page === 1) return pageResults;
+      const existingIds = new Set(prev.map((r) => r.gid));
+      const newItems = pageResults.filter((r) => !existingIds.has(r.gid));
+      return [...prev, ...newItems];
+    });
 
     const more = pageResults.length === PAGE_SIZE;
     setHasMore(more);
@@ -136,112 +133,33 @@ export default function Search() {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedView style={styles.searchContainer}>
-        <ThemedTextInput
-          variant="outlined"
-          style={styles.searchInput}
-          placeholder="البحث..."
-          value={inputText}
-          cursorColor={secondaryColor}
-          onChangeText={(text) => {
-            const arabicOnly = text.replace(/[^\u0621-\u064A\s]/g, '');
-            setInputText(arabicOnly);
-            if (arabicOnly.trim()) {
-              setIsTyping(true);
-              setIsSearching(true);
-            } else {
-              setIsTyping(false);
-              setIsSearching(false);
-            }
-            handleSearch(arabicOnly);
-          }}
-        />
-        {isTyping || isSearching ? (
-          <ActivityIndicator
-            size="small"
-            color={primaryColor}
-            style={styles.icon}
-          />
-        ) : (
-          <Feather
-            name="search"
-            size={20}
-            color={primaryColor}
-            style={styles.icon}
-          />
-        )}
-        <Pressable
-          onPress={() => setShowOptions(!showOptions)}
-          accessibilityRole="button"
-          accessibilityLabel="خيارات البحث المتقدم"
-          accessibilityState={{ expanded: showOptions }}
-        >
-          <Ionicons
-            name="options"
-            size={20}
-            color={showOptions ? primaryColor : '#777'}
-            style={styles.icon}
-          />
-        </Pressable>
-      </ThemedView>
+      <SearchInput
+        value={inputText}
+        onChangeText={(text: string) => {
+          const arabicOnly = text.replace(/[^\u0621-\u064A\s]/g, '');
+          setInputText(arabicOnly);
+          if (arabicOnly.trim()) {
+            setIsTyping(true);
+            setIsSearching(true);
+          } else {
+            setIsTyping(false);
+            setIsSearching(false);
+          }
+          handleSearch(arabicOnly);
+        }}
+        isTyping={isTyping}
+        isSearching={isSearching}
+        showOptions={showOptions}
+        setShowOptions={setShowOptions}
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+      />
 
       {showOptions && (
-        <ThemedView style={styles.advancedOptions}>
-          <View style={styles.optionRow}>
-            <Pressable
-              style={[
-                styles.optionButton,
-                advancedOptions.lemma && styles.optionActive,
-              ]}
-              onPress={() => toggleOption('lemma')}
-              accessibilityRole="togglebutton"
-              accessibilityState={{ checked: advancedOptions.lemma }}
-            >
-              <ThemedText
-                style={
-                  advancedOptions.lemma ? styles.optionActiveText : undefined
-                }
-              >
-                الصيغة
-              </ThemedText>
-            </Pressable>
-
-            <Pressable
-              style={[
-                styles.optionButton,
-                advancedOptions.root && styles.optionActive,
-              ]}
-              onPress={() => toggleOption('root')}
-              accessibilityRole="togglebutton"
-              accessibilityState={{ checked: advancedOptions.root }}
-            >
-              <ThemedText
-                style={
-                  advancedOptions.root ? styles.optionActiveText : undefined
-                }
-              >
-                الجذر
-              </ThemedText>
-            </Pressable>
-            <Pressable
-              style={[
-                styles.optionButton,
-                advancedOptions.fuzzy && styles.optionActive,
-              ]}
-              onPress={() => toggleOption('fuzzy')}
-              accessibilityRole="togglebutton"
-              accessibilityState={{ checked: advancedOptions.fuzzy }}
-            >
-              <ThemedText
-                style={
-                  advancedOptions.fuzzy ? styles.optionActiveText : undefined
-                }
-              >
-                التقريب
-              </ThemedText>
-            </Pressable>
-          </View>
-        </ThemedView>
+        <SearchAdvancedOptions
+          advancedOptions={advancedOptions}
+          toggleOption={toggleOption}
+        />
       )}
 
       {query ? (
@@ -291,50 +209,28 @@ export default function Search() {
               </ThemedView>
             ) : null
           }
-          ListEmptyComponent={
-            // 1) Initial empty state when there isn't any query
-            !query.trim() && !inputText.trim() ? (
-              <ThemedView style={styles.emptyContainer}>
-                <ThemedView
-                  style={[
-                    styles.emptyIconWrapper,
-                    { backgroundColor: primaryColor },
-                  ]}
-                >
-                  <Ionicons name="book-outline" size={40} color="#fff" />
-                </ThemedView>
-                <ThemedText type="defaultSemiBold" style={styles.emptyTitle}>
-                  ابحث في القرآن الكريم
-                </ThemedText>
-                <ThemedText style={styles.emptySubtitle}>
-                  أدخل كلمة عربية للبحث عنها في آيات القرآن الكريم.
-                </ThemedText>
-              </ThemedView>
-            ) : // 2) Hide empty states completely while we are waiting/searching to prevent flashing
-            isTyping || isSearching || isLoading ? null : query.trim() && // 3) Only show "No Results" if we finished searching and actually found nothing
-              results.length === 0 ? (
-              <ThemedView style={styles.emptyContainer}>
-                <ThemedView
-                  style={[
-                    styles.emptyIconWrapper,
-                    { backgroundColor: dangerColor },
-                  ]}
-                >
-                  <Ionicons
-                    name="alert-circle-outline"
-                    size={40}
-                    color="#fff"
-                  />
-                </ThemedView>
-                <ThemedText type="defaultSemiBold" style={styles.emptyTitle}>
-                  لم يتم العثور على نتائج
-                </ThemedText>
-                <ThemedText style={styles.emptySubtitle}>
-                  تأكد من كتابة الكلمة بشكل صحيح، أو جرّب كلمة أخرى.
-                </ThemedText>
-              </ThemedView>
-            ) : null
-          }
+          ListEmptyComponent={(() => {
+            if (!query.trim() && !inputText.trim()) {
+              return (
+                <SearchEmptyState
+                  type="initial"
+                  primaryColor={primaryColor}
+                  dangerColor={dangerColor}
+                />
+              );
+            }
+            if (isTyping || isSearching || isLoading) return null;
+            if (query.trim() && results.length === 0) {
+              return (
+                <SearchEmptyState
+                  type="no-results"
+                  primaryColor={primaryColor}
+                  dangerColor={dangerColor}
+                />
+              );
+            }
+            return null;
+          })()}
         />
       )}
 
@@ -355,64 +251,5 @@ export default function Search() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    paddingHorizontal: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    textAlign: 'right',
-    paddingVertical: 10,
-    borderWidth: 0,
-  },
-  icon: { marginHorizontal: 6 },
-  advancedOptions: {
-    padding: 10,
-    marginBottom: 12,
-    borderRadius: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.03)',
-  },
-  optionRow: { flexDirection: 'row', justifyContent: 'center', gap: 10 },
-  optionButton: {
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
-  optionActive: { backgroundColor: '#e3f2fd', borderColor: '#1976d2' },
-  optionActiveText: { color: '#1976d2', fontWeight: '600' },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    marginTop: 64,
-  },
-  emptyIconWrapper: {
-    width: 84,
-    height: 84,
-    borderRadius: 42,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  emptyTitle: {
-    fontSize: 18,
-    marginBottom: 6,
-    textAlign: 'center',
-  },
-  emptySubtitle: {
-    textAlign: 'center',
-    fontSize: 14,
-    lineHeight: 22,
-    opacity: 0.8,
-  },
   resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14 },
 });
