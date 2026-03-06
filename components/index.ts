@@ -16,6 +16,7 @@ export * from './PrivacyContentEnglish';
 export * from './ReadingPositionBanner';
 export * from './searchColorLegend';
 export * from './searchResultItem';
+export * from './searchSkeleton';
 export * from './SegmentControl';
 export * from './SegmentedControlWithDisabled';
 export * from './SelectRiwaya';
