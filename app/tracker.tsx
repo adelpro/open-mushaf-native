@@ -101,8 +101,8 @@ export default function TrackerScreen() {
   );
 
   const styles = useMemo(
-    () => createStyles({ borderLightColor, textColor }),
-    [borderLightColor, textColor],
+    () => createStyles({ borderLightColor }),
+    [borderLightColor],
   );
 
   return (
@@ -227,7 +227,9 @@ export default function TrackerScreen() {
               >
                 <ThemedView style={styles.resetButtonContent}>
                   <Feather name="refresh-cw" size={16} />
-                  <Text style={styles.resetButtonText}>إعادة التعيين</Text>
+                  <Text style={[styles.resetButtonText, { color: textColor }]}>
+                    إعادة التعيين
+                  </Text>
                 </ThemedView>
               </ThemedButton>
             </ThemedView>
@@ -318,7 +320,6 @@ interface TrackerStyles {
 
 const createStyles = (colors: {
   borderLightColor: string;
-  textColor: string;
 }): TrackerStyles =>
   StyleSheet.create({
     container: {
@@ -365,7 +366,6 @@ const createStyles = (colors: {
       textAlign: 'center',
       fontSize: 12,
       zIndex: 1,
-      color: colors.textColor,
     },
     infoText: { marginTop: 4, fontSize: 16, lineHeight: 24 },
     controlsContainer: {
