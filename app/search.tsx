@@ -14,6 +14,7 @@ import wordMapJSON from '@/assets/search/word-map.json';
 import {
   SearchColorLegend,
   SearchResultItem,
+  SearchSkeleton,
   Seo,
   TafseerPopup,
   ThemedText,
@@ -32,7 +33,7 @@ const WORD_MAP = wordMapJSON;
 
 export default function Search() {
   const { quranData, isLoading, error } = useQuranMetadata();
-  const { tintColor, primaryColor } = useColors();
+  const { tintColor, primaryColor, secondaryColor, dangerColor } = useColors();
 
   const PAGE_SIZE = 50;
 
@@ -49,15 +50,17 @@ export default function Search() {
   const [results, setResults] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const listRef = useRef<FlatList>(null);
 
   const handleSearch = useDebounce((text: string) => {
+    setIsTyping(false);
     setPage(1);
-    setResults([]);
     setHasMore(false);
     setQuery(text);
-  }, 200);
+  }, 300);
 
   const { pageResults, counts, getPositiveTokens } = useQuranSearch({
     quranData,
@@ -75,6 +78,7 @@ export default function Search() {
       setResults([]);
       setHasMore(false);
       setIsLoadingMore(false);
+      setIsSearching(false);
       return;
     }
 
@@ -87,6 +91,7 @@ export default function Search() {
     const more = pageResults.length === PAGE_SIZE;
     setHasMore(more);
     setIsLoadingMore(false);
+    setIsSearching(false);
 
     if (page === 1 && listRef.current) {
       listRef.current.scrollToOffset({ offset: 0, animated: false });
@@ -94,6 +99,10 @@ export default function Search() {
   }, [pageResults, page, query]);
 
   const toggleOption = (option: keyof typeof advancedOptions) => {
+    if (query.trim()) {
+      setIsSearching(true);
+      setPage(1);
+    }
     setAdvancedOptions((prev) => ({ ...prev, [option]: !prev[option] }));
   };
 
@@ -130,18 +139,34 @@ export default function Search() {
           style={styles.searchInput}
           placeholder="البحث..."
           value={inputText}
+          cursorColor={secondaryColor}
           onChangeText={(text) => {
             const arabicOnly = text.replace(/[^\u0621-\u064A\s]/g, '');
             setInputText(arabicOnly);
+            if (arabicOnly.trim()) {
+              setIsTyping(true);
+              setIsSearching(true);
+            } else {
+              setIsTyping(false);
+              setIsSearching(false);
+            }
             handleSearch(arabicOnly);
           }}
         />
-        <Feather
-          name="search"
-          size={20}
-          color={primaryColor}
-          style={styles.icon}
-        />
+        {isTyping || isSearching ? (
+          <ActivityIndicator
+            size="small"
+            color={primaryColor}
+            style={styles.icon}
+          />
+        ) : (
+          <Feather
+            name="search"
+            size={20}
+            color={primaryColor}
+            style={styles.icon}
+          />
+        )}
         <Pressable
           onPress={() => setShowOptions(!showOptions)}
           accessibilityRole="button"
@@ -221,55 +246,94 @@ export default function Search() {
       ) : null}
 
       <SearchColorLegend />
-      <FlatList
-        ref={listRef}
-        data={results}
-        keyExtractor={(item) => item.gid.toString()}
-        renderItem={({ item }) => (
-          <SearchResultItem
-            item={item}
-            query={query}
-            advancedOptions={advancedOptions}
-            wordMap={WORD_MAP}
-            getPositiveTokens={getPositiveTokens}
-            onSelectAya={(selected: { aya: number; surah: number }) =>
-              setSelectedAya(selected)
-            }
-          />
-        )}
-        onEndReached={() => {
-          if (!hasMore || isLoadingMore) return;
-          setIsLoadingMore(true);
-          setPage((prev) => prev + 1);
-        }}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={
-          isLoadingMore ? (
-            <ThemedView style={{ paddingVertical: 12 }}>
-              <ActivityIndicator size="small" color={tintColor} />
-            </ThemedView>
-          ) : null
-        }
-        ListEmptyComponent={
-          query && !isLoading ? (
-            <ThemedView style={styles.emptyContainer}>
-              <ThemedView style={styles.emptyIconWrapper}>
-                <Ionicons
-                  name="search-outline"
-                  size={44}
-                  color={primaryColor}
-                />
+
+      {(isTyping || isSearching) && results.length === 0 ? (
+        <FlatList
+          data={[1, 2, 3, 4, 5, 6]}
+          keyExtractor={(item) => item.toString()}
+          renderItem={() => <SearchSkeleton />}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : (
+        <FlatList
+          ref={listRef}
+          data={results}
+          style={{
+            opacity: (isTyping || isSearching) && results.length > 0 ? 0.5 : 1,
+          }}
+          keyExtractor={(item) => item.gid.toString()}
+          renderItem={({ item }) => (
+            <SearchResultItem
+              item={item}
+              query={query}
+              advancedOptions={advancedOptions}
+              wordMap={WORD_MAP}
+              getPositiveTokens={getPositiveTokens}
+              onSelectAya={(selected: { aya: number; surah: number }) =>
+                setSelectedAya(selected)
+              }
+              disabled={(isTyping || isSearching) && results.length > 0}
+            />
+          )}
+          onEndReached={() => {
+            if (!hasMore || isLoadingMore) return;
+            setIsLoadingMore(true);
+            setPage((prev) => prev + 1);
+          }}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            isLoadingMore ? (
+              <ThemedView style={{ paddingVertical: 12 }}>
+                <ActivityIndicator size="small" color={tintColor} />
               </ThemedView>
-              <ThemedText type="defaultSemiBold" style={styles.emptyTitle}>
-                لم يتم العثور على نتائج
-              </ThemedText>
-              <ThemedText style={styles.emptySubtitle}>
-                تأكد من كتابة الكلمة بشكل صحيح، أو حاول البحث بكلمة أخرى.
-              </ThemedText>
-            </ThemedView>
-          ) : null
-        }
-      />
+            ) : null
+          }
+          ListEmptyComponent={
+            // 1) Initial empty state when there isn't any query
+            !query.trim() && !inputText.trim() ? (
+              <ThemedView style={styles.emptyContainer}>
+                <ThemedView
+                  style={[
+                    styles.emptyIconWrapper,
+                    { backgroundColor: primaryColor },
+                  ]}
+                >
+                  <Ionicons name="book-outline" size={40} color="#fff" />
+                </ThemedView>
+                <ThemedText type="defaultSemiBold" style={styles.emptyTitle}>
+                  ابحث في القرآن الكريم
+                </ThemedText>
+                <ThemedText style={styles.emptySubtitle}>
+                  أدخل كلمة عربية للبحث عنها في آيات القرآن الكريم.
+                </ThemedText>
+              </ThemedView>
+            ) : // 2) Hide empty states completely while we are waiting/searching to prevent flashing
+            isTyping || isSearching || isLoading ? null : query.trim() && // 3) Only show "No Results" if we finished searching and actually found nothing
+              results.length === 0 ? (
+              <ThemedView style={styles.emptyContainer}>
+                <ThemedView
+                  style={[
+                    styles.emptyIconWrapper,
+                    { backgroundColor: dangerColor },
+                  ]}
+                >
+                  <Ionicons
+                    name="alert-circle-outline"
+                    size={40}
+                    color="#fff"
+                  />
+                </ThemedView>
+                <ThemedText type="defaultSemiBold" style={styles.emptyTitle}>
+                  لم يتم العثور على نتائج
+                </ThemedText>
+                <ThemedText style={styles.emptySubtitle}>
+                  تأكد من كتابة الكلمة بشكل صحيح، أو جرّب كلمة أخرى.
+                </ThemedText>
+              </ThemedView>
+            ) : null
+          }
+        />
+      )}
 
       <TafseerPopup
         show={selectedAya.aya > 0}
@@ -302,6 +366,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'right',
     paddingVertical: 10,
+    borderWidth: 0,
   },
   icon: { marginHorizontal: 6 },
   advancedOptions: {
@@ -325,7 +390,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
-    paddingTop: 32,
+    marginTop: 64,
   },
   emptyIconWrapper: {
     width: 84,
@@ -333,8 +398,7 @@ const styles = StyleSheet.create({
     borderRadius: 42,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
-    backgroundColor: 'rgba(25, 118, 210, 0.12)',
+    marginBottom: 16,
   },
   emptyTitle: {
     fontSize: 18,
