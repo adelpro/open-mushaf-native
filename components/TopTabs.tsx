@@ -21,6 +21,10 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
   return (
     <ThemedView style={styles.container}>
       <TouchableOpacity
+        accessible={true}
+        accessibilityRole="tab"
+        accessibilityState={{ selected: activeTab === 'surahs' }}
+        accessibilityLabel="تبويب السور"
         onPress={() => handleTabPress('surahs')}
         style={[
           styles.tab,
@@ -43,6 +47,10 @@ export default function TopTabs({ activeTab, setActiveTab }: Props) {
       </TouchableOpacity>
 
       <TouchableOpacity
+        accessible={true}
+        accessibilityRole="tab"
+        accessibilityState={{ selected: activeTab === 'juzs' }}
+        accessibilityLabel="تبويب الأجزاء"
         onPress={() => handleTabPress('juzs')}
         style={[
           styles.tab,

@@ -123,6 +123,10 @@ export default function TopMenu() {
         <ThemedView style={styles.leftIconsContainer}>
           {!isTemporary && (
             <TouchableOpacity
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="متابعة الورد اليومي"
+              accessibilityHint="يفتح شاشة تتبع تقدم قراءتك اليومية"
               style={styles.icon}
               onPress={() => {
                 setShowTopMenuState(false);
@@ -149,6 +153,10 @@ export default function TopMenu() {
           )}
 
           <TouchableOpacity
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="فهرس السور والأجزاء"
+            accessibilityHint="يفتح شاشة التنقل"
             style={styles.icon}
             onPress={() => {
               setShowTopMenuState(false);
@@ -163,6 +171,10 @@ export default function TopMenu() {
           </TouchableOpacity>
 
           <TouchableOpacity
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="البحث في القرآن"
+            accessibilityHint="يفتح شاشة البحث عن الآيات"
             style={styles.icon}
             onPress={() => {
               setShowTopMenuState(false);
@@ -172,6 +184,13 @@ export default function TopMenu() {
             <Ionicons name="search" size={ICON_SIZE} color={tintColor} />
           </TouchableOpacity>
           <TouchableOpacity
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel={
+              showBottomMenuState
+                ? 'تصغير الشاشة وإظهار القوائم'
+                : 'تكبير الشاشة وإخفاء القوائم'
+            }
             style={styles.icon}
             onPress={() => {
               setShowTopMenuState(false);
