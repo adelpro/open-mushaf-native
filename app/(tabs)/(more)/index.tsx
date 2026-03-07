@@ -9,8 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 
@@ -21,10 +20,8 @@ import PageSVG from '@/assets/svgs/page.svg';
 import SettingsSVG from '@/assets/svgs/settings.svg';
 import ShareSVG from '@/assets/svgs/share.svg';
 import WelcomeSVG from '@/assets/svgs/welcome.svg';
-import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useColors } from '@/hooks/useColors';
+import { ThemedButton, ThemedText, ThemedView } from '@/components';
+import { useColors } from '@/hooks';
 import { isWeb } from '@/utils/isWeb';
 
 export default function MoreScreen() {
@@ -82,6 +79,16 @@ export default function MoreScreen() {
         <View style={styles.buttonContent}>
           <SettingsSVG width={24} height={24} style={styles.svg} />
           <Text style={styles.buttonText}>الإعدادات</Text>
+        </View>
+      </ThemedButton>
+      <ThemedButton
+        onPress={() => router.push('/bookmarks')}
+        variant="primary"
+        style={styles.button}
+      >
+        <View style={styles.buttonContent}>
+          <Feather name="bookmark" size={24} color="white" />
+          <Text style={styles.buttonText}>العلامات المرجعية</Text>
         </View>
       </ThemedButton>
       <ThemedButton
@@ -163,6 +170,8 @@ export default function MoreScreen() {
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setErrorModalVisible(false)}
+          accessibilityLabel="إغلاق نافذة الخطأ"
+          accessibilityRole="button"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
@@ -177,6 +186,8 @@ export default function MoreScreen() {
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setErrorModalVisible(false)}
+                accessibilityRole="button"
+                accessibilityLabel="إغلاق رسالة الخطأ"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>

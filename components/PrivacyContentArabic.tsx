@@ -6,7 +6,7 @@ import { ThemedView } from '@/components/ThemedView';
 
 import { ExternalLink } from './ExternalLink';
 
-export default function PrivacyContentArabicNew() {
+export function PrivacyContentArabic() {
   return (
     <ThemedView style={[styles.container]}>
       <ThemedText style={[styles.title, styles.arabicText]}>

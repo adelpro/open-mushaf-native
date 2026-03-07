@@ -39,11 +39,11 @@ It emphasizes performance, offline access, and a distraction-free experience, po
 
 ### Key Features
 
-- **Swipeable Navigation** – Move between pages smoothly with gestures.  
-- **Offline Access** – Cache Quran pages and Tafseer data for full offline use.  
-- **Dynamic Tafseer Popups** – Resize Tafseer sections with drag gestures.  
-- **Optimized Image Loading** – Uses `expo-image` for efficient memory handling.  
-- **Lightweight State Management** – Powered by **Jotai** atoms.  
+- **Swipeable Navigation** – Move between pages smoothly with gestures.
+- **Offline Access** – Cache Quran pages and Tafseer data for full offline use.
+- **Dynamic Tafseer Popups** – Resize Tafseer sections with drag gestures.
+- **Optimized Image Loading** – Uses `expo-image` for efficient memory handling.
+- **Lightweight State Management** – Powered by **Jotai** atoms.
 - **Cross-Platform Ready** – One codebase for Android, iOS, Web, and macOS.
 
 ---
@@ -88,15 +88,17 @@ It emphasizes performance, offline access, and a distraction-free experience, po
 ## Installation
 
 ### Requirements
+
 - Node.js **v22+**
 - Expo SDK **52+**
 
 ### Steps
+
 ```bash
 git clone https://github.com/adelpro/open-mushaf-native.git
 cd open-mushaf-native
-npm install
-npx expo start
+yarn install
+yarn expo start
 ```
 
 ## Contributing
@@ -118,4 +120,5 @@ This project is licensed under the MIT License. See the
 for more details.
 
 ---
+
 Keywords: Quran App, Mushaf, React Native, Expo, Offline Quran, Tafseer, PWA, Islamic App

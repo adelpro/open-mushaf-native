@@ -16,12 +16,14 @@ import { Stack } from 'expo-router';
 import { useAtom } from 'jotai';
 import Toggle from 'react-native-toggle-input';
 
-import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedTextInput } from '@/components/ThemedInput';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import TimePicker from '@/components/TimePicker';
-import { useColors } from '@/hooks/useColors';
+import {
+  ThemedButton,
+  ThemedText,
+  ThemedTextInput,
+  ThemedView,
+  TimePicker,
+} from '@/components';
+import { useColors } from '@/hooks';
 import { remindersAtom } from '@/jotai/atoms';
 import { Reminder, ReminderPreset } from '@/types/reminder';
 import {
@@ -42,16 +44,12 @@ const DAY_LABELS: Record<number, string> = {
   7: 'السبت',
 };
 
-/** Returns a formatted Arabic time string like ٨:٠٠ م */
+/** Returns a formatted time string based on system preferences */
 const formatTimeArabic = (hour: number, minute: number): string => {
   const period = hour >= 12 ? 'م' : 'ص';
   const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-  const arabicNumerals = (n: number) =>
-    n
-      .toString()
-      .padStart(2, '0')
-      .replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[parseInt(d)]);
-  return `${arabicNumerals(displayHour)}:${arabicNumerals(minute)} ${period}`;
+  const formatNumber = (n: number) => n.toString().padStart(2, '0');
+  return `${formatNumber(displayHour)}:${formatNumber(minute)} ${period}`;
 };
 
 /** Returns a preset icon name */
@@ -280,6 +278,9 @@ export default function RemindersScreen() {
         style={styles.timeRow}
         onPress={() => handleEditTime(reminder)}
         activeOpacity={0.6}
+        accessibilityLabel={`تعديل وقت التذكير ${formatTimeArabic(reminder.hour, reminder.minute)}`}
+        accessibilityHint="اضغط لتغيير وقت التذكير"
+        accessibilityRole="button"
       >
         <Feather name="clock" size={16} color={iconColor} />
         <ThemedText style={[styles.timeText, { color: textColor }]}>
@@ -304,6 +305,9 @@ export default function RemindersScreen() {
           style={styles.deleteRow}
           onPress={() => setDeleteConfirmId(reminder.id)}
           activeOpacity={0.6}
+          accessibilityLabel={`حذف تذكير ${reminder.title}`}
+          accessibilityHint="اضغط لحذف هذا التذكير"
+          accessibilityRole="button"
         >
           <Feather name="trash-2" size={16} color={dangerColor} />
           <ThemedText style={[styles.deleteText, { color: dangerColor }]}>
@@ -360,12 +364,12 @@ export default function RemindersScreen() {
           onPress={() => setAddModalVisible(true)}
           style={styles.addButton}
         >
-          <View style={styles.addButtonContent}>
+          <ThemedView style={styles.addButtonContent}>
             <Feather name="plus" size={20} color={primaryColor} />
             <ThemedText style={[styles.addButtonText, { color: primaryColor }]}>
               إضافة تذكير
             </ThemedText>
-          </View>
+          </ThemedView>
         </ThemedButton>
       </ScrollView>
 
@@ -401,6 +405,8 @@ export default function RemindersScreen() {
                   setTimePickerVisible(false);
                   setEditingReminder(null);
                 }}
+                accessibilityLabel="إغلاق"
+                accessibilityRole="button"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
@@ -452,7 +458,11 @@ export default function RemindersScreen() {
               <ThemedText style={[styles.modalTitle, { color: textColor }]}>
                 تذكير جديد
               </ThemedText>
-              <TouchableOpacity onPress={() => setAddModalVisible(false)}>
+              <TouchableOpacity
+                onPress={() => setAddModalVisible(false)}
+                accessibilityLabel="إغلاق"
+                accessibilityRole="button"
+              >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
             </ThemedView>
@@ -500,6 +510,8 @@ export default function RemindersScreen() {
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setDeleteConfirmId(null)}
+          accessibilityLabel="إغلاق نافذة تأكيد الحذف"
+          accessibilityRole="button"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
@@ -511,7 +523,11 @@ export default function RemindersScreen() {
               <ThemedText style={[styles.modalTitle, { color: textColor }]}>
                 حذف التذكير
               </ThemedText>
-              <TouchableOpacity onPress={() => setDeleteConfirmId(null)}>
+              <TouchableOpacity
+                onPress={() => setDeleteConfirmId(null)}
+                accessibilityLabel="إغلاق"
+                accessibilityRole="button"
+              >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
             </ThemedView>
@@ -617,15 +633,18 @@ const styles = StyleSheet.create({
   addButton: {
     marginTop: 12,
     height: 48,
+    alignSelf: 'center',
   },
   addButtonContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 8,
   },
   addButtonText: {
     fontSize: 16,
     fontFamily: 'Tajawal_700Bold',
+    textAlignVertical: 'center',
   },
   warningBanner: {
     flexDirection: 'row',

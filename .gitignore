@@ -10,6 +10,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+.eslintcache
 
 # macOS
 .DS_Store
@@ -40,3 +41,5 @@ firebase-debug.log
 
 #Ignore vscode AI rules
 .github\copilot-instructions.md
+coverage/
+*.tsbuildinfo

@@ -3,7 +3,7 @@ import { FlatList, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import { useQuranMetadata } from '@/hooks';
 import { Surah } from '@/types';
 import { isWeb } from '@/utils';
 
@@ -20,7 +20,7 @@ interface SurahAyaNavigatorProps {
   iconColor: string;
   cardColor: string;
 }
-export default function SurahAyaNavigator({
+export function SurahAyaNavigator({
   currentSurah,
   currentAya,
   ayaCount,
@@ -168,6 +168,8 @@ export default function SurahAyaNavigator({
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setSurahModalVisible(false)}
+          accessibilityLabel="إغلاق قائمة السور"
+          accessibilityRole="button"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
@@ -178,6 +180,8 @@ export default function SurahAyaNavigator({
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setSurahModalVisible(false)}
+                accessibilityRole="button"
+                accessibilityLabel="إغلاق قائمة السور"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>
@@ -210,6 +214,8 @@ export default function SurahAyaNavigator({
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setAyaModalVisible(false)}
+          accessibilityLabel="إغلاق قائمة الآيات"
+          accessibilityRole="button"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}
@@ -220,6 +226,8 @@ export default function SurahAyaNavigator({
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setAyaModalVisible(false)}
+                accessibilityRole="button"
+                accessibilityLabel="إغلاق قائمة الآيات"
               >
                 <Feather name="x" size={24} color={iconColor} />
               </TouchableOpacity>

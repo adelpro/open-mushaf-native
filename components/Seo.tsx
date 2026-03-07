@@ -13,7 +13,7 @@ type Props = {
   structuredData?: Record<string, any>; // Add structured data support
 };
 
-export default function SEO({
+export function Seo({
   title = 'Open Mushaf',
   description = 'A modern and minimalist Quran Mushaf application',
   image = 'https://open-mushaf-native.web.app/og-image.png',

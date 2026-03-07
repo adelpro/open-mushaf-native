@@ -2,236 +2,308 @@
 
 All notable changes to this project will be documented in this file.
 
-## [4.3.0]
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-- fix: now the data in the android widget is correcly synced with the app
-- feat: enhance the search function by updating the simple search and adding fuzzy, root and lemma search
-- feat: add serached text hightlight in search results
+## [Unreleased]
 
-## [4.2.0]
+### Added
 
-- feat: add Android widget
+### Changed
 
-## [4.0.0]
+### Deprecated
 
-- chore: removed riwaya warsh mujawad from el maarifah ( because of copyright )
+### Removed
 
-## [3.7.0]
+### Fixed
 
-- feat: Add new mushaf riwaya warsh mujawad from el maarifah
-- feat: Add besmala aya count to mushaf specs
-- feat: Add slides presentation (our story)
+### Security
 
-## [3.6.1]
+## [4.3.0] - 2025-??-??
 
-- feat: Add Swipe navigation to the tutorial screen
-- fix: fixed migration error from b3.6.0 (expo sdk 53)
+### Added
 
-## [3.5.2]
+### Changed
 
-- chore: Migrate from @react-native-async-storage/async-storage to react-native-mmkv
-- feat: Add share button
-- fix: Fix Tafseer popup scroll issue
-- chore: Updated Colors.ts with new primary, secondary, and accent colors.
-- refactor: Refactored SurahCard and ChapterCard to include IslamicMarker and improved styling.
-- style: Enhanced TopMenu by removing redundant color scheme logic and simplifying layout.
-- style: Improved settings.tsx with icons and better layout organization.
+### Deprecated
 
-## [3.5.1]
+### Removed
 
-- chore: clean-up multiple unused packages
-- fix: Update metro.config to fix build error from b3.5.0
+### Fixed
 
-## [3.5.0]
+- now the data in the android widget is correctly synced with the app
 
-- chore: Migrate to Expo SDK 53
-- chore: Migrate from expo-av to expo-audio (End of support)
-- chore: Migrate from Recoil to Jotai (end of support)
-- chore: Migrate from @react-native-community/slider to react-native-awesome-slider
-- chore: Update @gorhom/bottom-sheet
-- chore: Update react-native-safe-area-context
+### Security
 
-## [3.4.1]
+## [4.2.0] - 2025-??-??
 
-- fix: Minor UI and logics fix in the service-worker
-- style: Add a max width to the bottom menu
-- fix: Minor errors in the bottom menu icons
-- fix: Minor errors in the reading top banner save button
+### Added
 
-## [3.4.0]
+- add Android widget
 
-- feat: Add Yandex verification file for domain ownership
-- feat: Add IndexNow protocol to the web version
-- feat: Add 'Asbab Nozool from el-wahidi'
-- feat: Add 'tafseer wasseet'
-- feat: Add 'tafseer tanweer'
+### Changed
 
-## [3.3.0]
+### Deprecated
 
-- feat: Add collapsible functionality to Reading Position Banner
-- feat: Add documentations website
+### Removed
 
-## [3.2.9]
+### Fixed
 
-- refactor: Add a quran metadata json file managementent system
-- refactor: Remove the rract-native-toast-message package and replace by a built-in one
--
+### Security
 
-## [3.2.8]
+## [4.0.0] - 2025-??-??
 
-- feat: Add Reading Tracker feature (daily)
-- feat: Add surah name, current juz and juz progress in the top menu
-- update: Refactor the navigation lists ui/uix
+### Added
 
-## [3.2.6]
+### Changed
 
-- feat: Added SEO optimization with Open Graph and Twitter card support
-- feat: Added PWA support
-- feat: Web improved offline capabilities
+### Deprecated
 
-## [3.2.5]
+### Removed
 
-- feat: Added advanced search option using fuse.js
+- removed riwaya warsh mujawad from el maarifah (because of copyright)
 
-## [3.2.4]
+### Fixed
 
-- feat: Added preload system to speedup mushaf navigation
-- feat: Implemented web deployment support (Firebase Hosting)
+### Security
 
-## [3.2.3]
+## [3.7.0] - 2025-??-??
 
-- refactor: replace vercel by firebase hosting
+### Added
 
-## [3.2.2]
+- Add new mushaf riwaya warsh mujawad from el maarifah
+- Add besmala aya count to mushaf specs
+- Add slides presentation (our story)
 
-- feat: add pages (images) cache preload system
-- feat: add Vercel web hosting
-- feat: add landscape reading mode
+### Changed
 
-## [3.2.1]
+### Deprecated
 
-- feat: add basic bookmarking system
+### Removed
 
-## [3.1.5]
+### Fixed
 
-- fix: revert back to recoil
+### Security
 
-## [3.1.4]
+## [3.6.1] - 2025-??-??
 
-- perf: speed up mushaf pages navigation
+### Added
 
-## [3.1.1]
+- Add Swipe navigation to the tutorial screen
 
-- refactor: update the way we handle SVGs
+### Changed
 
-## [3.1.0]
+### Deprecated
 
-- feat: add a reset button (behind debug flag) in the settings screen
-- feat: add tutorial screen
+### Removed
 
-## [3.0.1]
+### Fixed
 
-- ci: add multiple github actions to enhance the workflow
+- fixed migration error from b3.6.0 (expo sdk 53)
 
-## [3.0.0]
+### Security
 
-- feat: add option to choose between riwayas (warsh or hafs)
+## [3.5.2] - 2025-??-??
 
-## [2.8.0]
+### Added
 
-- refactor: move from Recoil (End of life) to Jotai
+- Add share button
 
-## [2.6.0]
+### Changed
 
-- fix: resolve tafseer popup scroll issue
+- Updated Colors.ts with new primary, secondary, and accent colors
 
-## [2.4.0]
+### Deprecated
 
-- a11y: improve accessibility for the app
+### Removed
 
-## [2.3.0]
+### Fixed
 
-- style: unify UI over all screens
-- feat: add Hizb and Juz notifications in Mushaf
-- fix: correct Arabic and English privacy policies screen
+- Fix Tafseer popup scroll issue
 
-## [2.2.1]
+### Security
 
-- a11y: enhance accessibility for the app
+## [3.5.1] - 2025-??-??
 
-## [2.2.0]
+### Added
 
-- feat: add contact-us screen
-- feat: implement toast notifications
-- feat: create design system for the UI
-- feat: add slider in settings to change Mushaf contrast
-- docs: update screenshots to match v2
-- fix: resolve SafeAreaView dark mode issues
+### Changed
 
-## [2.1.0]
+- clean-up multiple unused packages
 
-- perf: use new react compiler (experiment)
-- fix: correct Mushaf opacity on dark mode
-- perf: optimize app size
-- fix: resolve splash screen resizing issue
+### Deprecated
 
-## [2.0.0]
+### Removed
 
-- feat: update Mushaf pages to use new images from madina mushaf - warsh
-- feat: add new splash screen for dark mode
-- deps: upgrade to new Expo SDK (52)
-- fix: resolve keep awake functionality
-- perf: reduce app size
+### Fixed
 
-## [1.0.16]
+- Update metro.config to fix build error from b3.5.0
 
-- fix: resolve Tafseer scroll view issues
+### Security
 
-## [1.0.15]
+## [3.5.0] - 2025-??-??
 
-- style: update Sura and Juz lists UI
-- fix: resolve assets loading error on Android
+### Added
 
-## [1.0.14]
+### Changed
 
-- fix: address multiple UI issues
+- Migrate to Expo SDK 53
+- Migrate from expo-av to expo-audio (End of support)
+- Migrate from Recoil to Jotai (end of support)
+- Migrate from @react-native-community/slider to react-native-awesome-slider
+- Update @gorhom/bottom-sheet
+- Update react-native-safe-area-context
 
-## [1.0.13]
+### Deprecated
 
-- perf: optimize Tafseer JSON loading (load each file individually)
-- perf: load Mushaf page images individually to reduce memory usage
+### Removed
 
-## [1.0.12]
+### Fixed
 
-- feat: update Tafaseer JSON files
-- style: improve navigation screen UI
-- perf: change JavaScript engine to 'Hermes'
-- fix: resolve Tafseer loading error on Android
+### Security
 
-## [1.0.10]
+## [3.4.1] - 2025-??-??
 
-- feat: add mushaf navigation page
+### Added
 
-## [1.0.9]
+### Changed
 
-- feat: add page flip sound
-- feat: implement KeepAwake feature
-- feat: create Search Quran page
-- fix: resolve search functionality issues
-- fix: address Mushaf page dark mode problems
+- Add a max width to the bottom menu
 
-## [1.0.7]
+### Deprecated
 
-- feat: add More tab
-- feat: include privacy policy (in Arabic and English)
-- refactor: improve Tafseer and Mushaf page code
+### Removed
 
-## [1.0.6]
+### Fixed
 
-- fix: resolve minor UI issues with dark mode in Top Menu and Tafseer popup
-- fix: correct "لا يوجد تفسير" UI issues in Tafseer popup
-- fix: address forced reload for RTL mode at app startup
+- Minor UI and logics fix in the service-worker
+- Minor errors in the bottom menu icons
+- Minor errors in the reading top banner save button
 
-## [1.0.5]
+### Security
 
-- feat: initial release
+## [3.4.0] - 2025-??-??
+
+### Added
+
+- Add Yandex verification file for domain ownership
+- Add IndexNow protocol to the web version
+- Add 'Asbab Nozool from el-wahidi'
+- Add 'tafseer wasseet'
+- Add 'tafseer tanweer'
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [3.3.0] - 2025-??-??
+
+### Added
+
+- Add collapsible functionality to Reading Position Banner
+- Add documentations website
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [3.2.9] - 2025-??-??
+
+### Added
+
+### Changed
+
+- Add a quran metadata json file management system
+
+### Deprecated
+
+### Removed
+
+- Remove the react-native-toast-message package
+
+### Fixed
+
+### Security
+
+## [3.2.8] - 2025-??-??
+
+### Added
+
+- Add Reading Tracker feature (daily)
+- Add surah name, current juz and juz progress in the top menu
+
+### Changed
+
+- Refactor the navigation lists ui/uix
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [3.2.6] - 2025-??-??
+
+### Added
+
+- Add SEO optimization with Open Graph and Twitter card support
+- Add PWA support
+
+### Changed
+
+- Web improved offline capabilities
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [3.2.5] - 2025-??-??
+
+### Added
+
+- Add advanced search option using fuse.js
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [3.2.4] - 2025-??-??
+
+### Added
+
+- Add preload system to speedup mushaf navigation
+- Implement web deployment support (Firebase Hosting)
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
