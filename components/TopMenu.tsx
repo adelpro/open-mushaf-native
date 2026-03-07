@@ -14,7 +14,8 @@ import * as Progress from 'react-native-progress';
 
 import { ThemedView } from '@/components/ThemedView';
 import {} from '@/constants';
-import { useColors, useQuranMetadata } from '@/hooks';
+import { useColors } from '@/hooks/useColors';
+import useQuranMetadata from '@/hooks/useQuranMetadata';
 import {
   bottomMenuState,
   currentSavedPage,
@@ -22,13 +23,11 @@ import {
   dailyTrackerGoal,
   topMenuState,
 } from '@/jotai/atoms';
-import {
-  getJuzPositionByPage,
-  getSurahNameByPage,
-} from '@/utils/quranMetadataUtils';
+import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
+import { getJuzPositionByPage } from '@/utils/quranMetadataUtils';
 
 const ICON_SIZE = 32;
-export function TopMenu() {
+export default function TopMenu() {
   const { tintColor, backgroundColor } = useColors();
   const { surahData, thumnData } = useQuranMetadata();
   const [progressValue, setProgressValue] = useState<number>(0);
@@ -124,14 +123,15 @@ export function TopMenu() {
         <ThemedView style={styles.leftIconsContainer}>
           {!isTemporary && (
             <TouchableOpacity
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="متابعة الورد اليومي"
+              accessibilityHint="يفتح شاشة تتبع تقدم قراءتك اليومية"
               style={styles.icon}
               onPress={() => {
                 setShowTopMenuState(false);
                 router.push('/tracker');
               }}
-              accessibilityLabel="الورد اليومي"
-              accessibilityHint="اضغط لفتح متتبع الورد اليومي"
-              accessibilityRole="button"
             >
               <View style={styles.progressContainer}>
                 <Progress.Circle
@@ -153,14 +153,15 @@ export function TopMenu() {
           )}
 
           <TouchableOpacity
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="فهرس السور والأجزاء"
+            accessibilityHint="يفتح شاشة التنقل"
             style={styles.icon}
             onPress={() => {
               setShowTopMenuState(false);
               router.push('/navigation');
             }}
-            accessibilityLabel="التنقل"
-            accessibilityHint="اضغط لفتح صفحة التنقل بين السور والأجزاء"
-            accessibilityRole="button"
           >
             <Ionicons
               name="navigate-circle-outline"
@@ -170,28 +171,31 @@ export function TopMenu() {
           </TouchableOpacity>
 
           <TouchableOpacity
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="البحث في القرآن"
+            accessibilityHint="يفتح شاشة البحث عن الآيات"
             style={styles.icon}
             onPress={() => {
               setShowTopMenuState(false);
               router.push('/search');
             }}
-            accessibilityLabel="البحث"
-            accessibilityHint="اضغط لفتح صفحة البحث في القرآن"
-            accessibilityRole="button"
           >
             <Ionicons name="search" size={ICON_SIZE} color={tintColor} />
           </TouchableOpacity>
           <TouchableOpacity
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel={
+              showBottomMenuState
+                ? 'تصغير الشاشة وإظهار القوائم'
+                : 'تكبير الشاشة وإخفاء القوائم'
+            }
             style={styles.icon}
             onPress={() => {
               setShowTopMenuState(false);
               toggleMenu();
             }}
-            accessibilityRole="button"
-            accessibilityLabel={
-              showBottomMenuState ? 'وضع ملء الشاشة' : 'إظهار القائمة'
-            }
-            accessibilityState={{ expanded: showBottomMenuState }}
           >
             {showBottomMenuState ? (
               <MaterialCommunityIcons
