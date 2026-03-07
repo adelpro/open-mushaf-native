@@ -9,7 +9,7 @@ import {
 
 import { Feather } from '@expo/vector-icons';
 
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 import { getPaginationRange, isCompactView } from '@/utils/dimensionsUtils';
 
 import { ThemedText } from './ThemedText';
@@ -23,7 +23,7 @@ interface PageNavigatorProps {
   iconColor: string;
 }
 
-export default function PageNavigator({
+export function PageNavigator({
   currentPage,
   totalPages,
   onPageChange,

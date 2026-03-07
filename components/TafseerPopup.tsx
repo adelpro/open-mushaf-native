@@ -13,7 +13,7 @@ import {
 
 import { Colors } from '@/constants/Colors';
 
-import Tafseer from './Tafseer';
+import { Tafseer } from './Tafseer';
 import { ThemedView } from './ThemedView';
 type Props = {
   show?: boolean;
@@ -22,7 +22,7 @@ type Props = {
   surah?: number;
 };
 
-export default function TafseerPopup({ show = false, setShow, aya = 1, surah = 1 }: Props) {
+export function TafseerPopup({ show = false, setShow, aya = 1, surah = 1 }: Props) {
   const colorScheme = useColorScheme();
   const tintColor = Colors[colorScheme ?? 'light'].tint;
   const backgroundColor = Colors[colorScheme ?? 'light'].background;

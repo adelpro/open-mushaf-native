@@ -10,15 +10,14 @@ import {
   READING_BANNER_HEIGHT_CLOSED,
   READING_BANNER_HEIGHT_OPEN,
 } from '@/constants';
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
+import { useColors, useCurrentPage } from '@/hooks';
 import { readingBannerCollapsedState, yesterdayPage } from '@/jotai/atoms';
 
 import { ThemedButton } from './ThemedButton';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-export default function ReadingPositionBanner() {
+export function ReadingPositionBanner() {
   const [isCollapsed, setIsCollapsed] = useAtom(readingBannerCollapsedState);
   const setYesterdayPageValue = useSetAtom(yesterdayPage);
 

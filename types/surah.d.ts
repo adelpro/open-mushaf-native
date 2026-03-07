@@ -4,4 +4,5 @@ export type Surah = {
   englishName: string;
   startingPage: number;
   numberOfAyahs: number;
+  revelationType: 'Meccan' | 'Medinan';
 };
