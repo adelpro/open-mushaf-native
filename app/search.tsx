@@ -45,7 +45,7 @@ export default function Search() {
   const [hasMore, setHasMore] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
+  const [isOptionChanging, setIsOptionChanging] = useState(false);
 
   const listRef = useRef<FlatList>(null);
 
@@ -72,7 +72,7 @@ export default function Search() {
       setResults([]);
       setHasMore(false);
       setIsLoadingMore(false);
-      setIsSearching(false);
+      setIsOptionChanging(false);
       return;
     }
 
@@ -88,7 +88,7 @@ export default function Search() {
     const more = pageResults.length === PAGE_SIZE;
     setHasMore(more);
     setIsLoadingMore(false);
-    setIsSearching(false);
+    setIsOptionChanging(false);
 
     if (page === 1 && listRef.current) {
       listRef.current.scrollToOffset({ offset: 0, animated: false });
@@ -97,7 +97,7 @@ export default function Search() {
 
   const toggleOption = (option: keyof typeof advancedOptions) => {
     if (query.trim()) {
-      setIsSearching(true);
+      setIsOptionChanging(true);
       setPage(1);
     }
 
@@ -131,6 +131,16 @@ export default function Search() {
         ? `عدد النتائج: ${counts.total} (${selectedLabels.join('، ')})`
         : `عدد النتائج: ${counts.total} (نص)`;
 
+  const isBusy = isTyping || isOptionChanging;
+  const showNoResults =
+    !isBusy &&
+    !isLoading &&
+    query.trim() !== '' &&
+    pageResults !== undefined &&
+    pageResults !== null &&
+    results.length === 0 &&
+    pageResults.length === 0;
+
   return (
     <ThemedView style={styles.container}>
       <SearchInput
@@ -140,15 +150,13 @@ export default function Search() {
           setInputText(arabicOnly);
           if (arabicOnly.trim()) {
             setIsTyping(true);
-            setIsSearching(true);
           } else {
             setIsTyping(false);
-            setIsSearching(false);
           }
           handleSearch(arabicOnly);
         }}
         isTyping={isTyping}
-        isSearching={isSearching}
+        isSearching={isBusy}
         showOptions={showOptions}
         setShowOptions={setShowOptions}
         primaryColor={primaryColor}
@@ -168,7 +176,7 @@ export default function Search() {
 
       <SearchColorLegend />
 
-      {(isTyping || isSearching) && results.length === 0 ? (
+      {isBusy && results.length === 0 ? (
         <FlatList
           data={[1, 2, 3, 4, 5, 6]}
           keyExtractor={(item) => item.toString()}
@@ -179,9 +187,7 @@ export default function Search() {
         <FlatList
           ref={listRef}
           data={results}
-          style={{
-            opacity: (isTyping || isSearching) && results.length > 0 ? 0.5 : 1,
-          }}
+          style={{ opacity: isBusy && results.length > 0 ? 0.5 : 1 }}
           keyExtractor={(item) => item.gid.toString()}
           renderItem={({ item }) => (
             <SearchResultItem
@@ -193,7 +199,7 @@ export default function Search() {
               onSelectAya={(selected: { aya: number; surah: number }) =>
                 setSelectedAya(selected)
               }
-              disabled={(isTyping || isSearching) && results.length > 0}
+              disabled={isBusy && results.length > 0}
             />
           )}
           onEndReached={() => {
@@ -209,28 +215,21 @@ export default function Search() {
               </ThemedView>
             ) : null
           }
-          ListEmptyComponent={(() => {
-            if (!query.trim() && !inputText.trim()) {
-              return (
-                <SearchEmptyState
-                  type="initial"
-                  primaryColor={primaryColor}
-                  dangerColor={dangerColor}
-                />
-              );
-            }
-            if (isTyping || isSearching || isLoading) return null;
-            if (query.trim() && results.length === 0) {
-              return (
-                <SearchEmptyState
-                  type="no-results"
-                  primaryColor={primaryColor}
-                  dangerColor={dangerColor}
-                />
-              );
-            }
-            return null;
-          })()}
+          ListEmptyComponent={
+            !query.trim() && !inputText.trim() ? (
+              <SearchEmptyState
+                type="initial"
+                primaryColor={primaryColor}
+                dangerColor={dangerColor}
+              />
+            ) : showNoResults ? (
+              <SearchEmptyState
+                type="no-results"
+                primaryColor={primaryColor}
+                dangerColor={dangerColor}
+              />
+            ) : null
+          }
         />
       )}
 

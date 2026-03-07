@@ -43,7 +43,7 @@ export function SearchSkeleton() {
 const styles = StyleSheet.create({
   item: {
     flexDirection: 'column',
-    alignItems: 'flex-start',
+    alignItems: 'flex-end',
     justifyContent: 'center',
     gap: 5,
     padding: 15,
