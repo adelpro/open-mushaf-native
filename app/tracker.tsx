@@ -42,9 +42,9 @@ export default function TrackerScreen() {
 
   const { updateAndroidWidget } = useUpdateAndroidWidget();
 
-  const [dailyTrackerGoalValue, setDailyTrackerGoalValue] =
+  const [dailyTrackerGoalValue, setdailyTrackerGoalValue] =
     useAtom(dailyTrackerGoal);
-  const [dailyTrackerCompletedValue, setDailyTrackerCompletedValue] = useAtom(
+  const [dailyTrackerCompletedValue, setdailyTrackerCompletedValue] = useAtom(
     dailyTrackerCompleted,
   );
   const [yesterdayPageValue, setYesterdayPageValue] = useAtom(yesterdayPage);
@@ -61,9 +61,9 @@ export default function TrackerScreen() {
       : 0;
 
   // Should change by full hizb (8 thumns)
-  const incrementDailyGoal = () => setDailyTrackerGoalValue((prev) => prev + 1);
+  const incrementDailyGoal = () => setdailyTrackerGoalValue((prev) => prev + 1);
   const decrementDailyGoal = () =>
-    setDailyTrackerGoalValue((prev) => Math.max(1, prev - 1));
+    setdailyTrackerGoalValue((prev) => Math.max(1, prev - 1));
 
   // Consolidated reset logic into one function
   const performReset = async () => {
@@ -74,7 +74,7 @@ export default function TrackerScreen() {
       });
     }
 
-    setDailyTrackerCompletedValue({
+    setdailyTrackerCompletedValue({
       value: 0,
       date: new Date().toDateString(),
     });
@@ -101,8 +101,8 @@ export default function TrackerScreen() {
   );
 
   const styles = useMemo(
-    () => createStyles({ borderLightColor, textColor }),
-    [borderLightColor, textColor],
+    () => createStyles({ borderLightColor }),
+    [borderLightColor],
   );
 
   return (
@@ -227,7 +227,9 @@ export default function TrackerScreen() {
               >
                 <ThemedView style={styles.resetButtonContent}>
                   <Feather name="refresh-cw" size={16} />
-                  <Text style={styles.resetButtonText}>إعادة التعيين</Text>
+                  <Text style={[styles.resetButtonText, { color: textColor }]}>
+                    إعادة التعيين
+                  </Text>
                 </ThemedView>
               </ThemedButton>
             </ThemedView>
@@ -316,10 +318,7 @@ interface TrackerStyles {
   resetButtonText: TextStyle;
 }
 
-const createStyles = (colors: {
-  borderLightColor: string;
-  textColor: string;
-}): TrackerStyles =>
+const createStyles = (colors: { borderLightColor: string }): TrackerStyles =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -365,7 +364,6 @@ const createStyles = (colors: {
       textAlign: 'center',
       fontSize: 12,
       zIndex: 1,
-      color: colors.textColor,
     },
     infoText: { marginTop: 4, fontSize: 16, lineHeight: 24 },
     controlsContainer: {
