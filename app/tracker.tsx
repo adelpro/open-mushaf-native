@@ -20,13 +20,13 @@ import {
   ThemedView,
 } from '@/components';
 import { useColors, useCurrentPage, useUpdateAndroidWidget } from '@/hooks';
+import { CHART_PERIODS } from '@/constants';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
   readingHistory,
   yesterdayPage,
 } from '@/jotai/atoms';
-import { CHART_PERIODS } from '@/constants';
 import { formatDateKey, getHizbText } from '@/utils/hizbProgress';
 
 export default function TrackerScreen() {
