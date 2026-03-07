@@ -22,7 +22,12 @@ type Props = {
   surah?: number;
 };
 
-export function TafseerPopup({ show = false, setShow, aya = 1, surah = 1 }: Props) {
+export function TafseerPopup({
+  show = false,
+  setShow,
+  aya = 1,
+  surah = 1,
+}: Props) {
   const colorScheme = useColorScheme();
   const tintColor = Colors[colorScheme ?? 'light'].tint;
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
