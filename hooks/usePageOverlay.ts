@@ -3,13 +3,13 @@ import { getDimensionCoeff } from '@/utils';
 
 import { useQuranMetadata } from './useQuranMetadata';
 
-export const usePageOverlay = ({
+export function usePageOverlay({
   index,
   dimensions,
 }: {
   index: number;
   dimensions: { customPageWidth: number; customPageHeight: number };
-}) => {
+}) {
   const { ayaData, specsData } = useQuranMetadata();
   const page: Aya[] = ayaData[index];
   const { customPageHeight, customPageWidth } = dimensions;
@@ -129,5 +129,4 @@ export const usePageOverlay = ({
   };
 
   return { overlay: generateOverlay(), lineHeight };
-};
-
+}

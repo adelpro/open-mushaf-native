@@ -6,7 +6,7 @@ import {
   type TouchableOpacityProps,
 } from 'react-native';
 
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 
 export type ThemedButtonProps = TouchableOpacityProps & {
   lightColor?: string;
@@ -31,8 +31,13 @@ export function ThemedButton({
   children,
   ...rest
 }: ThemedButtonProps) {
-  const { primaryColor, secondaryColor, dangerColor, dangerLightColor } =
-    useColors();
+  const {
+    primaryColor,
+    secondaryColor,
+    dangerColor,
+    dangerLightColor,
+    backgroundColor,
+  } = useColors();
   const [isPressed, setIsPressed] = useState<boolean>(false);
 
   const getVariantStyles = () => {
@@ -97,9 +102,10 @@ export function ThemedButton({
 
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       style={[
         {
-          backgroundColor: variantStyles.backgroundColor,
+          backgroundColor: variantStyles.backgroundColor ?? backgroundColor,
           borderColor: variantStyles.borderColor,
           borderWidth: 1,
         },
@@ -113,11 +119,7 @@ export function ThemedButton({
       {...rest}
     >
       <Text
-        style={[
-          styles.text,
-          styles.center,
-          { color: variantStyles.color, backgroundColor: 'transparent' },
-        ]}
+        style={[styles.text, styles.center, { color: variantStyles.color }]}
       >
         {children}
       </Text>

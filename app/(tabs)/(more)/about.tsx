@@ -2,10 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { ExternalLink } from '@/components/ExternalLink';
-import { SEO } from '@/components/seo';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { ExternalLink, Seo, ThemedText, ThemedView } from '@/components';
 import { ExternalLinkType } from '@/types';
 import { getAppVersion, getBuildVersion } from '@/utils';
 
@@ -60,7 +57,7 @@ export default function AboutScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <SEO
+      <Seo
         title="المصحف المفتوح - حول التطبيق"
         description="معلومات عن تطبيق المصحف المفتوح - المصادر والميزات"
       />

@@ -4,11 +4,11 @@ import { Pressable, StyleSheet } from 'react-native';
 import { useAtom } from 'jotai/react';
 
 import { riwayaOptions } from '@/constants';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 import { mushafRiwaya } from '@/jotai/atoms';
 import { RiwayaByIndice, RiwayaByValue } from '@/utils';
 
-import { SegmentedControl } from './SegmentedControl';
+import { SegmentedControl } from './SegmentControl';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
@@ -32,6 +32,8 @@ export function SelectRiwaya() {
             activeColor={primaryColor}
             textColor={primaryColor}
             onSelectionChange={(index: number) => {
+              console.log('Selected Riwaya Index:', index);
+              console.log('Selected Riwaya Value:', RiwayaByValue(index));
               const selectedRiwaya = RiwayaByValue(index);
               setMushafRiwayaValue(selectedRiwaya);
             }}

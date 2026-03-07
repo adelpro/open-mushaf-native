@@ -57,7 +57,7 @@ export function useQuranMetadata(): QuranMetadata {
 
           setThumnData(thumnModule.default);
           setHizbData(hizbModule.default);
-          setSurahData(surahModule.default);
+          setSurahData(surahModule.default as Surah[]);
           setAyaData(ayaModule.default.coordinates as Page[]);
           setSpecsData(specsModule.default);
           setChapterData(chapterModule.default);
@@ -81,7 +81,7 @@ export function useQuranMetadata(): QuranMetadata {
 
           setThumnData(thumnModule.default);
           setHizbData(hizbModule.default);
-          setSurahData(surahModule.default);
+          setSurahData(surahModule.default as Surah[]);
           setAyaData(ayaModule.default.coordinates as Page[]);
           setSpecsData(specsModule.default);
           setChapterData(chapterModule.default);

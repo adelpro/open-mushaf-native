@@ -4,8 +4,9 @@ import { Asset } from 'expo-asset';
 import { useAtomValue } from 'jotai/react';
 
 import { imagesMapHafs, imagesMapWarsh } from '@/constants';
-import { useCurrentPage } from '@/hooks/useCurrentPage';
 import { mushafRiwaya } from '@/jotai/atoms';
+
+import { useCurrentPage } from './useCurrentPage';
 
 export function useImagesArray() {
   const [error, setError] = useState<string | null>(null);

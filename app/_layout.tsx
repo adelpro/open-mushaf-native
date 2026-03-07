@@ -29,13 +29,10 @@ import { HelmetProvider } from 'react-helmet-async';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import ErrorBoundary from '@/components/ErrorBoundary';
-import { Notification } from '@/components/Notification';
-import { SEO } from '@/components/seo';
+import { ErrorBoundary, Notification, Seo } from '@/components';
+import { NotificationProvider } from '@/Context/NotificationProvider';
 import { isRTL } from '@/utils';
 import { setupNotificationChannel } from '@/utils/notifications';
-
-import { NotificationProvider } from '../components/NotificationProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -105,7 +102,7 @@ export default function RootLayout() {
     <ErrorBoundary>
       <NotificationProvider>
         <HelmetProvider>
-          <SEO />
+          <Seo />
           <GestureHandlerRootView style={{ flex: 1 }}>
             <SafeAreaProvider>
               <SafeAreaView

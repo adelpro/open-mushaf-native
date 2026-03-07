@@ -3,14 +3,16 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import { useAtomValue, useSetAtom } from 'jotai/react';
 
-import { ChangeLogs } from '@/components/ChangeLogs';
-import { MushafPage } from '@/components/MushafPage';
-import { ReadingPositionBanner } from '@/components/ReadingPositionBanner';
-import { SelectRiwaya } from '@/components/SelectRiwaya';
-import { SEO } from '@/components/seo';
-import { ThemedView } from '@/components/ThemedView';
-import { TopMenu } from '@/components/TopMenu';
-import { TutorialGuide } from '@/components/TutorialGuide';
+import {
+  ChangeLogs,
+  MushafPage,
+  ReadingPositionBanner,
+  SelectRiwaya,
+  Seo,
+  ThemedView,
+  TopMenu,
+  TutorialGuide,
+} from '@/components';
 import {
   currentAppVersion,
   finishedTutorial,
@@ -40,7 +42,7 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <SEO
+      <Seo
         title="المصحف المفتوح - المصحف"
         description="قرآءة القرآن مع خيارات متعددة للقراءات والتفاسير"
       />
