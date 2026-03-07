@@ -32,9 +32,9 @@ export default function TrackerScreen() {
 
   const { updateAndroidWidget } = useUpdateAndroidWidget();
 
-  const [dailyTrackerGoalValue, setdailyTrackerGoalValue] =
+  const [dailyTrackerGoalValue, setDailyTrackerGoalValue] =
     useAtom(dailyTrackerGoal);
-  const [dailyTrackerCompletedValue, setdailyTrackerCompletedValue] = useAtom(
+  const [dailyTrackerCompletedValue, setDailyTrackerCompletedValue] = useAtom(
     dailyTrackerCompleted,
   );
   const [yesterdayPageValue, setYesterdayPageValue] = useAtom(yesterdayPage);
@@ -51,9 +51,9 @@ export default function TrackerScreen() {
       : 0;
 
   // Should change by full hizb (8 thumns)
-  const incrementDailyGoal = () => setdailyTrackerGoalValue((prev) => prev + 1);
+  const incrementDailyGoal = () => setDailyTrackerGoalValue((prev) => prev + 1);
   const decrementDailyGoal = () =>
-    setdailyTrackerGoalValue((prev) => Math.max(1, prev - 1));
+    setDailyTrackerGoalValue((prev) => Math.max(1, prev - 1));
 
   // Consolidated reset logic into one function
   const performReset = async () => {
@@ -64,7 +64,7 @@ export default function TrackerScreen() {
       });
     }
 
-    setdailyTrackerCompletedValue({
+    setDailyTrackerCompletedValue({
       value: 0,
       date: new Date().toDateString(),
     });
