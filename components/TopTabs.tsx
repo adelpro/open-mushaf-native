@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 import { ListTabs } from '@/types';
 
 import { ThemedText } from './ThemedText';
@@ -11,7 +11,7 @@ type Props = {
   activeTab: ListTabs;
 };
 
-export default function TopTabs({ activeTab, setActiveTab }: Props) {
+export function TopTabs({ activeTab, setActiveTab }: Props) {
   const { backgroundColor, textColor } = useColors();
 
   const handleTabPress = (tab: ListTabs) => {
