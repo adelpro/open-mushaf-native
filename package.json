@@ -46,8 +46,8 @@
     "test": "vitest run --passWithNoTests",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage --passWithNoTests",
-    "clean": "rimraf .next node_modules && rimraf .expo",
     "clean:all": "rimraf node_modules .expo android ios",
+    "fresh": "yarn clean:all && yarn install && yarn prebuild",
     "docs:start": "cd docs && npx fumapress"
   },
   "jest": {
