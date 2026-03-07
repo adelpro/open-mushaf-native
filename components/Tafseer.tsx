@@ -4,12 +4,12 @@ import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import { useAtom } from 'jotai/react';
 import HTMLView from 'react-native-htmlview';
 
-import { useColors } from '@/hooks/useColors';
-import { useQuranMetadata } from '@/hooks/useQuranMetadata';
 import {
   hasNoTafseerContent,
+  useColors,
+  useQuranMetadata,
   useTafseerContent,
-} from '@/hooks/useTafseerContent';
+} from '@/hooks';
 import { tafseerTab } from '@/jotai/atoms';
 import { TafseerAya, TafseerTabs } from '@/types';
 
@@ -38,13 +38,15 @@ type Props = {
 
 export function Tafseer({ aya, surah, opacity = undefined }: Props) {
   const { tintColor, textColor } = useColors();
-  const { surahData, specsData } = useQuranMetadata();
+  const { surahData } = useQuranMetadata();
   const [surahName, setSurahName] = useState<string>('');
   const [selectedTabValue, setSelectedTab] = useAtom(tafseerTab);
   const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
   const [tabsWithContent, setTabsWithContent] = useState<
     Record<TafseerTabs, boolean>
   >({} as Record<TafseerTabs, boolean>);
+
+  const { specsData } = useQuranMetadata();
 
   const { countBesmalAya } = specsData;
 

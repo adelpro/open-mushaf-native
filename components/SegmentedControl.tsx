@@ -41,6 +41,9 @@ export function SegmentedControl({
             index === selectedIndex && { backgroundColor: activeColor },
           ]}
           onPress={() => handlePress(index)}
+          accessibilityLabel={option}
+          accessibilityRole="radio"
+          accessibilityState={{ selected: index === selectedIndex }}
         >
           <ThemedText
             style={[

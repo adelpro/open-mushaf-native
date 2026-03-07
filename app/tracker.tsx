@@ -12,13 +12,14 @@ import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useAtom } from 'jotai/react';
 
-import { SEO } from '@/components/seo';
-import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useColors } from '@/hooks/useColors';
-import { useCurrentPage } from '@/hooks/useCurrentPage';
-import { useUpdateAndroidWidget } from '@/hooks/useUpdateAndroidWidget';
+import {
+  ReadingChart,
+  Seo,
+  ThemedButton,
+  ThemedText,
+  ThemedView,
+} from '@/components';
+import { useColors, useCurrentPage, useUpdateAndroidWidget } from '@/hooks';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
@@ -31,9 +32,9 @@ export default function TrackerScreen() {
 
   const { updateAndroidWidget } = useUpdateAndroidWidget();
 
-  const [dailyTrackerGoalValue, setdailyTrackerGoalValue] =
+  const [dailyTrackerGoalValue, setDailyTrackerGoalValue] =
     useAtom(dailyTrackerGoal);
-  const [dailyTrackerCompletedValue, setdailyTrackerCompletedValue] = useAtom(
+  const [dailyTrackerCompletedValue, setDailyTrackerCompletedValue] = useAtom(
     dailyTrackerCompleted,
   );
   const [yesterdayPageValue, setYesterdayPageValue] = useAtom(yesterdayPage);
@@ -50,9 +51,9 @@ export default function TrackerScreen() {
       : 0;
 
   // Should change by full hizb (8 thumns)
-  const incrementDailyGoal = () => setdailyTrackerGoalValue((prev) => prev + 1);
+  const incrementDailyGoal = () => setDailyTrackerGoalValue((prev) => prev + 1);
   const decrementDailyGoal = () =>
-    setdailyTrackerGoalValue((prev) => Math.max(1, prev - 1));
+    setDailyTrackerGoalValue((prev) => Math.max(1, prev - 1));
 
   // Consolidated reset logic into one function
   const performReset = async () => {
@@ -63,7 +64,7 @@ export default function TrackerScreen() {
       });
     }
 
-    setdailyTrackerCompletedValue({
+    setDailyTrackerCompletedValue({
       value: 0,
       date: new Date().toDateString(),
     });
@@ -87,7 +88,7 @@ export default function TrackerScreen() {
   return (
     <>
       <Stack.Screen options={{ title: 'الورد' }} />
-      <SEO title="الورد - المصحف المفتوح" description="الورد في تطبيق المصحف" />
+      <Seo title="الورد - المصحف المفتوح" description="الورد في تطبيق المصحف" />
       <ThemedView style={styles.container}>
         <ScrollView
           style={styles.scrollView}
@@ -148,8 +149,9 @@ export default function TrackerScreen() {
                   <TouchableOpacity
                     style={styles.controlButton}
                     onPress={decrementDailyGoal}
-                    accessibilityRole="button"
                     accessibilityLabel="تقليل الهدف اليومي"
+                    accessibilityHint="اضغط لتقليل عدد الأحزاب في الهدف اليومي"
+                    accessibilityRole="button"
                   >
                     <Feather name="minus" size={20} color={primaryColor} />
                   </TouchableOpacity>
@@ -159,8 +161,9 @@ export default function TrackerScreen() {
                   <TouchableOpacity
                     style={styles.controlButton}
                     onPress={incrementDailyGoal}
-                    accessibilityRole="button"
                     accessibilityLabel="زيادة الهدف اليومي"
+                    accessibilityHint="اضغط لزيادة عدد الأحزاب في الهدف اليومي"
+                    accessibilityRole="button"
                   >
                     <Feather name="plus" size={20} color={primaryColor} />
                   </TouchableOpacity>
@@ -168,6 +171,8 @@ export default function TrackerScreen() {
               </ThemedView>
             </ThemedView>
           </ThemedView>
+
+          <ReadingChart />
 
           <ThemedView
             style={[styles.navigationSection, { backgroundColor: cardColor }]}
@@ -236,6 +241,8 @@ export default function TrackerScreen() {
             style={styles.modalOverlay}
             activeOpacity={1}
             onPress={() => setConfirmModalVisible(false)} // Close on overlay press
+            accessibilityLabel="إغلاق نافذة التأكيد"
+            accessibilityRole="button"
           >
             {/* Prevent modal closing when pressing inside content */}
             <ThemedView
@@ -285,8 +292,6 @@ export default function TrackerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
-    margin: 2,
     alignItems: 'center',
     justifyContent: 'flex-start',
     alignSelf: 'center',

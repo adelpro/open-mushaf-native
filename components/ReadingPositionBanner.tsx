@@ -10,8 +10,7 @@ import {
   READING_BANNER_HEIGHT_CLOSED,
   READING_BANNER_HEIGHT_OPEN,
 } from '@/constants';
-import { useColors } from '@/hooks/useColors';
-import { useCurrentPage } from '@/hooks/useCurrentPage';
+import { useColors, useCurrentPage } from '@/hooks';
 import { readingBannerCollapsedState, yesterdayPage } from '@/jotai/atoms';
 
 import { ThemedButton } from './ThemedButton';
@@ -64,7 +63,11 @@ export function ReadingPositionBanner() {
       <TouchableOpacity
         style={styles.toggleIcon}
         onPress={toggleCollapse}
-        accessibilityLabel={isCollapsed ? 'Expand banner' : 'Collapse banner'}
+        accessibilityRole="button"
+        accessibilityLabel={
+          isCollapsed ? 'توسيع شريط موضع القراءة' : 'طي شريط موضع القراءة'
+        }
+        accessibilityHint="اضغط لتبديل عرض خيارات موضع القراءة"
       >
         <ThemedView
           style={[styles.headerContainer, { backgroundColor: 'transparent' }]}

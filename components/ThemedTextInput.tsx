@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, type TextInputProps } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  TextInput,
+  type TextInputProps,
+} from 'react-native';
 
 import { useColors } from '@/hooks/useColors';
 
@@ -24,7 +29,11 @@ export function ThemedTextInput({
       style={[
         {
           color,
-          outline: 'none',
+          ...Platform.select({
+            web: {
+              outline: 'none',
+            },
+          }),
           borderColor: isFocused ? primaryColor : secondaryColor,
         },
         variant === 'default' && [

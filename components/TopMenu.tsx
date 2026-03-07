@@ -14,8 +14,7 @@ import * as Progress from 'react-native-progress';
 
 import { ThemedView } from '@/components/ThemedView';
 import {} from '@/constants';
-import { useColors } from '@/hooks/useColors';
-import { useQuranMetadata } from '@/hooks/useQuranMetadata';
+import { useColors, useQuranMetadata } from '@/hooks';
 import {
   bottomMenuState,
   currentSavedPage,
@@ -130,8 +129,9 @@ export function TopMenu() {
                 setShowTopMenuState(false);
                 router.push('/tracker');
               }}
-              accessibilityRole="button"
               accessibilityLabel="الورد اليومي"
+              accessibilityHint="اضغط لفتح متتبع الورد اليومي"
+              accessibilityRole="button"
             >
               <View style={styles.progressContainer}>
                 <Progress.Circle
@@ -158,8 +158,9 @@ export function TopMenu() {
               setShowTopMenuState(false);
               router.push('/navigation');
             }}
+            accessibilityLabel="التنقل"
+            accessibilityHint="اضغط لفتح صفحة التنقل بين السور والأجزاء"
             accessibilityRole="button"
-            accessibilityLabel="الانتقال إلى صفحة أو سورة"
           >
             <Ionicons
               name="navigate-circle-outline"
@@ -174,8 +175,9 @@ export function TopMenu() {
               setShowTopMenuState(false);
               router.push('/search');
             }}
+            accessibilityLabel="البحث"
+            accessibilityHint="اضغط لفتح صفحة البحث في القرآن"
             accessibilityRole="button"
-            accessibilityLabel="البحث في القرآن"
           >
             <Ionicons name="search" size={ICON_SIZE} color={tintColor} />
           </TouchableOpacity>

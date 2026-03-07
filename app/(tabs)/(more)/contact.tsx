@@ -1,13 +1,11 @@
 import { StyleSheet } from 'react-native';
 
-import { ContactForm } from '@/components/ContactForm';
-import { SEO } from '@/components/seo';
-import { ThemedView } from '@/components/ThemedView';
+import { ContactForm, Seo, ThemedView } from '@/components';
 
 export default function Contact() {
   return (
     <ThemedView style={styles.container}>
-      <SEO
+      <Seo
         title="المصحف المفتوح - تواصل بنا"
         description="تواصل معنا عبر نموذج الاتصال للاستفسارات والاقتراحات"
       />

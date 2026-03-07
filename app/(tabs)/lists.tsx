@@ -3,11 +3,7 @@ import { Platform, ScrollView, StyleSheet } from 'react-native';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ChapterList } from '@/components/ChapterList';
-import { SEO } from '@/components/seo';
-import { SurahList } from '@/components/SurahList';
-import { ThemedView } from '@/components/ThemedView';
-import { TopTabs } from '@/components/TopTabs';
+import { ChapterList, Seo, SurahList, ThemedView, TopTabs } from '@/components';
 import { ListTabs } from '@/types';
 
 export default function ListsScreen() {
@@ -21,7 +17,7 @@ export default function ListsScreen() {
         { paddingTop: Platform.OS === 'ios' ? insets.top : 0 },
       ]}
     >
-      <SEO
+      <Seo
         title="القوائم"
         description="قائمة السور والأجزاء - المصحف المفتوح"
       />

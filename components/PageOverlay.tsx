@@ -3,8 +3,9 @@ import { I18nManager, Pressable, StyleSheet } from 'react-native';
 
 import { useSetAtom } from 'jotai';
 
-import { usePageOverlay } from '@/hooks/usePageOverlay';
+import { usePageOverlay } from '@/hooks';
 import { topMenuState } from '@/jotai/atoms';
+import { triggerImpactHaptic } from '@/utils';
 
 import { TafseerPopup } from './TafseerPopup';
 
@@ -19,6 +20,7 @@ export function PageOverlay({ index, dimensions }: Props) {
   const setShowTopMenu = useSetAtom(topMenuState);
 
   const handleAyaClick = ({ aya, surah }: { aya: number; surah: number }) => {
+    triggerImpactHaptic();
     setSelectedAya({ aya, surah });
     setShow(true);
   };

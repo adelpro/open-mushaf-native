@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 import { ListTabs } from '@/types';
 
 import { ThemedText } from './ThemedText';
@@ -30,6 +30,10 @@ export function TopTabs({ activeTab, setActiveTab }: Props) {
             borderBottomColor: textColor,
           },
         ]}
+        accessibilityLabel="السور"
+        accessibilityHint="اضغط لعرض قائمة السور"
+        accessibilityRole="tab"
+        accessibilityState={{ selected: activeTab === 'surahs' }}
       >
         <ThemedText
           style={[
@@ -52,6 +56,10 @@ export function TopTabs({ activeTab, setActiveTab }: Props) {
             borderBottomColor: textColor,
           },
         ]}
+        accessibilityLabel="الأجزاء"
+        accessibilityHint="اضغط لعرض قائمة الأجزاء"
+        accessibilityRole="tab"
+        accessibilityState={{ selected: activeTab === 'juzs' }}
       >
         <ThemedText
           style={[
@@ -82,10 +90,9 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 24,
     lineHeight: 32,
-    fontFamily: 'Tajawal_700Bold',
-    fontWeight: '500',
+    fontFamily: 'Tajawal_500Medium',
   },
   activeTabText: {
-    fontWeight: '700',
+    fontFamily: 'Tajawal_700Bold',
   },
 });
