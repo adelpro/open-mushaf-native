@@ -21,16 +21,15 @@ export function getSurahNameByPage(surahs: Surah[], page: number): string {
 }
 
 /**
- * Returns the surah number (as a string) for the surah that contains the
- * given page.
+ * Returns the surah number for the surah that contains the given page.
  *
  * Falls back to `1` when no matching surah is found.
  *
  * @param surahs - Ordered array of surah metadata.
  * @param page   - Mushaf page number (1-based).
- * @returns The surah number string, or `1` as a default fallback.
+ * @returns The surah number, or `1` as a default fallback.
  */
-export function getSurahNumberByPage(surahs: Surah[], page: number): string {
+export function getSurahNumberByPage(surahs: Surah[], page: number): number {
   const surah = surahs.find(
     (s, index) =>
       page >= s.startingPage &&

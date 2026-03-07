@@ -6,13 +6,13 @@ import { useAtomValue } from 'jotai/react';
 import { imagesMapHafs, imagesMapWarsh } from '@/constants';
 import { mushafRiwaya } from '@/jotai/atoms';
 
-import useQuranMetadata from './useQuranMetadata';
+import { useQuranMetadata } from './useQuranMetadata';
 
 /**
  * Hook to preload images for smoother page navigation
  * Preloads the current page, next two pages, and previous page
  */
-export default function useImagePreloader(currentPage: number) {
+export function useImagePreloader(currentPage: number) {
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);
   const preloadedPagesRef = useRef<Set<number>>(new Set());
   const { specsData } = useQuranMetadata();

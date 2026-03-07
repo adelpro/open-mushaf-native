@@ -13,7 +13,7 @@
     "start:clear": "expo start --reset-cache",
     "web": "expo start --web",
     "prebuild": "npx expo prebuild --clean",
-    "build": "expo build",
+    "build": "expo export",
     "android": "expo run:android -d",
     "android:prod": "npx expo run:android --variant Release -d",
     "ios": "expo run:ios",
@@ -37,24 +37,25 @@
     "doctor": "npx expo-doctor",
     "react-compiler-check": "npx react-compiler-healthcheck@latest",
     "commit": "git-cz",
-    "lint": "eslint . --cache --concurrency=auto --max-warnings=0",
-    "lint:fix": "eslint . --fix --cache --concurrency=auto",
+    "lint": "npx eslint . --cache --concurrency=auto --max-warnings=0",
+    "lint:fix": "npx eslint . --fix --cache --concurrency=auto",
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky || true",
-    "test": "vitest",
+    "test": "vitest run --passWithNoTests",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
     "clean": "rimraf .next node_modules && rimraf .expo",
-    "clean:all": "rimraf node_modules .expo android ios"
+    "clean:all": "rimraf node_modules .expo android ios",
+    "docs:start": "cd docs && npx fumapress"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --fix --cache --concurrency=auto",
+      "npx eslint --fix --cache --concurrency=auto",
       "prettier --write"
     ]
   },
@@ -85,6 +86,7 @@
     "expo-secure-store": "~15.0.8",
     "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",
+    "expo-store-review": "~9.0.9",
     "expo-system-ui": "~6.0.9",
     "expo-updates": "~29.0.15",
     "expo-web-browser": "~15.0.10",
@@ -115,11 +117,14 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@eslint/plugin-kit": "^0.6.0",
+    "@expo/config-plugins": "^55.0.6",
+    "@expo/image-utils": "^0.8.12",
     "@types/jest": "^29.5.12",
     "@types/react": "~19.1.17",
     "@types/react-native-htmlview": "^0.16.5",
     "@types/react-test-renderer": "^18.0.7",
     "@typescript/native-preview": "^7.0.0-dev.20250523.1",
+    "@vitest/coverage-v8": "4.0.18",
     "babel-plugin-react-compiler": "^19.0.0-beta-df7b47d-20241124",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "commitizen": "^4.3.1",
@@ -139,7 +144,9 @@
     "react-native-svg-transformer": "^1.5.0",
     "react-test-renderer": "18.2.0",
     "rimraf": "^6.0.0",
-    "typescript": "~5.9.3"
+    "temp-dir": "^3.0.0",
+    "typescript": "~5.9.3",
+    "vitest": "^4.0.18"
   },
   "config": {
     "commitizen": {

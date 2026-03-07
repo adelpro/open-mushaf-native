@@ -7,7 +7,7 @@ import { type QuranText, type WordMap } from 'quran-search-engine';
 import { HighlightText } from '@/components/HighlightArabic';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 
 type SearchResultItemProps = {
   item: QuranText;
@@ -24,7 +24,7 @@ type SearchResultItemProps = {
   onSelectAya: (aya: { aya: number; surah: number }) => void;
 };
 
-export default function SearchResultItem({
+export function SearchResultItem({
   item,
   query,
   advancedOptions,

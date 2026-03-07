@@ -12,13 +12,14 @@ import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useAtom } from 'jotai/react';
 
-import SEO from '@/components/seo';
-import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
-import { useUpdateAndroidWidget } from '@/hooks/useUpdateAndroidWidget';
+import {
+  ReadingChart,
+  Seo,
+  ThemedButton,
+  ThemedText,
+  ThemedView,
+} from '@/components';
+import { useColors, useCurrentPage, useUpdateAndroidWidget } from '@/hooks';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
@@ -87,7 +88,7 @@ export default function TrackerScreen() {
   return (
     <>
       <Stack.Screen options={{ title: 'الورد' }} />
-      <SEO title="الورد - المصحف المفتوح" description="الورد في تطبيق المصحف" />
+      <Seo title="الورد - المصحف المفتوح" description="الورد في تطبيق المصحف" />
       <ThemedView style={styles.container}>
         <ScrollView
           style={styles.scrollView}
@@ -170,6 +171,8 @@ export default function TrackerScreen() {
               </ThemedView>
             </ThemedView>
           </ThemedView>
+
+          <ReadingChart />
 
           <ThemedView
             style={[styles.navigationSection, { backgroundColor: cardColor }]}
@@ -289,8 +292,6 @@ export default function TrackerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
-    margin: 2,
     alignItems: 'center',
     justifyContent: 'flex-start',
     alignSelf: 'center',
