@@ -22,6 +22,7 @@ type SearchResultItemProps = {
     cleanQuery?: string,
   ) => string[];
   onSelectAya: (aya: { aya: number; surah: number }) => void;
+  disabled?: boolean;
 };
 
 export function SearchResultItem({
@@ -31,6 +32,7 @@ export function SearchResultItem({
   wordMap,
   getPositiveTokens,
   onSelectAya,
+  disabled,
 }: SearchResultItemProps) {
   const { directColor, fuzzyColor, relatedColor } = useColors();
   const cleanQuery = query.trim();
@@ -103,6 +105,7 @@ export function SearchResultItem({
       accessibilityLabel={`سورة ${item.sura_name} الآية ${item.aya_id}`}
       accessibilityHint="اضغط لعرض التفسير"
       accessibilityRole="button"
+      disabled={disabled}
     >
       <ThemedView style={styles.item}>
         <View style={styles.header}>
