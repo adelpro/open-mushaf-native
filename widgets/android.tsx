@@ -162,7 +162,6 @@ export default function AndroidWidget({
             fontSize: 22,
             fontWeight: '700',
             color: textColor,
-            lineHeight: 26,
           }}
         />
         <IconWidget
@@ -214,7 +213,6 @@ export default function AndroidWidget({
         <FlexWidget
           style={{
             flexDirection: 'column',
-            columnGap: 20,
           }}
         >
           <FlexWidget

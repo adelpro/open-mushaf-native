@@ -11,12 +11,8 @@ import { Feather } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { useAtom } from 'jotai/react';
 
-import SEO from '@/components/seo';
-import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
+import { Seo, ThemedButton, ThemedText, ThemedView } from '@/components';
+import { useColors, useCurrentPage } from '@/hooks';
 import { Bookmark, bookmarks as bookmarksAtom } from '@/jotai/atoms';
 
 export default function BookmarksScreen() {
@@ -93,7 +89,7 @@ export default function BookmarksScreen() {
   return (
     <>
       <Stack.Screen options={{ title: 'العلامات المرجعية' }} />
-      <SEO
+      <Seo
         title="العلامات المرجعية - المصحف المفتوح"
         description="إدارة العلامات المرجعية في المصحف"
       />

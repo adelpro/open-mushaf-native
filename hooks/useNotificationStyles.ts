@@ -1,4 +1,4 @@
-export default function useNotificationStyles() {
+export function useNotificationStyles() {
   return {
     neutral: { borderColor: '#CCC', backgroundColor: '#333', color: '#FFF' },
     success: {

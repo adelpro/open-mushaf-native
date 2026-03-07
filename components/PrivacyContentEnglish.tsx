@@ -7,7 +7,7 @@ import { isRTL } from '@/utils';
 
 import { ExternalLink } from './ExternalLink';
 
-export default function PrivacyContentEnglish() {
+export function PrivacyContentEnglish() {
   return (
     <ThemedView style={[styles.container]}>
       <ThemedText style={[styles.title, styles.englishText]}>

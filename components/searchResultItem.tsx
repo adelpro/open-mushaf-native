@@ -7,7 +7,7 @@ import { type QuranText, type WordMap } from 'quran-search-engine';
 import { HighlightText } from '@/components/HighlightArabic';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 
 type SearchResultItemProps = {
   item: QuranText;
@@ -24,7 +24,7 @@ type SearchResultItemProps = {
   onSelectAya: (aya: { aya: number; surah: number }) => void;
 };
 
-export default function SearchResultItem({
+export function SearchResultItem({
   item,
   query,
   advancedOptions,
@@ -100,6 +100,9 @@ export default function SearchResultItem({
   return (
     <TouchableOpacity
       onPress={() => onSelectAya({ aya: item.aya_id, surah: item.sura_id })}
+      accessibilityLabel={`سورة ${item.sura_name} الآية ${item.aya_id}`}
+      accessibilityHint="اضغط لعرض التفسير"
+      accessibilityRole="button"
     >
       <ThemedView style={styles.item}>
         <View style={styles.header}>

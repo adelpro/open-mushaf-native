@@ -20,10 +20,8 @@ import PageSVG from '@/assets/svgs/page.svg';
 import SettingsSVG from '@/assets/svgs/settings.svg';
 import ShareSVG from '@/assets/svgs/share.svg';
 import WelcomeSVG from '@/assets/svgs/welcome.svg';
-import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useColors } from '@/hooks/useColors';
+import { ThemedButton, ThemedText, ThemedView } from '@/components';
+import { useColors } from '@/hooks';
 import { isWeb } from '@/utils/isWeb';
 
 export default function MoreScreen() {
@@ -172,6 +170,8 @@ export default function MoreScreen() {
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setErrorModalVisible(false)}
+          accessibilityLabel="إغلاق نافذة الخطأ"
+          accessibilityRole="button"
         >
           <ThemedView
             style={[styles.modalContent, { backgroundColor: cardColor }]}

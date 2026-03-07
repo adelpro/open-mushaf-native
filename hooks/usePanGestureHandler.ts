@@ -1,58 +1,47 @@
+import { useMemo } from 'react';
+
 import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS, useSharedValue, withSpring } from 'react-native-reanimated';
 
-import {
-  SPRING_DAMPING,
-  SPRING_STIFFNESS,
-  SWIPE_THRESHOLD_LANDSCAPE,
-  SWIPE_THRESHOLD_PORTRAIT,
-  TRANSLATION_CLAMP,
-} from '@/constants';
+import { PAN_GESTURE_CONFIG } from '@/constants';
 
-import useOrientation from './useOrientation';
+import { useOrientation } from './useOrientation';
 
 export const usePanGestureHandler = (
-  currentPage: number,
-  onPageChange: (page: number) => void,
-  maxPages: number,
-  /** Optional multiplier applied to the base swipe threshold (default 1). */
-  sensitivityMultiplier = 1,
+  onPageChange: (delta: number) => void,
+  sensitivityMultiplier: number = 1.0,
 ) => {
   const translateX = useSharedValue(0);
   const { isLandscape } = useOrientation();
 
-  const panGestureHandler = Gesture.Pan()
-    .onUpdate((e) => {
-      // Clamp the drag so the page doesn't translate too far visually
-      translateX.value = Math.max(
-        -TRANSLATION_CLAMP,
-        Math.min(TRANSLATION_CLAMP, e.translationX),
-      );
-    })
-    .onEnd((e) => {
-      // Choose base threshold depending on orientation, then scale by user preference
-      const baseThreshold = isLandscape
-        ? SWIPE_THRESHOLD_LANDSCAPE
-        : SWIPE_THRESHOLD_PORTRAIT;
-      const threshold = baseThreshold * sensitivityMultiplier;
+  const panGestureHandler = useMemo(() => {
+    return Gesture.Pan()
+      .activeOffsetX(PAN_GESTURE_CONFIG.ACTIVATION_OFFSET_X)
+      .failOffsetY(PAN_GESTURE_CONFIG.FAIL_OFFSET_Y)
+      .onUpdate((e) => {
+        translateX.value = Math.max(
+          -PAN_GESTURE_CONFIG.MAX_TRANSLATION_X,
+          Math.min(PAN_GESTURE_CONFIG.MAX_TRANSLATION_X, e.translationX),
+        );
+      })
+      .onEnd((e) => {
+        const baseThreshold = isLandscape
+          ? PAN_GESTURE_CONFIG.LANDSCAPE_THRESHOLD
+          : PAN_GESTURE_CONFIG.PORTRAIT_THRESHOLD;
 
-      const targetPage =
-        e.translationX > threshold
-          ? Math.min(currentPage + 1, maxPages) // Swipe Right
-          : e.translationX < -threshold
-            ? Math.max(currentPage - 1, 1) // Swipe Left
-            : currentPage; // No page change
+        const threshold = baseThreshold / sensitivityMultiplier;
 
-      if (targetPage !== currentPage) {
-        runOnJS(onPageChange)(targetPage);
-      }
+        if (Math.abs(e.translationX) > threshold) {
+          const d = e.translationX > 0 ? 1 : -1;
+          runOnJS(onPageChange)(d);
+        }
 
-      // Snap back with a smooth spring animation
-      translateX.value = withSpring(0, {
-        damping: SPRING_DAMPING,
-        stiffness: SPRING_STIFFNESS,
+        translateX.value = withSpring(0, {
+          damping: PAN_GESTURE_CONFIG.SPRING_DAMPING,
+          stiffness: PAN_GESTURE_CONFIG.SPRING_STIFFNESS,
+        }); // Smooth return
       });
-    });
+  }, [isLandscape, onPageChange, sensitivityMultiplier, translateX]);
 
   return { translateX, panGestureHandler };
 };

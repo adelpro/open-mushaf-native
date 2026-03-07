@@ -1,4 +1,5 @@
 import React from 'react';
+import { useColorScheme } from 'react-native';
 
 import {
   Feather,
@@ -9,7 +10,6 @@ import { Tabs } from 'expo-router';
 import { useAtomValue } from 'jotai/react';
 
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { bottomMenuState } from '@/jotai/atoms';
 
 export default function TabLayout() {

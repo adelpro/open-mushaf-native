@@ -9,7 +9,7 @@ import {
 
 import { Feather } from '@expo/vector-icons';
 
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 import { getPaginationRange, isCompactView } from '@/utils/dimensionsUtils';
 
 import { ThemedText } from './ThemedText';
@@ -23,7 +23,7 @@ interface PageNavigatorProps {
   iconColor: string;
 }
 
-export default function PageNavigator({
+export function PageNavigator({
   currentPage,
   totalPages,
   onPageChange,
@@ -106,8 +106,9 @@ export default function PageNavigator({
             <TouchableOpacity
               style={styles.submitButton}
               onPress={handleInputSubmit}
-              accessibilityRole="button"
               accessibilityLabel="تأكيد رقم الصفحة"
+              accessibilityHint="اضغط للانتقال إلى رقم الصفحة المدخل"
+              accessibilityRole="button"
             >
               <Feather name="check" size={18} color={primaryColor} />
             </TouchableOpacity>
@@ -135,6 +136,16 @@ export default function PageNavigator({
                     ]}
                     onPress={() => handlePageNumberPress(page)}
                     disabled={page === '...'}
+                    accessibilityLabel={
+                      page === '...' ? 'المزيد من الصفحات' : `صفحة ${page}`
+                    }
+                    accessibilityHint={
+                      page === '...'
+                        ? undefined
+                        : `اضغط للانتقال إلى صفحة ${page}`
+                    }
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: page === currentPage }}
                   >
                     <ThemedText
                       style={[
@@ -155,6 +166,9 @@ export default function PageNavigator({
                     { borderColor: primaryColor },
                   ]}
                   onPress={toggleInput}
+                  accessibilityLabel={`الصفحة الحالية ${currentPage}`}
+                  accessibilityHint="اضغط لإدخال رقم صفحة للانتقال إليها"
+                  accessibilityRole="button"
                 >
                   <ThemedText
                     style={[styles.compactPageText, { color: primaryColor }]}

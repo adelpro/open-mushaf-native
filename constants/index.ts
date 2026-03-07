@@ -12,4 +12,6 @@ export * from './riwayaOptions';
 
 export * from './readingThemes';
 
-export * from './gesture';
+export * from './readingChart';
+
+export * from './panGesture';
