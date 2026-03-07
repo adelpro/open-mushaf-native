@@ -1,18 +1,23 @@
 import { useState } from 'react';
-import { ScrollView } from 'react-native';
+import { Platform, ScrollView, StyleSheet } from 'react-native';
 
-import ChapterList from '@/components/ChapterList';
-import SEO from '@/components/seo';
-import SurahList from '@/components/SurahList';
-import { ThemedView } from '@/components/ThemedView';
-import TopTabs from '@/components/TopTabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { ChapterList, Seo, SurahList, ThemedView, TopTabs } from '@/components';
 import { ListTabs } from '@/types';
 
 export default function ListsScreen() {
   const [activeTab, setActiveTab] = useState<ListTabs>('surahs');
+  const insets = useSafeAreaInsets();
+
   return (
-    <ThemedView style={{ flex: 1, marginTop: 30 }}>
-      <SEO
+    <ThemedView
+      style={[
+        styles.container,
+        { paddingTop: Platform.OS === 'ios' ? insets.top : 0 },
+      ]}
+    >
+      <Seo
         title="القوائم"
         description="قائمة السور والأجزاء - المصحف المفتوح"
       />
@@ -24,3 +29,9 @@ export default function ListsScreen() {
     </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

@@ -1,16 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
 import { useAtomValue, useSetAtom } from 'jotai/react';
 
-import ChangeLogs from '@/components/ChangeLogs';
-import MushafPage from '@/components/MushafPage';
-import ReadingPositionBanner from '@/components/ReadingPositionBanner';
-import SelectRiwaya from '@/components/SelectRiwaya';
-import SEO from '@/components/seo';
-import { ThemedView } from '@/components/ThemedView';
-import TopMenu from '@/components/TopMenu';
-import TutorialGuide from '@/components/TutorialGuide';
+import {
+  ChangeLogs,
+  MushafPage,
+  ReadingPositionBanner,
+  SelectRiwaya,
+  Seo,
+  ThemedView,
+  TopMenu,
+  TutorialGuide,
+} from '@/components';
 import {
   currentAppVersion,
   finishedTutorial,
@@ -22,6 +24,7 @@ import { getAppVersion, isWeb } from '@/utils';
 export default function HomeScreen() {
   const setShowTopMenu = useSetAtom(topMenuState);
   const [showChangeLogs, setShowChangeLogs] = useState<boolean>(false);
+  const setCurrentVersionValue = useSetAtom(currentAppVersion);
   const currentAppVersionValue = useAtomValue(currentAppVersion);
   const finishedTutorialValue = useAtomValue(finishedTutorial);
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);
@@ -32,17 +35,21 @@ export default function HomeScreen() {
     setShowChangeLogs(show);
   }, [currentAppVersionValue]);
 
+  const handleCloseChangeLogs = useCallback(() => {
+    setShowChangeLogs(false);
+    setCurrentVersionValue(getAppVersion());
+  }, [setCurrentVersionValue]);
+
   return (
     <ThemedView style={styles.container}>
-      <SEO
+      <Seo
         title="المصحف المفتوح - المصحف"
         description="قرآءة القرآن مع خيارات متعددة للقراءات والتفاسير"
       />
       <ReadingPositionBanner />
+      <ChangeLogs visible={showChangeLogs} onClose={handleCloseChangeLogs} />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
-        {showChangeLogs ? (
-          <ChangeLogs />
-        ) : !finishedTutorialValue ? (
+        {!finishedTutorialValue ? (
           <ThemedView style={{ width: '100%', height: '100%' }}>
             <TutorialGuide />
           </ThemedView>

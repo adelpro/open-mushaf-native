@@ -5,6 +5,7 @@
   "author": "Adel Benyahia <adelpro@gmail.com>",
   "repository": "https://github.com/adelpro/open-mushaf-native.git",
   "main": "index.ts",
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "start": "expo start",
     "start:atlas": "cross-env EXPO_UNSTABLE_ATLAS=true expo start",
@@ -12,6 +13,7 @@
     "start:clear": "expo start --reset-cache",
     "web": "expo start --web",
     "prebuild": "npx expo prebuild --clean",
+    "build": "expo export",
     "android": "expo run:android -d",
     "android:prod": "npx expo run:android --variant Release -d",
     "ios": "expo run:ios",
@@ -31,22 +33,30 @@
     "deploy:local": "yarn run predeploy && firebase emulators:start --only hosting",
     "deploy:preview": "yarn run predeploy && firebase hosting:channel:deploy preview",
     "deploy:live": "yarn run predeploy && firebase deploy --only hosting",
-    "test": "jest --watchAll",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
     "scan": "expo start & npx react-scan@latest localhost:8081",
     "doctor": "npx expo-doctor",
     "react-compiler-check": "npx react-compiler-healthcheck@latest",
     "commit": "git-cz",
-    "prepare": "husky"
+    "lint": "npx eslint . --cache --concurrency=auto --max-warnings=0",
+    "lint:fix": "npx eslint . --fix --cache --concurrency=auto",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky || true",
+    "test": "vitest run --passWithNoTests",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "clean:all": "rimraf node_modules .expo android ios",
+    "fresh": "yarn clean:all && yarn install && yarn prebuild",
+    "docs:start": "cd docs && npx fumapress"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": [
-      "npx prettier --write",
-      "npx eslint --fix"
+    "*.{js,jsx,ts,tsx}": [
+      "npx eslint --fix --cache --concurrency=auto",
+      "prettier --write"
     ]
   },
   "dependencies": {
@@ -61,12 +71,13 @@
     "@react-native/assets-registry": "^0.75.4",
     "@react-navigation/native-stack": "^7.0.0",
     "cross-env": "^7.0.3",
-    "expo": "54.0.30",
+    "expo": "~54.0.33",
     "expo-application": "~7.0.8",
     "expo-audio": "~1.1.1",
     "expo-build-properties": "~1.0.10",
     "expo-constants": "~18.0.12",
     "expo-font": "~14.0.10",
+    "expo-haptics": "~15.0.8",
     "expo-image": "~3.0.11",
     "expo-keep-awake": "~15.0.8",
     "expo-linking": "~8.0.11",
@@ -75,6 +86,7 @@
     "expo-secure-store": "~15.0.8",
     "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",
+    "expo-store-review": "~9.0.9",
     "expo-system-ui": "~6.0.9",
     "expo-updates": "~29.0.15",
     "expo-web-browser": "~15.0.10",
@@ -99,20 +111,25 @@
     "react-native-screens": "~4.16.0",
     "react-native-svg": "15.12.1",
     "react-native-toggle-input": "^1.0.12",
-    "react-native-web": "^0.21.2"
+    "react-native-web": "^0.21.2",
+    "react-native-worklets": "^0.7.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@eslint/plugin-kit": "^0.6.0",
+    "@expo/config-plugins": "^55.0.6",
+    "@expo/image-utils": "^0.8.12",
     "@types/jest": "^29.5.12",
     "@types/react": "~19.1.17",
     "@types/react-native-htmlview": "^0.16.5",
     "@types/react-test-renderer": "^18.0.7",
     "@typescript/native-preview": "^7.0.0-dev.20250523.1",
+    "@vitest/coverage-v8": "4.0.18",
     "babel-plugin-react-compiler": "^19.0.0-beta-df7b47d-20241124",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.21.0",
     "eslint-config-expo": "~10.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.30.0",
@@ -126,7 +143,10 @@
     "prettier": "^3.3.3",
     "react-native-svg-transformer": "^1.5.0",
     "react-test-renderer": "18.2.0",
-    "typescript": "~5.9.3"
+    "rimraf": "^6.0.0",
+    "temp-dir": "^3.0.0",
+    "typescript": "~5.9.3",
+    "vitest": "^4.0.18"
   },
   "config": {
     "commitizen": {

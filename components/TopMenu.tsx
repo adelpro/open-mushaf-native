@@ -14,8 +14,7 @@ import * as Progress from 'react-native-progress';
 
 import { ThemedView } from '@/components/ThemedView';
 import {} from '@/constants';
-import { useColors } from '@/hooks/useColors';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import { useColors, useQuranMetadata } from '@/hooks';
 import {
   bottomMenuState,
   currentSavedPage,
@@ -23,11 +22,13 @@ import {
   dailyTrackerGoal,
   topMenuState,
 } from '@/jotai/atoms';
-import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
-import { getJuzPositionByPage } from '@/utils/quranMetadataUtils';
+import {
+  getJuzPositionByPage,
+  getSurahNameByPage,
+} from '@/utils/quranMetadataUtils';
 
 const ICON_SIZE = 32;
-export default function TopMenu() {
+export function TopMenu() {
   const { tintColor, backgroundColor } = useColors();
   const { surahData, thumnData } = useQuranMetadata();
   const [progressValue, setProgressValue] = useState<number>(0);
@@ -128,6 +129,9 @@ export default function TopMenu() {
                 setShowTopMenuState(false);
                 router.push('/tracker');
               }}
+              accessibilityLabel="الورد اليومي"
+              accessibilityHint="اضغط لفتح متتبع الورد اليومي"
+              accessibilityRole="button"
             >
               <View style={styles.progressContainer}>
                 <Progress.Circle
@@ -154,6 +158,9 @@ export default function TopMenu() {
               setShowTopMenuState(false);
               router.push('/navigation');
             }}
+            accessibilityLabel="التنقل"
+            accessibilityHint="اضغط لفتح صفحة التنقل بين السور والأجزاء"
+            accessibilityRole="button"
           >
             <Ionicons
               name="navigate-circle-outline"
@@ -168,6 +175,9 @@ export default function TopMenu() {
               setShowTopMenuState(false);
               router.push('/search');
             }}
+            accessibilityLabel="البحث"
+            accessibilityHint="اضغط لفتح صفحة البحث في القرآن"
+            accessibilityRole="button"
           >
             <Ionicons name="search" size={ICON_SIZE} color={tintColor} />
           </TouchableOpacity>
@@ -177,6 +187,11 @@ export default function TopMenu() {
               setShowTopMenuState(false);
               toggleMenu();
             }}
+            accessibilityRole="button"
+            accessibilityLabel={
+              showBottomMenuState ? 'وضع ملء الشاشة' : 'إظهار القائمة'
+            }
+            accessibilityState={{ expanded: showBottomMenuState }}
           >
             {showBottomMenuState ? (
               <MaterialCommunityIcons

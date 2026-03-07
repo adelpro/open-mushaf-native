@@ -1,5 +1,6 @@
 import { observe } from 'jotai-effect';
 
+import { CHART_PERIODS } from '@/constants';
 import { Reminder, TafseerTabs } from '@/types';
 import { Riwaya } from '@/types/riwaya';
 import { formatDateKey } from '@/utils/hizbProgress';
@@ -51,25 +52,16 @@ export const showTrackerNotification = createAtomWithStorage<boolean>(
   'ShowTrackerNotification',
   false,
 );
+export const panGestureSensitivity = createAtomWithStorage<number>(
+  'PanGestureSensitivity',
+  1.0,
+);
 
 // Type declarations
 type DailyTrackerProgress = {
   value: number;
   date: string;
 };
-
-// Reading history — stores up to 90 days of daily hizb counts
-export type DailyReadingRecord = {
-  date: string;
-  hizbsCompleted: number;
-};
-
-export const MAX_HISTORY_DAYS = 90;
-
-export const readingHistory = createAtomWithStorage<DailyReadingRecord[]>(
-  'ReadingHistory',
-  [],
-);
 
 // Daily tracker with reset if date changed
 export const dailyTrackerCompleted =
@@ -78,40 +70,64 @@ export const dailyTrackerCompleted =
     date: formatDateKey(new Date()),
   });
 
-// Archive yesterday's reading before resetting the daily counter
+export type DailyReadingRecord = {
+  hizbsCompleted: number;
+  pagesRead: number;
+  date: string;
+};
+
+export const readingHistory = createAtomWithStorage<DailyReadingRecord[]>(
+  'ReadingHistory',
+  [],
+);
+
 observe((get, set) => {
-  (async () => {
-    const stored = await get(dailyTrackerCompleted);
-    const today = formatDateKey(new Date());
+  const stored = get(dailyTrackerCompleted);
+  const history = get(readingHistory);
+  const today = new Date().toDateString();
 
-    if (stored.date !== today) {
-      // Archive the previous day's data if there was any reading
-      if (stored.value > 0) {
-        const history = await get(readingHistory);
-        const existingIndex = history.findIndex((r) => r.date === stored.date);
-        const entry = { date: stored.date, hizbsCompleted: stored.value };
-        const updated =
-          existingIndex >= 0
-            ? history
-                .map((r, i) =>
-                  i === existingIndex
-                    ? {
-                        ...r,
-                        hizbsCompleted: Math.max(
-                          r.hizbsCompleted,
-                          entry.hizbsCompleted,
-                        ),
-                      }
-                    : r,
-                )
-                .slice(-MAX_HISTORY_DAYS)
-            : [...history, entry].slice(-MAX_HISTORY_DAYS);
-        set(readingHistory, updated);
-      }
+  if (stored.date !== today) {
+    const savedYesterday = get(yesterdayPage) as PageWithDate;
+    const lastPage = get(currentSavedPage) as number;
+    const pagesRead = Math.max(0, lastPage - savedYesterday.value);
 
-      set(dailyTrackerCompleted, { value: 0, date: today });
+    if (stored.value > 0 || pagesRead > 0) {
+      const entry: DailyReadingRecord = {
+        hizbsCompleted: stored.value,
+        pagesRead,
+        date: stored.date,
+      };
+
+      const currentIndex = history.findIndex(
+        (record: DailyReadingRecord) => record.date === stored.date,
+      );
+
+      const updatedHistory =
+        currentIndex !== -1
+          ? [
+              ...history.slice(0, currentIndex),
+              {
+                ...entry,
+                hizbsCompleted: Math.max(
+                  entry.hizbsCompleted,
+                  history[currentIndex].hizbsCompleted,
+                ),
+                pagesRead: Math.max(
+                  entry.pagesRead,
+                  history[currentIndex].pagesRead,
+                ),
+              },
+              ...history.slice(currentIndex + 1),
+            ]
+          : [...history, entry];
+
+      set(
+        readingHistory,
+        updatedHistory.slice(-CHART_PERIODS[CHART_PERIODS.length - 1].days),
+      );
     }
-  })();
+    set(dailyTrackerCompleted, { value: 0, date: today });
+  }
 });
 
 // Yesterday page logic with async init and sync to currentSavedPage
@@ -162,6 +178,12 @@ observe((get, set) => {
   }
 });
 
+// Reading theme: 'default' | 'sepia' | 'highContrast'
+export const readingTheme = createAtomWithStorage<string>(
+  'ReadingTheme',
+  'default',
+);
+
 // ReadingPositionBanner
 export const readingBannerCollapsedState = createAtomWithStorage<boolean>(
   'ReadingBannerCollapsedState',
@@ -207,3 +229,13 @@ export const remindersAtom = createAtomWithStorage<Reminder[]>(
   'Reminders',
   DEFAULT_REMINDERS,
 );
+
+// Multi-bookmark system
+export type Bookmark = {
+  id: string;
+  page: number;
+  label: string;
+  createdAt: string;
+};
+
+export const bookmarks = createAtomWithStorage<Bookmark[]>('Bookmarks', []);

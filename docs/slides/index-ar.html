@@ -1,670 +1,903 @@
-<!DOCTYPE html>
+<!doctype html>
 <html dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>عرض المصحف المفتوح</title>
 
-  <title>عرض المصحف المفتوح</title>
+    <link
+      href=" https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.min.css"
+      rel="stylesheet"
+    />
 
-  <link href=" https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
 
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
 
-  <link rel="stylesheet" href="styles.css">
-
-
-</head>
-
-<body>
-  <div class="language-switcher-container">
-    <div class="globe-icon" id="globe-icon" style="display:none;cursor:pointer;">
-      <i class="fa-solid fa-globe"></i>
+  <body>
+    <div class="language-switcher-container">
+      <div
+        class="globe-icon"
+        id="globe-icon"
+        style="display: none; cursor: pointer"
+      >
+        <i class="fa-solid fa-globe"></i>
+      </div>
+      <nav class="language-switcher" id="language-switcher" role="tablist">
+        <a href="index-ar.html" id="lang-ar" class="lang-button" role="tab"
+          >العربية</a
+        >
+        <a href="index-en.html" id="lang-en" class="lang-button" role="tab"
+          >English</a
+        >
+      </nav>
     </div>
-    <nav class="language-switcher" id="language-switcher" role="tablist">
-      <a href="index-ar.html" id="lang-ar" class="lang-button" role="tab">العربية</a>
-      <a href="index-en.html" id="lang-en" class="lang-button" role="tab">English</a>
-    </nav>
-  </div>
-  <div class="reveal">
-    <div class="slides">
-
-
-      <section data-transition="convex">
-        <div class="slide-container flex items-center justify-center p-4 md:p-8">
-          <div class="story-card max-w-5xl z-10 w-full">
-            <div class="mb-8">
-              <img src="icon.png" alt="Open Mushaf Logo" class="mx-auto w-24 h-24 md:w-[150px] md:h-[150px]">
-            </div>
-
-            <h1 class="title-text text-5xl md:text-6xl font-bold text-white mb-6">
-              المصحف المفتوح
-            </h1>
-
-            <h2 class="title-text text-3xl md:text-4xl font-semibold text-yellow-300 mb-8">
-              مصحف قرآني مدعوم من المجتمع، للجميع
-            </h2>
-
-            <p class="subtitle-text text-lg md:text-xl text-teal-100 leading-relaxed mb-8">
-              في عالم رقمي مليء بالضوضاء، أنشأنا شيئًا نقيًا:
-              منصة قرآنية بناها المجتمع، للمجتمع
-            </p>
-
-            <div class="mt-12 flex flex-col md:flex-row justify-center space-y-6 md:space-y-0 md:space-x-12">
-              <div class="flex items-center justify-center text-teal-200">
-                <i class="fa-solid fa-user text-2xl mr-3 text-yellow-500"></i>
-                <span class="text-lg">مدعوم من المجتمع</span>
+    <div class="reveal">
+      <div class="slides">
+        <section data-transition="convex">
+          <div
+            class="slide-container flex items-center justify-center p-4 md:p-8"
+          >
+            <div class="story-card max-w-5xl z-10 w-full">
+              <div class="mb-8">
+                <img
+                  src="icon.png"
+                  alt="Open Mushaf Logo"
+                  class="mx-auto w-24 h-24 md:w-[150px] md:h-[150px]"
+                />
               </div>
-              <div class="flex items-center justify-center text-teal-200">
-                <i class="fa-solid fa-bolt-lightning text-2xl mr-3 text-yellow-500"></i>
-                <span class=" text-lg">يعمل دون إنترنت</span>
-              </div>
-              <div class="flex items-center justify-center text-teal-200">
-                <i class="fa-solid fa-globe text-2xl mr-3 text-yellow-500"></i>
-                <span class="text-lg">للجميع</span>
-              </div>
-            </div>
 
-            <div class="mt-8 text-teal-300 text-lg">
-              <a href="https://www.quran.us" target="_blank" class="">www.quran.us</a>
+              <h1
+                class="title-text text-5xl md:text-6xl font-bold text-white mb-6"
+              >
+                المصحف المفتوح
+              </h1>
+
+              <h2
+                class="title-text text-3xl md:text-4xl font-semibold text-yellow-300 mb-8"
+              >
+                مصحف قرآني مدعوم من المجتمع، للجميع
+              </h2>
+
+              <p
+                class="subtitle-text text-lg md:text-xl text-teal-100 leading-relaxed mb-8"
+              >
+                في عالم رقمي مليء بالضوضاء، أنشأنا شيئًا نقيًا: منصة قرآنية
+                بناها المجتمع، للمجتمع
+              </p>
+
+              <div
+                class="mt-12 flex flex-col md:flex-row justify-center space-y-6 md:space-y-0 md:space-x-12"
+              >
+                <div class="flex items-center justify-center text-teal-200">
+                  <i class="fa-solid fa-user text-2xl mr-3 text-yellow-500"></i>
+                  <span class="text-lg">مدعوم من المجتمع</span>
+                </div>
+                <div class="flex items-center justify-center text-teal-200">
+                  <i
+                    class="fa-solid fa-bolt-lightning text-2xl mr-3 text-yellow-500"
+                  ></i>
+                  <span class="text-lg">يعمل دون إنترنت</span>
+                </div>
+                <div class="flex items-center justify-center text-teal-200">
+                  <i
+                    class="fa-solid fa-globe text-2xl mr-3 text-yellow-500"
+                  ></i>
+                  <span class="text-lg">للجميع</span>
+                </div>
+              </div>
+
+              <div class="mt-8 text-teal-300 text-lg">
+                <a href="https://www.quran.us" target="_blank" class=""
+                  >www.quran.us</a
+                >
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section data-transition="convex">
+        <section data-transition="convex">
+          <div
+            class="slide-container flex items-center justify-center p-4 md:p-8"
+          >
+            <div class="story-card max-w-5xl z-10 w-full">
+              <div class="text-center mb-5">
+                <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">
+                  بداية شخصية
+                </h1>
+                <div class="w-24 h-1 bg-yellow-500 mx-auto"></div>
+              </div>
 
-        <div class="slide-container flex items-center justify-center p-4 md:p-8">
-          <div class="story-card max-w-5xl z-10 w-full">
-            <div class="text-center mb-5">
-              <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">بداية شخصية</h1>
-              <div class="w-24 h-1 bg-yellow-500 mx-auto"></div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-              <div class="space-y-6">
-                <div class="flex items-center mb-6">
-                  <i class="fa-solid fa-calendar-day text-3xl text-teal-600 mr-4"></i>
-                  <div class="text-xl font-semibold text-gray-800">6 سبتمبر 2024</div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                <div class="space-y-6">
+                  <div class="flex items-center mb-6">
+                    <i
+                      class="fa-solid fa-calendar-day text-3xl text-teal-600 mr-4"
+                    ></i>
+                    <div class="text-xl font-semibold text-gray-800">
+                      6 سبتمبر 2024
+                    </div>
+                  </div>
+                  <p class="text-base md:text-lg text-gray-700 leading-relaxed">
+                    بدأ كل شيء بفكرة بسيطة من مطور منفرد. في عالم رقمي مليء
+                    بالضوضاء والمشتتات، كانت هناك حاجة لشيء نقي وأصيل.
+                  </p>
+                  <div
+                    class="bg-teal-50 p-6 rounded-lg border-l-4 border-teal-500"
+                  >
+                    <p
+                      class="text-teal-800 font-medium italic text-base md:text-lg"
+                    >
+                      "كان هدفي بسيطًا: بناء منصة قرآنية أستخدمها بنفسي - سريعة،
+                      سهلة الوصول، أصيلة، ومفتوحة للجميع."
+                    </p>
+                  </div>
                 </div>
-                <p class="text-base md:text-lg text-gray-700 leading-relaxed">
-                  بدأ كل شيء بفكرة بسيطة من مطور منفرد. في عالم رقمي مليء بالضوضاء
-                  والمشتتات،
-                  كانت هناك حاجة لشيء نقي وأصيل.
-                </p>
-                <div class="bg-teal-50 p-6 rounded-lg border-l-4 border-teal-500">
-                  <p class="text-teal-800 font-medium italic text-base md:text-lg">
-                    "كان هدفي بسيطًا: بناء منصة قرآنية أستخدمها بنفسي - سريعة، سهلة الوصول، أصيلة،
-                    ومفتوحة
-                    للجميع."
+
+                <div class="space-y-6">
+                  <div class="flex items-center mb-6">
+                    <i
+                      class="fa-solid fa-seedling text-3xl text-teal-600 mr-4"
+                    ></i>
+                    <h2
+                      class="text-2xl md:text-3xl font-semibold text-teal-800"
+                    >
+                      من بذرة إلى شجرة
+                    </h2>
+                  </div>
+                  <p class="text-base md:text-lg text-gray-700 leading-relaxed">
+                    ما بدأ كمشروع جانبي شخصي سرعان ما نما ليصبح شيئًا أكبر
+                    بكثير، بفضل الدعم المذهل من مجتمع عالمي من المؤمنين.
+                  </p>
+                  <div class="space-y-4">
+                    <div class="flex items-center text-teal-700">
+                      <i class="fa-solid fa-user text-yellow-500 mr-3"></i>
+                      <span>بدأت كرؤية لمطور منفرد</span>
+                    </div>
+                    <div class="flex items-center text-teal-700">
+                      <i class="fa-solid fa-users text-yellow-500 mr-3"></i>
+                      <span>نمى بدعم المجتمع</span>
+                    </div>
+                    <div class="flex items-center text-teal-700">
+                      <i class="fa-solid fa-globe text-yellow-500 mr-3"></i>
+                      <span>أصبح مهمة عالمية</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-transition="convex">
+          <section>
+            <div
+              class="slide-container flex items-center justify-center p-4 md:p-8"
+            >
+              <div class="geometric-pattern"></div>
+
+              <div class="max-w-6xl z-10 w-full">
+                <div class="text-center mb-8 md:mb-12">
+                  <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">
+                    رؤيتنا الواضحة
+                  </h1>
+                  <div class="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
+                  <p class="text-base md:text-xl text-white max-w-3xl mx-auto">
+                    منذ البداية، بُني المصحف المفتوح حول مبادئ أساسية تركز على
+                    سهولة الاستخدام، الأصالة، وإمكانية الوصول
                   </p>
                 </div>
-              </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                  <div class="vision-card p-6 text-center">
+                    <div class="principle-icon">
+                      <i class="fa-solid fa-heart text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-800 mb-3">
+                      سهولة الاستخدام
+                    </h3>
+                    <p
+                      class="text-gray-700 leading-relaxed text-sm md:text-base"
+                    >
+                      تنقل طبيعي يعتمد على الإيماءات وتصميم بديهي يوفر تجربة
+                      سلسة لكل مستخدم
+                    </p>
+                  </div>
 
-              <div class="space-y-6">
-                <div class="flex items-center mb-6">
-                  <i class="fa-solid fa-seedling text-3xl text-teal-600 mr-4"></i>
-                  <h2 class="text-2xl md:text-3xl font-semibold text-teal-800">من بذرة إلى شجرة</h2>
-                </div>
-                <p class="text-base md:text-lg text-gray-700 leading-relaxed">
-                  ما بدأ كمشروع جانبي شخصي سرعان ما نما ليصبح شيئًا أكبر بكثير، بفضل
-                  الدعم المذهل
-                  من مجتمع عالمي من المؤمنين.
-                </p>
-                <div class="space-y-4">
-                  <div class="flex items-center text-teal-700">
-                    <i class="fa-solid fa-user text-yellow-500 mr-3"></i>
-                    <span>بدأت كرؤية لمطور منفرد</span>
+                  <div class="vision-card p-6 text-center">
+                    <div class="principle-icon">
+                      <i class="fa-solid fa-certificate text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-800 mb-3">
+                      الأصالة
+                    </h3>
+                    <p
+                      class="text-gray-700 leading-relaxed text-sm md:text-base"
+                    >
+                      روايات متعددة مع قواعد التجويد المرمزة بالألوان للنطق
+                      الصحيح
+                    </p>
                   </div>
-                  <div class="flex items-center text-teal-700">
-                    <i class="fa-solid fa-users text-yellow-500 mr-3"></i>
-                    <span>نمى بدعم المجتمع</span>
-                  </div>
-                  <div class="flex items-center text-teal-700">
-                    <i class="fa-solid fa-globe text-yellow-500 mr-3"></i>
-                    <span>أصبح مهمة عالمية</span>
+
+                  <div class="vision-card p-6 text-center">
+                    <div class="principle-icon">
+                      <i class="fa-solid fa-universal-access text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-800 mb-3">
+                      إمكانية الوصول
+                    </h3>
+                    <p
+                      class="text-gray-700 leading-relaxed text-sm md:text-base"
+                    >
+                      يعمل على جميع المنصات، وبشكل كامل دون إنترنت، مع إعدادات
+                      مخصصة ومحفوظة
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
+          </section>
+          <section data-transition="convex">
+            <div
+              class="slide-container flex items-center justify-center p-4 md:p-8"
+            >
+              <div class="max-w-6xl z-10 w-full">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                  <div class="vision-card p-6 text-center">
+                    <div class="principle-icon">
+                      <i class="fa-solid fa-bolt-lightning text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-800 mb-3">
+                      دون إنترنت أولاً
+                    </h3>
+                    <p
+                      class="text-gray-700 leading-relaxed text-sm md:text-base"
+                    >
+                      لا يوجد إنترنت؟ لا مشكلة. القرآن كاملاً، الروايات
+                      والتفاسير تظل متاحة دون إنترنت
+                      <script src="language-switcher.js"></script>
+                    </p>
+                  </div>
 
-          </div>
-        </div>
-      </section>
+                  <div class="vision-card p-6 text-center">
+                    <div class="principle-icon">
+                      <i class="fa-solid fa-book-open text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-800 mb-3">
+                      محتوى غني
+                    </h3>
+                    <p
+                      class="text-gray-700 leading-relaxed text-sm md:text-base"
+                    >
+                      الوصول إلى مصادر تفسير متعددة وتتبع القراءة لدعم رحلتك
+                      الروحية
+                    </p>
+                  </div>
 
-      <section data-transition="convex">
-        <section>
-          <div class="slide-container flex items-center justify-center p-4 md:p-8">
-            <div class="geometric-pattern"></div>
+                  <div class="vision-card p-6 text-center">
+                    <div class="principle-icon">
+                      <i class="fa-solid fa-mobile-alt text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-800 mb-3">
+                      متعدد المنصات
+                    </h3>
+                    <p
+                      class="text-gray-700 leading-relaxed text-sm md:text-base"
+                    >
+                      أداء سلس على أندرويد، iOS، والويب مع ميزات أصلية على كل
+                      منصة
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
 
+        <section data-transition="convex">
+          <div
+            class="slide-container flex items-center justify-center p-4 md:p-8"
+          >
             <div class="max-w-6xl z-10 w-full">
-              <div class="text-center mb-8 md:mb-12">
-                <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">رؤيتنا الواضحة</h1>
+              <div class="text-center mb-8 md:mb-10">
+                <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">
+                  ما الذي يميز المصحف المفتوح
+                </h1>
                 <div class="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
                 <p class="text-base md:text-xl text-white max-w-3xl mx-auto">
-                  منذ البداية، بُني المصحف المفتوح حول مبادئ أساسية تركز على سهولة الاستخدام، الأصالة،
-                  وإمكانية الوصول
+                  ميزات مصممة لتعزيز اتصالك بالقرآن
                 </p>
               </div>
+
               <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                 <div class="vision-card p-6 text-center">
-                  <div class="principle-icon">
-                    <i class="fa-solid fa-heart text-2xl"></i>
+                  <div class="feature-icon">
+                    <i class="fa-solid fa-bolt-lightning text-xl"></i>
                   </div>
-                  <h3 class="text-xl font-semibold text-teal-800 mb-3">سهولة الاستخدام</h3>
+                  <h3 class="text-xl font-semibold text-teal-800 mb-3">
+                    متاح دائمًا
+                  </h3>
                   <p class="text-gray-700 leading-relaxed text-sm md:text-base">
-                    تنقل طبيعي يعتمد على الإيماءات وتصميم بديهي يوفر تجربة سلسة لكل مستخدم
+                    اقرأ القرآن في أي مكان وزمان - حتى دون اتصال بالإنترنت.
+                    مثالي للسفر، المناطق النائية، أو عندما ترغب ببساطة في
+                    الانفصال عن العالم الرقمي.
                   </p>
                 </div>
 
-                <div class="vision-card p-6 text-center">
-                  <div class="principle-icon">
-                    <i class="fa-solid fa-certificate text-2xl"></i>
+                <div class="feature-card p-6">
+                  <div class="feature-icon">
+                    <i class="fa-solid fa-palette text-xl"></i>
                   </div>
-                  <h3 class="text-xl font-semibold text-teal-800 mb-3">الأصالة</h3>
+                  <h3 class="text-xl font-semibold text-teal-800 mb-3">
+                    تجويد سهل
+                  </h3>
                   <p class="text-gray-700 leading-relaxed text-sm md:text-base">
-                    روايات متعددة مع قواعد التجويد المرمزة بالألوان للنطق الصحيح
+                    قواعد النطق المرمزة بالألوان تساعدك على التلاوة بشكل صحيح
+                    وجميل، مما يجعل التجويد متاحًا للمتعلمين في كل مستوى.
                   </p>
                 </div>
 
-                <div class="vision-card p-6 text-center">
-                  <div class="principle-icon">
-                    <i class="fa-solid fa-universal-access text-2xl"></i>
+                <div class="feature-card p-6">
+                  <div class="feature-icon">
+                    <i class="fa-solid fa-cog text-xl"></i>
                   </div>
-                  <h3 class="text-xl font-semibold text-teal-800 mb-3">إمكانية الوصول</h3>
+                  <h3 class="text-xl font-semibold text-teal-800 mb-3">
+                    تجربة شخصية
+                  </h3>
                   <p class="text-gray-700 leading-relaxed text-sm md:text-base">
-                    يعمل على جميع المنصات، وبشكل كامل دون إنترنت، مع إعدادات مخصصة ومحفوظة
+                    خصص تجربة القراءة الخاصة بك بإعدادات شخصية للرواية، المظهر،
+                    وغير ذلك - يتم حفظها تلقائيًا.
                   </p>
                 </div>
               </div>
             </div>
           </div>
         </section>
+
         <section data-transition="convex">
-
-          <div class="slide-container flex items-center justify-center p-4 md:p-8">
-
-            <div class="max-w-6xl z-10 w-full">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                <div class="vision-card p-6 text-center">
-                  <div class="principle-icon">
-                    <i class="fa-solid fa-bolt-lightning text-2xl"></i>
-                  </div>
-                  <h3 class="text-xl font-semibold text-teal-800 mb-3">دون إنترنت أولاً</h3>
-                  <p class="text-gray-700 leading-relaxed text-sm md:text-base">
-                    لا يوجد إنترنت؟ لا مشكلة. القرآن كاملاً، الروايات والتفاسير تظل متاحة دون إنترنت
-                    <script src="language-switcher.js"></script>
-                  </p>
-                </div>
-
-                <div class="vision-card p-6 text-center">
-                  <div class="principle-icon">
-                    <i class="fa-solid fa-book-open text-2xl"></i>
-                  </div>
-                  <h3 class="text-xl font-semibold text-teal-800 mb-3">محتوى غني</h3>
-                  <p class="text-gray-700 leading-relaxed text-sm md:text-base">
-                    الوصول إلى مصادر تفسير متعددة وتتبع القراءة لدعم رحلتك الروحية
-                  </p>
-                </div>
-
-                <div class="vision-card p-6 text-center">
-                  <div class="principle-icon">
-                    <i class="fa-solid fa-mobile-alt text-2xl"></i>
-                  </div>
-                  <h3 class="text-xl font-semibold text-teal-800 mb-3">متعدد المنصات</h3>
-                  <p class="text-gray-700 leading-relaxed text-sm md:text-base">
-                    أداء سلس على أندرويد، iOS، والويب مع ميزات أصلية على كل منصة
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </section>
-      </section>
-
-      <section data-transition="convex">
-        <div class="slide-container flex items-center justify-center p-4 md:p-8">
-
-          <div class="max-w-6xl z-10 w-full">
-            <div class="text-center mb-8 md:mb-10">
-              <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">ما الذي يميز المصحف المفتوح</h1>
-              <div class="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
-              <p class="text-base md:text-xl text-white max-w-3xl mx-auto">
-                ميزات مصممة لتعزيز اتصالك بالقرآن
-              </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-              <div class="vision-card p-6 text-center">
-                <div class="feature-icon">
-                  <i class="fa-solid fa-bolt-lightning text-xl"></i>
-                </div>
-                <h3 class="text-xl font-semibold text-teal-800 mb-3">متاح دائمًا</h3>
-                <p class="text-gray-700 leading-relaxed text-sm md:text-base">
-                  اقرأ القرآن في أي مكان وزمان - حتى دون اتصال بالإنترنت. مثالي للسفر، المناطق النائية،
-                  أو
-                  عندما ترغب ببساطة في الانفصال عن العالم الرقمي.
+          <div
+            class="slide-container flex items-center justify-center p-4 md:p-8"
+          >
+            <div class="evolution-card max-w-6xl z-10 w-full">
+              <div class="text-center mb-2 md:mb-2">
+                <h1 class="text-3xl md:text-4xl font-bold text-teal-800 mb-4">
+                  من الويب إلى الأصلي: تطورنا
+                </h1>
+                <div class="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
+                <p class="text-base md:text-xl text-gray-700 max-w-3xl mx-auto">
+                  كيف تطورنا لتقديم أفضل تجربة ممكنة لقراءة القرآن
                 </p>
               </div>
 
-              <div class="feature-card p-6">
-                <div class="feature-icon">
-                  <i class="fa-solid fa-palette text-xl"></i>
-                </div>
-                <h3 class="text-xl font-semibold text-teal-800 mb-3">تجويد سهل</h3>
-                <p class="text-gray-700 leading-relaxed text-sm md:text-base">
-                  قواعد النطق المرمزة بالألوان تساعدك على التلاوة بشكل صحيح وجميل، مما يجعل التجويد متاحًا
-                  للمتعلمين
-                  في كل مستوى.
-                </p>
-              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                <div class="space-y-6">
+                  <h2 class="text-3xl font-semibold text-teal-800 mb-2">
+                    الرحلة
+                  </h2>
 
-              <div class="feature-card p-6">
-                <div class="feature-icon">
-                  <i class="fa-solid fa-cog text-xl"></i>
-                </div>
-                <h3 class="text-xl font-semibold text-teal-800 mb-3">تجربة شخصية</h3>
-                <p class="text-gray-700 leading-relaxed text-sm md:text-base">
-                  خصص تجربة القراءة الخاصة بك بإعدادات شخصية للرواية، المظهر،
-                  وغير ذلك -
-                  يتم حفظها تلقائيًا.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section data-transition="convex">
-        <div class="slide-container flex items-center justify-center p-4 md:p-8">
-
-          <div class="evolution-card max-w-6xl z-10 w-full">
-            <div class="text-center mb-2 md:mb-2">
-              <h1 class="text-3xl md:text-4xl font-bold text-teal-800 mb-4">من الويب إلى الأصلي: تطورنا</h1>
-              <div class="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
-              <p class="text-base md:text-xl text-gray-700 max-w-3xl mx-auto">
-                كيف تطورنا لتقديم أفضل تجربة ممكنة لقراءة القرآن
-              </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-              <div class="space-y-6">
-                <h2 class="text-3xl font-semibold text-teal-800 mb-2">الرحلة</h2>
-
-                <div class="timeline-step">
-                  <h3 class="text-xl font-semibold text-teal-700 mb-2">تطبيق الويب (PWA)</h3>
-                  <p class="text-gray-700 text-sm md:text-base">بدأ كتطبيق ويب تقدمي (Next.js Progressive Web App)
-                    للوصول السريع
-                    وتوافق واسع
-                    عبر جميع المتصفحات.</p>
-                </div>
-
-                <div class="timeline-step">
-                  <h3 class="text-xl font-semibold text-teal-700 mb-2">إدراك القيود</h3>
-                  <p class="text-gray-700 text-sm md:text-base">قيود المتصفح منعتنا من تقديم التجربة التي
-                    تكون دون إنترنت أولاً، وشخصية للغاية كما تصورناها.</p>
-                </div>
-
-                <div class="timeline-step">
-                  <h3 class="text-xl font-semibold text-teal-700 mb-2">تطبيق الهاتف الأصلي</h3>
-                  <p class="text-gray-700 text-sm md:text-base" dir="rtl">
-                    أعيد بناؤه باستخدام <bdi>React Native مع Expo</bdi>
-                    لإطلاق العنان للإمكانات الكاملة
-                    لمنصات الهاتف المحمولة. </p>
-                </div>
-              </div>
-
-              <div class="space-y-6">
-                <h2 class="text-3xl font-semibold text-teal-800 mb-6">ما أتاحته هذه الخطوة</h2>
-
-                <div class="benefit-item">
-                  <div class="flex items-center mb-2">
-                    <i class="fa-solid fa-mobile-alt text-teal-600 mr-3"></i>
-                    <span class="font-semibold text-teal-800">تطوير موحد</span>
-                  </div>
-                  <p class="text-gray-700 text-xs md:text-sm">قاعدة بيانات واحدة لكل من منصات iOS، أندرويد والويب</p>
-                </div>
-
-                <div class="benefit-item">
-                  <div class="flex items-center mb-2">
-                    <i class="fa-solid fa-download text-teal-600 mr-3"></i>
-                    <span class="font-semibold text-teal-800">دعم محسّن دون إنترنت</span>
-                  </div>
-                  <p class="text-gray-700 text-xs md:text-sm">الوصول الكامل للقرآن دون أي اعتماد على الإنترنت</p>
-                </div>
-
-                <div class="benefit-item">
-                  <div class="flex items-center mb-2">
-                    <i class="fa-solid fa-database text-teal-600 mr-3"></i>
-                    <span class="font-semibold text-teal-800">تخزين أفضل</span>
-                  </div>
-                  <p class="text-gray-700 text-xs md:text-sm">إعدادات ثابتة وتقدم لا يضيع أبدًا</p>
-                </div>
-
-                <div class="benefit-item">
-                  <div class="flex items-center mb-2">
-                    <i class="fa-solid fa-hand-paper text-teal-600 mr-3"></i>
-                    <span class="font-semibold text-teal-800">إيماءات سلسة</span>
-                  </div>
-                  <p class="text-gray-700 text-xs md:text-sm">تفاعلات لمس طبيعية وسريعة الاستجابة</p>
-                </div>
-                <div class="benefit-item">
-                  <div class="flex items-center mb-2">
-                    <i class="fa-solid fa-book-open text-teal-600 mr-3"></i>
-                    <span class="font-semibold text-teal-800">روايات ومصاحف متعددة</span>
-                  </div>
-                  <p class="text-gray-700 text-xs md:text-sm">الوصول إلى مصاحف ورش وحفص مع قواعد التجويد الملونة
-                  </p>
-                </div>
-
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section data-transition="convex">
-        <div class="slide-container flex items-center justify-center p-6 md:p-12">
-          <div class="community-card max-w-6xl z-10 w-full">
-            <div class="text-center mb-2 md:mb-10">
-              <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">بُني بالتعاون مع المجتمع</h1>
-              <div class="w-24 h-1 bg-yellow-500 mx-auto mb-2"></div>
-              <p class="text-base md:text-xl text-gray-700 max-w-3xl mx-auto">
-                المصحف المفتوح مدفوع بملاحظات المستخدمين، وليس بخطة عمل شركة
-              </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-              <div class="space-y-6">
-                <h2 class="text-3xl font-semibold text-teal-800 mb-6">كل صوت مهم</h2>
-
-                <div class="feedback-item">
-                  <div class="flex items-center mb-2">
-                    <i class="fa-solid fa-bug text-teal-600 mr-3"></i>
-                    <span class="font-semibold text-teal-800">تقارير الأخطاء</span>
-                  </div>
-                  <p class="text-gray-700 text-xs md:text-sm">يجد المستخدمون المشاكل، ونحن نصلحها معًا</p>
-                </div>
-
-                <div class="feedback-item">
-                  <div class="flex items-center mb-2">
-                    <i class="fa-solid fa-lightbulb text-teal-600 mr-3"></i>
-                    <span class="font-semibold text-teal-800">اقتراحات واجهة المستخدم</span>
-                  </div>
-                  <p class="text-gray-700 text-xs md:text-sm">الأفكار لتحسين تجربة المستخدم مرحب بها دائمًا</p>
-                </div>
-
-                <div class="feedback-item">
-                  <div class="flex items-center mb-2">
-                    <i class="fa-solid fa-code-branch text-teal-600 mr-3"></i>
-                    <span class="font-semibold text-teal-800">مساهمات الكود</span>
-                  </div>
-                  <p class="text-gray-700 text-xs md:text-sm">المطورون يساهمون بالتحسينات والميزات الجديدة</p>
-                </div>
-
-                <div class="bg-yellow-100 p-4 rounded-lg border border-yellow-300 mt-6">
-                  <p class="text-gray-800 font-medium italic text-center text-sm md:text-base">
-                    "سواء كنت قارئًا، مطورًا، أو مجرد فضولي، مشاركتك مهمة."
-                  </p>
-                </div>
-              </div>
-
-              <div class="space-y-6">
-                <h2 class="text-3xl font-semibold text-teal-800 mb-6">تأثير المجتمع</h2>
-
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                  <div class="community-stat">
-                    <i class="fa-solid fa-users text-3xl mb-2"></i>
-                    <div class="text-2xl font-bold text-teal-800">عالمي</div>
-                    <div class="text-sm text-gray-700">المجتمع</div>
+                  <div class="timeline-step">
+                    <h3 class="text-xl font-semibold text-teal-700 mb-2">
+                      تطبيق الويب (PWA)
+                    </h3>
+                    <p class="text-gray-700 text-sm md:text-base">
+                      بدأ كتطبيق ويب تقدمي (Next.js Progressive Web App) للوصول
+                      السريع وتوافق واسع عبر جميع المتصفحات.
+                    </p>
                   </div>
 
-                  <div class="community-stat">
-                    <i class="fa-solid fa-heart text-3xl mb-2"></i>
-                    <div class="text-2xl font-bold text-teal-800">مفتوح</div>
-                    <div class="text-sm text-gray-700">المصدر</div>
+                  <div class="timeline-step">
+                    <h3 class="text-xl font-semibold text-teal-700 mb-2">
+                      إدراك القيود
+                    </h3>
+                    <p class="text-gray-700 text-sm md:text-base">
+                      قيود المتصفح منعتنا من تقديم التجربة التي تكون دون إنترنت
+                      أولاً، وشخصية للغاية كما تصورناها.
+                    </p>
+                  </div>
+
+                  <div class="timeline-step">
+                    <h3 class="text-xl font-semibold text-teal-700 mb-2">
+                      تطبيق الهاتف الأصلي
+                    </h3>
+                    <p class="text-gray-700 text-sm md:text-base" dir="rtl">
+                      أعيد بناؤه باستخدام <bdi>React Native مع Expo</bdi> لإطلاق
+                      العنان للإمكانات الكاملة لمنصات الهاتف المحمولة.
+                    </p>
                   </div>
                 </div>
 
-                <div class="space-y-4">
-                  <h3 class="text-xl font-semibold text-teal-800">كيف يمكنك المساهمة</h3>
+                <div class="space-y-6">
+                  <h2 class="text-3xl font-semibold text-teal-800 mb-6">
+                    ما أتاحته هذه الخطوة
+                  </h2>
 
-                  <div class="flex items-center text-gray-700">
-                    <i class="fa-solid fa-star text-yellow-500 mr-3"></i>
-                    <span>قدم الملاحظات والاقتراحات</span>
-                  </div>
-
-                  <div class="flex items-center text-gray-700">
-                    <i class="fa-solid fa-share text-yellow-500 mr-3"></i>
-                    <span>شارك مع مجتمعك</span>
-                  </div>
-
-                  <div class="flex items-center text-gray-700">
-                    <i class="fa-solid fa-code text-yellow-500 mr-3"></i>
-                    <span>ساهم بتحسينات الكود</span>
-                  </div>
-
-                  <div class="flex items-center text-gray-700">
-                    <i class="fa-solid fa-book text-yellow-500 mr-3"></i>
-                    <span>حسن الوثائق</span>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section data-transition="convex">
-        <div class="slide-container flex items-center justify-center p-4 md:p-8">
-
-          <div class="impact-card max-w-6xl z-10 w-full">
-            <div class="text-center mb-2 md:mb-4">
-              <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">ربط القلوب حول العالم</h1>
-              <div class="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
-              <p class="text-base md:text-xl text-gray-700 max-w-3xl mx-auto">
-                كيف يجمع المصحف المفتوح المسلمين معًا من خلال تقنية القرآن الميسرة
-              </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-              <div class="space-y-6">
-                <div class="world-section">
-                  <div class="globe-icon mx-auto mb-3">
-                    <i class="fa-solid fa-globe text-3xl"></i>
-                  </div>
-                  <h2 class="text-2xl font-semibold text-teal-800 text-center mb-4">كسر الحواجز</h2>
-                  <p class="text-gray-700 text-center leading-relaxed text-sm md:text-base">
-                    من المدن الصاخبة إلى القرى النائية، يضمن المصحف المفتوح وصول كل مسلم إلى القرآن بكل
-                    كرامة وسهولة.
-                  </p>
-                </div>
-
-                <div class="space-y-3">
-                  <h3 class="text-xl font-semibold text-teal-800">الوصول الشامل</h3>
-
-                  <div class="connection-item">
-                    <div class="flex items-center">
+                  <div class="benefit-item">
+                    <div class="flex items-center mb-2">
                       <i class="fa-solid fa-mobile-alt text-teal-600 mr-3"></i>
-                      <span class="font-medium text-teal-800">الهاتف أولاً</span>
+                      <span class="font-semibold text-teal-800"
+                        >تطوير موحد</span
+                      >
                     </div>
-                    <p class="text-gray-700 text-xs md:text-sm mt-1">مصمم للهواتف الذكية التي يحملها الجميع</p>
-                  </div>
-
-                  <div class="connection-item">
-                    <div class="flex items-center">
-                      <i class="fa-solid fa-wifi-slash text-teal-600 mr-3"></i>
-                      <span class="font-medium text-teal-800">جاهز دون إنترنت</span>
-                    </div>
-                    <p class="text-gray-700 text-xs md:text-sm mt-1">يعمل دون إنترنت في المناطق النائية</p>
-                  </div>
-
-                  <div class="connection-item">
-                    <div class="flex items-center">
-                      <i class="fa-solid fa-universal-access text-teal-600 mr-3"></i>
-                      <span class="font-medium text-teal-800">للجميع</span>
-                    </div>
-                    <p class="text-gray-700 text-xs md:text-sm mt-1">متاح للمستخدمين من جميع المستويات التقنية</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="space-y-6">
-                <h2 class="text-3xl font-semibold text-teal-800 mb-6">تأثير حقيقي</h2>
-
-                <div class="space-y-4">
-                  <div class="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500">
-                    <h4 class="font-semibold text-teal-800 mb-2">الطلاب والمتعلمون</h4>
-                    <p class="text-gray-700 text-xs md:text-sm">ألوان التجويد تساعد المتعلمين الجدد على التلاوة الصحيحة
+                    <p class="text-gray-700 text-xs md:text-sm">
+                      قاعدة بيانات واحدة لكل من منصات iOS، أندرويد والويب
                     </p>
                   </div>
 
-                  <div class="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500">
-                    <h4 class="font-semibold text-teal-800 mb-2">المسافرون والحجاج</h4>
-                    <p class="text-gray-700 text-xs md:text-sm">الوصول دون إنترنت أثناء الحج، العمرة، والرحلات</p>
-                  </div>
-
-                  <div class="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500">
-                    <h4 class="font-semibold text-teal-800 mb-2">القراء اليوميون</h4>
-                    <p class="text-gray-700 text-xs md:text-sm">تتبع الورد يساعد في الحفاظ على عادات القراءة المنتظمة
+                  <div class="benefit-item">
+                    <div class="flex items-center mb-2">
+                      <i class="fa-solid fa-download text-teal-600 mr-3"></i>
+                      <span class="font-semibold text-teal-800"
+                        >دعم محسّن دون إنترنت</span
+                      >
+                    </div>
+                    <p class="text-gray-700 text-xs md:text-sm">
+                      الوصول الكامل للقرآن دون أي اعتماد على الإنترنت
                     </p>
                   </div>
 
-                  <div class="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500">
-                    <h4 class="font-semibold text-teal-800 mb-2">العلماء والمعلمون</h4>
-                    <p class="text-gray-700 text-xs md:text-sm">مصادر تفسير متعددة لدراسة أعمق</p>
-                  </div>
-                </div>
-
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section data-transition="convex">
-        <div class="slide-container flex items-center justify-center p-4 md:p-8">
-
-          <div class="mission-card max-w-6xl z-10 w-full">
-            <div class="text-center mb-2 md:mb-10">
-              <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">مهمة المصدر المفتوح</h1>
-              <div class="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
-              <p class="text-base md:text-xl text-gray-700 max-w-3xl mx-auto">
-                لماذا تهم الشفافية وملكية المجتمع لتقنية القرآن
-              </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-              <div class="space-y-6">
-                <div class="principle-box text-center">
-                  <div class="open-source-icon">
-                    <i class="fa-solid fa-code-branch text-2xl text-white"></i>
-                  </div>
-                  <h2 class="text-2xl font-semibold text-teal-800 mb-4">مفتوح وشفاف</h2>
-                  <p class="text-gray-700 leading-relaxed text-sm md:text-base">
-                    كل سطر من الكود مفتوح للمراجعة. لا خوارزميات مخفية، لا جمع بيانات سري. ما تراه
-                    هو
-                    ما تحصل عليه.
-                  </p>
-                </div>
-
-                <div class="space-y-3">
-                  <h3 class="text-xl font-semibold text-teal-800">القيم الأساسية</h3>
-
-                  <div class="value-item">
-                    <div class="flex items-center">
-                      <i class="fa-solid fa-shield-alt text-teal-600 mr-3"></i>
-                      <span class="font-medium text-teal-800">الثقة والخصوصية</span>
+                  <div class="benefit-item">
+                    <div class="flex items-center mb-2">
+                      <i class="fa-solid fa-database text-teal-600 mr-3"></i>
+                      <span class="font-semibold text-teal-800"
+                        >تخزين أفضل</span
+                      >
                     </div>
-                    <p class="text-gray-700 text-xs md:text-sm mt-1">لا جمع بيانات، لا تتبع، لا إعلانات</p>
-                  </div>
-
-                  <div class="value-item">
-                    <div class="flex items-center">
-                      <i class="fa-solid fa-infinity text-teal-600 mr-3"></i>
-                      <span class="font-medium text-teal-800">مجاني للأبد</span>
-                    </div>
-                    <p class="text-gray-700 text-xs md:text-sm mt-1">متاح دائمًا للجميع، في كل مكان</p>
-                  </div>
-
-                  <div class="value-item">
-                    <div class="flex items-center">
-                      <i class="fa-solid fa-users text-teal-600 mr-3"></i>
-                      <span class="font-medium text-teal-800">ملكية المجتمع</span>
-                    </div>
-                    <p class="text-gray-700 text-xs md:text-sm mt-1">ينتمي إلى المجتمع الإسلامي العالمي</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="space-y-6">
-                <h2 class="text-3xl font-semibold text-teal-800 mb-6">لماذا هذا مهم</h2>
-
-                <div class="space-y-2">
-                  <div class="bg-teal-50 p-2 rounded-lg border-l-4 border-teal-500">
-                    <h4 class="font-semibold text-teal-800 mb-2">🤝 التعاون</h4>
-                    <p class="text-gray-700 text-xs md:text-sm">يمكن للمطورين المسلمين في جميع أنحاء العالم المساهمة
-                      بالتحسينات
-                      والميزات الجديدة
+                    <p class="text-gray-700 text-xs md:text-sm">
+                      إعدادات ثابتة وتقدم لا يضيع أبدًا
                     </p>
                   </div>
 
-                  <div class="bg-teal-50 p-2 rounded-lg border-l-4 border-teal-500">
-                    <h4 class="font-semibold text-teal-800 mb-2">🛡️ الاستقلالية</h4>
-                    <p class="text-gray-700 text-xs md:text-sm">غير خاضع لسيطرة أي شركة أو مصالح تجارية</p>
-                  </div>
-
-                  <div class="bg-teal-50 p-2 rounded-lg border-l-4 border-teal-500">
-                    <h4 class="font-semibold text-teal-800 mb-2">📚 التعلم</h4>
-                    <p class="text-gray-700 text-xs md:text-sm">يعمل كمصدر تعليمي للمطورين
-                      والطلاب
+                  <div class="benefit-item">
+                    <div class="flex items-center mb-2">
+                      <i class="fa-solid fa-hand-paper text-teal-600 mr-3"></i>
+                      <span class="font-semibold text-teal-800"
+                        >إيماءات سلسة</span
+                      >
+                    </div>
+                    <p class="text-gray-700 text-xs md:text-sm">
+                      تفاعلات لمس طبيعية وسريعة الاستجابة
                     </p>
                   </div>
-
-                  <div class="bg-teal-50 p-2 rounded-lg border-l-4 border-teal-500">
-                    <h4 class="font-semibold text-teal-800 mb-2">🌍 الاستدامة</h4>
-                    <p class="text-gray-700 text-xs md:text-sm">سيستمر في الوجود والتحسن طالما
-                      يدعمه المجتمع
+                  <div class="benefit-item">
+                    <div class="flex items-center mb-2">
+                      <i class="fa-solid fa-book-open text-teal-600 mr-3"></i>
+                      <span class="font-semibold text-teal-800"
+                        >روايات ومصاحف متعددة</span
+                      >
+                    </div>
+                    <p class="text-gray-700 text-xs md:text-sm">
+                      الوصول إلى مصاحف ورش وحفص مع قواعد التجويد الملونة
                     </p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
+        <section data-transition="convex">
+          <div
+            class="slide-container flex items-center justify-center p-6 md:p-12"
+          >
+            <div class="community-card max-w-6xl z-10 w-full">
+              <div class="text-center mb-2 md:mb-10">
+                <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">
+                  بُني بالتعاون مع المجتمع
+                </h1>
+                <div class="w-24 h-1 bg-yellow-500 mx-auto mb-2"></div>
+                <p class="text-base md:text-xl text-gray-700 max-w-3xl mx-auto">
+                  المصحف المفتوح مدفوع بملاحظات المستخدمين، وليس بخطة عمل شركة
+                </p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                <div class="space-y-6">
+                  <h2 class="text-3xl font-semibold text-teal-800 mb-6">
+                    كل صوت مهم
+                  </h2>
+
+                  <div class="feedback-item">
+                    <div class="flex items-center mb-2">
+                      <i class="fa-solid fa-bug text-teal-600 mr-3"></i>
+                      <span class="font-semibold text-teal-800"
+                        >تقارير الأخطاء</span
+                      >
+                    </div>
+                    <p class="text-gray-700 text-xs md:text-sm">
+                      يجد المستخدمون المشاكل، ونحن نصلحها معًا
+                    </p>
+                  </div>
+
+                  <div class="feedback-item">
+                    <div class="flex items-center mb-2">
+                      <i class="fa-solid fa-lightbulb text-teal-600 mr-3"></i>
+                      <span class="font-semibold text-teal-800"
+                        >اقتراحات واجهة المستخدم</span
+                      >
+                    </div>
+                    <p class="text-gray-700 text-xs md:text-sm">
+                      الأفكار لتحسين تجربة المستخدم مرحب بها دائمًا
+                    </p>
+                  </div>
+
+                  <div class="feedback-item">
+                    <div class="flex items-center mb-2">
+                      <i class="fa-solid fa-code-branch text-teal-600 mr-3"></i>
+                      <span class="font-semibold text-teal-800"
+                        >مساهمات الكود</span
+                      >
+                    </div>
+                    <p class="text-gray-700 text-xs md:text-sm">
+                      المطورون يساهمون بالتحسينات والميزات الجديدة
+                    </p>
+                  </div>
+
+                  <div
+                    class="bg-yellow-100 p-4 rounded-lg border border-yellow-300 mt-6"
+                  >
+                    <p
+                      class="text-gray-800 font-medium italic text-center text-sm md:text-base"
+                    >
+                      "سواء كنت قارئًا، مطورًا، أو مجرد فضولي، مشاركتك مهمة."
+                    </p>
+                  </div>
+                </div>
+
+                <div class="space-y-6">
+                  <h2 class="text-3xl font-semibold text-teal-800 mb-6">
+                    تأثير المجتمع
+                  </h2>
+
+                  <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="community-stat">
+                      <i class="fa-solid fa-users text-3xl mb-2"></i>
+                      <div class="text-2xl font-bold text-teal-800">عالمي</div>
+                      <div class="text-sm text-gray-700">المجتمع</div>
+                    </div>
+
+                    <div class="community-stat">
+                      <i class="fa-solid fa-heart text-3xl mb-2"></i>
+                      <div class="text-2xl font-bold text-teal-800">مفتوح</div>
+                      <div class="text-sm text-gray-700">المصدر</div>
+                    </div>
+                  </div>
+
+                  <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-teal-800">
+                      كيف يمكنك المساهمة
+                    </h3>
+
+                    <div class="flex items-center text-gray-700">
+                      <i class="fa-solid fa-star text-yellow-500 mr-3"></i>
+                      <span>قدم الملاحظات والاقتراحات</span>
+                    </div>
+
+                    <div class="flex items-center text-gray-700">
+                      <i class="fa-solid fa-share text-yellow-500 mr-3"></i>
+                      <span>شارك مع مجتمعك</span>
+                    </div>
+
+                    <div class="flex items-center text-gray-700">
+                      <i class="fa-solid fa-code text-yellow-500 mr-3"></i>
+                      <span>ساهم بتحسينات الكود</span>
+                    </div>
+
+                    <div class="flex items-center text-gray-700">
+                      <i class="fa-solid fa-book text-yellow-500 mr-3"></i>
+                      <span>حسن الوثائق</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-transition="convex">
+          <div
+            class="slide-container flex items-center justify-center p-4 md:p-8"
+          >
+            <div class="impact-card max-w-6xl z-10 w-full">
+              <div class="text-center mb-2 md:mb-4">
+                <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">
+                  ربط القلوب حول العالم
+                </h1>
+                <div class="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
+                <p class="text-base md:text-xl text-gray-700 max-w-3xl mx-auto">
+                  كيف يجمع المصحف المفتوح المسلمين معًا من خلال تقنية القرآن
+                  الميسرة
+                </p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                <div class="space-y-6">
+                  <div class="world-section">
+                    <div class="globe-icon mx-auto mb-3">
+                      <i class="fa-solid fa-globe text-3xl"></i>
+                    </div>
+                    <h2
+                      class="text-2xl font-semibold text-teal-800 text-center mb-4"
+                    >
+                      كسر الحواجز
+                    </h2>
+                    <p
+                      class="text-gray-700 text-center leading-relaxed text-sm md:text-base"
+                    >
+                      من المدن الصاخبة إلى القرى النائية، يضمن المصحف المفتوح
+                      وصول كل مسلم إلى القرآن بكل كرامة وسهولة.
+                    </p>
+                  </div>
+
+                  <div class="space-y-3">
+                    <h3 class="text-xl font-semibold text-teal-800">
+                      الوصول الشامل
+                    </h3>
+
+                    <div class="connection-item">
+                      <div class="flex items-center">
+                        <i
+                          class="fa-solid fa-mobile-alt text-teal-600 mr-3"
+                        ></i>
+                        <span class="font-medium text-teal-800"
+                          >الهاتف أولاً</span
+                        >
+                      </div>
+                      <p class="text-gray-700 text-xs md:text-sm mt-1">
+                        مصمم للهواتف الذكية التي يحملها الجميع
+                      </p>
+                    </div>
+
+                    <div class="connection-item">
+                      <div class="flex items-center">
+                        <i
+                          class="fa-solid fa-wifi-slash text-teal-600 mr-3"
+                        ></i>
+                        <span class="font-medium text-teal-800"
+                          >جاهز دون إنترنت</span
+                        >
+                      </div>
+                      <p class="text-gray-700 text-xs md:text-sm mt-1">
+                        يعمل دون إنترنت في المناطق النائية
+                      </p>
+                    </div>
+
+                    <div class="connection-item">
+                      <div class="flex items-center">
+                        <i
+                          class="fa-solid fa-universal-access text-teal-600 mr-3"
+                        ></i>
+                        <span class="font-medium text-teal-800">للجميع</span>
+                      </div>
+                      <p class="text-gray-700 text-xs md:text-sm mt-1">
+                        متاح للمستخدمين من جميع المستويات التقنية
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="space-y-6">
+                  <h2 class="text-3xl font-semibold text-teal-800 mb-6">
+                    تأثير حقيقي
+                  </h2>
+
+                  <div class="space-y-4">
+                    <div
+                      class="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500"
+                    >
+                      <h4 class="font-semibold text-teal-800 mb-2">
+                        الطلاب والمتعلمون
+                      </h4>
+                      <p class="text-gray-700 text-xs md:text-sm">
+                        ألوان التجويد تساعد المتعلمين الجدد على التلاوة الصحيحة
+                      </p>
+                    </div>
+
+                    <div
+                      class="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500"
+                    >
+                      <h4 class="font-semibold text-teal-800 mb-2">
+                        المسافرون والحجاج
+                      </h4>
+                      <p class="text-gray-700 text-xs md:text-sm">
+                        الوصول دون إنترنت أثناء الحج، العمرة، والرحلات
+                      </p>
+                    </div>
+
+                    <div
+                      class="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500"
+                    >
+                      <h4 class="font-semibold text-teal-800 mb-2">
+                        القراء اليوميون
+                      </h4>
+                      <p class="text-gray-700 text-xs md:text-sm">
+                        تتبع الورد يساعد في الحفاظ على عادات القراءة المنتظمة
+                      </p>
+                    </div>
+
+                    <div
+                      class="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500"
+                    >
+                      <h4 class="font-semibold text-teal-800 mb-2">
+                        العلماء والمعلمون
+                      </h4>
+                      <p class="text-gray-700 text-xs md:text-sm">
+                        مصادر تفسير متعددة لدراسة أعمق
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section data-transition="convex">
+          <div
+            class="slide-container flex items-center justify-center p-4 md:p-8"
+          >
+            <div class="mission-card max-w-6xl z-10 w-full">
+              <div class="text-center mb-2 md:mb-10">
+                <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">
+                  مهمة المصدر المفتوح
+                </h1>
+                <div class="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
+                <p class="text-base md:text-xl text-gray-700 max-w-3xl mx-auto">
+                  لماذا تهم الشفافية وملكية المجتمع لتقنية القرآن
+                </p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                <div class="space-y-6">
+                  <div class="principle-box text-center">
+                    <div class="open-source-icon">
+                      <i
+                        class="fa-solid fa-code-branch text-2xl text-white"
+                      ></i>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-teal-800 mb-4">
+                      مفتوح وشفاف
+                    </h2>
+                    <p
+                      class="text-gray-700 leading-relaxed text-sm md:text-base"
+                    >
+                      كل سطر من الكود مفتوح للمراجعة. لا خوارزميات مخفية، لا جمع
+                      بيانات سري. ما تراه هو ما تحصل عليه.
+                    </p>
+                  </div>
+
+                  <div class="space-y-3">
+                    <h3 class="text-xl font-semibold text-teal-800">
+                      القيم الأساسية
+                    </h3>
+
+                    <div class="value-item">
+                      <div class="flex items-center">
+                        <i
+                          class="fa-solid fa-shield-alt text-teal-600 mr-3"
+                        ></i>
+                        <span class="font-medium text-teal-800"
+                          >الثقة والخصوصية</span
+                        >
+                      </div>
+                      <p class="text-gray-700 text-xs md:text-sm mt-1">
+                        لا جمع بيانات، لا تتبع، لا إعلانات
+                      </p>
+                    </div>
+
+                    <div class="value-item">
+                      <div class="flex items-center">
+                        <i class="fa-solid fa-infinity text-teal-600 mr-3"></i>
+                        <span class="font-medium text-teal-800"
+                          >مجاني للأبد</span
+                        >
+                      </div>
+                      <p class="text-gray-700 text-xs md:text-sm mt-1">
+                        متاح دائمًا للجميع، في كل مكان
+                      </p>
+                    </div>
+
+                    <div class="value-item">
+                      <div class="flex items-center">
+                        <i class="fa-solid fa-users text-teal-600 mr-3"></i>
+                        <span class="font-medium text-teal-800"
+                          >ملكية المجتمع</span
+                        >
+                      </div>
+                      <p class="text-gray-700 text-xs md:text-sm mt-1">
+                        ينتمي إلى المجتمع الإسلامي العالمي
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="space-y-6">
+                  <h2 class="text-3xl font-semibold text-teal-800 mb-6">
+                    لماذا هذا مهم
+                  </h2>
+
+                  <div class="space-y-2">
+                    <div
+                      class="bg-teal-50 p-2 rounded-lg border-l-4 border-teal-500"
+                    >
+                      <h4 class="font-semibold text-teal-800 mb-2">
+                        🤝 التعاون
+                      </h4>
+                      <p class="text-gray-700 text-xs md:text-sm">
+                        يمكن للمطورين المسلمين في جميع أنحاء العالم المساهمة
+                        بالتحسينات والميزات الجديدة
+                      </p>
+                    </div>
+
+                    <div
+                      class="bg-teal-50 p-2 rounded-lg border-l-4 border-teal-500"
+                    >
+                      <h4 class="font-semibold text-teal-800 mb-2">
+                        🛡️ الاستقلالية
+                      </h4>
+                      <p class="text-gray-700 text-xs md:text-sm">
+                        غير خاضع لسيطرة أي شركة أو مصالح تجارية
+                      </p>
+                    </div>
+
+                    <div
+                      class="bg-teal-50 p-2 rounded-lg border-l-4 border-teal-500"
+                    >
+                      <h4 class="font-semibold text-teal-800 mb-2">
+                        📚 التعلم
+                      </h4>
+                      <p class="text-gray-700 text-xs md:text-sm">
+                        يعمل كمصدر تعليمي للمطورين والطلاب
+                      </p>
+                    </div>
+
+                    <div
+                      class="bg-teal-50 p-2 rounded-lg border-l-4 border-teal-500"
+                    >
+                      <h4 class="font-semibold text-teal-800 mb-2">
+                        🌍 الاستدامة
+                      </h4>
+                      <p class="text-gray-700 text-xs md:text-sm">
+                        سيستمر في الوجود والتحسن طالما يدعمه المجتمع
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
-  </div>
 
-  <script src="language-switcher.js"></script>
-  <script src=" https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.min.js"></script>
-  <script>
-    Reveal.initialize({
-      controls: true,        // Display controls in the bottom right corner
-      progress: true,        // Display a presentation progress bar
-      center: true,          // Vertically and horizontally center slides
-      hash: true,            // Push each slide's URL into the browser history
-      // Add more configuration options as needed
-      // Check the Reveal.js documentation for full list: https://revealjs.com/
-    });
-  </script>
-  <script type="module">
-    import { showTopNotification } from './top-notification.js';
+    <script src="language-switcher.js"></script>
+    <script src=" https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.min.js"></script>
+    <script>
+      Reveal.initialize({
+        controls: true, // Display controls in the bottom right corner
+        progress: true, // Display a presentation progress bar
+        center: true, // Vertically and horizontally center slides
+        hash: true, // Push each slide's URL into the browser history
+        // Add more configuration options as needed
+        // Check the Reveal.js documentation for full list: https://revealjs.com/
+      });
+    </script>
+    <script type="module">
+      import { showTopNotification } from './top-notification.js';
 
-    // Show notification on document load
-    window.addEventListener('DOMContentLoaded', function () {
-      // Only show on small screens (max-width: 767px)
-      if (window.innerWidth > 767) return;
+      // Show notification on document load
+      window.addEventListener('DOMContentLoaded', function () {
+        // Only show on small screens (max-width: 767px)
+        if (window.innerWidth > 767) return;
 
-      showTopNotification('تعمل بشكل أفضل على الشاشات والكبيرة.');
-    });
-  </script>
-
-</body>
-
+        showTopNotification('تعمل بشكل أفضل على الشاشات والكبيرة.');
+      });
+    </script>
+  </body>
 </html>

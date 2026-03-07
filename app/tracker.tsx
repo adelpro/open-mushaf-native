@@ -12,21 +12,21 @@ import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useAtom, useSetAtom } from 'jotai/react';
 
-import ReadingChart from '@/components/ReadingChart';
-import SEO from '@/components/seo';
-import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useColors } from '@/hooks/useColors';
-import useCurrentPage from '@/hooks/useCurrentPage';
-import { useUpdateAndroidWidget } from '@/hooks/useUpdateAndroidWidget';
+import {
+  ReadingChart,
+  Seo,
+  ThemedButton,
+  ThemedText,
+  ThemedView,
+} from '@/components';
+import { useColors, useCurrentPage, useUpdateAndroidWidget } from '@/hooks';
 import {
   dailyTrackerCompleted,
   dailyTrackerGoal,
-  MAX_HISTORY_DAYS,
   readingHistory,
   yesterdayPage,
 } from '@/jotai/atoms';
+import { CHART_PERIODS } from '@/constants';
 import { formatDateKey, getHizbText } from '@/utils/hizbProgress';
 
 export default function TrackerScreen() {
@@ -35,9 +35,9 @@ export default function TrackerScreen() {
 
   const { updateAndroidWidget } = useUpdateAndroidWidget();
 
-  const [dailyTrackerGoalValue, setdailyTrackerGoalValue] =
+  const [dailyTrackerGoalValue, setDailyTrackerGoalValue] =
     useAtom(dailyTrackerGoal);
-  const [dailyTrackerCompletedValue, setdailyTrackerCompletedValue] = useAtom(
+  const [dailyTrackerCompletedValue, setDailyTrackerCompletedValue] = useAtom(
     dailyTrackerCompleted,
   );
   const [yesterdayPageValue, setYesterdayPageValue] = useAtom(yesterdayPage);
@@ -55,9 +55,9 @@ export default function TrackerScreen() {
       : 0;
 
   // Should change by full hizb (8 thumns)
-  const incrementDailyGoal = () => setdailyTrackerGoalValue((prev) => prev + 1);
+  const incrementDailyGoal = () => setDailyTrackerGoalValue((prev) => prev + 1);
   const decrementDailyGoal = () =>
-    setdailyTrackerGoalValue((prev) => Math.max(1, prev - 1));
+    setDailyTrackerGoalValue((prev) => Math.max(1, prev - 1));
 
   // Consolidated reset logic into one function
   const performReset = async () => {
@@ -73,9 +73,14 @@ export default function TrackerScreen() {
     // Archive today's progress before clearing (upsert to keep highest value)
     if (dailyTrackerCompletedValue.value > 0) {
       setReadingHistoryValue((prev) => {
+        const pagesRead =
+          typeof savedPage === 'number' && yesterdayPageValue.value > 0
+            ? Math.max(0, savedPage - yesterdayPageValue.value)
+            : 0;
         const entry = {
           date: today,
           hizbsCompleted: dailyTrackerCompletedValue.value,
+          pagesRead,
         };
         const existingIndex = prev.findIndex((r) => r.date === today);
         if (existingIndex >= 0) {
@@ -88,16 +93,17 @@ export default function TrackerScreen() {
                       r.hizbsCompleted,
                       entry.hizbsCompleted,
                     ),
+                    pagesRead: Math.max(r.pagesRead, entry.pagesRead),
                   }
                 : r,
             )
-            .slice(-MAX_HISTORY_DAYS);
+            .slice(-CHART_PERIODS[CHART_PERIODS.length - 1].days);
         }
-        return [...prev, entry].slice(-MAX_HISTORY_DAYS);
+        return [...prev, entry].slice(-CHART_PERIODS[CHART_PERIODS.length - 1].days);
       });
     }
 
-    setdailyTrackerCompletedValue({
+    setDailyTrackerCompletedValue({
       value: 0,
       date: today,
     });
@@ -109,7 +115,7 @@ export default function TrackerScreen() {
   return (
     <>
       <Stack.Screen options={{ title: 'الورد' }} />
-      <SEO title="الورد - المصحف المفتوح" description="الورد في تطبيق المصحف" />
+      <Seo title="الورد - المصحف المفتوح" description="الورد في تطبيق المصحف" />
       <ThemedView style={styles.container}>
         <ScrollView
           style={styles.scrollView}
@@ -170,6 +176,9 @@ export default function TrackerScreen() {
                   <TouchableOpacity
                     style={styles.controlButton}
                     onPress={decrementDailyGoal}
+                    accessibilityLabel="تقليل الهدف اليومي"
+                    accessibilityHint="اضغط لتقليل عدد الأحزاب في الهدف اليومي"
+                    accessibilityRole="button"
                   >
                     <Feather name="minus" size={20} color={primaryColor} />
                   </TouchableOpacity>
@@ -179,6 +188,9 @@ export default function TrackerScreen() {
                   <TouchableOpacity
                     style={styles.controlButton}
                     onPress={incrementDailyGoal}
+                    accessibilityLabel="زيادة الهدف اليومي"
+                    accessibilityHint="اضغط لزيادة عدد الأحزاب في الهدف اليومي"
+                    accessibilityRole="button"
                   >
                     <Feather name="plus" size={20} color={primaryColor} />
                   </TouchableOpacity>
@@ -256,6 +268,8 @@ export default function TrackerScreen() {
             style={styles.modalOverlay}
             activeOpacity={1}
             onPress={() => setConfirmModalVisible(false)} // Close on overlay press
+            accessibilityLabel="إغلاق نافذة التأكيد"
+            accessibilityRole="button"
           >
             {/* Prevent modal closing when pressing inside content */}
             <ThemedView
@@ -267,6 +281,8 @@ export default function TrackerScreen() {
                 <TouchableOpacity
                   style={styles.closeButton}
                   onPress={() => setConfirmModalVisible(false)}
+                  accessibilityRole="button"
+                  accessibilityLabel="إغلاق نافذة التأكيد"
                 >
                   <Feather name="x" size={24} color={iconColor} />
                 </TouchableOpacity>
@@ -303,8 +319,6 @@ export default function TrackerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
-    margin: 2,
     alignItems: 'center',
     justifyContent: 'flex-start',
     alignSelf: 'center',

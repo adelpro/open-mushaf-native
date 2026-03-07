@@ -13,7 +13,7 @@ interface BaseProps {
   activeTextColor?: string;
 }
 
-export default function SegmentedControl({
+export function SegmentedControl({
   options,
   onSelectionChange,
   initialSelectedIndex = undefined,
@@ -41,6 +41,9 @@ export default function SegmentedControl({
             index === selectedIndex && { backgroundColor: activeColor },
           ]}
           onPress={() => handlePress(index)}
+          accessibilityLabel={option}
+          accessibilityRole="radio"
+          accessibilityState={{ selected: index === selectedIndex }}
         >
           <ThemedText
             style={[

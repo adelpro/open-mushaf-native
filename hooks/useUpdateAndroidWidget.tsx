@@ -12,6 +12,7 @@ import {
   dailyTrackerGoal,
   mushafRiwaya,
 } from '@/jotai/atoms';
+import { Surah, Thumn } from '@/types';
 import {
   getJuzPositionByPage,
   getSurahNumberByPage,
@@ -35,8 +36,8 @@ export const useUpdateAndroidWidget = () => {
         dailyCompletedAtom.date === today ? dailyCompletedAtom.value : 0;
 
       // Select surah and thumn metadata based on riwaya
-      const surahs = riwaya === 'hafs' ? hafsSurahs : warshSurahs;
-      const thumns = riwaya === 'hafs' ? hafsThumns : warshThumns;
+      const surahs = (riwaya === 'hafs' ? hafsSurahs : warshSurahs) as Surah[];
+      const thumns = (riwaya === 'hafs' ? hafsThumns : warshThumns) as Thumn[];
 
       // Calculate current surah
       let currentSurahNumber = 1;
