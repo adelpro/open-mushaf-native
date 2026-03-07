@@ -65,7 +65,7 @@ export function MushafPage() {
   const hizbNotificationValue = useAtomValue(hizbNotification);
   const [showHizbNotification, setShowHizbNotification] = useState(false);
 
-  const setdailyTrackerCompletedValue = useSetAtom(dailyTrackerCompleted);
+  const setDailyTrackerCompletedValue = useSetAtom(dailyTrackerCompleted);
 
   const showTrackerNotificationValue = useAtomValue(showTrackerNotification);
   const [showGoalNotification, setShowGoalNotification] = useState(false);
@@ -314,7 +314,7 @@ export function MushafPage() {
       );
 
       // Update the progress state with new object format
-      setdailyTrackerCompletedValue({
+      setDailyTrackerCompletedValue({
         value: numberOfThumn / 8,
         date: new Date().toDateString(),
       });
@@ -323,7 +323,7 @@ export function MushafPage() {
     currentPage,
     yesterdayPageValue,
     thumnData,
-    setdailyTrackerCompletedValue,
+    setDailyTrackerCompletedValue,
   ]);
 
   // Handle errors from metadata loading
