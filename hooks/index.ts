@@ -13,3 +13,4 @@ export * from './useReadingChartData';
 export * from './useTafseerContent';
 export * from './useThemeColor';
 export * from './useUpdateAndroidWidget';
+export * from './useSkeletonAnimation';
