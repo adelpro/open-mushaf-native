@@ -12,9 +12,9 @@ import { useAtom, useAtomValue } from 'jotai/react';
 import { removeTashkeel } from 'quran-search-engine';
 import * as Progress from 'react-native-progress';
 
-import { ThemedView } from '@/components/ThemedView';
+import { ThemedView } from '@/components';
 import {} from '@/constants';
-import { useColors } from '@/hooks/useColors';
+import { useColors } from '@/hooks';
 import useQuranMetadata from '@/hooks/useQuranMetadata';
 import {
   bottomMenuState,
@@ -27,7 +27,7 @@ import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
 import { getJuzPositionByPage } from '@/utils/quranMetadataUtils';
 
 const ICON_SIZE = 32;
-export default function TopMenu() {
+export function TopMenu() {
   const { tintColor, backgroundColor } = useColors();
   const { surahData, thumnData } = useQuranMetadata();
   const [progressValue, setProgressValue] = useState<number>(0);
