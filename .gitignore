@@ -12,6 +12,7 @@ npm-debug.*
 web-build/
 .eslintcache
 .idea/
+coverage/
 
 # macOS
 .DS_Store
