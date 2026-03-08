@@ -21,6 +21,10 @@ export function TopTabs({ activeTab, setActiveTab }: Props) {
   return (
     <ThemedView style={styles.container}>
       <TouchableOpacity
+        accessible={true}
+        accessibilityRole="tab"
+        accessibilityState={{ selected: activeTab === 'surahs' }}
+        accessibilityLabel="تبويب السور"
         onPress={() => handleTabPress('surahs')}
         style={[
           styles.tab,
@@ -30,10 +34,6 @@ export function TopTabs({ activeTab, setActiveTab }: Props) {
             borderBottomColor: textColor,
           },
         ]}
-        accessibilityLabel="السور"
-        accessibilityHint="اضغط لعرض قائمة السور"
-        accessibilityRole="tab"
-        accessibilityState={{ selected: activeTab === 'surahs' }}
       >
         <ThemedText
           style={[
@@ -47,6 +47,10 @@ export function TopTabs({ activeTab, setActiveTab }: Props) {
       </TouchableOpacity>
 
       <TouchableOpacity
+        accessible={true}
+        accessibilityRole="tab"
+        accessibilityState={{ selected: activeTab === 'juzs' }}
+        accessibilityLabel="تبويب الأجزاء"
         onPress={() => handleTabPress('juzs')}
         style={[
           styles.tab,
@@ -56,10 +60,6 @@ export function TopTabs({ activeTab, setActiveTab }: Props) {
             borderBottomColor: textColor,
           },
         ]}
-        accessibilityLabel="الأجزاء"
-        accessibilityHint="اضغط لعرض قائمة الأجزاء"
-        accessibilityRole="tab"
-        accessibilityState={{ selected: activeTab === 'juzs' }}
       >
         <ThemedText
           style={[
@@ -90,9 +90,10 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 24,
     lineHeight: 32,
-    fontFamily: 'Tajawal_500Medium',
+    fontFamily: 'Tajawal_700Bold',
+    fontWeight: '500',
   },
   activeTabText: {
-    fontFamily: 'Tajawal_700Bold',
+    fontWeight: '700',
   },
 });
