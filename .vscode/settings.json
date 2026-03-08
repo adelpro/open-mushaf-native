@@ -21,6 +21,6 @@
   },
   "typescript.experimental.useTsgo": true,
   "[typescriptreact]": {
-    "editor.defaultFormatter": "prettier.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
