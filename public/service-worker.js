@@ -1,6 +1,9 @@
 /* eslint-disable no-undef */
 // This service worker is processed by workbox-cli
-
+const ERROR_MESSAGES = {
+  OFFLINE: 'أنت غير متصل بالإنترنت.',
+  SERVICE_WORKER: 'حدث خطأ في خدمة التطبيق.',
+};
 try {
   importScripts(
     'https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-sw.js',
@@ -312,7 +315,9 @@ try {
     clients.forEach((client) => {
       client.postMessage({
         type: 'SW_ERROR',
-        message: `${ERROR_MESSAGES.SERVICE_WORKER} ${error.message}`,
+        message: `${ERROR_MESSAGES.SERVICE_WORKER} ${
+          error instanceof Error ? error.message : String(error)
+        }`,
       });
     });
   });
