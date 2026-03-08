@@ -3,6 +3,7 @@ import { ActivityIndicator, StyleSheet, Text } from 'react-native';
 
 import { FontAwesome } from '@expo/vector-icons';
 
+import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import { useColors } from '@/hooks/useColors';
 
 import { useNotification } from './NotificationProvider';
@@ -39,21 +40,17 @@ export default function ContactForm() {
 
     // Check all fields and show notifications for each error
     if (name.trim().length < 3 || name.trim().length > 50) {
-      notify('الإسم يجب أن يكون بين 3 و 50 حرفًا.', 'name_validation', 'error');
+      notify(ERROR_MESSAGES.INVALID_NAME, 'name_validation', 'error');
       isValid = false;
     }
 
     if (isValidEmail(email) === false) {
-      notify('البريد الألكتروني غير صحيح.', 'email_validation', 'error');
+      notify(ERROR_MESSAGES.INVALID_EMAIL, 'email_validation', 'error');
       isValid = false;
     }
 
     if (message.trim().length < 10 || message.trim().length > 500) {
-      notify(
-        'الرسالة يجب أن تكون بين 10 و 500 حرفًا.',
-        'message_validation',
-        'error',
-      );
+      notify(ERROR_MESSAGES.INVALID_MESSAGE, 'message_validation', 'error');
       isValid = false;
     }
 
@@ -92,11 +89,7 @@ export default function ContactForm() {
 
       notify('تم الإرسال بنجاح!', 'form_success', 'success');
     } catch {
-      notify(
-        'فشل في إرسال الرسالة! يرجى المحاولة مرة أخرى لاحقًا.',
-        'form_error',
-        'error',
-      );
+      notify(ERROR_MESSAGES.CONTACT_FAILED, 'form_error', 'error');
     } finally {
       setIsLoading(false);
     }

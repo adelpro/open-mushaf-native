@@ -23,6 +23,7 @@ import WelcomeSVG from '@/assets/svgs/welcome.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import { useColors } from '@/hooks/useColors';
 
 export default function MoreScreen() {
@@ -48,8 +49,8 @@ export default function MoreScreen() {
         title: 'Open Mushaf Native', // Optional, mainly for Android
       });
       // console.log('Share successful or dismissed'); // You can uncomment this if needed
-    } catch (error: any) {
-      setErrorMessage(error.message || 'An unexpected error occurred.');
+    } catch {
+      setErrorMessage(ERROR_MESSAGES.SHARE_FAILED);
       setErrorModalVisible(true);
     }
   };

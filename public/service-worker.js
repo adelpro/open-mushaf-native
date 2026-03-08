@@ -290,7 +290,7 @@ try {
           clients.forEach((client) => {
             client.postMessage({
               type: 'SW_STATE_UPDATE',
-              message: 'أنت غير متصل بالإنترنت',
+              message: ERROR_MESSAGES.OFFLINE,
               duration: 5000,
             });
           });
@@ -312,7 +312,7 @@ try {
     clients.forEach((client) => {
       client.postMessage({
         type: 'SW_ERROR',
-        message: `Service worker error: ${error.message}`,
+        message: `${ERROR_MESSAGES.SERVICE_WORKER} ${error.message}`,
       });
     });
   });

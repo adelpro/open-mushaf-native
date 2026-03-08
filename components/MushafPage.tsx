@@ -19,6 +19,7 @@ import { useAtomValue, useSetAtom } from 'jotai/react';
 import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
+import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import { useColors } from '@/hooks/useColors';
 import useCurrentPage from '@/hooks/useCurrentPage';
 import useImagePreloader from '@/hooks/useImagePreloader';
@@ -288,7 +289,7 @@ export default function MushafPage() {
       <ThemedView
         style={[styles.errorContainer, { backgroundColor: ivoryColor }]}
       >
-        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${metadataError}`}</ThemedText>
+        <ThemedText type="defaultSemiBold">{`${ERROR_MESSAGES.METADATA_LOAD} ${metadataError}`}</ThemedText>
       </ThemedView>
     );
   }
@@ -309,7 +310,7 @@ export default function MushafPage() {
       <ThemedView
         style={[styles.errorContainer, { backgroundColor: ivoryColor }]}
       >
-        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${assetError}`}</ThemedText>
+        <ThemedText type="defaultSemiBold">{`${ERROR_MESSAGES.ASSET_LOAD} ${assetError}`}</ThemedText>
       </ThemedView>
     );
   }
