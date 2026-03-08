@@ -99,7 +99,9 @@ export default function TrackerScreen() {
             )
             .slice(-CHART_PERIODS[CHART_PERIODS.length - 1].days);
         }
-        return [...prev, entry].slice(-CHART_PERIODS[CHART_PERIODS.length - 1].days);
+        return [...prev, entry].slice(
+          -CHART_PERIODS[CHART_PERIODS.length - 1].days,
+        );
       });
     }
 
