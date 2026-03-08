@@ -19,6 +19,12 @@ const storage = {
   },
 };
 
+/**
+ * Creates an MMKV-backed JSON storage adapter for Jotai atoms on native platforms.
+ * Wraps MMKV methods with Jotai-compatible signatures.
+ *
+ * @returns A configured JSON storage object using MMKV.
+ */
 export function createStorage<T>() {
   return createJSONStorage<T>(() => storage);
 }
