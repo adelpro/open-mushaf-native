@@ -11,6 +11,7 @@ npm-debug.*
 *.orig.*
 web-build/
 .eslintcache
+.idea/
 
 # macOS
 .DS_Store
