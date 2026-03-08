@@ -20,7 +20,7 @@ import {
 import { ChartMetric, useColors, useReadingChartData } from '@/hooks';
 import { formatLabel, getPosStyle, shouldShowLabel } from '@/utils';
 
-import { SegmentedControl } from '../SegmentControl';
+import { SegmentedControl } from '../SegmentedControl';
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
 import { styles } from './styles';

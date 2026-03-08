@@ -5,7 +5,7 @@ export * from './useImagePreloader';
 export * from './useImagesArray';
 export * from './useNotificationStyles';
 export * from './useOrientation';
-export * from './usePageOverLay';
+export * from './usePageOverlay';
 export * from './usePanGestureHandler';
 export * from './useQuranMetadata';
 export * from './useQuranSearch';
