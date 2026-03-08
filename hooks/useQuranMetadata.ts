@@ -17,6 +17,12 @@ type QuranMetadata = {
   error: string | null;
 };
 
+/**
+ * Hook to load and manage various Quranic metadata securely from local JSON assets.
+ * Evaluates the active `mushafRiwaya` (Hafs/Warsh) atom and loads the respective data dynamically.
+ *
+ * @returns An object loaded with typed metadata payloads (`thumnData`, `hizbData`, `surahData`, etc.) alongside loading/error states.
+ */
 export function useQuranMetadata(): QuranMetadata {
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);
 

@@ -33,6 +33,22 @@ interface UseQuranSearchProps {
   limit: number;
 }
 
+/**
+ * Hook to interface with the core Quran search engine.
+ * Processes queries, normalizes Arabic text, and fetches matches across the loaded metadata.
+ *
+ * @param props - Configuration properties for executing a localized Quran search.
+ * @param props.quranData - The loaded Quranic text dataset.
+ * @param props.morphologyData - The loaded morphology metadata for advanced search matching.
+ * @param props.wordMap - The mapping of generic words for indexing.
+ * @param props.query - The user input search string.
+ * @param props.advancedOptions - Config object to enable lemma, root, or fuzzy matching.
+ * @param props.fuseInstance - Optional pre-instantiated Fuse.js index.
+ * @param props.page - The pagination page.
+ * @param props.limit - The maximum results per page.
+ *
+ * @returns An object containing `pageResults`, search metric `counts`, and a helper for identifying `getPositiveTokens`.
+ */
 export function useQuranSearch({
   quranData,
   morphologyData,

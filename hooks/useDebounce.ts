@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useRef } from 'react';
 
+/**
+ * Hook to debounce a function call, ensuring it only executes after a specified delay
+ * has passed since its last invocation.
+ *
+ * @param fun - The function to debounce.
+ * @param delay - The delay in milliseconds.
+ * @returns A debounced version of the provided function.
+ */
 export function useDebounce<T extends (...args: any[]) => void>(
-  fn: T,
+  fun: T,
   delay: number,
 ) {
   const timeoutRef = useRef<number | null>(null);
@@ -12,10 +20,10 @@ export function useDebounce<T extends (...args: any[]) => void>(
         clearTimeout(timeoutRef.current);
       }
       timeoutRef.current = window.setTimeout(() => {
-        fn(...args);
+        fun(...args);
       }, delay);
     },
-    [fn, delay],
+    [fun, delay],
   );
 
   useEffect(() => {

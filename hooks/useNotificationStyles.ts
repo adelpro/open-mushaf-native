@@ -1,3 +1,8 @@
+/**
+ * Hook providing standard styling objects for different notification types.
+ *
+ * @returns An object containing style definitions for `neutral`, `success`, `error`, and `info` status themes.
+ */
 export function useNotificationStyles() {
   return {
     neutral: { borderColor: '#CCC', backgroundColor: '#333', color: '#FFF' },

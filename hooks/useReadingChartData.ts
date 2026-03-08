@@ -14,6 +14,13 @@ import { daysAgo } from '@/utils';
 
 export type ChartMetric = 'hizbs' | 'pages';
 
+/**
+ * Hook to aggregate and calculate user reading metrics for visualization in charts.
+ * Processes Jotai store history against the selected tracking metric.
+ *
+ * @param metric - The unit of measurement for charting data ('hizbs' | 'pages'). Defaults to 'hizbs'.
+ * @returns Chart configurations including the data array, total sum, daily average, max value, and period mutators.
+ */
 export function useReadingChartData(metric: ChartMetric = 'hizbs') {
   const history = useAtomValue(readingHistory);
   const todayTracker = useAtomValue(dailyTrackerCompleted);

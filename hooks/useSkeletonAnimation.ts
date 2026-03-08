@@ -8,6 +8,12 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
+/**
+ * Hook providing a looped opacity animation style for skeleton loaders.
+ * Uses Reanimated to smoothly pulse between 0.4 and 0.8 opacity.
+ *
+ * @returns A reanimated style object ready to be applied to an Animated.View.
+ */
 export function useSkeletonAnimation() {
   const opacity = useSharedValue(0.4);
 
