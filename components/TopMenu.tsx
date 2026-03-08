@@ -15,7 +15,7 @@ import * as Progress from 'react-native-progress';
 import { ThemedView } from '@/components';
 import {} from '@/constants';
 import { useColors } from '@/hooks';
-import useQuranMetadata from '@/hooks/useQuranMetadata';
+import { useQuranMetadata } from '@/hooks/useQuranMetadata';
 import {
   bottomMenuState,
   currentSavedPage,
@@ -23,8 +23,10 @@ import {
   dailyTrackerGoal,
   topMenuState,
 } from '@/jotai/atoms';
-import { getSurahNameByPage } from '@/utils/quranMetadataUtils';
-import { getJuzPositionByPage } from '@/utils/quranMetadataUtils';
+import {
+  getJuzPositionByPage,
+  getSurahNameByPage,
+} from '@/utils/quranMetadataUtils';
 
 const ICON_SIZE = 32;
 export function TopMenu() {
