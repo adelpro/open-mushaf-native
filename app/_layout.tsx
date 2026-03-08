@@ -4,7 +4,6 @@ import {
   InteractionManager,
   Platform,
   useColorScheme,
-  View,
 } from 'react-native';
 
 import {
@@ -28,7 +27,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
 import { HelmetProvider } from 'react-helmet-async';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { ErrorBoundary, Notification, Seo } from '@/components';
 import { NotificationProvider } from '@/Context/NotificationProvider';
@@ -106,7 +105,8 @@ export default function RootLayout() {
           <Seo />
           <GestureHandlerRootView style={{ flex: 1 }}>
             <SafeAreaProvider>
-              <View
+              <SafeAreaView
+                edges={['top', 'left', 'right']}
                 style={{
                   flex: 1,
                   width: '100%',
@@ -157,7 +157,7 @@ export default function RootLayout() {
                   </Stack>
                   <Notification />
                 </ThemeProvider>
-              </View>
+              </SafeAreaView>
             </SafeAreaProvider>
           </GestureHandlerRootView>
         </HelmetProvider>
