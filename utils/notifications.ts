@@ -11,7 +11,12 @@ import { Reminder } from '@/types/reminder';
 
 const CHANNEL_ID = 'quran-reminders';
 
-/** Sets up the Android notification channel. Call once on app start. */
+/**
+ * Sets up the Android notification channel.
+ * Call once on app start to configure notification importance, sound, and visual indicators.
+ *
+ * @returns A promise that resolves when the channel configuration completes.
+ */
 export const setupNotificationChannel = async () => {
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
@@ -24,7 +29,11 @@ export const setupNotificationChannel = async () => {
   }
 };
 
-/** Requests notification permissions from the user. Returns true if granted. */
+/**
+ * Requests notification permissions from the user.
+ *
+ * @returns A promise resolving to true if permissions are granted, false otherwise.
+ */
 export const requestNotificationPermissions = async (): Promise<boolean> => {
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   if (existingStatus === 'granted') return true;
@@ -33,7 +42,13 @@ export const requestNotificationPermissions = async (): Promise<boolean> => {
   return status === 'granted';
 };
 
-/** Schedules a local notification for a reminder and returns the notification ID. */
+/**
+ * Schedules a local notification for a given reminder requirement.
+ * Determines if the reminder is a daily or weekly trigger and registers it with the OS.
+ *
+ * @param reminder - The reminder object containing scheduling rules (time, intervals) and content.
+ * @returns A promise resolving to the string ID of the scheduled notification.
+ */
 export const scheduleReminder = async (reminder: Reminder): Promise<string> => {
   let trigger: DailyTriggerInput | WeeklyTriggerInput;
 
@@ -67,19 +82,31 @@ export const scheduleReminder = async (reminder: Reminder): Promise<string> => {
   return notificationId;
 };
 
-/** Cancels a single scheduled notification by ID. */
+/**
+ * Cancels a single scheduled notification by its ID.
+ *
+ * @param notificationId - The exact string identifier returned when the notification was scheduled.
+ * @returns A promise that resolves when the cancellation completes.
+ */
 export const cancelReminder = async (notificationId: string) => {
   await Notifications.cancelScheduledNotificationAsync(notificationId);
 };
 
-/** Cancels all scheduled notifications. */
+/**
+ * Cancels all scheduled notifications active in the application.
+ *
+ * @returns A promise that resolves when all cancellations are complete.
+ */
 export const cancelAllReminders = async () => {
   await Notifications.cancelAllScheduledNotificationsAsync();
 };
 
 /**
- * Syncs reminders state with actual scheduled notifications.
+ * Syncs the local application reminders state with actual OS scheduled notifications.
  * Re-schedules any enabled reminders that are missing from the OS scheduler.
+ *
+ * @param reminders - An array of reminder configurations from the application state.
+ * @returns A promise resolving to the updated array of reminders, injecting any newly created notification IDs.
  */
 export const syncReminders = async (
   reminders: Reminder[],

@@ -6,6 +6,12 @@ import { ThemedView } from '@/components/ThemedView';
 
 import { ExternalLink } from './ExternalLink';
 
+/**
+ * Dedicated informational component laying out the localized Arabic translation of
+ * the application's offline-only data and privacy policies.
+ *
+ * @returns A vertically mapped view iterating privacy text blocks.
+ */
 export function PrivacyContentArabic() {
   return (
     <ThemedView style={[styles.container]}>

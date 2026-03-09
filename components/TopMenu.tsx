@@ -28,6 +28,12 @@ import {
 } from '@/utils/quranMetadataUtils';
 
 const ICON_SIZE = 32;
+/**
+ * Overlay control panel typically accessible via a soft tap on the Mushaf view.
+ * Exposes core interaction triggers (Search, Bookmarks, and Settings navigators).
+ *
+ * @returns A structurally mapped interface block or null based on the global `topMenuState`.
+ */
 export function TopMenu() {
   const { tintColor, backgroundColor } = useColors();
   const { surahData, thumnData } = useQuranMetadata();

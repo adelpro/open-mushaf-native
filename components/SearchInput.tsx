@@ -6,17 +6,33 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 import { ThemedTextInput } from './ThemedTextInput';
 import { ThemedView } from './ThemedView';
 
+/**
+ * Props for the generalized SearchInput component.
+ */
 interface SearchInputProps {
+  /** Controlled value. */
   value: string;
+  /** Callback triggered on input change. */
   onChangeText: (text: string) => void;
+  /** Sets progress spinner for debouncing delays. */
   isTyping: boolean;
+  /** Sets progress spinner for active async API search fetching. */
   isSearching: boolean;
+  /** Current state tracker for the search filter toggles. */
   showOptions: boolean;
+  /** State modifier handler. */
   setShowOptions: (show: boolean) => void;
   primaryColor: string;
   secondaryColor: string;
 }
 
+/**
+ * A combined search input text field bundling a loading indicator and options toggle
+ * tailored for Arabic linguistic datasets.
+ *
+ * @param props - Component dependencies and hooks passing.
+ * @returns A cohesive `<TextInput>` based input bar element.
+ */
 export function SearchInput({
   value,
   onChangeText,

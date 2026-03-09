@@ -53,6 +53,13 @@ import { useNotification } from '../Context/NotificationProvider';
 
 const audioSource = require('@/assets/sounds/page-flip-sound.mp3');
 
+/**
+ * The core viewing component representing an individual page of the Mushaf.
+ * Handles the orchestration of displaying the Quran image (Hafs/Warsh), rendering interactive UI overlays,
+ * preloading adjacent page assets, tracking read progress, and capturing touch gestures for navigation.
+ *
+ * @returns A fully interactive Mushaf page view complete with SEO metadata, localized notifications, and touch-drag support.
+ */
 export function MushafPage() {
   const player = useAudioPlayer(audioSource);
   const isFlipSoundEnabled = useAtomValue(flipSound);

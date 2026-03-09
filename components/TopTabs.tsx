@@ -6,11 +6,23 @@ import { ListTabs } from '@/types';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+/**
+ * Navigation state hooks mapping to available tabs.
+ */
 type Props = {
+  /** Setter modifying the global view context. */
   setActiveTab: (tab: ListTabs) => void;
+  /** Active selected key. */
   activeTab: ListTabs;
 };
 
+/**
+ * Simple horizontal row of tab controls used exclusively for swapping
+ * between `Surah` and `Juz` listings on the main `Navigation` screen.
+ *
+ * @param props - Mapped state bindings.
+ * @returns A `<View>` displaying 2 labeled tabs triggering state changes on press.
+ */
 export function TopTabs({ activeTab, setActiveTab }: Props) {
   const { backgroundColor, textColor } = useColors();
 

@@ -67,6 +67,9 @@ export const checkRateLimit = (
 
 /**
  * Reset the rate limit for a given key.
+ *
+ * @param key - Unique identifier for the action to reset.
+ * @returns void
  */
 export const resetRateLimit = (key: string): void => {
   store.delete(key);

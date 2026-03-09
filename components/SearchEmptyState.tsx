@@ -6,12 +6,25 @@ import { Ionicons } from '@expo/vector-icons';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+/**
+ * Rendering properties determining the message mode presented when no results populate.
+ */
 interface SearchEmptyStateProps {
+  /** Configures whether it implies 'no query entered' (initial) or 'no records found'. */
   type: 'initial' | 'no-results';
+  /** Primary accent color fallback. */
   primaryColor: string;
+  /** Red/warm accent color fallback mapped for warnings. */
   dangerColor: string;
 }
 
+/**
+ * Informational fallback component displaying instructions or alerts
+ * based on the empty query stream (initial/no-results).
+ *
+ * @param props - Payload configuring text strings and colored SVG assets.
+ * @returns Centered View providing visual cues to the user when zero results exist.
+ */
 export function SearchEmptyState({
   type,
   primaryColor,

@@ -17,6 +17,12 @@ import { ThemedButton } from './ThemedButton';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+/**
+ * An overlay banner component that only displays when a user navigates away from their saved reading position.
+ * Features controls for returning to the exact saved page instantly or overriding the bookmark with the current page.
+ *
+ * @returns A collapsible banner or `null` if the user is not in a temporary navigation state.
+ */
 export function ReadingPositionBanner() {
   const [isCollapsed, setIsCollapsed] = useAtom(readingBannerCollapsedState);
   const setYesterdayPageValue = useSetAtom(yesterdayPage);

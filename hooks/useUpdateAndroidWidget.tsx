@@ -19,6 +19,12 @@ import {
 } from '@/utils/quranMetadataUtils';
 import AndroidWidget from '@/widgets/android';
 
+/**
+ * Hook to manage updates for an Android home-screen widget.
+ * Prepares the current user reading states and issues an update request to the underlying Android environment.
+ *
+ * @returns An object containing the `updateAndroidWidget` asynchronous function trigger.
+ */
 export const useUpdateAndroidWidget = () => {
   const savedPage = useAtomValue(currentSavedPage);
   const riwaya = useAtomValue(mushafRiwaya) || 'warsh';

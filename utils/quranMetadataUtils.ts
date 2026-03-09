@@ -1,5 +1,12 @@
 import { Surah, Thumn } from '@/types';
 
+/**
+ * Retrieves the name of a Surah based on a specific page number.
+ *
+ * @param surahs - The array of Surah metadata.
+ * @param page - The page number to search for.
+ * @returns The name of the Surah found, or an empty string if not found.
+ */
 export function getSurahNameByPage(surahs: Surah[], page: number): string {
   const surah = surahs.find(
     (s, index) =>
@@ -9,6 +16,13 @@ export function getSurahNameByPage(surahs: Surah[], page: number): string {
   return surah ? surah.name : '';
 }
 
+/**
+ * Retrieves the number of a Surah based on a specific page number.
+ *
+ * @param surahs - The array of Surah metadata.
+ * @param page - The page number to search for.
+ * @returns The number of the Surah found, or 1 if not found.
+ */
 export function getSurahNumberByPage(surahs: Surah[], page: number): number {
   const surah = surahs.find(
     (s, index) =>
@@ -18,6 +32,13 @@ export function getSurahNumberByPage(surahs: Surah[], page: number): number {
   return surah ? surah.number : 1;
 }
 
+/**
+ * Calculates the position within a Juz (the thumn index and juz number) based on a page number.
+ *
+ * @param thumns - The array of Thumn metadata.
+ * @param page - The page number to evaluate.
+ * @returns An object containing the 1-indexed `thumnInJuz` and `juzNumber`.
+ */
 export function getJuzPositionByPage(thumns: Thumn[], page: number) {
   const thumn = thumns.find(
     (t, index) =>
@@ -34,6 +55,14 @@ export function getJuzPositionByPage(thumns: Thumn[], page: number) {
   return { thumnInJuz, juzNumber };
 }
 
+/**
+ * Generates localized SEO metadata for a specific Quran page.
+ *
+ * @param surahs - The array of Surah metadata.
+ * @param thumns - The array of Thumn metadata.
+ * @param page - The page number being viewed.
+ * @returns An object containing `title`, `description`, and `keywords` for SEO purposes.
+ */
 export function getSEOMetadataByPage(
   surahs: Surah[],
   thumns: Thumn[],

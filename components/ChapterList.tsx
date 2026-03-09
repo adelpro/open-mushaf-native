@@ -7,6 +7,13 @@ import { ChapterCard } from './ChapterCard';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+/**
+ * A list component that fetches chapter metadata using the `useQuranMetadata` hook
+ * and renders a sequence of `ChapterCard`s.
+ * Displays local loading indicators and error states accordingly.
+ *
+ * @returns A rendered scrollable view or fallback state representing the list of chapters.
+ */
 export function ChapterList() {
   const { tintColor } = useColors();
   const { chapterData, isLoading, error } = useQuranMetadata();

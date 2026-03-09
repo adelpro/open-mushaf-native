@@ -15,14 +15,17 @@ const ITEM_HEIGHT = 44;
 const VISIBLE_ITEMS = 5;
 const PICKER_HEIGHT = ITEM_HEIGHT * VISIBLE_ITEMS;
 
+/**
+ * props for a single scrollable selection wheel.
+ */
 type WheelProps = {
-  /** Array of values to display */
+  /** Array of numeric dataset values to display. */
   data: number[];
-  /** Currently selected value */
+  /** Currently selected value indicating snapped position. */
   value: number;
-  /** Callback when value changes */
+  /** Callback fired upon stable snapping selection change. */
   onChange: (value: number) => void;
-  /** Format the displayed number (e.g. pad with zero) */
+  /** Formats the displayed number (e.g. pads with zero). */
   formatLabel?: (value: number) => string;
 };
 
@@ -157,12 +160,15 @@ const Wheel = ({
   );
 };
 
+/**
+ * Composite options defining the behavior for the dual-wheel TimePicker interaction.
+ */
 type TimePickerProps = {
-  /** Selected hour (0-23) */
+  /** Selected hour parameter (0-23). */
   hour: number;
-  /** Selected minute (0-59) */
+  /** Selected minute parameter (0-59). */
   minute: number;
-  /** Called when the user changes the time */
+  /** Modifier hook called returning a unified time payload object. */
   onChange: (time: { hour: number; minute: number }) => void;
 };
 

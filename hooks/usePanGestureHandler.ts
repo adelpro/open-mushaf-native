@@ -7,6 +7,14 @@ import { PAN_GESTURE_CONFIG } from '@/constants';
 
 import { useOrientation } from './useOrientation';
 
+/**
+ * Hook to configure and manage a pan gesture handler for navigating between pages.
+ * Handles translational tracking, page change triggering thresholds, and smooth spring resets.
+ *
+ * @param onPageChange - Callback invoked with the direction delta (+1 for next, -1 for previous) when the swipe threshold is met.
+ * @param sensitivityMultiplier - Multiplier to adjust the threshold distance (defaults to 1.0). Higher means easier triggering.
+ * @returns An object containing the shared `translateX` value and the constructed `panGestureHandler`.
+ */
 export const usePanGestureHandler = (
   onPageChange: (delta: number) => void,
   sensitivityMultiplier: number = 1.0,

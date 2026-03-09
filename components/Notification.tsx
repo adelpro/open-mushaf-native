@@ -8,6 +8,12 @@ import { useNotificationStyles } from '@/hooks';
 import { ThemedText } from './ThemedText';
 import { useNotification } from '../Context/NotificationProvider';
 
+/**
+ * A global floating container that maps active notification payloads to screen feedback bars.
+ * Driven by Jotai/Context payloads to execute animated entrance/exit transitions smoothly.
+ *
+ * @returns Respective animated `SlideInUp` overlay views.
+ */
 export function Notification() {
   const { notifications } = useNotification();
   const insets = useSafeAreaInsets();

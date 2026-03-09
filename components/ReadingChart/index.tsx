@@ -25,6 +25,13 @@ import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
 import { styles } from './styles';
 
+/**
+ * The primary statistical charting component driving the User's daily read tracking.
+ * Maps reading outputs (pages/hizbs) against custom date vectors using `react-native-svg` plotting
+ * to provide a responsive bar-chart visualization of completion timelines.
+ *
+ * @returns An interactive `<Svg>` map and scroll context wrapped safely.
+ */
 export function ReadingChart() {
   const { primaryColor, textColor, cardColor, tabIconDefaultColor } =
     useColors();

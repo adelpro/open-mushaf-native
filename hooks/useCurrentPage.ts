@@ -8,6 +8,13 @@ import { currentSavedPage } from '@/jotai/atoms';
 import { useQuranMetadata } from './useQuranMetadata';
 import { useUpdateAndroidWidget } from './useUpdateAndroidWidget';
 
+/**
+ * Hook to manage the current page of the Mushaf.
+ * Handles reading from URL parameters, falling back to the saved state,
+ * updating the Jotai store, and syncing the Android widget.
+ *
+ * @returns An object with the current page, saved page, setter function, and a boolean flag for temporary navigation.
+ */
 export function useCurrentPage() {
   const { page: pageParam, temporary } = useLocalSearchParams();
   const [currentSavedPageValue, setCurrentSavedPageValue] =

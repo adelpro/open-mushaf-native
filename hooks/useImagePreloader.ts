@@ -9,8 +9,11 @@ import { mushafRiwaya } from '@/jotai/atoms';
 import { useQuranMetadata } from './useQuranMetadata';
 
 /**
- * Hook to preload images for smoother page navigation
- * Preloads the current page, next two pages, and previous page
+ * Hook to preload images for smoother page navigation.
+ * Preloads the current page, the previous page, and the next two pages into the Expo Asset cache.
+ *
+ * @param currentPage - The page number currently being viewed.
+ * @returns null - This hook is only utilized for its side-effects.
  */
 export function useImagePreloader(currentPage: number) {
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);

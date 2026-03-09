@@ -3,6 +3,16 @@ import { getDimensionCoeff } from '@/utils';
 
 import { useQuranMetadata } from './useQuranMetadata';
 
+/**
+ * Hook to generate coordinate dimensions for drawing an interactive overlay
+ * over Ayas on a specific Quran page image.
+ *
+ * @param args - Configuration object for calculating the overlay.
+ * @param args.index - The 1-based page index to retrieve Aya coordinate data for.
+ * @param args.dimensions - Custom defined width and height of the rendered page container.
+ *
+ * @returns An object containing the generated `overlay` coordinate array and the calculated `lineHeight`.
+ */
 export function usePageOverlay({
   index,
   dimensions,

@@ -30,12 +30,25 @@ const tabLabels: Partial<Record<TafseerTabs, string>> = {
   waseet: 'الوسيط',
 };
 
+/**
+ * Component configuration mapping the targeted verse payload rendering bounds.
+ */
 type Props = {
+  /** The local Aya number in the bounds of the active `surah`. */
   aya: number;
+  /** The active Surah numeric ID. */
   surah: number;
+  /** Opacity override for animation bounds. */
   opacity?: number | undefined;
 };
 
+/**
+ * Core Tafseer reading component connecting to static textual databases (`tabary.json`, `katheer.json`, etc.).
+ * Includes a segmented selector toggling horizontally across varying scholar interpretations.
+ *
+ * @param props - Mapped bounding variables.
+ * @returns A `<View>` displaying localized HTML interpretations bounded by user selection.
+ */
 export function Tafseer({ aya, surah, opacity = undefined }: Props) {
   const { tintColor, textColor } = useColors();
   const { surahData } = useQuranMetadata();

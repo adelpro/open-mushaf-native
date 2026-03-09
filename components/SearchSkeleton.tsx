@@ -6,6 +6,12 @@ import { useColors, useSkeletonAnimation } from '@/hooks';
 
 import { SkeletonBar } from './SearchSkeletonBar';
 
+/**
+ * An animated placeholder representing the loading state of a search result item.
+ * Utilizes the `useSkeletonAnimation` hook for Reanimated opacity pulsing.
+ *
+ * @returns A structurally identical but blank mocked element.
+ */
 export function SearchSkeleton() {
   const { tintColor } = useColors();
   const animatedStyle = useSkeletonAnimation();

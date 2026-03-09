@@ -4,17 +4,34 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+/**
+ * Search options representing active toggle states for advanced linguistic parsing.
+ */
 interface AdvancedOptions {
+  /** If true, expands search scope matching lemma forms. */
   lemma: boolean;
+  /** If true, expands search scope matching root structures. */
   root: boolean;
+  /** If true, permits typographical fuzzy matching. */
   fuzzy: boolean;
 }
 
+/**
+ * Props for the SearchAdvancedOptions context component.
+ */
 interface SearchAdvancedOptionsProps {
+  /** Payload of the active search settings. */
   advancedOptions: AdvancedOptions;
+  /** Modifier callback emitted on press toggle. */
   toggleOption: (option: keyof AdvancedOptions) => void;
 }
 
+/**
+ * Renders a row of toggleable chips ('Lemma', 'Root', 'Fuzzy') affecting the search query expansion logic.
+ *
+ * @param props - Defines the control state mapped from the parent container.
+ * @returns An interactive view displaying the available filter controls.
+ */
 export function SearchAdvancedOptions({
   advancedOptions,
   toggleOption,
