@@ -3,10 +3,12 @@ import { StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { ExternalLink, Seo, ThemedText, ThemedView } from '@/components';
+import { useColors } from '@/hooks';
 import { ExternalLinkType } from '@/types';
 import { getAppVersion, getBuildVersion } from '@/utils';
 
 export default function AboutScreen() {
+  const { linkColor, subtleTextColor } = useColors();
   const appVersion = getAppVersion();
   const buildVersion = getBuildVersion();
 
@@ -79,7 +81,7 @@ export default function AboutScreen() {
                 {text}&nbsp;
                 <ExternalLink
                   href={link}
-                  style={styles.link}
+                  style={[styles.link, { color: linkColor }]}
                   accessible={true}
                   accessibilityLabel={label}
                   accessibilityHint={`فتح الرابط إلى ${label}`}
@@ -114,7 +116,7 @@ export default function AboutScreen() {
               البرنامج مفتوح المصدر:&nbsp;
               <ExternalLink
                 href="https://github.com/adelpro/open-mushaf-native"
-                style={styles.link}
+                style={[styles.link, { color: linkColor }]}
                 accessible={true}
                 accessibilityLabel="Open Mushaf Native repository"
                 accessibilityHint="فتح الرابط إلى مستودع Open Mushaf Native"
@@ -125,12 +127,15 @@ export default function AboutScreen() {
           </ThemedView>
         </ThemedView>
 
-        <ThemedText style={styles.copyright} accessible={true}>
+        <ThemedText
+          style={[styles.copyright, { color: subtleTextColor }]}
+          accessible={true}
+        >
           © {new Date().getFullYear()} Open-Mushaf. جميع الحقوق محفوظة.
         </ThemedText>
 
         <ThemedText
-          style={styles.versionText}
+          style={[styles.versionText, { color: subtleTextColor }]}
           accessible={true}
           accessibilityLabel={`إصدار التطبيق: ${appVersion} (${buildVersion})`}
         >
@@ -180,18 +185,15 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   link: {
-    color: '#1E90FF',
     textDecorationLine: 'underline',
   },
   versionText: {
     fontSize: 12,
-    color: '#888',
     textAlign: 'center',
     marginTop: 5,
   },
   copyright: {
     fontSize: 12,
-    color: '#888',
     textAlign: 'center',
     marginTop: 10,
   },

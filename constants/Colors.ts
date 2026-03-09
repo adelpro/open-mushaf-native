@@ -18,6 +18,9 @@ export const Colors = {
     dangerLight: '#FFCDD2',
     ivory: '#F9F6EF',
     card: '#FFFFFF',
+    border: '#E5E7EB',
+    subtleText: '#888888',
+    link: '#1E90FF',
 
     // Text Highlight colors
     directColor: '#FFD700',
@@ -38,6 +41,9 @@ export const Colors = {
     dangerLight: '#E57373',
     ivory: '#2E2E2E',
     card: '#1E1E1E',
+    border: '#374151',
+    subtleText: '#A0A0A0',
+    link: '#5BA8F5',
 
     // Text Highlight colors
     directColor: '#FFA000',

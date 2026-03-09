@@ -47,7 +47,8 @@ export default function SettingsScreen() {
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const [HizbNotificationValue, setHizbNotificationValue] =
     useAtom(hizbNotification);
-  const { textColor, primaryColor, cardColor, iconColor } = useColors();
+  const { textColor, primaryColor, cardColor, iconColor, borderColor } =
+    useColors();
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
   const [panGestureSensitivityValue, setPanGestureSensitivityValue] = useAtom(
     panGestureSensitivity,
@@ -410,7 +411,9 @@ export default function SettingsScreen() {
             style={[styles.modalContent, { backgroundColor: cardColor }]}
             onStartShouldSetResponder={() => true}
           >
-            <ThemedView style={styles.modalHeader}>
+            <ThemedView
+              style={[styles.modalHeader, { borderBottomColor: borderColor }]}
+            >
               <ThemedText style={styles.modalTitle}>تأكيد</ThemedText>
               <TouchableOpacity
                 style={styles.closeButton}

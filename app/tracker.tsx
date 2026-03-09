@@ -27,7 +27,7 @@ import {
 } from '@/jotai/atoms';
 
 export default function TrackerScreen() {
-  const { iconColor, cardColor, primaryColor } = useColors();
+  const { iconColor, cardColor, primaryColor, borderColor } = useColors();
   const { currentSavedPage: savedPage } = useCurrentPage();
 
   const { updateAndroidWidget } = useUpdateAndroidWidget();
@@ -109,7 +109,12 @@ export default function TrackerScreen() {
               <ThemedText style={styles.label}>الورد اليومي:</ThemedText>
             </ThemedView>
 
-            <ThemedView style={styles.progressContainer}>
+            <ThemedView
+              style={[
+                styles.progressContainer,
+                { backgroundColor: borderColor },
+              ]}
+            >
               <ThemedView
                 style={[
                   styles.progressBar,
@@ -147,7 +152,7 @@ export default function TrackerScreen() {
                 </ThemedText>
                 <ThemedView style={styles.controls}>
                   <TouchableOpacity
-                    style={styles.controlButton}
+                    style={[styles.controlButton, { borderColor }]}
                     onPress={decrementDailyGoal}
                     accessibilityLabel="تقليل الهدف اليومي"
                     accessibilityHint="اضغط لتقليل عدد الأحزاب في الهدف اليومي"
@@ -159,7 +164,7 @@ export default function TrackerScreen() {
                     {getHizbText(dailyTrackerGoalValue)}
                   </ThemedText>
                   <TouchableOpacity
-                    style={styles.controlButton}
+                    style={[styles.controlButton, { borderColor }]}
                     onPress={incrementDailyGoal}
                     accessibilityLabel="زيادة الهدف اليومي"
                     accessibilityHint="اضغط لزيادة عدد الأحزاب في الهدف اليومي"
@@ -249,7 +254,9 @@ export default function TrackerScreen() {
               style={[styles.modalContent, { backgroundColor: cardColor }]}
               onStartShouldSetResponder={() => true}
             >
-              <ThemedView style={styles.modalHeader}>
+              <ThemedView
+                style={[styles.modalHeader, { borderBottomColor: borderColor }]}
+              >
                 <ThemedText style={styles.modalTitle}>تأكيد</ThemedText>
                 <TouchableOpacity
                   style={styles.closeButton}
@@ -395,7 +402,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee', // Consider using a theme color here
+    borderBottomColor: '#eee',
     minHeight: 40,
     backgroundColor: 'transparent', // Ensure header background is transparent if content has color
   },
