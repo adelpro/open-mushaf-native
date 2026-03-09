@@ -29,6 +29,12 @@ import { useColors, useOrientation } from '@/hooks';
 import { finishedTutorial, panGestureSensitivity } from '@/jotai/atoms';
 import { isRTL } from '@/utils';
 
+/**
+ * An interactive, paginated onboarding tutorial shown on initial app load.
+ * Supports swiping gestures via `react-native-gesture-handler` and localized textual elements.
+ *
+ * @returns An `Animated.View` containing swipe controls and feature outlines.
+ */
 export function TutorialGuide() {
   const router = useRouter();
   const pathname = usePathname();

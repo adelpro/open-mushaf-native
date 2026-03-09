@@ -3,6 +3,12 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { useColors } from '@/hooks';
 
+/**
+ * Informational strip component describing the color-coded matching algorithms utilized
+ * inside the search query responses. Provides graphical correlation for Exact vs Fuzzy hits.
+ *
+ * @returns A statically built instructional horizontal legend mapping.
+ */
 export function SearchColorLegend() {
   const { directColor, relatedColor, fuzzyColor, textColor } = useColors();
 

@@ -16,17 +16,33 @@ import { logError } from '@/utils/errorLogger';
 
 import { ThemedButton } from './ThemedButton';
 
+/**
+ * Props for the ErrorBoundary component.
+ */
 interface ErrorBoundaryProps {
+  /** The child components that the boundary wraps to catch errors. */
   children: ReactNode;
+  /** Optional custom fallback UI, receives a resetting callback. */
   fallback?: (resetError: () => void) => ReactNode;
+  /** Optional error hook for external logging or side effects. */
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
+/**
+ * State shape for determining the ErrorBoundary rendering logic.
+ */
 interface ErrorBoundaryState {
+  /** Tracks if an error bubble has reached this boundary. */
   hasError: boolean;
+  /** The error instance captured, if any. */
   error: Error | null;
 }
 
+/**
+ * A Class component designed to act as a React Error Boundary.
+ * Catches JavaScript errors anywhere in their child component tree,
+ * logs those errors, and displays a fallback UI instead of crashing the app.
+ */
 export class ErrorBoundary extends Component<
   ErrorBoundaryProps,
   ErrorBoundaryState

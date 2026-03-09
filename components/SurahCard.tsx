@@ -10,10 +10,21 @@ import { Surah } from '@/types';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+/**
+ * Specific properties dictating the Surah's detail card view.
+ */
 type Props = {
+  /** Global Surah metadata object matching the interface `Surah`. */
   surah: Surah;
 };
 
+/**
+ * A stylized card representing a specific Quranic chapter (Surah).
+ * On press, navigates the user's view to the initial starting page of the selected Surah.
+ *
+ * @param props - Custom properties defined in `Props`.
+ * @returns An interactive mapping tile block formatted within a `Pressable`.
+ */
 export function SurahCard({ surah }: Props) {
   const router = useRouter();
 

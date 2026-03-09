@@ -10,10 +10,21 @@ import { Chapter } from '@/types';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+/**
+ * Props for the ChapterCard component.
+ */
 type Props = {
+  /** The specific chapter metadata object to render. */
   chapter: Chapter;
 };
 
+/**
+ * A clickable card element representing a single Quranic Chapter (Juz/Hizb marker layout).
+ * Pressing it navigates the user to the starting page of the selected chapter in a temporary view mode.
+ *
+ * @param props - Component dependencies.
+ * @returns A styled, interactive `Pressable` container displaying chapter information.
+ */
 export function ChapterCard({ chapter }: Props) {
   const router = useRouter();
   const { backgroundColor, textColor, secondaryColor } = useColors();

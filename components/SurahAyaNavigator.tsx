@@ -10,16 +10,32 @@ import { isWeb } from '@/utils';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+/**
+ * Configuration schema for the Surah / Aya dual-navigator block.
+ */
 interface SurahAyaNavigatorProps {
+  /** Active numeric surah index (e.g., 1 for Al-Fatihah). */
   currentSurah: number;
+  /** Active numeric aya index representing progression within the `currentSurah`. */
   currentAya: number;
+  /** Complete list representation mapping out the number of verses available. */
   ayaCount: number[];
+  /** Handler fired when the user selects a new Surah via the modal. */
   onSurahChange: (surahNumber: number) => void;
+  /** Handler fired when the user targets a specific Aya jump. */
   onAyaChange: (ayaNumber: number) => void;
   primaryColor: string;
   iconColor: string;
   cardColor: string;
 }
+/**
+ * A composite navigation component exposing dropdown-styled elements.
+ * Invokes modal layovers containing FlatLists that let the user precisely scroll and tap-navigate
+ * to granular coordinates (Surah + Aya level) efficiently.
+ *
+ * @param props - Mapped variables determining active Surahs and controlling selection triggers.
+ * @returns Fully styled dual toggle `<View>` and associated Modals.
+ */
 export function SurahAyaNavigator({
   currentSurah,
   currentAya,

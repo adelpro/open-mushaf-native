@@ -15,13 +15,27 @@ import { Colors } from '@/constants/Colors';
 
 import { Tafseer } from './Tafseer';
 import { ThemedView } from './ThemedView';
+/**
+ * Shared props connecting the parent overlay coordinates to this popup component.
+ */
 type Props = {
+  /** Trigger declaring if the popup is visibly snapped open. */
   show: boolean;
+  /** Modifier hook for flipping the `show` boolean. */
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  /** Focus Aya ID. */
   aya: number;
+  /** Focus Surah ID. */
   surah: number;
 };
 
+/**
+ * A bottom sheet drawer mechanism wrapping the `<Tafseer />` content view.
+ * Utilizes `gorhom/bottom-sheet` and handles specific animated opacity transitions on resize.
+ *
+ * @param props - Mapping variables.
+ * @returns The bottom-anchored animated drawer.
+ */
 export function TafseerPopup({ show, setShow, aya, surah }: Props) {
   const colorScheme = useColorScheme();
   const tintColor = Colors[colorScheme ?? 'light'].tint;

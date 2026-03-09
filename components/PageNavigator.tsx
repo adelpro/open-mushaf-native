@@ -15,14 +15,30 @@ import { getPaginationRange, isCompactView } from '@/utils/dimensionsUtils';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+/**
+ * Props for the PageNavigator component.
+ */
 interface PageNavigatorProps {
+  /** The currently active page number. */
   currentPage: number;
+  /** The maximum possible page index. */
   totalPages: number;
+  /** Callback emitted when the user selects or inputs a new page. */
   onPageChange: (page: number) => void;
+  /** Primary theme color used for indicators and borders. */
   primaryColor: string;
+  /** Secondary theme color mapped to navigational icons. */
   iconColor: string;
 }
 
+/**
+ * A horizontal pagination control component for traversing the Mushaf pages.
+ * Adaptively renders a scrolling number slider on larger layouts or a compact
+ * tap-to-edit indicator on tighter layouts.
+ *
+ * @param props - Configuration properties defined in `PageNavigatorProps`.
+ * @returns A bounded pagination view element.
+ */
 export function PageNavigator({
   currentPage,
   totalPages,

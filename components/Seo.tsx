@@ -2,17 +2,36 @@ import React from 'react';
 
 import { Helmet } from 'react-helmet-async';
 
+/**
+ * Helmet props generating dynamic layout headers for the Web build context.
+ */
 type Props = {
+  /** Page specific title text. */
   title?: string;
+  /** Snippet for search crawlers detailing page intent. */
   description?: string;
+  /** OG-enabled preview fallback visual. */
   image?: string;
+  /** Currently rendering absolute URI string. */
   url?: string;
+  /** Primary identifier index for web indexing deduplication. */
   canonical?: string;
+  /** Comma-separated keyword text cluster. */
   keywords?: string;
+  /** Active application locale format (e.g. `ar_DZ`). */
   locale?: string;
+  /** Optional structured LDAP/JSON schema payload. */
   structuredData?: Record<string, any>; // Add structured data support
 };
 
+/**
+ * Search Engine Optimization wrapper element utilizing `react-helmet-async`.
+ * Applies necessary metadata nodes (`og:image`, `twitter:card`) inside the Web document's `<head>`.
+ * Safe to render natively (falls back transparently/ignores output).
+ *
+ * @param props - Injected config metadata overwriting the hardcoded defaults.
+ * @returns A `Helmet` block.
+ */
 export function Seo({
   title = 'Open Mushaf',
   description = 'A modern and minimalist Quran Mushaf application',

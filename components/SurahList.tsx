@@ -7,6 +7,12 @@ import { SurahCard } from './SurahCard';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+/**
+ * Fetch and display all 114 Surahs within sequentially rendered `SurahCard` instances.
+ * Internally handles application suspense/loading fallback behaviors during metadata fetch.
+ *
+ * @returns A structurally mapped list layout rendering the active catalog of Surahs.
+ */
 export function SurahList() {
   const { tintColor } = useColors();
   const { surahData, isLoading, error } = useQuranMetadata();

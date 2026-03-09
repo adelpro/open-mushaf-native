@@ -9,11 +9,19 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks';
 
+/**
+ * Structural payload definition configuring search list mapping output.
+ */
 type SearchResultItemProps = {
+  /** A matched document dictionary record containing context strings and IDs. */
   item: QuranText;
+  /** The original unmodified search term inputted by the user. */
   query: string;
+  /** Toggle options altering token matching leniency. */
   advancedOptions: { lemma: boolean; root: boolean; fuzzy: boolean };
+  /** A dictionary containing morphological breakdown associations. */
   wordMap: WordMap;
+  /** Helper tool function emitting an array of explicitly highlighted matches. */
   getPositiveTokens: (
     verse: QuranText,
     mode: 'text' | 'lemma' | 'root' | 'fuzzy',
@@ -21,10 +29,19 @@ type SearchResultItemProps = {
     targetRoot?: string,
     cleanQuery?: string,
   ) => string[];
+  /** Handler fired traversing back to a mapped location within the `MushafPage`. */
   onSelectAya: (aya: { aya: number; surah: number }) => void;
   disabled?: boolean;
 };
 
+/**
+ * A render block component used within lists displaying individual search query hits.
+ * Integrates directly with `HighlightText` to logically process string offsets
+ * and render appropriate color backgrounds on matching tokens.
+ *
+ * @param props - Mapped document record with filtering states.
+ * @returns A touchable card yielding `<HighlightText />` fragments.
+ */
 export function SearchResultItem({
   item,
   query,

@@ -8,9 +8,14 @@ import {
 
 import { useColors } from '@/hooks';
 
+/**
+ * Expanding default properties native to `TouchableOpacityProps`.
+ * Added standardized coloring parameters referencing Jotai styling atoms.
+ */
 export type ThemedButtonProps = TouchableOpacityProps & {
   lightColor?: string;
   darkColor?: string;
+  /** Enforces a standardized stylistic approach via internal switch evaluation. */
   variant?:
     | 'default'
     | 'primary'
@@ -23,6 +28,13 @@ export type ThemedButtonProps = TouchableOpacityProps & {
     | 'outlined-danger-secondary';
 };
 
+/**
+ * A generalized accessible interaction element overriding pure `TouchableOpacity` behaviors
+ * matching established color schemas automatically while providing robust touch feedback.
+ *
+ * @param props - Mapped stylistic hooks.
+ * @returns A theme-matching interactive button structure.
+ */
 export function ThemedButton({
   style,
   lightColor,

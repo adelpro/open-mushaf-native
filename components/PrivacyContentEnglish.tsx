@@ -7,6 +7,12 @@ import { isRTL } from '@/utils';
 
 import { ExternalLink } from './ExternalLink';
 
+/**
+ * Dedicated informational component laying out the localized English translation of
+ * the application's offline-only data and privacy policies.
+ *
+ * @returns A vertically mapped view iterating privacy text blocks.
+ */
 export function PrivacyContentEnglish() {
   return (
     <ThemedView style={[styles.container]}>

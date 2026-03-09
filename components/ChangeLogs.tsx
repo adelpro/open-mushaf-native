@@ -6,8 +6,13 @@ import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
+/**
+ * Props for the ChangeLogs modal component.
+ */
 interface ChangeLogsProps {
+  /** Controls the visibility of the modal. */
   visible: boolean;
+  /** Callback fired when the user requests to close the modal. */
   onClose: () => void;
 }
 
@@ -17,6 +22,13 @@ const platformLogsMap: Record<string, string[]> = {
   web: changeLogsJSON.web,
 };
 
+/**
+ * Modal component that displays the application changelog.
+ * Parses and conditionally renders logs depending on the active platform (iOS/Android/Web).
+ *
+ * @param props - The component properties.
+ * @returns A rendered Modal containing the formatted release notes, or null if no logs exist.
+ */
 export function ChangeLogs({ visible, onClose }: ChangeLogsProps) {
   const changeLogs = useMemo(() => {
     const allLogs = changeLogsJSON.all ?? [];

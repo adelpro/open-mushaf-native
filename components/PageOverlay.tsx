@@ -9,11 +9,24 @@ import { triggerImpactHaptic } from '@/utils';
 
 import { TafseerPopup } from './TafseerPopup';
 
+/**
+ * Props for the PageOverlay component.
+ */
 type Props = {
+  /** The page number currently being displayed. */
   index: number;
+  /** The width and height of the rendered Quran page image. */
   dimensions: { customPageWidth: number; customPageHeight: number };
 };
 
+/**
+ * Renders an invisible, interactive grid over the static Quran page image.
+ * This component maps the physical locations of verses (Ayas) on the image
+ * so users can tap or long-press specific verses to open the Tafseer (exegesis) popup.
+ *
+ * @param props - The page index and image dimensions used to scale the verse positions.
+ * @returns A group of invisible, pressable areas placed precisely over the verses.
+ */
 export function PageOverlay({ index, dimensions }: Props) {
   const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
   const [show, setShow] = useState<boolean>(false);

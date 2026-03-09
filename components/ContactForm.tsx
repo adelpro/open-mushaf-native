@@ -13,6 +13,13 @@ import { ThemedTextInput } from './ThemedTextInput';
 import { ThemedView } from './ThemedView';
 import { useNotification } from '../Context/NotificationProvider';
 
+/**
+ * A comprehensive contact form view component featuring inline field validation,
+ * local rate limiting via `checkRateLimit`, and Telegram API submission masking.
+ * Includes user notification triggers upon success or explicit validation failures.
+ *
+ * @returns A fully functional, styled user input form view.
+ */
 export function ContactForm() {
   const { textColor, secondaryColor } = useColors();
   const { notify } = useNotification();

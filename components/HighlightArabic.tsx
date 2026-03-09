@@ -1,17 +1,36 @@
 import React from 'react';
 import { Text, TextStyle } from 'react-native';
 
+/**
+ * Component configurations for dynamic text highlighting.
+ */
 type HighlightTextProps = {
+  /** The complete Arabic text to be evaluated and formatted. */
   text: string;
+  /** Array of explicitly matched tokens, typically for exact highlighting. */
   tokens: string[];
+  /** Array of words conceptually related to the context or grammar. */
   relatedWords?: string[];
+  /** Array of fuzzily matched words based on loose similarity. */
   fuzzyWords?: string[];
+  /** HEX color code for exact match highlighting. */
   color?: string;
+  /** HEX color code for related match highlighting. */
   relatedColor?: string;
+  /** HEX color code for fuzzy match highlighting. */
   fuzzyColor?: string;
+  /** Optional TextStyle overrides to apply to the root wrapper. */
   style?: TextStyle;
 };
 
+/**
+ * A specialized text formatting component that dynamically applies background colors
+ * corresponding to varying degrees of search relevance (direct, related, or fuzzy matches).
+ * Utilizes complex regex splitting optimized for Arabic syntax.
+ *
+ * @param props - HighlightText component settings payload.
+ * @returns An array of styled React Native Text fragments representing the original string.
+ */
 export const HighlightText: React.FC<HighlightTextProps> = ({
   text,
   tokens,

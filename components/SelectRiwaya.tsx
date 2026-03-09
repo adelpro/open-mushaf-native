@@ -12,6 +12,11 @@ import { SegmentedControl } from './SegmentControl';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+/**
+ * A setting component integrating `SegmentedControl` to manipulate the active `mushafRiwaya` atom.
+ *
+ * @returns An interactive UI block explicitly for mutating the global Riwaya state.
+ */
 export function SelectRiwaya() {
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const { primaryColor } = useColors();
