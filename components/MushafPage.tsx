@@ -100,7 +100,9 @@ export function MushafPage() {
 
   const { isLandscape } = useOrientation();
   const { currentPage, setCurrentPage } = useCurrentPage();
-  const { temporary } = useLocalSearchParams();
+  const { temporary = 'false' } = useLocalSearchParams<{
+    temporary?: string;
+  }>();
   const [dimensions, setDimensions] = useState({
     customPageWidth: 0,
     customPageHeight: 0,
