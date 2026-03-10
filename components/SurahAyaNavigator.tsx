@@ -208,7 +208,7 @@ export function SurahAyaNavigator({
               renderItem={renderSurahItem}
               keyExtractor={(item) => item.number.toString()}
               showsVerticalScrollIndicator={isWeb}
-              initialScrollIndex={currentSurah - 1}
+              initialScrollIndex={Math.max(0, currentSurah - 1)}
               getItemLayout={(_data, index) => ({
                 length: 60,
                 offset: 60 * index,
@@ -255,7 +255,7 @@ export function SurahAyaNavigator({
               keyExtractor={(item) => item.toString()}
               showsVerticalScrollIndicator={isWeb}
               numColumns={5}
-              initialScrollIndex={Math.floor((currentAya - 1) / 5)}
+              initialScrollIndex={Math.max(0, Math.floor((currentAya - 1) / 5))}
               getItemLayout={(_data, index) => ({
                 length: 50,
                 offset: 50 * Math.floor(index / 5),

@@ -32,15 +32,12 @@ interface BaseProps {
 export function SegmentedControl({
   options,
   onSelectionChange,
-  initialSelectedIndex = undefined,
+  initialSelectedIndex = -1,
   activeColor = '#007AFF',
   textColor = '#000',
   activeTextColor = '#fff',
 }: BaseProps) {
-  // Default to -1
-  const [selectedIndex, setSelectedIndex] = useState(
-    initialSelectedIndex !== undefined ? initialSelectedIndex : -1,
-  );
+  const [selectedIndex, setSelectedIndex] = useState(initialSelectedIndex);
 
   const handlePress = (index: number) => {
     setSelectedIndex(index);
