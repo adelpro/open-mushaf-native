@@ -11,6 +11,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useAtom, useAtomValue } from 'jotai/react';
 import { removeTashkeel } from 'quran-search-engine';
 import * as Progress from 'react-native-progress';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedView } from '@/components/ThemedView';
 import {} from '@/constants';
@@ -38,6 +39,7 @@ export function TopMenu() {
   const { tintColor, backgroundColor } = useColors();
   const { surahData, thumnData } = useQuranMetadata();
   const [progressValue, setProgressValue] = useState<number>(0);
+  const insets = useSafeAreaInsets();
 
   const [showBottomMenuState, setBottomMenuState] = useAtom(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] = useAtom(topMenuState);
@@ -80,6 +82,9 @@ export function TopMenu() {
           styles.topMenu,
           {
             backgroundColor,
+            paddingTop: insets.top,
+            paddingLeft: insets.left,
+            paddingRight: insets.right,
           },
         ]}
       >
@@ -236,7 +241,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   topMenu: {
-    height: 60,
+    height: 'auto',
     //marginTop: 10,
     justifyContent: 'space-between',
     flexDirection: 'row',

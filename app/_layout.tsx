@@ -103,61 +103,61 @@ export default function RootLayout() {
       <NotificationProvider>
         <HelmetProvider>
           <Seo />
-          <GestureHandlerRootView style={{ flex: 1 }}>
+          <GestureHandlerRootView
+            style={{
+              flex: 1,
+              backgroundColor:
+                colorScheme === 'dark'
+                  ? DarkTheme.colors.background
+                  : DefaultTheme.colors.background,
+            }}
+          >
             <SafeAreaProvider>
-              <SafeAreaView
-                edges={['left', 'right']}
-                style={{
-                  flex: 1,
-                  width: '100%',
-                  maxWidth: 640,
-                  alignSelf: 'center',
-                  backgroundColor: 'transparent',
-                }}
+              <StatusBar style="auto" />
+              <ThemeProvider
+                value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
               >
-                <StatusBar style="auto" />
-                <ThemeProvider
-                  value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+                <Stack
+                  screenOptions={{
+                    headerTitleStyle: { fontFamily: 'Tajawal_700Bold' },
+                    contentStyle: {
+                      maxWidth: 640,
+                      alignSelf: 'center',
+                      width: '100%',
+                    },
+                  }}
                 >
-                  <Stack
-                    screenOptions={{
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false, title: 'الرئيسية' }}
+                  />
+                  <Stack.Screen name="+not-found" />
+                  <Stack.Screen
+                    name="search"
+                    options={{
+                      title: 'بحث',
                       headerTitleStyle: {
-                        fontFamily: 'Tajawal_700Bold',
+                        fontFamily: 'Tajawal_400Regular',
                       },
                     }}
-                  >
-                    <Stack.Screen
-                      name="(tabs)"
-                      options={{ headerShown: false, title: 'الرئيسية' }}
-                    />
-                    <Stack.Screen name="+not-found" />
-                    <Stack.Screen
-                      name="search"
-                      options={{
-                        title: 'بحث',
-                        headerTitleStyle: {
-                          fontFamily: 'Tajawal_400Regular',
-                        },
-                      }}
-                    />
-                    <Stack.Screen
-                      name="navigation"
-                      options={{
-                        title: 'تنقل',
-                      }}
-                    />
-                    <Stack.Screen
-                      name="tutorial"
-                      options={{ headerShown: true, title: 'جولة تعليمية' }}
-                    />
-                    <Stack.Screen
-                      name="tracker"
-                      options={{ headerShown: true, title: 'الورد اليومي' }}
-                    />
-                  </Stack>
-                  <Notification />
-                </ThemeProvider>
-              </SafeAreaView>
+                  />
+                  <Stack.Screen
+                    name="navigation"
+                    options={{
+                      title: 'تنقل',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="tutorial"
+                    options={{ headerShown: true, title: 'جولة تعليمية' }}
+                  />
+                  <Stack.Screen
+                    name="tracker"
+                    options={{ headerShown: true, title: 'الورد اليومي' }}
+                  />
+                </Stack>
+                <Notification />
+              </ThemeProvider>
             </SafeAreaProvider>
           </GestureHandlerRootView>
         </HelmetProvider>

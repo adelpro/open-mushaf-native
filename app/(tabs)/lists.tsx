@@ -11,12 +11,7 @@ export default function ListsScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <ThemedView
-      style={[
-        styles.container,
-        { paddingTop: Platform.OS === 'ios' ? insets.top : 0 },
-      ]}
-    >
+    <ThemedView style={[styles.container]}>
       <Seo
         title="القوائم"
         description="قائمة السور والأجزاء - المصحف المفتوح"

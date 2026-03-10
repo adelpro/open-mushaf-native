@@ -5,6 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useRouter } from 'expo-router';
 import { useAtom, useSetAtom } from 'jotai';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   READING_BANNER_HEIGHT_CLOSED,
@@ -35,6 +36,7 @@ export function ReadingPositionBanner() {
     useCurrentPage();
   const router = useRouter();
   const { tintColor, cardColor, primaryColor } = useColors();
+  const insets = useSafeAreaInsets();
 
   if (!isTemporaryNavigation) {
     return null;
@@ -64,7 +66,16 @@ export function ReadingPositionBanner() {
 
   return (
     <ThemedView
-      style={[styles.container, { height: HEIGHT, backgroundColor: cardColor }]}
+      style={[
+        styles.container,
+        {
+          height: HEIGHT + insets.top,
+          paddingTop: insets.top,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+          backgroundColor: cardColor,
+        },
+      ]}
     >
       <TouchableOpacity
         style={styles.toggleIcon}
