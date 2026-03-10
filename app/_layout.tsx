@@ -106,6 +106,7 @@ export default function RootLayout() {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <SafeAreaProvider>
               <SafeAreaView
+                edges={['left', 'right']}
                 style={{
                   flex: 1,
                   width: '100%',

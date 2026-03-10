@@ -30,6 +30,25 @@ Supports **Android**, **iOS**, **Web**, and **macOS**, featuring **offline Quran
 ![PWA](https://img.shields.io/badge/PWA-1B1F23?logo=pwa&logoColor=fff&style=flat)
 ![Jotai](https://img.shields.io/badge/Jotai-20232A?style=flat)
 
+[![Athar](https://img.shields.io/static/v1?label=Athar&message=%F0%9F%8C%99&color=blue)](https://community.itqan.dev/d/255/11)
+
+---
+
+## Table of Contents
+
+- [About](#about)
+  - [Key Features](#key-features)
+- [Demo](#demo)
+- [Download](#download)
+- [App Screenshots](#app-screenshots)
+- [Installation](#installation)
+  - [Requirements](#requirements)
+  - [Steps](#steps)
+- [Contributing](#contributing)
+- [Stargazers](#stargazers)
+- [Acknowledgments](#acknowledgments)
+- [License](#license)
+
 ---
 
 ## About
@@ -112,6 +131,16 @@ Please follow the [contribution guidelines](https://github.com/adelpro/open-mush
 Thank you to everyone who supports the project 🌟
 
 [![Stargazers repo roster for @adelpro/open-mushaf-native](https://reporoster.com/stars/adelpro/open-mushaf-native)](https://github.com/adelpro/open-mushaf-native/stargazers)
+
+## Acknowledgments
+
+Special thanks to the [ITQAN Community](https://community.itqan.dev) for their support and contribution to the Quran technology ecosystem.
+
+<p align="center">
+  <a href="https://itqan.dev">
+    <img src="./assets/itqan-logo.svg" alt="ITQAN Community Logo" width="150" />
+  </a>
+</p>
 
 ## License
 
