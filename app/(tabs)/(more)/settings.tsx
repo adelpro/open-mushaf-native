@@ -373,7 +373,9 @@ export default function SettingsScreen() {
         <ThemedButton
           role="button"
           variant="danger"
-          onPress={() => setConfirmModalVisible(true)}
+          onPress={() => {
+            setConfirmModalVisible(true);
+          }}
         >
           إعادة ضبط التطبيق
         </ThemedButton>
@@ -384,12 +386,16 @@ export default function SettingsScreen() {
         animationType="fade"
         transparent={true}
         visible={confirmModalVisible}
-        onRequestClose={() => setConfirmModalVisible(false)}
+        onRequestClose={() => {
+          setConfirmModalVisible(false);
+        }}
       >
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
-          onPress={() => setConfirmModalVisible(false)}
+          onPress={() => {
+            setConfirmModalVisible(false);
+          }}
           accessibilityLabel="إغلاق نافذة التأكيد"
           accessibilityRole="button"
         >
@@ -401,7 +407,9 @@ export default function SettingsScreen() {
               <ThemedText style={styles.modalTitle}>تأكيد</ThemedText>
               <TouchableOpacity
                 style={styles.closeButton}
-                onPress={() => setConfirmModalVisible(false)}
+                onPress={() => {
+                  setConfirmModalVisible(false);
+                }}
                 accessibilityRole="button"
                 accessibilityLabel="إغلاق نافذة التأكيد"
               >
@@ -416,7 +424,9 @@ export default function SettingsScreen() {
             <ThemedView style={styles.modalActions}>
               <ThemedButton
                 variant="outlined-primary"
-                onPress={() => setConfirmModalVisible(false)}
+                onPress={() => {
+                  setConfirmModalVisible(false);
+                }}
                 style={styles.modalButton}
               >
                 إلغاء

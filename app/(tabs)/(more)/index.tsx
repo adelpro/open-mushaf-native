@@ -62,7 +62,9 @@ export default function MoreScreen() {
       >
         {!isWeb && (
           <ThemedButton
-            onPress={() => router.push('/reminders')}
+            onPress={() => {
+              router.push('/reminders');
+            }}
             variant="primary"
             style={styles.button}
           >
@@ -77,7 +79,9 @@ export default function MoreScreen() {
           </ThemedButton>
         )}
         <ThemedButton
-          onPress={() => router.push('/settings')}
+          onPress={() => {
+            router.push('/settings');
+          }}
           variant="primary"
           style={styles.button}
         >
@@ -87,7 +91,9 @@ export default function MoreScreen() {
           </View>
         </ThemedButton>
         <ThemedButton
-          onPress={() => router.push('/bookmarks')}
+          onPress={() => {
+            router.push('/bookmarks');
+          }}
           variant="primary"
           style={styles.button}
         >
@@ -97,7 +103,9 @@ export default function MoreScreen() {
           </View>
         </ThemedButton>
         <ThemedButton
-          onPress={() => router.push('/privacy')}
+          onPress={() => {
+            router.push('/privacy');
+          }}
           variant="primary"
           style={styles.button}
         >
@@ -107,7 +115,9 @@ export default function MoreScreen() {
           </View>
         </ThemedButton>
         <ThemedButton
-          onPress={() => router.push('/contact')}
+          onPress={() => {
+            router.push('/contact');
+          }}
           variant="primary"
           style={styles.button}
         >
@@ -119,7 +129,9 @@ export default function MoreScreen() {
 
         <ThemedButton
           variant="primary"
-          onPress={() => router.push('/tutorial')}
+          onPress={() => {
+            router.push('/tutorial');
+          }}
           style={styles.button}
         >
           <View style={styles.buttonContent}>
@@ -144,7 +156,9 @@ export default function MoreScreen() {
           </View>
         </ThemedButton>
         <ThemedButton
-          onPress={() => router.push('/about')}
+          onPress={() => {
+            router.push('/about');
+          }}
           variant="primary"
           style={styles.button}
         >
@@ -169,12 +183,16 @@ export default function MoreScreen() {
           animationType="fade"
           transparent={true}
           visible={errorModalVisible}
-          onRequestClose={() => setErrorModalVisible(false)}
+          onRequestClose={() => {
+            setErrorModalVisible(false);
+          }}
         >
           <TouchableOpacity
             style={styles.modalOverlay}
             activeOpacity={1}
-            onPress={() => setErrorModalVisible(false)}
+            onPress={() => {
+              setErrorModalVisible(false);
+            }}
             accessibilityLabel="إغلاق نافذة الخطأ"
             accessibilityRole="button"
           >
@@ -190,7 +208,9 @@ export default function MoreScreen() {
                 </ThemedText>
                 <TouchableOpacity
                   style={styles.closeButton}
-                  onPress={() => setErrorModalVisible(false)}
+                  onPress={() => {
+                    setErrorModalVisible(false);
+                  }}
                   accessibilityRole="button"
                   accessibilityLabel="إغلاق رسالة الخطأ"
                 >
@@ -205,7 +225,9 @@ export default function MoreScreen() {
               <ThemedView style={styles.modalActions}>
                 <ThemedButton
                   variant="primary"
-                  onPress={() => setErrorModalVisible(false)}
+                  onPress={() => {
+                    setErrorModalVisible(false);
+                  }}
                   style={styles.modalButton}
                 >
                   حسناً
