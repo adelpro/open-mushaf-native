@@ -39,7 +39,7 @@ type Props = {
   /** The active Surah numeric ID. */
   surah: number;
   /** Opacity override for animation bounds. */
-  opacity?: number | undefined;
+  opacity?: number;
 };
 
 /**
@@ -49,7 +49,7 @@ type Props = {
  * @param props - Mapped bounding variables.
  * @returns A `<View>` displaying localized HTML interpretations bounded by user selection.
  */
-export function Tafseer({ aya, surah, opacity = undefined }: Props) {
+export function Tafseer({ aya, surah, opacity = 1 }: Props) {
   const { tintColor, textColor } = useColors();
   const { surahData } = useQuranMetadata();
   const [surahName, setSurahName] = useState<string>('');

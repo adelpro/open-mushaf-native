@@ -61,9 +61,9 @@ export function TopMenu() {
     setBottomMenuState((state) => !state);
   };
 
-  const { page, temporary } = useLocalSearchParams<{
-    page: string;
-    temporary: string;
+  const { page, temporary = 'false' } = useLocalSearchParams<{
+    page?: string;
+    temporary?: string;
   }>();
   const currentPage = page ? parseInt(page) : currentSavedPageValue;
   const isTemporary = temporary === 'true';
