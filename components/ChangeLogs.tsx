@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     maxWidth: 400,
     elevation: 5,
-    direction: 'rtl',
   },
   title: {
     fontSize: 20,

@@ -240,11 +240,7 @@ export default function SettingsScreen() {
         ]}
       >
         <ThemedView
-          style={[
-            styles.fullWidthContainer,
-            styles.iconTextContainer,
-            { backgroundColor: cardColor },
-          ]}
+          style={[styles.fullWidthContainer, styles.iconTextContainer]}
         >
           <Feather
             name="bell"
@@ -252,10 +248,7 @@ export default function SettingsScreen() {
             color={iconColor}
             style={styles.iconStyle}
           />
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.itemText, styles.fullWidth]}
-          >
+          <ThemedText type="defaultSemiBold" style={[styles.itemText]}>
             تفعيل التنبيهات:
           </ThemedText>
         </ThemedView>
@@ -293,10 +286,7 @@ export default function SettingsScreen() {
             color={iconColor}
             style={styles.iconStyle}
           />
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.itemText, styles.fullWidth]}
-          >
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
             سمة القراءة:
           </ThemedText>
         </ThemedView>
@@ -333,10 +323,7 @@ export default function SettingsScreen() {
             color={iconColor}
             style={styles.iconStyle}
           />
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.itemText, styles.fullWidth]}
-          >
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
             إختيار الرواية :
           </ThemedText>
         </ThemedView>
@@ -484,6 +471,8 @@ const styles = StyleSheet.create({
   fullWidthContainer: {
     alignItems: 'center',
     width: '100%',
+    flex: 1,
+    justifyContent: 'flex-start',
   },
   fullWidth: {
     width: '100%',
@@ -493,7 +482,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Tajawal_700Bold',
     paddingVertical: 8,
     paddingHorizontal: 5,
-    textAlignVertical: 'center',
+    // textAlignVertical: 'center',
     alignItems: 'baseline',
   },
   sliderContainer: {
