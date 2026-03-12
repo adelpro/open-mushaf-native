@@ -49,7 +49,7 @@ export function SearchResultItem({
   wordMap,
   getPositiveTokens,
   onSelectAya,
-  disabled,
+  disabled = false,
 }: SearchResultItemProps) {
   const { directColor, fuzzyColor, relatedColor } = useColors();
   const cleanQuery = query.trim();
