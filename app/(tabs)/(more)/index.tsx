@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Modal,
   Platform,
+  ScrollView,
   Share,
   StyleSheet,
   Text,
@@ -21,13 +22,14 @@ import SettingsSVG from '@/assets/svgs/settings.svg';
 import ShareSVG from '@/assets/svgs/share.svg';
 import WelcomeSVG from '@/assets/svgs/welcome.svg';
 import { ThemedButton, ThemedText, ThemedView } from '@/components';
-import { useColors } from '@/hooks';
+import { useColors, useOrientation } from '@/hooks';
 import { isWeb } from '@/utils/isWeb';
 
 export default function MoreScreen() {
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { cardColor, iconColor, textColor } = useColors(); // Added textColor for modal message
+  const { isLandscape } = useOrientation();
 
   const handleShare = async () => {
     let shareUrl = 'https://www.quran.us.kg'; // Default/Web URL
@@ -54,166 +56,195 @@ export default function MoreScreen() {
   };
 
   return (
-    <ThemedView style={styles.container}>
-      {!isWeb && (
+    <ScrollView contentContainerStyle={styles.contentContainerStyle}>
+      <ThemedView
+        style={[styles.container, { paddingVertical: isLandscape ? 30 : 0 }]}
+      >
+        {!isWeb && (
+          <ThemedButton
+            onPress={() => {
+              router.push('/reminders');
+            }}
+            variant="primary"
+            style={styles.button}
+          >
+            <View style={styles.buttonContent}>
+              <MaterialCommunityIcons
+                name="bell-outline"
+                size={24}
+                color="white"
+              />
+              <Text style={styles.buttonText}>التذكيرات</Text>
+            </View>
+          </ThemedButton>
+        )}
         <ThemedButton
-          onPress={() => router.push('/reminders')}
+          onPress={() => {
+            router.push('/settings');
+          }}
           variant="primary"
           style={styles.button}
         >
           <View style={styles.buttonContent}>
-            <MaterialCommunityIcons
-              name="bell-outline"
-              size={24}
-              color="white"
-            />
-            <Text style={styles.buttonText}>التذكيرات</Text>
+            <SettingsSVG width={24} height={24} style={styles.svg} />
+            <Text style={styles.buttonText}>الإعدادات</Text>
           </View>
         </ThemedButton>
-      )}
-      <ThemedButton
-        onPress={() => router.push('/settings')}
-        variant="primary"
-        style={styles.button}
-      >
-        <View style={styles.buttonContent}>
-          <SettingsSVG width={24} height={24} style={styles.svg} />
-          <Text style={styles.buttonText}>الإعدادات</Text>
-        </View>
-      </ThemedButton>
-      <ThemedButton
-        onPress={() => router.push('/bookmarks')}
-        variant="primary"
-        style={styles.button}
-      >
-        <View style={styles.buttonContent}>
-          <Feather name="bookmark" size={24} color="white" />
-          <Text style={styles.buttonText}>العلامات المرجعية</Text>
-        </View>
-      </ThemedButton>
-      <ThemedButton
-        onPress={() => router.push('/privacy')}
-        variant="primary"
-        style={styles.button}
-      >
-        <View style={styles.buttonContent}>
-          <PageSVG width={24} height={24} style={styles.svg} />
-          <Text style={styles.buttonText}>سياسة الخصوصية</Text>
-        </View>
-      </ThemedButton>
-      <ThemedButton
-        onPress={() => router.push('/contact')}
-        variant="primary"
-        style={styles.button}
-      >
-        <View style={styles.buttonContent}>
-          <MailSVG width={24} height={24} style={styles.svg} />
-          <Text style={styles.buttonText}>تواصل معنا</Text>
-        </View>
-      </ThemedButton>
-
-      <ThemedButton
-        variant="primary"
-        onPress={() => router.push('/tutorial')}
-        style={styles.button}
-      >
-        <View style={styles.buttonContent}>
-          <WelcomeSVG width={24} height={24} style={styles.svg} />
-          <Text style={styles.buttonText}>جولة تعليمة</Text>
-        </View>
-      </ThemedButton>
-      <ThemedButton
-        onPress={async () => {
-          const url = 'https://docs.quran.us.kg';
-          const supported = await Linking.canOpenURL(url);
-          if (supported) {
-            await Linking.openURL(url);
-          }
-        }}
-        variant="primary"
-        style={styles.button}
-      >
-        <View style={styles.buttonContent}>
-          <HelpSVG width={24} height={24} style={styles.svg} />
-          <Text style={styles.buttonText}>المساعدة</Text>
-        </View>
-      </ThemedButton>
-      <ThemedButton
-        onPress={() => router.push('/about')}
-        variant="primary"
-        style={styles.button}
-      >
-        <View style={styles.buttonContent}>
-          <InfoSVG width={24} height={24} style={styles.svg} />
-          <Text style={styles.buttonText}>حول التطبيق</Text>
-        </View>
-      </ThemedButton>
-      <ThemedButton
-        onPress={handleShare}
-        variant="primary"
-        style={styles.button}
-      >
-        <View style={styles.buttonContent}>
-          <ShareSVG width={24} height={24} style={styles.svg} />
-          <Text style={styles.buttonText}>شارك التطبيق</Text>
-        </View>
-      </ThemedButton>
-
-      {/* Error Modal */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={errorModalVisible}
-        onRequestClose={() => setErrorModalVisible(false)}
-      >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setErrorModalVisible(false)}
-          accessibilityLabel="إغلاق نافذة الخطأ"
-          accessibilityRole="button"
+        <ThemedButton
+          onPress={() => {
+            router.push('/bookmarks');
+          }}
+          variant="primary"
+          style={styles.button}
         >
-          <ThemedView
-            style={[styles.modalContent, { backgroundColor: cardColor }]}
-            onStartShouldSetResponder={() => true} // Prevents touch from passing through
+          <View style={styles.buttonContent}>
+            <Feather name="bookmark" size={24} color="white" />
+            <Text style={styles.buttonText}>العلامات المرجعية</Text>
+          </View>
+        </ThemedButton>
+        <ThemedButton
+          onPress={() => {
+            router.push('/privacy');
+          }}
+          variant="primary"
+          style={styles.button}
+        >
+          <View style={styles.buttonContent}>
+            <PageSVG width={24} height={24} style={styles.svg} />
+            <Text style={styles.buttonText}>سياسة الخصوصية</Text>
+          </View>
+        </ThemedButton>
+        <ThemedButton
+          onPress={() => {
+            router.push('/contact');
+          }}
+          variant="primary"
+          style={styles.button}
+        >
+          <View style={styles.buttonContent}>
+            <MailSVG width={24} height={24} style={styles.svg} />
+            <Text style={styles.buttonText}>تواصل معنا</Text>
+          </View>
+        </ThemedButton>
+
+        <ThemedButton
+          variant="primary"
+          onPress={() => {
+            router.push('/tutorial');
+          }}
+          style={styles.button}
+        >
+          <View style={styles.buttonContent}>
+            <WelcomeSVG width={24} height={24} style={styles.svg} />
+            <Text style={styles.buttonText}>جولة تعليمة</Text>
+          </View>
+        </ThemedButton>
+        <ThemedButton
+          onPress={async () => {
+            const url = 'https://docs.quran.us.kg';
+            const supported = await Linking.canOpenURL(url);
+            if (supported) {
+              await Linking.openURL(url);
+            }
+          }}
+          variant="primary"
+          style={styles.button}
+        >
+          <View style={styles.buttonContent}>
+            <HelpSVG width={24} height={24} style={styles.svg} />
+            <Text style={styles.buttonText}>المساعدة</Text>
+          </View>
+        </ThemedButton>
+        <ThemedButton
+          onPress={() => {
+            router.push('/about');
+          }}
+          variant="primary"
+          style={styles.button}
+        >
+          <View style={styles.buttonContent}>
+            <InfoSVG width={24} height={24} style={styles.svg} />
+            <Text style={styles.buttonText}>حول التطبيق</Text>
+          </View>
+        </ThemedButton>
+        <ThemedButton
+          onPress={handleShare}
+          variant="primary"
+          style={styles.button}
+        >
+          <View style={styles.buttonContent}>
+            <ShareSVG width={24} height={24} style={styles.svg} />
+            <Text style={styles.buttonText}>شارك التطبيق</Text>
+          </View>
+        </ThemedButton>
+
+        {/* Error Modal */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={errorModalVisible}
+          onRequestClose={() => {
+            setErrorModalVisible(false);
+          }}
+        >
+          <TouchableOpacity
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={() => {
+              setErrorModalVisible(false);
+            }}
+            accessibilityLabel="إغلاق نافذة الخطأ"
+            accessibilityRole="button"
           >
             <ThemedView
-              style={[styles.modalHeader, { borderBottomColor: textColor }]}
+              style={[styles.modalContent, { backgroundColor: cardColor }]}
+              onStartShouldSetResponder={() => true} // Prevents touch from passing through
             >
-              <ThemedText style={[styles.modalTitle, { color: textColor }]}>
-                خطأ
+              <ThemedView
+                style={[styles.modalHeader, { borderBottomColor: textColor }]}
+              >
+                <ThemedText style={[styles.modalTitle, { color: textColor }]}>
+                  خطأ
+                </ThemedText>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => {
+                    setErrorModalVisible(false);
+                  }}
+                  accessibilityRole="button"
+                  accessibilityLabel="إغلاق رسالة الخطأ"
+                >
+                  <Feather name="x" size={24} color={iconColor} />
+                </TouchableOpacity>
+              </ThemedView>
+
+              <ThemedText style={[styles.modalMessage, { color: textColor }]}>
+                {errorMessage}
               </ThemedText>
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={() => setErrorModalVisible(false)}
-                accessibilityRole="button"
-                accessibilityLabel="إغلاق رسالة الخطأ"
-              >
-                <Feather name="x" size={24} color={iconColor} />
-              </TouchableOpacity>
-            </ThemedView>
 
-            <ThemedText style={[styles.modalMessage, { color: textColor }]}>
-              {errorMessage}
-            </ThemedText>
-
-            <ThemedView style={styles.modalActions}>
-              <ThemedButton
-                variant="primary"
-                onPress={() => setErrorModalVisible(false)}
-                style={styles.modalButton}
-              >
-                حسناً
-              </ThemedButton>
+              <ThemedView style={styles.modalActions}>
+                <ThemedButton
+                  variant="primary"
+                  onPress={() => {
+                    setErrorModalVisible(false);
+                  }}
+                  style={styles.modalButton}
+                >
+                  حسناً
+                </ThemedButton>
+              </ThemedView>
             </ThemedView>
-          </ThemedView>
-        </TouchableOpacity>
-      </Modal>
-    </ThemedView>
+          </TouchableOpacity>
+        </Modal>
+      </ThemedView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  contentContainerStyle: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     gap: 20,

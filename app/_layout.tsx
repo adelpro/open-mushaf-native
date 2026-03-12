@@ -1,10 +1,5 @@
 import { useEffect } from 'react';
-import {
-  I18nManager,
-  InteractionManager,
-  Platform,
-  useColorScheme,
-} from 'react-native';
+import { I18nManager, Platform, useColorScheme } from 'react-native';
 
 import {
   Amiri_400Regular,
@@ -27,7 +22,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
 import { HelmetProvider } from 'react-helmet-async';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ErrorBoundary, Notification, Seo } from '@/components';
 import { NotificationProvider } from '@/Context/NotificationProvider';
@@ -53,22 +48,23 @@ export default function RootLayout() {
 
   useEffect(() => {
     async function applyRTL() {
+      if (Platform.OS === 'web') {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
+        I18nManager.allowRTL(true);
+        I18nManager.forceRTL(true);
+        return;
+      }
+
       if (!isRTL) {
         I18nManager.allowRTL(true);
         I18nManager.forceRTL(true);
 
-        InteractionManager.runAfterInteractions(async () => {
-          if (__DEV__) {
-            console.info('Reloading app to apply RTL');
-          } else {
-            if (Platform.OS === 'web') {
-              document.documentElement.setAttribute('dir', 'rtl');
-              document.documentElement.setAttribute('lang', 'ar');
-            } else {
-              await Updates.reloadAsync();
-            }
-          }
-        });
+        if (__DEV__) {
+          console.info('Reloading app to apply RTL');
+        } else {
+          await Updates.reloadAsync();
+        }
       }
     }
 
@@ -103,60 +99,61 @@ export default function RootLayout() {
       <NotificationProvider>
         <HelmetProvider>
           <Seo />
-          <GestureHandlerRootView style={{ flex: 1 }}>
+          <GestureHandlerRootView
+            style={{
+              flex: 1,
+              backgroundColor:
+                colorScheme === 'dark'
+                  ? DarkTheme.colors.background
+                  : DefaultTheme.colors.background,
+            }}
+          >
             <SafeAreaProvider>
-              <SafeAreaView
-                style={{
-                  flex: 1,
-                  width: '100%',
-                  maxWidth: 640,
-                  alignSelf: 'center',
-                  backgroundColor: 'transparent',
-                }}
+              <StatusBar style="auto" />
+              <ThemeProvider
+                value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
               >
-                <StatusBar style="auto" />
-                <ThemeProvider
-                  value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+                <Stack
+                  screenOptions={{
+                    headerTitleStyle: { fontFamily: 'Tajawal_700Bold' },
+                    contentStyle: {
+                      maxWidth: 640,
+                      alignSelf: 'center',
+                      width: '100%',
+                    },
+                  }}
                 >
-                  <Stack
-                    screenOptions={{
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false, title: 'الرئيسية' }}
+                  />
+                  <Stack.Screen name="+not-found" />
+                  <Stack.Screen
+                    name="search"
+                    options={{
+                      title: 'بحث',
                       headerTitleStyle: {
-                        fontFamily: 'Tajawal_700Bold',
+                        fontFamily: 'Tajawal_400Regular',
                       },
                     }}
-                  >
-                    <Stack.Screen
-                      name="(tabs)"
-                      options={{ headerShown: false, title: 'الرئيسية' }}
-                    />
-                    <Stack.Screen name="+not-found" />
-                    <Stack.Screen
-                      name="search"
-                      options={{
-                        title: 'بحث',
-                        headerTitleStyle: {
-                          fontFamily: 'Tajawal_400Regular',
-                        },
-                      }}
-                    />
-                    <Stack.Screen
-                      name="navigation"
-                      options={{
-                        title: 'تنقل',
-                      }}
-                    />
-                    <Stack.Screen
-                      name="tutorial"
-                      options={{ headerShown: true, title: 'جولة تعليمية' }}
-                    />
-                    <Stack.Screen
-                      name="tracker"
-                      options={{ headerShown: true, title: 'الورد اليومي' }}
-                    />
-                  </Stack>
-                  <Notification />
-                </ThemeProvider>
-              </SafeAreaView>
+                  />
+                  <Stack.Screen
+                    name="navigation"
+                    options={{
+                      title: 'تنقل',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="tutorial"
+                    options={{ headerShown: true, title: 'جولة تعليمية' }}
+                  />
+                  <Stack.Screen
+                    name="tracker"
+                    options={{ headerShown: true, title: 'الورد اليومي' }}
+                  />
+                </Stack>
+                <Notification />
+              </ThemeProvider>
             </SafeAreaProvider>
           </GestureHandlerRootView>
         </HelmetProvider>

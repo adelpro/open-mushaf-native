@@ -18,6 +18,10 @@ import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { useAtomValue, useSetAtom } from 'jotai/react';
 import { GestureDetector, ScrollView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 import { PAN_GESTURE_CONFIG } from '@/constants';
 import { READING_THEMES } from '@/constants/readingThemes';
@@ -99,7 +103,8 @@ export function MushafPage() {
   const router = useRouter();
 
   const { isLandscape } = useOrientation();
-  const { currentPage, setCurrentPage } = useCurrentPage();
+  const { currentPage, setCurrentPage, isTemporaryNavigation } =
+    useCurrentPage();
   const { temporary = 'false' } = useLocalSearchParams<{
     temporary?: string;
   }>();
@@ -107,6 +112,8 @@ export function MushafPage() {
     customPageWidth: 0,
     customPageHeight: 0,
   });
+
+  const insets = useSafeAreaInsets();
 
   const seoMetadata = getSEOMetadataByPage(surahData, thumnData, currentPage);
 
@@ -396,20 +403,41 @@ export function MushafPage() {
                   : themeConfig.backgroundColor || ivoryColor,
             },
           ]}
-          onLayout={handleImageLayout}
         >
-          {asset?.localUri ? (
-            <>
-              {isLandscape ? (
-                <ScrollView style={styles.scrollContainer}>
+          <SafeAreaView
+            style={{ flex: 1 }}
+            edges={isTemporaryNavigation ? [] : ['top']}
+          >
+            {asset?.localUri ? (
+              <>
+                {isLandscape ? (
+                  <ScrollView style={styles.scrollContainer}>
+                    <Image
+                      style={[
+                        styles.image,
+                        {
+                          width: '100%',
+                          height: undefined,
+                          aspectRatio: 0.7,
+                        },
+                        colorScheme === 'dark' && {
+                          opacity: mushafContrastValue,
+                        },
+                        colorScheme !== 'dark' &&
+                          themeConfig.imageOpacity < 1 && {
+                            opacity: themeConfig.imageOpacity,
+                          },
+                      ]}
+                      source={{ uri: asset?.localUri }}
+                      contentFit="fill"
+                      onLayout={handleImageLayout}
+                    />
+                  </ScrollView>
+                ) : (
                   <Image
                     style={[
                       styles.image,
-                      {
-                        width: '100%',
-                        height: undefined,
-                        aspectRatio: 0.7,
-                      },
+                      { width: '100%' },
                       colorScheme === 'dark' && {
                         opacity: mushafContrastValue,
                       },
@@ -420,30 +448,19 @@ export function MushafPage() {
                     ]}
                     source={{ uri: asset?.localUri }}
                     contentFit="fill"
+                    onLayout={handleImageLayout}
                   />
-                </ScrollView>
-              ) : (
-                <Image
-                  style={[
-                    styles.image,
-                    { width: '100%' },
-                    colorScheme === 'dark' && {
-                      opacity: mushafContrastValue,
-                    },
-                    colorScheme !== 'dark' &&
-                      themeConfig.imageOpacity < 1 && {
-                        opacity: themeConfig.imageOpacity,
-                      },
-                  ]}
-                  source={{ uri: asset?.localUri }}
-                  contentFit="fill"
-                />
-              )}
-            </>
-          ) : (
-            <ActivityIndicator size="large" color={tintColor} />
-          )}
-          <PageOverlay index={currentPage} dimensions={dimensions} />
+                )}
+              </>
+            ) : (
+              <ActivityIndicator size="large" color={tintColor} />
+            )}
+            <PageOverlay
+              index={currentPage}
+              dimensions={dimensions}
+              topOffset={isTemporaryNavigation ? 0 : insets.top}
+            />
+          </SafeAreaView>
         </Animated.View>
       </GestureDetector>
     </>

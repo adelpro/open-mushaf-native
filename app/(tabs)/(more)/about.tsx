@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     paddingHorizontal: 22,
     alignSelf: 'center',
+    alignItems: 'flex-start',
   },
   title: {
     fontSize: 20,
@@ -165,6 +166,7 @@ const styles = StyleSheet.create({
   listContainer: {
     marginBottom: 5,
     paddingLeft: 16,
+    alignItems: 'flex-start',
   },
   listItem: {
     marginBottom: 10,
@@ -178,6 +180,7 @@ const styles = StyleSheet.create({
   listText: {
     fontSize: 16,
     lineHeight: 22,
+    textAlign: 'left',
   },
   link: {
     color: '#1E90FF',
@@ -188,11 +191,14 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     marginTop: 5,
+    alignSelf: 'center',
   },
   copyright: {
     fontSize: 12,
     color: '#888',
     textAlign: 'center',
     marginTop: 10,
+    width: '100%',
+    alignSelf: 'center',
   },
 });

@@ -1,6 +1,8 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import { useColors } from '@/hooks';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { useColors, useOrientation } from '@/hooks';
 import { ListTabs } from '@/types';
 
 import { ThemedText } from './ThemedText';
@@ -25,13 +27,24 @@ type Props = {
  */
 export function TopTabs({ activeTab, setActiveTab }: Props) {
   const { backgroundColor, textColor } = useColors();
+  const { top, left, right } = useSafeAreaInsets();
+  const { isLandscape } = useOrientation();
 
   const handleTabPress = (tab: ListTabs) => {
     setActiveTab(tab);
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView
+      style={[
+        styles.container,
+        {
+          paddingTop: isLandscape ? 0 : top,
+          paddingLeft: left,
+          paddingRight: right,
+        },
+      ]}
+    >
       <TouchableOpacity
         onPress={() => handleTabPress('surahs')}
         style={[
