@@ -1,5 +1,5 @@
 import React from 'react';
-import { useColorScheme } from 'react-native';
+import { Platform, useColorScheme } from 'react-native';
 
 import {
   Feather,
@@ -8,6 +8,7 @@ import {
 } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { useAtomValue } from 'jotai/react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Colors } from '@/constants/Colors';
 import { bottomMenuState } from '@/jotai/atoms';
@@ -15,7 +16,7 @@ import { bottomMenuState } from '@/jotai/atoms';
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const menuStateValue = useAtomValue<boolean>(bottomMenuState);
-
+  const insets = useSafeAreaInsets();
   return (
     <Tabs
       screenOptions={() => ({
@@ -25,13 +26,14 @@ export default function TabLayout() {
           display: menuStateValue ? 'flex' : 'none',
           justifyContent: 'center',
           flexDirection: 'column-reverse',
-          height: 60,
-          margin: 4,
+          height:
+            Platform.OS === 'ios' ? 45 + insets.bottom : 65 + insets.bottom,
+          paddingBottom: insets.bottom,
           borderWidth: 0.5,
         },
         tabBarLabelStyle: {
           fontFamily: 'Tajawal_400Regular',
-          marginTop: 1,
+          marginTop: 8,
         },
         tabBarIconStyle: {},
         headerShown: false,
@@ -61,7 +63,6 @@ export default function TabLayout() {
             <FontAwesome6
               name="book-quran"
               size={24}
-              style={{ marginBottom: -3 }}
               color={color}
               accessible={true}
               accessibilityLabel="المصحف"

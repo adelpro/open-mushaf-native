@@ -17,6 +17,8 @@ type Props = {
   index: number;
   /** The width and height of the rendered Quran page image. */
   dimensions: { customPageWidth: number; customPageHeight: number };
+  /** The offset to apply to the top of the overlay. */
+  topOffset?: number;
 };
 
 /**
@@ -27,7 +29,7 @@ type Props = {
  * @param props - The page index and image dimensions used to scale the verse positions.
  * @returns A group of invisible, pressable areas placed precisely over the verses.
  */
-export function PageOverlay({ index, dimensions }: Props) {
+export function PageOverlay({ index, dimensions, topOffset = 0 }: Props) {
   const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
   const [show, setShow] = useState<boolean>(false);
   const setShowTopMenu = useSetAtom(topMenuState);
@@ -60,7 +62,7 @@ export function PageOverlay({ index, dimensions }: Props) {
             style={[
               styles.overlay,
               {
-                top,
+                top: top + topOffset,
                 left: adjustedLeft, // Use adjusted left position for RTL
                 width,
                 height: lineHeight,

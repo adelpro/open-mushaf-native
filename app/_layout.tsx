@@ -1,10 +1,5 @@
 import { useEffect } from 'react';
-import {
-  I18nManager,
-  InteractionManager,
-  Platform,
-  useColorScheme,
-} from 'react-native';
+import { I18nManager, Platform, useColorScheme } from 'react-native';
 
 import {
   Amiri_400Regular,
@@ -27,7 +22,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
 import { HelmetProvider } from 'react-helmet-async';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ErrorBoundary, Notification, Seo } from '@/components';
 import { NotificationProvider } from '@/Context/NotificationProvider';
@@ -53,22 +48,23 @@ export default function RootLayout() {
 
   useEffect(() => {
     async function applyRTL() {
+      if (Platform.OS === 'web') {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
+        I18nManager.allowRTL(true);
+        I18nManager.forceRTL(true);
+        return;
+      }
+
       if (!isRTL) {
         I18nManager.allowRTL(true);
         I18nManager.forceRTL(true);
 
-        InteractionManager.runAfterInteractions(async () => {
-          if (__DEV__) {
-            console.info('Reloading app to apply RTL');
-          } else {
-            if (Platform.OS === 'web') {
-              document.documentElement.setAttribute('dir', 'rtl');
-              document.documentElement.setAttribute('lang', 'ar');
-            } else {
-              await Updates.reloadAsync();
-            }
-          }
-        });
+        if (__DEV__) {
+          console.info('Reloading app to apply RTL');
+        } else {
+          await Updates.reloadAsync();
+        }
       }
     }
 
