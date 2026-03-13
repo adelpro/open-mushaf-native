@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
 import { useAtomValue, useSetAtom } from 'jotai/react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
   ChangeLogs,
@@ -50,11 +51,19 @@ export default function HomeScreen() {
       <ChangeLogs visible={showChangeLogs} onClose={handleCloseChangeLogs} />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
         {!finishedTutorialValue ? (
-          <ThemedView style={{ width: '100%', height: '100%' }}>
+          <SafeAreaView
+            style={{ width: '100%', height: '100%' }}
+            edges={['top']}
+          >
             <TutorialGuide />
-          </ThemedView>
+          </SafeAreaView>
         ) : mushafRiwayaValue === undefined ? (
-          <SelectRiwaya />
+          <SafeAreaView
+            style={{ width: '100%', height: '100%' }}
+            edges={['top']}
+          >
+            <SelectRiwaya />
+          </SafeAreaView>
         ) : (
           <>
             <TopMenu />
