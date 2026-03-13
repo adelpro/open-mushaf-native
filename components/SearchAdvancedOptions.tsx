@@ -13,7 +13,7 @@ interface SearchAdvancedOptionsProps {
   /** Payload of the active search settings. */
   advancedOptions: SearchOptions;
   /** Modifier callback emitted on press toggle. */
-  toggleOption: (option: keyof SearchOptions) => void;
+  toggleOption: (_option: keyof SearchOptions) => void;
 }
 
 /**
