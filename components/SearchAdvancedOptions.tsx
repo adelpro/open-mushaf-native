@@ -1,20 +1,10 @@
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { AdvancedOptions } from '@/types';
+
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-
-/**
- * Search options representing active toggle states for advanced linguistic parsing.
- */
-interface AdvancedOptions {
-  /** If true, expands search scope matching lemma forms. */
-  lemma: boolean;
-  /** If true, expands search scope matching root structures. */
-  root: boolean;
-  /** If true, permits typographical fuzzy matching. */
-  fuzzy: boolean;
-}
 
 /**
  * Props for the SearchAdvancedOptions context component.

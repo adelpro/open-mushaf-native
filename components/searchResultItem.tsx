@@ -2,12 +2,13 @@ import React from 'react';
 import { Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { router } from 'expo-router';
-import { type QuranText, type WordMap } from 'quran-search-engine';
+import { type WordMap } from 'quran-search-engine';
 
 import { HighlightText } from '@/components/HighlightArabic';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks';
+import { QuranText } from '@/types';
 
 /**
  * Structural payload definition configuring search list mapping output.

@@ -1,18 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import {
-  type MorphologyAya,
-  type QuranText,
-  search,
-  type SearchResponse,
-  type WordMap,
-} from 'quran-search-engine';
+import { search, type SearchResponse, type WordMap } from 'quran-search-engine';
 
-interface AdvancedOptions {
-  lemma: boolean;
-  root: boolean;
-  fuzzy: boolean;
-}
+import { AdvancedOptions, MorphologyAya, QuranText } from '@/types';
 
 interface Counts {
   simple: number;
