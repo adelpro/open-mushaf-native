@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { AdvancedOptions } from '@/types';
+import { SearchOptions } from '@/types';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -11,9 +11,9 @@ import { ThemedView } from './ThemedView';
  */
 interface SearchAdvancedOptionsProps {
   /** Payload of the active search settings. */
-  advancedOptions: AdvancedOptions;
+  advancedOptions: SearchOptions;
   /** Modifier callback emitted on press toggle. */
-  toggleOption: (option: keyof AdvancedOptions) => void;
+  toggleOption: (option: keyof SearchOptions) => void;
 }
 
 /**

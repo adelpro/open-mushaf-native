@@ -8,7 +8,7 @@ import { HighlightText } from '@/components/HighlightArabic';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks';
-import { QuranText } from '@/types';
+import { QuranText, SearchOptions } from '@/types';
 
 /**
  * Structural payload definition configuring search list mapping output.
@@ -19,7 +19,7 @@ type SearchResultItemProps = {
   /** The original unmodified search term inputted by the user. */
   query: string;
   /** Toggle options altering token matching leniency. */
-  advancedOptions: { lemma: boolean; root: boolean; fuzzy: boolean };
+  advancedOptions: SearchOptions;
   /** A dictionary containing morphological breakdown associations. */
   wordMap: WordMap;
   /** Helper tool function emitting an array of explicitly highlighted matches. */

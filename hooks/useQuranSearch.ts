@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { search, type SearchResponse, type WordMap } from 'quran-search-engine';
 
-import { AdvancedOptions, MorphologyAya, QuranText } from '@/types';
+import { MorphologyAya, QuranText, SearchOptions } from '@/types';
 
 interface Counts {
   simple: number;
@@ -17,7 +17,7 @@ interface UseQuranSearchProps {
   morphologyData: MorphologyAya[];
   wordMap: WordMap;
   query: string;
-  advancedOptions: AdvancedOptions;
+  advancedOptions: SearchOptions;
   fuseInstance: any | null;
   page: number;
   limit: number;
