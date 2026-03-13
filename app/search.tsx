@@ -21,6 +21,7 @@ import {
   useQuranMetadata,
   useQuranSearch,
 } from '@/hooks';
+import { SearchOptions } from '@/types';
 
 const MORPH = morphologyDataRaw;
 const WORD_MAP = wordMapJSON;
@@ -34,7 +35,7 @@ export default function Search() {
   const [inputText, setInputText] = useState('');
   const [query, setQuery] = useState('');
   const [showOptions, setShowOptions] = useState(false);
-  const [advancedOptions, setAdvancedOptions] = useState({
+  const [advancedOptions, setAdvancedOptions] = useState<SearchOptions>({
     lemma: false,
     root: false,
     fuzzy: false,
@@ -95,7 +96,7 @@ export default function Search() {
     }
   }, [pageResults, page, query]);
 
-  const toggleOption = (option: keyof typeof advancedOptions) => {
+  const toggleOption = (option: keyof SearchOptions) => {
     if (query.trim()) {
       setIsOptionChanging(true);
       setPage(1);

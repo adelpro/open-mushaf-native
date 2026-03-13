@@ -3,24 +3,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-
-/**
- * Base properties configuring the native-looking segment control widget.
- */
-interface BaseProps {
-  /** Text labels specifying the toggles available. */
-  options: string[];
-  /** Handler fired upon tapping a valid segment. */
-  onSelectionChange: (selectedIndex: number) => void;
-  /** Optionally sets an initially highlighted index block (-1 for no default selection). */
-  initialSelectedIndex?: number;
-  /** Theme styling overlay color when the chip is active. */
-  activeColor?: string;
-  /** Standard text tint before active selection. */
-  textColor?: string;
-  /** Inner tint color for active text selections. */
-  activeTextColor?: string;
-}
+import { SegmentedControlProps } from '../types';
 
 /**
  * An iOS-style Segmented Control component rebuilt manually to enforce RTL and custom coloring.
@@ -36,7 +19,7 @@ export function SegmentedControl({
   activeColor = '#007AFF',
   textColor = '#000',
   activeTextColor = '#fff',
-}: BaseProps) {
+}: SegmentedControlProps) {
   const [selectedIndex, setSelectedIndex] = useState(initialSelectedIndex);
 
   const handlePress = (index: number) => {
