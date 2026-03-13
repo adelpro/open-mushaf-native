@@ -37,8 +37,8 @@
     "doctor": "npx expo-doctor",
     "react-compiler-check": "npx react-compiler-healthcheck@latest",
     "commit": "git-cz",
-    "lint": "npx eslint . --cache --concurrency=auto --max-warnings=0",
-    "lint:fix": "npx eslint . --fix --cache --concurrency=auto",
+    "lint": "npx eslint . --cache --max-warnings=0",
+    "lint:fix": "npx eslint . --fix --cache",
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -55,7 +55,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "npx eslint --fix --cache --concurrency=auto",
+      "npx eslint --fix --cache",
       "prettier --write"
     ]
   },

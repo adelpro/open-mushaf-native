@@ -6,11 +6,11 @@ export * from './aya';
 
 export * from './surah';
 
-export * from './listTabs';
+export * from './list-tabs';
 
-export * from './tafseerTabs';
+export * from './tafseer-tabs';
 
-export * from './tafseerAya';
+export * from './tafseer-aya';
 
 export * from './specs';
 

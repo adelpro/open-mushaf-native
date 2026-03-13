@@ -6,7 +6,7 @@ export interface SegmentedControlProps {
   /** An array of string labels displaying the segment options. */
   options: string[];
   /** Callback notifying parent of the newly selected index position. */
-  onSelectionChange: (_selectedIndex: number) => void;
+  onSelectionChange: (selectedIndex: number) => void;
   /** Numeric offset representing the active tab on load. */
   initialSelectedIndex?: number;
   /** Thematic highlight background for the active toggle. */
