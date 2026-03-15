@@ -3,6 +3,7 @@ import { ActivityIndicator, StyleSheet, Text } from 'react-native';
 
 import { FontAwesome } from '@expo/vector-icons';
 
+import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import { CONTACT_FORM_RATE_LIMIT_CONFIG } from '@/constants/ratelimitConfig';
 import { useColors } from '@/hooks';
 import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
@@ -148,11 +149,7 @@ export function ContactForm() {
           'error',
         );
       } else {
-        notify(
-          'فشل في إرسال الرسالة! يرجى المحاولة مرة أخرى لاحقًا.',
-          'form_error',
-          'error',
-        );
+        notify(ERROR_MESSAGES.MESSAGE_SEND_FAILED, 'form_error', 'error');
       }
     } finally {
       setIsLoading(false);

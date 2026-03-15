@@ -270,7 +270,7 @@ if ('serviceWorker' in navigator) {
         .catch(error => {
           console.error('Service Worker registration failed:', error);
           if (notificationElement && statusMessageElement) {
-            statusMessageElement.textContent = 'حدث خطأ أثناء تحميل التطبيق.';
+            statusMessageElement.textContent = 'لم نتمكن من تحميل التطبيق، حاول تحديث الصفحة.';
             spinnerElement.style.display = 'none';
             setTimeout(() => {
               notificationElement.style.display = 'none';

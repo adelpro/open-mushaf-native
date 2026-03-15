@@ -23,6 +23,7 @@ import {
   ThemedView,
   TimePicker,
 } from '@/components';
+import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import { useColors } from '@/hooks';
 import { remindersAtom } from '@/jotai/atoms';
 import { Reminder, ReminderPreset } from '@/types/reminder';
@@ -139,10 +140,7 @@ export default function RemindersScreen() {
               const granted = await requestNotificationPermissions();
               setPermissionGranted(granted);
               if (!granted) {
-                Alert.alert(
-                  'الإذن مطلوب',
-                  'يجب السماح بالإشعارات لتفعيل التذكيرات',
-                );
+                Alert.alert('الإذن مطلوب', ERROR_MESSAGES.PERMISSION_REQUIRED);
                 return r;
               }
             }
@@ -157,7 +155,7 @@ export default function RemindersScreen() {
       } catch (error) {
         console.error('Failed to toggle reminder:', error);
         setReminders(prev);
-        Alert.alert('خطأ', 'فشل تبديل التذكير. يرجى المحاولة مرة أخرى.');
+        Alert.alert('خطأ', ERROR_MESSAGES.REMINDER_TOGGLE_FAILED);
       }
     },
     [reminders, permissionGranted, setReminders],
@@ -203,7 +201,7 @@ export default function RemindersScreen() {
     } catch (error) {
       console.error('Failed to save reminder time:', error);
       setReminders(prev);
-      Alert.alert('خطأ', 'فشل حفظ وقت التذكير. يرجى المحاولة مرة أخرى.');
+      Alert.alert('خطأ', ERROR_MESSAGES.REMINDER_SAVE_FAILED);
     }
   }, [editingReminder, reminders, setReminders]);
 
@@ -238,7 +236,7 @@ export default function RemindersScreen() {
           await cancelReminder(reminder.notificationId);
         } catch (error) {
           console.error('Failed to cancel notification during delete:', error);
-          Alert.alert('تنبيه', 'تم حذف التذكير لكن فشل إلغاء الإشعار.');
+          Alert.alert('تنبيه', ERROR_MESSAGES.REMINDER_CANCEL_FAILED);
         }
       }
       setReminders(reminders.filter((r) => r.id !== id));

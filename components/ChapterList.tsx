@@ -29,7 +29,7 @@ export function ChapterList() {
   if (error) {
     return (
       <ThemedView style={styles.errorContainer}>
-        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${error}`}</ThemedText>
+        <ThemedText type="defaultSemiBold">{error}</ThemedText>
       </ThemedView>
     );
   }

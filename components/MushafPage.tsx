@@ -348,7 +348,7 @@ export function MushafPage() {
       <ThemedView
         style={[styles.errorContainer, { backgroundColor: ivoryColor }]}
       >
-        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${metadataError}`}</ThemedText>
+        <ThemedText type="defaultSemiBold">{metadataError}</ThemedText>
       </ThemedView>
     );
   }
@@ -369,7 +369,7 @@ export function MushafPage() {
       <ThemedView
         style={[styles.errorContainer, { backgroundColor: ivoryColor }]}
       >
-        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${assetError}`}</ThemedText>
+        <ThemedText type="defaultSemiBold">{assetError}</ThemedText>
       </ThemedView>
     );
   }

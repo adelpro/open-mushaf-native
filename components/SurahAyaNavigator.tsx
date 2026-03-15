@@ -79,7 +79,7 @@ export function SurahAyaNavigator({
       <ThemedView
         style={[styles.container, { backgroundColor: 'transparent' }]}
       >
-        <ThemedText>{`حدث خطأ: ${error}`}</ThemedText>
+        <ThemedText>{error}</ThemedText>
       </ThemedView>
     );
   }
