@@ -15,3 +15,5 @@ export * from './readingThemes';
 export * from './readingChart';
 
 export * from './panGesture';
+
+export * from './errorMessages';

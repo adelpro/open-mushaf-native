@@ -117,7 +117,7 @@ export default function Search() {
   if (error)
     return (
       <ThemedView style={styles.container}>
-        <ThemedText type="defaultSemiBold">{`حدث خطأ: ${error}`}</ThemedText>
+        <ThemedText type="defaultSemiBold">{error}</ThemedText>
       </ThemedView>
     );
 
