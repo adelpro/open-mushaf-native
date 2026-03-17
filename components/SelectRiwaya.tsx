@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
 import { useAtom } from 'jotai/react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { riwayaOptions } from '@/constants';
 import { useColors } from '@/hooks';
@@ -22,41 +23,47 @@ export function SelectRiwaya() {
   const { primaryColor } = useColors();
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={styles.contentContainer}>
-        <ThemedText
-          type="defaultSemiBold"
-          style={[styles.itemText, { width: '100%' }]}
-        >
-          يرجى اختيار الرواية
-        </ThemedText>
-        <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
-          <SegmentedControl
-            options={riwayaOptions}
-            initialSelectedIndex={RiwayaByIndice(mushafRiwayaValue)}
-            activeColor={primaryColor}
-            textColor={primaryColor}
-            onSelectionChange={(index: number) => {
-              console.log('Selected Riwaya Index:', index);
-              console.log('Selected Riwaya Value:', RiwayaByValue(index));
-              const selectedRiwaya = RiwayaByValue(index);
-              setMushafRiwayaValue(selectedRiwaya);
-            }}
-          />
-        </Pressable>
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <ThemedView style={styles.container}>
+        <ThemedView style={styles.contentContainer}>
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, { width: '100%' }]}
+          >
+            يرجى اختيار الرواية
+          </ThemedText>
+          <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
+            <SegmentedControl
+              options={riwayaOptions}
+              initialSelectedIndex={RiwayaByIndice(mushafRiwayaValue)}
+              activeColor={primaryColor}
+              textColor={primaryColor}
+              onSelectionChange={(index: number) => {
+                console.log('Selected Riwaya Index:', index);
+                console.log('Selected Riwaya Value:', RiwayaByValue(index));
+                const selectedRiwaya = RiwayaByValue(index);
+                setMushafRiwayaValue(selectedRiwaya);
+              }}
+            />
+          </Pressable>
+        </ThemedView>
       </ThemedView>
-    </ThemedView>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
+  safeArea: {
+    width: '100%',
+    height: '100%',
+    paddingHorizontal: 20,
+    margin: 10,
+  },
   container: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     height: '100%',
-    paddingHorizontal: 20,
-    margin: 10,
   },
   contentContainer: {
     display: 'flex',
