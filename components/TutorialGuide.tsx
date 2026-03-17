@@ -44,6 +44,7 @@ export function TutorialGuide() {
   const { isLandscape } = useOrientation();
   const panGestureSensitivityValue = useAtomValue(panGestureSensitivity);
   const [index, setIndex] = useState(0);
+  const currentSlide = SLIDES[Math.max(0, Math.min(index, SLIDES.length - 1))];
 
   const finishTutorial = () => {
     setFinishedTutorial(true);
@@ -96,17 +97,17 @@ export function TutorialGuide() {
             <ScrollView>
               <ThemedView style={styles.ScrollContent}>
                 <Image
-                  source={SLIDES[index].image}
+                  source={currentSlide.image}
                   style={styles.image}
                   resizeMode="contain"
                 />
 
                 <View style={styles.textContainer}>
                   <ThemedText style={styles.title}>
-                    {SLIDES[index].title}
+                    {currentSlide.title}
                   </ThemedText>
-                  {Array.isArray(SLIDES[index].description) ? (
-                    SLIDES[index].description.map((item, i) => (
+                  {Array.isArray(currentSlide.description) ? (
+                    currentSlide.description.map((item, i) => (
                       <ThemedText
                         key={i}
                         style={[
@@ -122,7 +123,7 @@ export function TutorialGuide() {
                     <ThemedText
                       style={[styles.description, { textAlign: 'center' }]}
                     >
-                      {SLIDES[index].description}
+                      {currentSlide.description}
                     </ThemedText>
                   )}
                 </View>
