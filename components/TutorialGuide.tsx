@@ -146,7 +146,9 @@ export function TutorialGuide() {
               <ThemedButton
                 onPress={
                   index < SLIDES.length - 1
-                    ? () => setIndex(index + 1)
+                    ? () => {
+                        setIndex(index + 1);
+                      }
                     : finishTutorial
                 }
                 variant="primary"
