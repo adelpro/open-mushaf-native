@@ -18,6 +18,7 @@ import Animated, {
   FadeOutRight,
   runOnJS,
 } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import CheckedSVG from '@/assets/svgs/checked.svg';
 import NextSVG from '@/assets/svgs/next.svg';
@@ -38,11 +39,12 @@ import { isRTL } from '@/utils';
 export function TutorialGuide() {
   const router = useRouter();
   const pathname = usePathname();
-  const { primaryColor, primaryLightColor } = useColors();
+  const { primaryColor, primaryLightColor, backgroundColor } = useColors();
   const setFinishedTutorial = useSetAtom(finishedTutorial);
   const { isLandscape } = useOrientation();
   const panGestureSensitivityValue = useAtomValue(panGestureSensitivity);
   const [index, setIndex] = useState(0);
+  const currentSlide = SLIDES[Math.max(0, Math.min(index, SLIDES.length - 1))];
 
   const finishTutorial = () => {
     setFinishedTutorial(true);
@@ -88,100 +90,114 @@ export function TutorialGuide() {
         style={styles.animatedContainer}
       >
         <ThemedView style={styles.mainContainer}>
-          <ScrollView>
-            <ThemedView style={styles.ScrollContent}>
-              <Image
-                source={SLIDES[index].image}
-                style={styles.image}
-                resizeMode="contain"
-              />
+          <SafeAreaView
+            style={[styles.safeArea, { backgroundColor }]}
+            edges={['top']}
+          >
+            <ScrollView>
+              <ThemedView style={styles.ScrollContent}>
+                <Image
+                  source={currentSlide.image}
+                  style={styles.image}
+                  resizeMode="contain"
+                />
 
-              <View style={styles.textContainer}>
-                <ThemedText style={styles.title}>
-                  {SLIDES[index].title}
-                </ThemedText>
-                {Array.isArray(SLIDES[index].description) ? (
-                  SLIDES[index].description.map((item, i) => (
-                    <ThemedText
-                      key={i}
-                      style={[
-                        styles.description,
-                        item.align !== 'start' && { textAlign: 'center' },
-                      ]}
-                    >
-                      {item.align === 'start' ? '✓ ' : ''}
-                      {item.text}
-                    </ThemedText>
-                  ))
-                ) : (
-                  <ThemedText
-                    style={[styles.description, { textAlign: 'center' }]}
-                  >
-                    {SLIDES[index].description}
+                <View style={styles.textContainer}>
+                  <ThemedText style={styles.title}>
+                    {currentSlide.title}
                   </ThemedText>
-                )}
+                  {Array.isArray(currentSlide.description) ? (
+                    currentSlide.description.map((item, i) => (
+                      <ThemedText
+                        key={i}
+                        style={[
+                          styles.description,
+                          item.align !== 'start' && { textAlign: 'center' },
+                        ]}
+                      >
+                        {item.align === 'start' ? '✓ ' : ''}
+                        {item.text}
+                      </ThemedText>
+                    ))
+                  ) : (
+                    <ThemedText
+                      style={[styles.description, { textAlign: 'center' }]}
+                    >
+                      {currentSlide.description}
+                    </ThemedText>
+                  )}
+                </View>
+              </ThemedView>
+            </ScrollView>
+
+            <ThemedView style={styles.controlsContainer}>
+              <View style={styles.dotsContainer}>
+                {SLIDES.map((_, i) => (
+                  <View
+                    key={i}
+                    style={[
+                      styles.dot,
+                      i === index && styles.activeDot,
+                      i === index && { backgroundColor: primaryColor },
+                    ]}
+                  />
+                ))}
+              </View>
+
+              <ThemedButton
+                onPress={
+                  index < SLIDES.length - 1
+                    ? () => {
+                        setIndex(index + 1);
+                      }
+                    : finishTutorial
+                }
+                variant="primary"
+                style={styles.button}
+              >
+                <View style={styles.buttonContent}>
+                  {index < SLIDES.length - 1 ? (
+                    <>
+                      <Text style={styles.buttonText}>التالي</Text>
+                      <NextSVG
+                        width={24}
+                        height={24}
+                        style={styles.buttonIcon}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <Text style={styles.buttonText}>إنتهاء</Text>
+                      <CheckedSVG
+                        width={24}
+                        height={24}
+                        style={styles.buttonIcon}
+                      />
+                    </>
+                  )}
+                </View>
+              </ThemedButton>
+              <View style={styles.closeButtonContainer}>
+                <Pressable onPress={finishTutorial}>
+                  <Text
+                    style={[
+                      styles.closeButtonText,
+                      { color: primaryLightColor },
+                    ]}
+                  >
+                    تخطي
+                  </Text>
+                </Pressable>
+                <View
+                  style={{
+                    width: 24,
+                    height: 24,
+                    backgroundColor: 'transparent',
+                  }}
+                />
               </View>
             </ThemedView>
-          </ScrollView>
-
-          <ThemedView style={styles.controlsContainer}>
-            <View style={styles.dotsContainer}>
-              {SLIDES.map((_, i) => (
-                <View
-                  key={i}
-                  style={[
-                    styles.dot,
-                    i === index && styles.activeDot,
-                    i === index && { backgroundColor: primaryColor },
-                  ]}
-                />
-              ))}
-            </View>
-
-            <ThemedButton
-              onPress={
-                index < SLIDES.length - 1
-                  ? () => setIndex(index + 1)
-                  : finishTutorial
-              }
-              variant="primary"
-              style={styles.button}
-            >
-              <View style={styles.buttonContent}>
-                {index < SLIDES.length - 1 ? (
-                  <>
-                    <Text style={styles.buttonText}>التالي</Text>
-                    <NextSVG width={24} height={24} style={styles.buttonIcon} />
-                  </>
-                ) : (
-                  <>
-                    <Text style={styles.buttonText}>إنتهاء</Text>
-                    <CheckedSVG
-                      width={24}
-                      height={24}
-                      style={styles.buttonIcon}
-                    />
-                  </>
-                )}
-              </View>
-            </ThemedButton>
-            <View style={styles.closeButtonContainer}>
-              <Pressable onPress={finishTutorial}>
-                <Text
-                  style={[styles.closeButtonText, { color: primaryLightColor }]}
-                >
-                  تخطي
-                </Text>
-              </Pressable>
-              <View
-                style={{
-                  width: 24,
-                  height: 24,
-                  backgroundColor: 'transparent',
-                }}
-              />
-            </View>
-          </ThemedView>
+          </SafeAreaView>
         </ThemedView>
       </Animated.View>
     </GestureDetector>
@@ -213,6 +229,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingHorizontal: 5,
     textAlign: 'center',
+  },
+  safeArea: {
+    width: '100%',
+    height: '100%',
   },
   mainContainer: {
     flex: 1,
