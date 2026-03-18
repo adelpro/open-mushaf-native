@@ -26,6 +26,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ErrorBoundary, Notification, Seo } from '@/components';
 import { NotificationProvider } from '@/Context/NotificationProvider';
+import { useDailyTrackerReset } from '@/hooks';
 import { isRTL } from '@/utils';
 import { setupNotificationChannel } from '@/utils/notifications';
 
@@ -37,6 +38,9 @@ SplashScreen.setOptions({ fade: true, duration: 1000 });
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+
+  // Handle daily tracker reset on date change
+  useDailyTrackerReset();
 
   const [fontLoaded, fontError] = useFonts({
     Amiri_400Regular,

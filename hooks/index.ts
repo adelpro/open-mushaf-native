@@ -1,5 +1,6 @@
 export * from './useColors';
 export * from './useCurrentPage';
+export * from './useDailyTrackerReset';
 export * from './useDebounce';
 export * from './useImagePreloader';
 export * from './useImagesArray';

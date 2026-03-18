@@ -1,6 +1,5 @@
 import { observe } from 'jotai-effect';
 
-import { CHART_PERIODS } from '@/constants';
 import { Reminder, TafseerTabs } from '@/types';
 import { Riwaya } from '@/types/riwaya';
 
@@ -80,55 +79,6 @@ export const readingHistory = createAtomWithStorage<DailyReadingRecord[]>(
   [],
 );
 
-observe((get, set) => {
-  const stored = get(dailyTrackerCompleted);
-  const history = get(readingHistory);
-  const today = new Date().toDateString();
-
-  if (stored.date !== today) {
-    const savedYesterday = get(yesterdayPage) as PageWithDate;
-    const lastPage = get(currentSavedPage) as number;
-    const pagesRead = Math.max(0, lastPage - savedYesterday.value);
-
-    if (stored.value > 0 || pagesRead > 0) {
-      const entry: DailyReadingRecord = {
-        hizbsCompleted: stored.value,
-        pagesRead,
-        date: stored.date,
-      };
-
-      const currentIndex = history.findIndex(
-        (record: DailyReadingRecord) => record.date === stored.date,
-      );
-
-      const updatedHistory =
-        currentIndex !== -1
-          ? [
-              ...history.slice(0, currentIndex),
-              {
-                ...entry,
-                hizbsCompleted: Math.max(
-                  entry.hizbsCompleted,
-                  history[currentIndex].hizbsCompleted,
-                ),
-                pagesRead: Math.max(
-                  entry.pagesRead,
-                  history[currentIndex].pagesRead,
-                ),
-              },
-              ...history.slice(currentIndex + 1),
-            ]
-          : [...history, entry];
-
-      set(
-        readingHistory,
-        updatedHistory.slice(-CHART_PERIODS[CHART_PERIODS.length - 1].days),
-      );
-    }
-    set(dailyTrackerCompleted, { value: 0, date: today });
-  }
-});
-
 // Yesterday page logic with async init and sync to currentSavedPage
 type PageWithDate = {
   value: number;
@@ -143,20 +93,7 @@ export const yesterdayPage = createAtomWithStorage<PageWithDate>(
   },
 );
 
-// Yesterday page reset logic
-observe((get, set) => {
-  (async () => {
-    const today = new Date().toDateString();
-    const saved = await get(yesterdayPage);
-    const lastPage = await get(currentSavedPage);
-
-    if (saved.date !== today) {
-      set(yesterdayPage, { value: lastPage, date: today });
-    }
-  })();
-});
-
-// Top menu persist atom
+/// Top menu persist atom
 export const topMenuState = createAtomWithStorage<boolean>(
   'TopMenuState',
   false,
