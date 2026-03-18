@@ -26,7 +26,8 @@ import {
 } from '@/jotai/atoms';
 
 export default function TrackerScreen() {
-  const { iconColor, cardColor, primaryColor } = useColors();
+  // تم إضافة secondaryColor هنا لاستخدامه كبديل للألوان الثابتة
+  const { iconColor, cardColor, primaryColor, secondaryColor } = useColors();
   const { currentSavedPage: savedPage } = useCurrentPage();
 
   const { updateAndroidWidget } = useUpdateAndroidWidget();
@@ -108,7 +109,13 @@ export default function TrackerScreen() {
               <ThemedText style={styles.label}>الورد اليومي:</ThemedText>
             </ThemedView>
 
-            <ThemedView style={styles.progressContainer}>
+            {/* تم دمج لون الخلفية الديناميكي هنا */}
+            <ThemedView
+              style={[
+                styles.progressContainer,
+                { backgroundColor: secondaryColor },
+              ]}
+            >
               <ThemedView
                 style={[
                   styles.progressBar,
@@ -145,8 +152,12 @@ export default function TrackerScreen() {
                   الهدف اليومي:
                 </ThemedText>
                 <ThemedView style={styles.controls}>
+                  {/* تم دمج لون الحدود الديناميكي هنا */}
                   <TouchableOpacity
-                    style={styles.controlButton}
+                    style={[
+                      styles.controlButton,
+                      { borderColor: secondaryColor },
+                    ]}
                     onPress={decrementDailyGoal}
                   >
                     <Feather name="minus" size={20} color={primaryColor} />
@@ -154,8 +165,12 @@ export default function TrackerScreen() {
                   <ThemedText style={styles.controlValue}>
                     {getHizbText(dailyTrackerGoalValue)}
                   </ThemedText>
+                  {/* تم دمج لون الحدود الديناميكي هنا */}
                   <TouchableOpacity
-                    style={styles.controlButton}
+                    style={[
+                      styles.controlButton,
+                      { borderColor: secondaryColor },
+                    ]}
                     onPress={incrementDailyGoal}
                   >
                     <Feather name="plus" size={20} color={primaryColor} />
@@ -238,7 +253,13 @@ export default function TrackerScreen() {
               style={[styles.modalContent, { backgroundColor: cardColor }]}
               onStartShouldSetResponder={() => true}
             >
-              <ThemedView style={styles.modalHeader}>
+              {/* تم دمج لون الحدود الديناميكي هنا للهيدر */}
+              <ThemedView
+                style={[
+                  styles.modalHeader,
+                  { borderBottomColor: secondaryColor },
+                ]}
+              >
                 <ThemedText style={styles.modalTitle}>تأكيد</ThemedText>
                 <TouchableOpacity
                   style={styles.closeButton}
@@ -307,7 +328,6 @@ const styles = StyleSheet.create({
     height: 24,
     width: '100%',
     borderRadius: 12,
-    backgroundColor: '#E5E7EB',
     overflow: 'hidden',
     justifyContent: 'center',
     marginBottom: 8,
@@ -342,7 +362,6 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 10,
@@ -358,9 +377,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
-  resetButton: { paddingHorizontal: 16, paddingVertical: 8 }, // This padding controls the space around the icon and text
-
-  // Add Modal Styles (copied from settings.tsx and adjusted slightly)
+  resetButton: { paddingHorizontal: 16, paddingVertical: 8 },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -384,9 +401,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee', // Consider using a theme color here
     minHeight: 40,
-    backgroundColor: 'transparent', // Ensure header background is transparent if content has color
+    backgroundColor: 'transparent',
   },
   modalTitle: {
     fontSize: 18,
@@ -408,10 +424,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    backgroundColor: 'transparent', // Ensure actions background is transparent
+    backgroundColor: 'transparent',
   },
   modalButton: {
-    width: '40%', // Use percentage for better responsiveness
-    maxWidth: 120, // Add maxWidth to prevent buttons getting too large
+    width: '40%',
+    maxWidth: 120,
   },
 });
