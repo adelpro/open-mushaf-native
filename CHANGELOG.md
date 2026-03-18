@@ -7,27 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+## [5.0.0-athar] - 18-03-2026
 
-### Changed
+## Added
 
-### Deprecated
+- Tutorial & Safe Area Fixes
+- Standardize Error Messages
+- Type Consolidation & UI Refinement
+- Add Default Parameter Values to Prevent Undefined Behavior
+- Add JSDoc Documentation
+- Standardize camelCase naming in tracker.tsx and MushafPage.tsx
+- Search Component UX Improvements & Debounce Loading States
+- Standardize Component and hook Exports
+- Haptic Feedback
+- Add Reading Chart with Historical Tracking & Pages/Hizbs Toggle
+- Add ErrorBoundary Component & Base Error Logger
+- Add Rate on Store button to Settings
+- Add accessibility labels and hints to interactive elements for screen reader support
+- Add empty state illustration for no results
 
-### Removed
+## Fixed
 
-### Fixed
+- iOS Edge-to-Edge Support, Safe Area Optimization, and RTL Alignment
+- Update pan gesture constants, add sensitivity settings, and fix navigation glitch
+- Changelog modal RTL alignment and semantic list structure
+- Address PR review feedback for reminders feature
+- Platform-specific changelogs, RTL and safe area for What's New modal
+- Remove duplicated thumn entry in mushaf-elmadina-warsh-azrak
+- Use iOS safe area inset instead of hardcoded top margin
+- Replace raw route names in back button labels
+- Add accessibility labels to icon-only buttons
+- iOS physical device QA audit, closes #24
+- Issue 41
 
-### Security
+## Changed
+
+- Type Consolidation & UI Refinement
 
 ## [4.3.0] - 2025-??-??
-
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
 
 ### Fixed
 
