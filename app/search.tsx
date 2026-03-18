@@ -28,7 +28,15 @@ const WORD_MAP = wordMapJSON;
 
 export default function Search() {
   const { quranData, isLoading, error } = useQuranMetadata();
-  const { tintColor, primaryColor } = useColors();
+  // تم إضافة الألوان الجديدة هنا
+  const {
+    tintColor,
+    primaryColor,
+    secondaryColor,
+    cardColor,
+    textColor,
+    primaryLightColor,
+  } = useColors();
 
   const PAGE_SIZE = 50;
 
@@ -120,7 +128,10 @@ export default function Search() {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedView style={styles.searchContainer}>
+      {/* تعديل لون الحدود للـ searchContainer */}
+      <ThemedView
+        style={[styles.searchContainer, { borderColor: secondaryColor }]}
+      >
         <ThemedTextInput
           variant="outlined"
           style={styles.searchInput}
@@ -142,26 +153,37 @@ export default function Search() {
           <Ionicons
             name="options"
             size={20}
-            color={showOptions ? primaryColor : '#777'}
+            // تعديل اللون الثابت '#777' إلى لون من الثيم
+            color={showOptions ? primaryColor : textColor}
             style={styles.icon}
           />
         </Pressable>
       </ThemedView>
 
       {showOptions && (
-        <ThemedView style={styles.advancedOptions}>
+        // تعديل لون الخلفية الثابت
+        <ThemedView
+          style={[styles.advancedOptions, { backgroundColor: cardColor }]}
+        >
           <View style={styles.optionRow}>
             <Pressable
               style={[
                 styles.optionButton,
-                advancedOptions.lemma && styles.optionActive,
+                { borderColor: secondaryColor }, // إضافة لون الحدود الديناميكي
+                advancedOptions.lemma && {
+                  backgroundColor: primaryLightColor,
+                  borderColor: primaryColor,
+                },
               ]}
               onPress={() => toggleOption('lemma')}
             >
               <ThemedText
-                style={
-                  advancedOptions.lemma ? styles.optionActiveText : undefined
-                }
+                style={[
+                  advancedOptions.lemma && {
+                    color: primaryColor,
+                    fontWeight: '600',
+                  },
+                ]}
               >
                 الصيغة
               </ThemedText>
@@ -170,29 +192,44 @@ export default function Search() {
             <Pressable
               style={[
                 styles.optionButton,
-                advancedOptions.root && styles.optionActive,
+                { borderColor: secondaryColor },
+                advancedOptions.root && {
+                  backgroundColor: primaryLightColor,
+                  borderColor: primaryColor,
+                },
               ]}
               onPress={() => toggleOption('root')}
             >
               <ThemedText
-                style={
-                  advancedOptions.root ? styles.optionActiveText : undefined
-                }
+                style={[
+                  advancedOptions.root && {
+                    color: primaryColor,
+                    fontWeight: '600',
+                  },
+                ]}
               >
                 الجذر
               </ThemedText>
             </Pressable>
+
             <Pressable
               style={[
                 styles.optionButton,
-                advancedOptions.fuzzy && styles.optionActive,
+                { borderColor: secondaryColor },
+                advancedOptions.fuzzy && {
+                  backgroundColor: primaryLightColor,
+                  borderColor: primaryColor,
+                },
               ]}
               onPress={() => toggleOption('fuzzy')}
             >
               <ThemedText
-                style={
-                  advancedOptions.fuzzy ? styles.optionActiveText : undefined
-                }
+                style={[
+                  advancedOptions.fuzzy && {
+                    color: primaryColor,
+                    fontWeight: '600',
+                  },
+                ]}
               >
                 التقريب
               </ThemedText>
@@ -264,7 +301,6 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: '#ddd',
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
@@ -281,7 +317,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 12,
     borderRadius: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.03)',
   },
   optionRow: { flexDirection: 'row', justifyContent: 'center', gap: 10 },
   optionButton: {
@@ -289,10 +324,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#ccc',
   },
-  optionActive: { backgroundColor: '#e3f2fd', borderColor: '#1976d2' },
-  optionActiveText: { color: '#1976d2', fontWeight: '600' },
   emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14 },
 });
