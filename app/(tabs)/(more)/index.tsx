@@ -14,6 +14,7 @@ import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 
+import BookmarkSVG from '@/assets/svgs/bookmark.svg';
 import HelpSVG from '@/assets/svgs/help.svg';
 import InfoSVG from '@/assets/svgs/info.svg';
 import MailSVG from '@/assets/svgs/mail.svg';
@@ -98,12 +99,7 @@ export default function MoreScreen() {
           style={styles.button}
         >
           <View style={styles.buttonContent}>
-            <Feather
-              name="bookmark"
-              size={24}
-              color="white"
-              style={styles.svg}
-            />
+            <BookmarkSVG width={24} height={24} style={styles.svg} />
             <Text style={styles.buttonText}>العلامات المرجعية</Text>
           </View>
         </ThemedButton>
