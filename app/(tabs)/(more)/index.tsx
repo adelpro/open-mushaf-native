@@ -98,7 +98,12 @@ export default function MoreScreen() {
           style={styles.button}
         >
           <View style={styles.buttonContent}>
-            <Feather name="bookmark" size={24} color="white" />
+            <Feather
+              name="bookmark"
+              size={24}
+              color="white"
+              style={styles.svg}
+            />
             <Text style={styles.buttonText}>العلامات المرجعية</Text>
           </View>
         </ThemedButton>
