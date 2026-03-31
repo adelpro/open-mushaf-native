@@ -29,6 +29,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+import DeepLinkBanner from '@/components/DeepLinkBanner';
 import Notification from '@/components/Notification';
 import SEO from '@/components/seo';
 import { isRTL } from '@/utils';
@@ -142,6 +143,7 @@ export default function RootLayout() {
                   />
                 </Stack>
                 <Notification />
+                <DeepLinkBanner />
               </ThemeProvider>
             </SafeAreaView>
           </SafeAreaProvider>

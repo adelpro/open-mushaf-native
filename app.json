@@ -7,7 +7,7 @@
     "orientation": "default",
     "assetBundlePatterns": ["**/*"],
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "openmushaf",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -31,6 +31,14 @@
           },
           "category": ["BROWSABLE", "DEFAULT"],
           "autoVerify": true
+        },
+        {
+          "action": "VIEW",
+          "data": {
+            "scheme": "openmushaf",
+            "host": "mushaf"
+          },
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ],
       "softwareKeyboardLayoutMode": "resize",
