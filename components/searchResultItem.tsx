@@ -2,13 +2,13 @@ import React from 'react';
 import { Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { router } from 'expo-router';
-import { type WordMap } from 'quran-search-engine';
+import { type MatchType } from 'quran-search-engine';
 
 import { HighlightText } from '@/components/HighlightArabic';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColors } from '@/hooks';
-import { QuranText, SearchOptions } from '@/types';
+import { QuranText } from '@/types';
 
 /**
  * Structural payload definition configuring search list mapping output.
@@ -16,20 +16,6 @@ import { QuranText, SearchOptions } from '@/types';
 type SearchResultItemProps = {
   /** A matched document dictionary record containing context strings and IDs. */
   item: QuranText;
-  /** The original unmodified search term inputted by the user. */
-  query: string;
-  /** Toggle options altering token matching leniency. */
-  advancedOptions: SearchOptions;
-  /** A dictionary containing morphological breakdown associations. */
-  wordMap: WordMap;
-  /** Helper tool function emitting an array of explicitly highlighted matches. */
-  getPositiveTokens: (
-    verse: QuranText,
-    mode: 'text' | 'lemma' | 'root' | 'fuzzy',
-    targetLemma?: string,
-    targetRoot?: string,
-    cleanQuery?: string,
-  ) => string[];
   /** Handler fired traversing back to a mapped location within the `MushafPage`. */
   onSelectAya: (aya: { aya: number; surah: number }) => void;
   disabled?: boolean;
@@ -37,85 +23,21 @@ type SearchResultItemProps = {
 
 /**
  * A render block component used within lists displaying individual search query hits.
- * Integrates directly with `HighlightText` to logically process string offsets
- * and render appropriate color backgrounds on matching tokens.
+ * Integrates directly with `HighlightText` using `getHighlightRanges` from
+ * quran-search-engine to render appropriate color backgrounds on matching tokens.
  *
  * @param props - Mapped document record with filtering states.
  * @returns A touchable card yielding `<HighlightText />` fragments.
  */
 export function SearchResultItem({
   item,
-  query,
-  advancedOptions,
-  wordMap,
-  getPositiveTokens,
   onSelectAya,
   disabled = false,
 }: SearchResultItemProps) {
   const { directColor, fuzzyColor, relatedColor } = useColors();
-  const cleanQuery = query.trim();
-  const mapEntry = wordMap[cleanQuery];
 
-  const directTokens: string[] = [];
-  const relatedTokens: string[] = [];
-  const fuzzyTokens: string[] = [];
-
-  if (getPositiveTokens) {
-    const textMatches = getPositiveTokens(
-      item,
-      'text',
-      undefined,
-      undefined,
-      query,
-    );
-    directTokens.push(...textMatches);
-
-    if (advancedOptions.lemma && mapEntry?.lemma) {
-      const lemmaMatches = getPositiveTokens(
-        item,
-        'lemma',
-        mapEntry.lemma,
-        undefined,
-        query,
-      );
-      relatedTokens.push(
-        ...lemmaMatches.filter((w) => !textMatches.includes(w)),
-      );
-    }
-
-    if (advancedOptions.root && mapEntry?.root) {
-      const rootMatches = getPositiveTokens(
-        item,
-        'root',
-        undefined,
-        mapEntry.root,
-        query,
-      );
-      relatedTokens.push(
-        ...rootMatches.filter(
-          (w) => !textMatches.includes(w) && !relatedTokens.includes(w),
-        ),
-      );
-    }
-
-    if (advancedOptions.fuzzy) {
-      const fuzzyMatches = getPositiveTokens(
-        item,
-        'fuzzy',
-        undefined,
-        undefined,
-        query,
-      );
-      fuzzyTokens.push(
-        ...fuzzyMatches.filter(
-          (w) =>
-            !textMatches.includes(w) &&
-            !relatedTokens.includes(w) &&
-            !fuzzyTokens.includes(w),
-        ),
-      );
-    }
-  }
+  const matchedTokens: string[] = (item as any).matchedTokens || [];
+  const tokenTypes: Record<string, MatchType> = (item as any).tokenTypes || {};
 
   return (
     <TouchableOpacity
@@ -142,12 +64,11 @@ export function SearchResultItem({
         <ThemedText type="default" style={styles.uthmani}>
           <HighlightText
             text={item.standard}
-            tokens={directTokens}
-            relatedWords={relatedTokens}
-            fuzzyWords={fuzzyTokens}
-            color={directColor} // main tokens
-            relatedColor={relatedColor} // if HighlightText supports it
-            fuzzyColor={fuzzyColor} // fuzzy matches
+            matchedTokens={matchedTokens}
+            tokenTypes={tokenTypes}
+            exactColor={directColor}
+            relatedColor={relatedColor}
+            fuzzyColor={fuzzyColor}
             style={{ fontSize: 18 }}
           />
         </ThemedText>

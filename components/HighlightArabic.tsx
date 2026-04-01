@@ -1,21 +1,25 @@
 import React from 'react';
 import { Text, TextStyle } from 'react-native';
 
+import {
+  getHighlightRanges,
+  type HighlightRange,
+  type MatchType,
+} from 'quran-search-engine';
+
 /**
  * Component configurations for dynamic text highlighting.
  */
 type HighlightTextProps = {
   /** The complete Arabic text to be evaluated and formatted. */
   text: string;
-  /** Array of explicitly matched tokens, typically for exact highlighting. */
-  tokens: string[];
-  /** Array of words conceptually related to the context or grammar. */
-  relatedWords?: string[];
-  /** Array of fuzzily matched words based on loose similarity. */
-  fuzzyWords?: string[];
+  /** Array of explicitly matched tokens from the search engine. */
+  matchedTokens: string[];
+  /** Token-to-match-type mapping from the search engine. */
+  tokenTypes?: Record<string, MatchType>;
   /** HEX color code for exact match highlighting. */
-  color?: string;
-  /** HEX color code for related match highlighting. */
+  exactColor?: string;
+  /** HEX color code for morphological (lemma/root) match highlighting. */
   relatedColor?: string;
   /** HEX color code for fuzzy match highlighting. */
   fuzzyColor?: string;
@@ -23,115 +27,87 @@ type HighlightTextProps = {
   style?: TextStyle;
 };
 
+const TextSelectionColor = '#010c14ff';
+
 /**
- * A specialized text formatting component that dynamically applies background colors
- * corresponding to varying degrees of search relevance (direct, related, or fuzzy matches).
- * Utilizes complex regex splitting optimized for Arabic syntax.
+ * Maps a match type to the appropriate highlight color.
+ */
+function getColorForMatchType(
+  matchType: MatchType,
+  exactColor: string,
+  relatedColor: string,
+  fuzzyColor: string,
+): string {
+  switch (matchType) {
+    case 'exact':
+    case 'range':
+    case 'regex':
+    case 'semantic':
+      return exactColor;
+    case 'lemma':
+    case 'root':
+      return relatedColor;
+    case 'fuzzy':
+      return fuzzyColor;
+    default:
+      return exactColor;
+  }
+}
+
+/**
+ * A specialized text formatting component that uses `getHighlightRanges` from
+ * quran-search-engine to apply background colors corresponding to varying
+ * degrees of search relevance (exact, morphological, or fuzzy matches).
  *
  * @param props - HighlightText component settings payload.
  * @returns An array of styled React Native Text fragments representing the original string.
  */
 export const HighlightText: React.FC<HighlightTextProps> = ({
   text,
-  tokens,
-  relatedWords = [],
-  fuzzyWords = [],
-  color = '#FFD54F',
+  matchedTokens,
+  tokenTypes,
+  exactColor = '#FFD54F',
   relatedColor = '#FFD211',
   fuzzyColor = '#81C784',
   style,
 }) => {
-  const TextSelectionColor = '#010c14ff';
-  // Default related color if not provided
-  const actualRelatedColor = relatedColor || `${color}99`;
+  const ranges: HighlightRange[] = getHighlightRanges(
+    text,
+    matchedTokens,
+    tokenTypes,
+  );
 
-  if (
-    (!tokens || tokens.length === 0) &&
-    (!relatedWords || relatedWords.length === 0) &&
-    (!fuzzyWords || fuzzyWords.length === 0)
-  ) {
+  if (ranges.length === 0) {
     return <Text style={style}>{text}</Text>;
   }
 
-  // Combine direct tokens, related words and fuzzy words for highlighting
-  const allTokens = [...tokens, ...relatedWords, ...fuzzyWords];
+  const parts: React.ReactNode[] = [];
+  let cursor = 0;
 
-  // Escape tokens for regex
-  const escapedTokens = allTokens.map((t) =>
-    t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
-  );
+  ranges.forEach((r, i) => {
+    if (cursor < r.start) {
+      parts.push(text.slice(cursor, r.start));
+    }
+    const bgColor = getColorForMatchType(
+      r.matchType,
+      exactColor,
+      relatedColor,
+      fuzzyColor,
+    );
+    parts.push(
+      <Text
+        key={i}
+        style={{ backgroundColor: bgColor, color: TextSelectionColor }}
+      >
+        {text.slice(r.start, r.end)}
+      </Text>,
+    );
+    cursor = r.end;
+  });
 
-  // Create regex pattern for all tokens
-  const regex = new RegExp(`(${escapedTokens.join('|')})`, 'gi');
+  if (cursor < text.length) {
+    parts.push(text.slice(cursor));
+  }
 
-  // Split text by regex pattern
-  const parts = text.split(regex);
-
-  return (
-    <Text style={style}>
-      {parts.map((part, index) => {
-        // Check if this part matches any token
-        const isDirectMatch = tokens.some((token) =>
-          new RegExp(
-            `^${token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`,
-            'i',
-          ).test(part),
-        );
-
-        // Check if this part matches any related word
-        const isRelatedMatch = relatedWords.some((word) =>
-          new RegExp(
-            `^${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`,
-            'i',
-          ).test(part),
-        );
-
-        // Check if this part matches any fuzzy word
-        const isFuzzyMatch = fuzzyWords.some((word) =>
-          new RegExp(
-            `^${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`,
-            'i',
-          ).test(part),
-        );
-
-        if (isDirectMatch) {
-          // Direct match - primary highlight color
-          return (
-            <Text
-              key={index}
-              style={{ backgroundColor: color, color: TextSelectionColor }}
-            >
-              {part}
-            </Text>
-          );
-        } else if (isRelatedMatch) {
-          // Related match - slightly different highlight color
-          return (
-            <Text
-              key={index}
-              style={{
-                backgroundColor: actualRelatedColor,
-                color: TextSelectionColor,
-              }}
-            >
-              {part}
-            </Text>
-          );
-        } else if (isFuzzyMatch) {
-          // Fuzzy match - different highlight color
-          return (
-            <Text
-              key={index}
-              style={{ backgroundColor: fuzzyColor, color: TextSelectionColor }}
-            >
-              {part}
-            </Text>
-          );
-        } else {
-          // No match
-          return <Text key={index}>{part}</Text>;
-        }
-      })}
-    </Text>
-  );
+  return <Text style={style}>{parts}</Text>;
 };

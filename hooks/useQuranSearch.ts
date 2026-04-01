@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { search, type SearchResponse, type WordMap } from 'quran-search-engine';
 
@@ -37,7 +37,7 @@ interface UseQuranSearchProps {
  * @param props.page - The pagination page.
  * @param props.limit - The maximum results per page.
  *
- * @returns An object containing `pageResults`, search metric `counts`, and a helper for identifying `getPositiveTokens`.
+ * @returns An object containing `pageResults` and search metric `counts`.
  */
 export function useQuranSearch({
   quranData,
@@ -66,45 +66,6 @@ export function useQuranSearch({
     }
     return map;
   }, [morphologyData]);
-
-  const getPositiveTokens = useCallback(
-    (
-      verse: QuranText,
-      mode: 'text' | 'lemma' | 'root' | 'fuzzy',
-      targetLemma?: string,
-      targetRoot?: string,
-      cleanQuery?: string,
-    ): string[] => {
-      if (!cleanQuery) return [];
-
-      const matchedTokens = (verse as any).matchedTokens || [];
-      const tokenTypes = (verse as any).tokenTypes || {};
-
-      if (mode === 'text') {
-        return matchedTokens.filter(
-          (token: string) => tokenTypes[token] === 'exact',
-        );
-      }
-      if (mode === 'lemma') {
-        return matchedTokens.filter(
-          (token: string) => tokenTypes[token] === 'lemma',
-        );
-      }
-      if (mode === 'root') {
-        return matchedTokens.filter(
-          (token: string) => tokenTypes[token] === 'root',
-        );
-      }
-      if (mode === 'fuzzy') {
-        return matchedTokens.filter(
-          (token: string) => tokenTypes[token] === 'fuzzy',
-        );
-      }
-
-      return matchedTokens;
-    },
-    [],
-  );
 
   useEffect(() => {
     if (!quranData || quranData.length === 0) {
@@ -154,5 +115,5 @@ export function useQuranSearch({
     }
   }, [query, quranData, morphologyMap, wordMap, advancedOptions, page, limit]);
 
-  return { pageResults, counts, getPositiveTokens };
+  return { pageResults, counts };
 }

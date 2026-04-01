@@ -24,7 +24,9 @@ import {
 import { SearchOptions } from '@/types';
 
 const MORPH = morphologyDataRaw;
-const WORD_MAP = wordMapJSON;
+const WORD_MAP = new Map(
+  Object.entries(wordMapJSON),
+) as import('quran-search-engine').WordMap;
 
 export default function Search() {
   const { quranData, isLoading, error } = useQuranMetadata();
@@ -57,7 +59,7 @@ export default function Search() {
     setQuery(text);
   }, 300);
 
-  const { pageResults, counts, getPositiveTokens } = useQuranSearch({
+  const { pageResults, counts } = useQuranSearch({
     quranData,
     morphologyData: MORPH,
     wordMap: WORD_MAP,
@@ -193,10 +195,6 @@ export default function Search() {
           renderItem={({ item }) => (
             <SearchResultItem
               item={item}
-              query={query}
-              advancedOptions={advancedOptions}
-              wordMap={WORD_MAP}
-              getPositiveTokens={getPositiveTokens}
               onSelectAya={(selected: { aya: number; surah: number }) =>
                 setSelectedAya(selected)
               }
