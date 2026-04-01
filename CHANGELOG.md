@@ -7,9 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.1.0-athar] - 2026-03-20
+
 ### Changed
 
 - Upgrade quran search engine package to the athar version
+
+### Fixed
+
+- Android safe area inset
+- Reading chart eastern numbers
 
 ## [5.0.0-athar] - 18-03-2026
 
