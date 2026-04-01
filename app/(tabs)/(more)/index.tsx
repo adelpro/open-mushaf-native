@@ -13,6 +13,7 @@ import {
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import BookmarkSVG from '@/assets/svgs/bookmark.svg';
 import HelpSVG from '@/assets/svgs/help.svg';
@@ -31,6 +32,7 @@ export default function MoreScreen() {
   const [errorMessage, setErrorMessage] = useState('');
   const { cardColor, iconColor, textColor } = useColors(); // Added textColor for modal message
   const { isLandscape } = useOrientation();
+  const insets = useSafeAreaInsets();
 
   const handleShare = async () => {
     let shareUrl = 'https://www.quran.us.kg'; // Default/Web URL
@@ -59,7 +61,13 @@ export default function MoreScreen() {
   return (
     <ScrollView contentContainerStyle={styles.contentContainerStyle}>
       <ThemedView
-        style={[styles.container, { paddingVertical: isLandscape ? 30 : 0 }]}
+        style={[
+          styles.container,
+          {
+            paddingTop: isLandscape ? 30 : insets.top,
+            paddingBottom: isLandscape ? 30 : 0,
+          },
+        ]}
       >
         {!isWeb && (
           <ThemedButton
