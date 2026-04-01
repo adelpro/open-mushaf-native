@@ -41,6 +41,8 @@ export default function Search() {
     lemma: false,
     root: false,
     fuzzy: false,
+    semantic: false,
+    isRegex: false,
   });
   const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
   const [page, setPage] = useState(1);
@@ -127,6 +129,10 @@ export default function Search() {
   if (advancedOptions.lemma) selectedLabels.push(`صيغة: ${counts.lemma}`);
   if (advancedOptions.root) selectedLabels.push(`جذر: ${counts.root}`);
   if (advancedOptions.fuzzy) selectedLabels.push(`تقريبي: ${counts.fuzzy}`);
+  if (advancedOptions.semantic)
+    selectedLabels.push(`دلالي: ${(counts as any).semantic || 0}`);
+  if (advancedOptions.isRegex) selectedLabels.push(`النمط (Regex)`);
+
   const counterText =
     query.trim() === ''
       ? ''
@@ -149,14 +155,13 @@ export default function Search() {
       <SearchInput
         value={inputText}
         onChangeText={(text: string) => {
-          const arabicOnly = text.replace(/[^\u0621-\u064A\s]/g, '');
-          setInputText(arabicOnly);
-          if (arabicOnly.trim()) {
+          setInputText(text);
+          if (text.trim()) {
             setIsTyping(true);
           } else {
             setIsTyping(false);
           }
-          handleSearch(arabicOnly);
+          handleSearch(text);
         }}
         isTyping={isTyping}
         isSearching={isBusy}
@@ -175,6 +180,32 @@ export default function Search() {
 
       {query ? (
         <ThemedText style={styles.resultCount}>{counterText}</ThemedText>
+      ) : null}
+
+      {(counts as any)?.range &&
+      (counts as any).range > 0 &&
+      results.length > 0 ? (
+        <ThemedView
+          style={{
+            backgroundColor: '#e8f5e9',
+            padding: 12,
+            borderRadius: 8,
+            marginBottom: 10,
+            borderColor: '#4caf50',
+            borderWidth: 1,
+          }}
+        >
+          <ThemedText
+            style={{
+              textAlign: 'center',
+              color: '#2e7d32',
+              fontWeight: 'bold',
+            }}
+          >
+            بحث بالنطاق: تم العثور على {(counts as any).range} آية.
+            {'\n'}يمكنك الضغط على أي من النتائج أسفله للانتقال مباشرة للآية.
+          </ThemedText>
+        </ThemedView>
       ) : null}
 
       <SearchColorLegend />
