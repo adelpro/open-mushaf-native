@@ -32,6 +32,22 @@ export function useReadingChartData(metric: ChartMetric = 'hizbs') {
   const todayPagesRead = Math.max(0, (savedPage as number) - yesterday.value);
 
   const data: DailyReadingRecord[] = useMemo(() => {
+    // ─── DEV_MOCK: remove before production ───────────────────────────────────
+    if (__DEV__) {
+      const seed = (n: number) =>
+        Math.abs(Math.sin(n * 9301 + 49297) * 233280) % 1;
+      const result: DailyReadingRecord[] = [];
+      for (let i = period - 1; i >= 0; i--) {
+        const dateStr = daysAgo(i);
+        const skip = seed(i) > 0.78; // ~22% of days have no reading
+        const hizbs = skip ? 0 : parseFloat((seed(i + 1) * 3 + 0.5).toFixed(1));
+        const pages = skip ? 0 : Math.round(seed(i + 2) * 12 + 1);
+        result.push({ date: dateStr, hizbsCompleted: hizbs, pagesRead: pages });
+      }
+      return result;
+    }
+    // ─── END DEV_MOCK ──────────────────────────────────────────────────────────
+
     const hizbMap = new Map<string, number>();
     const pagesMap = new Map<string, number>();
 
