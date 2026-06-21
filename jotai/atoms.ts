@@ -21,9 +21,9 @@ export const finishedTutorial = createAtomWithStorage<boolean | undefined>(
   'FinishedTutorial',
   undefined,
 );
-export const mushafRiwaya = createAtomWithStorage<Riwaya | undefined>(
+export const mushafRiwaya = createAtomWithStorage<Riwaya>(
   'MushafRiwaya',
-  undefined,
+  'hafs',
 );
 export const tafseerTab = createAtomWithStorage<TafseerTabs>(
   'TafseerTab',

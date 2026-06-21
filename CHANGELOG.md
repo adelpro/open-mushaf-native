@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed unselictable disabled option in hizb notification settings
+- Fixed riwaya default mismatch: settings selector showed 'hafs' but the app loaded 'warsh' metadata on a fresh install
+- Fixed SegmentedControl internal state not syncing with `initialSelectedIndex` prop changes from the underlying atom
 
 ## [5.1.0-athar] - 2026-03-20
 

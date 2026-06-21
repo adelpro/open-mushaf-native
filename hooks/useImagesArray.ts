@@ -29,10 +29,6 @@ export function useImagesArray() {
 
     const loadAsset = async () => {
       try {
-        if (mushafRiwayaValue === undefined) {
-          return;
-        }
-
         let imagesMap;
         switch (mushafRiwayaValue) {
           case 'hafs':
@@ -41,8 +37,6 @@ export function useImagesArray() {
           case 'warsh':
             imagesMap = imagesMapWarsh;
             break;
-          default:
-            imagesMap = undefined;
         }
         if (!imagesMap) {
           return;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { ThemedText } from './ThemedText';
@@ -21,6 +21,12 @@ export function SegmentedControl({
   activeTextColor = '#fff',
 }: SegmentedControlProps) {
   const [selectedIndex, setSelectedIndex] = useState(initialSelectedIndex);
+
+  // Sync internal state when the prop changes (e.g. async storage hydration
+  // or external mutation of the underlying atom after mount).
+  useEffect(() => {
+    setSelectedIndex(initialSelectedIndex);
+  }, [initialSelectedIndex]);
 
   const handlePress = (index: number) => {
     setSelectedIndex(index);

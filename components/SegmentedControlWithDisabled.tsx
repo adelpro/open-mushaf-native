@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { SegmentedControlProps } from '@/types';
@@ -28,6 +28,14 @@ export function SegmentedControlWithDisabled({
   const [selectedIndex, setSelectedIndex] = useState(
     initialSelectedIndex !== undefined ? initialSelectedIndex : -1,
   );
+
+  // Sync internal state when the prop changes (e.g. async storage hydration
+  // or external mutation of the underlying atom after mount).
+  useEffect(() => {
+    setSelectedIndex(
+      initialSelectedIndex !== undefined ? initialSelectedIndex : -1,
+    );
+  }, [initialSelectedIndex]);
 
   const handlePress = (index: number) => {
     setSelectedIndex(index);
