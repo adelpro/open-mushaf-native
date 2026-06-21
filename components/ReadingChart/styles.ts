@@ -28,7 +28,9 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   metricBtn: {
-    paddingHorizontal: 10,
+    width: 70,
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 4,
   },
   metricBtnText: {
@@ -54,6 +56,27 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Tajawal_400Regular',
     marginTop: 2,
+  },
+  groupByContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  groupByToggle: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  groupByBtn: {
+    width: 70,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 4,
+  },
+  groupByBtnText: {
+    fontSize: 12,
+    fontFamily: 'Tajawal_500Medium',
   },
   segmentContainer: {
     width: '100%',
@@ -99,8 +122,10 @@ export const styles = StyleSheet.create({
     minWidth: 40,
     zIndex: 100,
   },
+  // Tooltip text uses the same on-primary token as the metric toggle label
+  // (white in dark themes, dark in light themes) so it never disappears
+  // against `primaryColor` in any future theme variant. Applied inline.
   tooltipText: {
-    color: '#fff',
     fontSize: 12,
     fontFamily: 'Tajawal_700Bold',
   },
@@ -113,6 +138,18 @@ export const styles = StyleSheet.create({
     borderLeftWidth: 6,
     borderRightWidth: 6,
     borderTopWidth: 6,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+  },
+  tooltipArrowUp: {
+    position: 'absolute',
+    top: -5,
+    alignSelf: 'center',
+    width: 0,
+    height: 0,
+    borderLeftWidth: 6,
+    borderRightWidth: 6,
+    borderBottomWidth: 6,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
   },

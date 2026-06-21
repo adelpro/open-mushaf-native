@@ -7,11 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased - 5.2]
 
+### Changed
+
+- Optimized reading chart UI: styled both metric selectors (Pages/Hizbs) and daily/weekly togglers with symmetric, equal-width outlined buttons
+- Simplified reading statistics layout by removing period-over-period comparison text
+- Cleaned up daily progress tracking math and improved Arabic pluralization logic for fractional hizb counts
+
 ### Fixed
 
 - Fixed unselictable disabled option in hizb notification settings
 - Fixed riwaya default mismatch: settings selector showed 'hafs' but the app loaded 'warsh' metadata on a fresh install
 - Fixed SegmentedControl internal state not syncing with `initialSelectedIndex` prop changes from the underlying atom
+- Fixed x-axis day names visibility on the 7-day chart by dynamically centering and expanding label containers to prevent Arabic weekday text truncation
 
 ## [5.1.0-athar] - 2026-03-20
 

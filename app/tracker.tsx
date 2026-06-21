@@ -1,12 +1,6 @@
 // Import useState, Modal, and Feather
 import React, { useState } from 'react';
-import {
-  Modal,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import { Modal, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
@@ -27,7 +21,8 @@ import {
 } from '@/jotai/atoms';
 
 export default function TrackerScreen() {
-  const { iconColor, cardColor, primaryColor } = useColors();
+  const { iconColor, cardColor, primaryColor, textColor, ivoryColor } =
+    useColors();
   const { currentSavedPage: savedPage } = useCurrentPage();
 
   const { updateAndroidWidget } = useUpdateAndroidWidget();
@@ -41,16 +36,18 @@ export default function TrackerScreen() {
   // Add state for modal visibility
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
+  // Both `dailyTrackerCompletedValue.value` and `dailyTrackerGoalValue` are
+  // expressed in hizbs (1-indexed: 1..60), so a straight ratio is correct.
+  // Hizbs are 1-indexed and there are 8 thumns per hizb — the stepper changes
+  // the goal by 1 full hizb at a time.
   const dailyProgress =
     dailyTrackerGoalValue > 0
       ? Math.min(
           100,
-          (dailyTrackerCompletedValue.value / 8 / (dailyTrackerGoalValue / 8)) *
-            100,
+          (dailyTrackerCompletedValue.value / dailyTrackerGoalValue) * 100,
         )
       : 0;
 
-  // Should change by full hizb (8 thumns)
   const incrementDailyGoal = () => setDailyTrackerGoalValue((prev) => prev + 1);
   const decrementDailyGoal = () =>
     setDailyTrackerGoalValue((prev) => Math.max(1, prev - 1));
@@ -75,14 +72,19 @@ export default function TrackerScreen() {
 
   // Removed the old resetAllProgress function that used Alert/confirm
 
+  // Pluralizes a hizb count for Arabic. Integers go through the full
+  // singular/dual/plural rules; fractional values (e.g. 0.5, 1.25 — produced
+  // by `thumnsCompleted / 8`) are rendered with a single decimal and the
+  // bare singular, e.g. "1.5 حزب" rather than the awkward "1.5 حزباً".
   const getHizbText = (count: number) => {
-    const hizbCount = count;
-
-    if (hizbCount === 0) return '0 أحزاب';
-    if (hizbCount === 1) return 'حزب واحد';
-    if (hizbCount === 2) return 'حزبين';
-    if (hizbCount >= 3 && hizbCount <= 10) return `${hizbCount} أحزاب`;
-    return `${hizbCount} حزباً`;
+    if (!Number.isInteger(count)) {
+      return `${count.toFixed(1)} حزب`;
+    }
+    if (count === 0) return '0 أحزاب';
+    if (count === 1) return 'حزب واحد';
+    if (count === 2) return 'حزبين';
+    if (count >= 3 && count <= 10) return `${count} أحزاب`;
+    return `${count} حزباً`;
   };
 
   return (
@@ -109,7 +111,12 @@ export default function TrackerScreen() {
               <ThemedText style={styles.label}>الورد اليومي:</ThemedText>
             </ThemedView>
 
-            <ThemedView style={styles.progressContainer}>
+            <ThemedView
+              style={[
+                styles.progressContainer,
+                { backgroundColor: ivoryColor },
+              ]}
+            >
               <ThemedView
                 style={[
                   styles.progressBar,
@@ -119,7 +126,11 @@ export default function TrackerScreen() {
               <ThemedText
                 style={[
                   styles.progressText,
-                  { color: dailyProgress > 50 ? 'white' : 'black' },
+                  // When the bar fills past the centered label, the label sits
+                  // on the (always dark) primary fill — white reads well in both
+                  // themes. Otherwise the label sits on the theme-aware track,
+                  // so we use the theme's text color for contrast.
+                  { color: dailyProgress > 50 ? '#fff' : textColor },
                 ]}
               >
                 {dailyProgress.toFixed(1)}%
@@ -127,11 +138,8 @@ export default function TrackerScreen() {
             </ThemedView>
 
             <ThemedText style={styles.infoText}>
-              قراءة{' '}
-              {Number.isInteger(dailyTrackerCompletedValue.value)
-                ? getHizbText(dailyTrackerCompletedValue.value)
-                : `${dailyTrackerCompletedValue.value.toFixed(1)} حزباً`}{' '}
-              من أصل {getHizbText(dailyTrackerGoalValue)}
+              قراءة {getHizbText(dailyTrackerCompletedValue.value)} من أصل{' '}
+              {getHizbText(dailyTrackerGoalValue)}
             </ThemedText>
 
             {yesterdayPageValue.value > 0 && (
@@ -147,7 +155,7 @@ export default function TrackerScreen() {
                 </ThemedText>
                 <ThemedView style={styles.controls}>
                   <TouchableOpacity
-                    style={styles.controlButton}
+                    style={[styles.controlButton, { borderColor: ivoryColor }]}
                     onPress={decrementDailyGoal}
                     accessibilityLabel="تقليل الهدف اليومي"
                     accessibilityHint="اضغط لتقليل عدد الأحزاب في الهدف اليومي"
@@ -159,7 +167,7 @@ export default function TrackerScreen() {
                     {getHizbText(dailyTrackerGoalValue)}
                   </ThemedText>
                   <TouchableOpacity
-                    style={styles.controlButton}
+                    style={[styles.controlButton, { borderColor: ivoryColor }]}
                     onPress={incrementDailyGoal}
                     accessibilityLabel="زيادة الهدف اليومي"
                     accessibilityHint="اضغط لزيادة عدد الأحزاب في الهدف اليومي"
@@ -203,27 +211,14 @@ export default function TrackerScreen() {
               <ThemedButton
                 variant="primary"
                 style={styles.resetButton}
-                // Update onPress to show the modal
                 onPress={() => setConfirmModalVisible(true)}
+                accessibilityLabel="إعادة التعيين"
               >
-                <ThemedView
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    backgroundColor: 'transparent',
-                    justifyContent: 'center',
-                    gap: 10,
-                  }}
-                >
+                <ThemedView style={styles.resetButtonContent}>
                   <Feather name="refresh-cw" size={16} />
-                  <Text
-                    style={{
-                      fontFamily: 'Tajawal_400Regular',
-                      fontSize: 18,
-                    }}
-                  >
+                  <ThemedText style={styles.resetButtonText}>
                     إعادة التعيين
-                  </Text>
+                  </ThemedText>
                 </ThemedView>
               </ThemedButton>
             </ThemedView>
@@ -249,7 +244,9 @@ export default function TrackerScreen() {
               style={[styles.modalContent, { backgroundColor: cardColor }]}
               onStartShouldSetResponder={() => true}
             >
-              <ThemedView style={styles.modalHeader}>
+              <ThemedView
+                style={[styles.modalHeader, { borderBottomColor: ivoryColor }]}
+              >
                 <ThemedText style={styles.modalTitle}>تأكيد</ThemedText>
                 <TouchableOpacity
                   style={styles.closeButton}
@@ -318,7 +315,6 @@ const styles = StyleSheet.create({
     height: 24,
     width: '100%',
     borderRadius: 12,
-    backgroundColor: '#E5E7EB',
     overflow: 'hidden',
     justifyContent: 'center',
     marginBottom: 8,
@@ -353,7 +349,6 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 10,
@@ -370,6 +365,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   resetButton: { paddingHorizontal: 16, paddingVertical: 8 }, // This padding controls the space around the icon and text
+  resetButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  resetButtonText: {
+    fontFamily: 'Tajawal_400Regular',
+    fontSize: 18,
+  },
 
   // Add Modal Styles (copied from settings.tsx and adjusted slightly)
   modalOverlay: {
@@ -395,7 +400,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee', // Consider using a theme color here
     minHeight: 40,
     backgroundColor: 'transparent', // Ensure header background is transparent if content has color
   },

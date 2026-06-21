@@ -321,6 +321,12 @@ export function MushafPage() {
   }, [notify, showGoalNotification, showTrackerNotificationValue]);
 
   useEffect(() => {
+    // Skip page jumps (search, jump-to-page, jump-to-surah). These change
+    // `currentPage` without the user actually reading, and we must not treat
+    // the resulting page delta as "hizbs completed today" — otherwise a
+    // single search from page 50 to page 200 would inflate today's progress
+    // by ~18 hizbs.
+    if (isTemporaryNavigation) return;
     if (typeof currentPage === 'number') {
       // Calculate thumns read between yesterday's page and current page
       const numberOfThumn = calculateThumnsBetweenPages(
@@ -336,6 +342,7 @@ export function MushafPage() {
       });
     }
   }, [
+    isTemporaryNavigation,
     currentPage,
     yesterdayPageValue,
     thumnData,

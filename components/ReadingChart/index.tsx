@@ -1,14 +1,22 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Pressable,
   ScrollView,
   TouchableOpacity,
+  useColorScheme,
   useWindowDimensions,
   View,
 } from 'react-native';
 
 import Svg, { Line, Rect, Text as SvgText } from 'react-native-svg';
 
+import { Colors } from '@/constants';
 import {
   BAR_GAP,
   BAR_RADIUS,
@@ -16,8 +24,9 @@ import {
   CHART_PADDING,
   CHART_PERIODS,
   GRID_RATIOS,
+  TOOLTIP_HEADROOM,
 } from '@/constants/readingChart';
-import { ChartMetric, useColors, useReadingChartData } from '@/hooks';
+import { ChartMetric, GroupBy, useColors, useReadingChartData } from '@/hooks';
 import { formatLabel, getPosStyle, shouldShowLabel } from '@/utils';
 
 import { SegmentedControl } from '../SegmentControl';
@@ -33,48 +42,78 @@ import { styles } from './styles';
  * @returns An interactive `<Svg>` map and scroll context wrapped safely.
  */
 export function ReadingChart() {
-  const { primaryColor, textColor, cardColor, tabIconDefaultColor } =
-    useColors();
+  const { primaryColor, textColor, cardColor } = useColors();
+  const colorScheme = useColorScheme();
+  // The selected-metric label sits on the brand-color fill, so we need the
+  // opposite-theme text color for contrast (avoids the white-on-white trap in
+  // light themes and dark-on-dark in dark themes).
+  const onPrimaryTextColor =
+    Colors[colorScheme === 'dark' ? 'light' : 'dark'].text;
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const [metric, setMetric] = useState<ChartMetric>('hizbs');
+  const [groupBy, setGroupBy] = useState<GroupBy>('day');
   const {
     data,
     maxValue,
     total,
-    dailyAvg,
+    avg,
     period,
     periodIndex,
     setPeriodIndex,
     getValue,
-  } = useReadingChartData(metric);
+  } = useReadingChartData(metric, groupBy);
 
   const isPages = metric === 'pages';
   const unitLabel = isPages ? 'صفحة' : 'حزب';
   const totalLabel = isPages ? 'إجمالي الصفحات' : 'إجمالي الأحزاب';
+  // "per day" / "per week" — matches the granularity the user is looking at.
+  const avgSuffix = groupBy === 'week' ? 'أسبوع' : 'يوم';
 
   const [selectedBar, setSelectedBar] = useState<number>(period - 1);
   const scrollRef = useRef<ScrollView>(null);
 
-  const chartHeight = Math.max(screenHeight * 0.25, 180);
-  const visibleWidth = Math.min(screenWidth - 64, 600);
-  const scrollableWidth = visibleWidth - CHART_PADDING.left;
+  // Layout math uses `data.length` (the number of bars we're actually
+  // rendering) so that the per-bar gap is consistent regardless of whether
+  // the bars are daily or weekly.
+  const { chartHeight, drawableHeight, barGap, barOffset, svgWidth } =
+    useMemo(() => {
+      const barCount = data.length;
+      const height = Math.max(screenHeight * 0.25, 180);
+      const width = Math.min(screenWidth - 64, 600);
+      const scrollable = width - CHART_PADDING.left;
+      const gap =
+        barCount <= 7
+          ? (scrollable - barCount * BAR_WIDTH) / (barCount + 1)
+          : BAR_GAP;
+      const offset = barCount <= 7 ? gap : 0;
+      const drawable = height - TOOLTIP_HEADROOM - CHART_PADDING.bottom;
+      const svg =
+        Math.max(
+          width,
+          CHART_PADDING.left +
+            barCount * (BAR_WIDTH + gap) +
+            CHART_PADDING.right,
+        ) - CHART_PADDING.left;
+      return {
+        chartHeight: height,
+        drawableHeight: drawable,
+        barGap: gap,
+        barOffset: offset,
+        svgWidth: svg,
+      };
+    }, [screenWidth, screenHeight, data.length]);
 
-  const maxRatio = Math.max(...GRID_RATIOS);
-  const extra = maxRatio - 1;
-  const paddingTop =
-    Math.ceil((extra * (chartHeight - CHART_PADDING.bottom)) / (1 + extra)) + 8;
-  const drawableHeight = chartHeight - paddingTop - CHART_PADDING.bottom;
+  const paddingTop = TOOLTIP_HEADROOM;
 
-  const barGap =
-    period <= 7
-      ? (scrollableWidth - period * BAR_WIDTH) / (period + 1)
-      : BAR_GAP;
-  const barOffset = period <= 7 ? barGap : 0;
-  const svgWidth =
-    Math.max(
-      visibleWidth,
-      CHART_PADDING.left + period * (BAR_WIDTH + barGap) + CHART_PADDING.right,
-    ) - CHART_PADDING.left;
+  // Auto-scroll to the most recent bar after the data settles (period change
+  // or first paint). Replaces the old onContentSizeChange handler that fired
+  // on every nested layout change.
+  useEffect(() => {
+    const handle = requestAnimationFrame(() => {
+      scrollRef.current?.scrollToEnd({ animated: false });
+    });
+    return () => cancelAnimationFrame(handle);
+  }, [period]);
 
   const selectedData = selectedBar !== null ? data[selectedBar] : null;
   const selectedValue = selectedData
@@ -82,6 +121,11 @@ export function ReadingChart() {
       ? getValue(selectedData).toString()
       : getValue(selectedData).toFixed(1)
     : '';
+
+  // Show the empty state when *all* bars in the current window are zero,
+  // not just when the sum is zero (a single 0.1 hizb day would otherwise
+  // hide the message).
+  const hasAnyReading = data.some((d) => getValue(d) > 0);
 
   const handlePeriodChange = useCallback(
     (index: number) => {
@@ -114,7 +158,9 @@ export function ReadingChart() {
               <ThemedText
                 style={[
                   styles.metricBtnText,
-                  { color: metric === m ? '#fff' : primaryColor },
+                  {
+                    color: metric === m ? onPrimaryTextColor : primaryColor,
+                  },
                 ]}
               >
                 {m === 'hizbs' ? 'أحزاب' : 'صفحات'}
@@ -137,8 +183,8 @@ export function ReadingChart() {
           <ThemedText
             style={[styles.avgLabel, { color: textColor, opacity: 0.4 }]}
           >
-            المعدل: {isPages ? dailyAvg.toFixed(0) : dailyAvg.toFixed(1)}{' '}
-            {unitLabel}/يوم
+            المعدل: {isPages ? avg.toFixed(0) : avg.toFixed(1)} {unitLabel}/
+            {avgSuffix}
           </ThemedText>
         )}
       </ThemedView>
@@ -152,6 +198,37 @@ export function ReadingChart() {
           onSelectionChange={handlePeriodChange}
         />
       </ThemedView>
+
+      {period > 7 && (
+        <ThemedView style={[styles.groupByContainer, bg]}>
+          <View style={[styles.groupByToggle, { borderColor: primaryColor }]}>
+            {(['day', 'week'] as GroupBy[]).map((g) => (
+              <TouchableOpacity
+                key={g}
+                onPress={() => setGroupBy(g)}
+                style={[
+                  styles.groupByBtn,
+                  groupBy === g && { backgroundColor: primaryColor },
+                ]}
+                accessibilityRole="button"
+                accessibilityLabel={g === 'day' ? 'عرض يومي' : 'عرض أسبوعي'}
+                accessibilityState={{ selected: groupBy === g }}
+              >
+                <ThemedText
+                  style={[
+                    styles.groupByBtnText,
+                    {
+                      color: groupBy === g ? onPrimaryTextColor : primaryColor,
+                    },
+                  ]}
+                >
+                  {g === 'day' ? 'يومي' : 'أسبوعي'}
+                </ThemedText>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ThemedView>
+      )}
 
       <ThemedView style={[styles.chartWrapper, bg]}>
         <Svg
@@ -180,9 +257,6 @@ export function ReadingChart() {
           showsHorizontalScrollIndicator={false}
           style={styles.chartScroll}
           contentContainerStyle={{ paddingRight: 8 }}
-          onContentSizeChange={() =>
-            scrollRef.current?.scrollToEnd({ animated: false })
-          }
         >
           <ThemedView
             style={{ width: svgWidth, backgroundColor: 'transparent' }}
@@ -217,9 +291,7 @@ export function ReadingChart() {
                     width={BAR_WIDTH}
                     height={Math.max(barH, 0)}
                     rx={BAR_RADIUS}
-                    fill={
-                      selectedBar === i ? primaryColor : tabIconDefaultColor
-                    }
+                    fill={primaryColor}
                     opacity={selectedBar === i ? 1 : 0.25}
                   />
                 );
@@ -229,12 +301,21 @@ export function ReadingChart() {
             <View style={[styles.touchLayer, { height: chartHeight }]}>
               {data.map((d, i) => {
                 const val = getValue(d);
+                // Skip empty days so a tap on a zero-value bar never sets a
+                // "selection" that produces no visible feedback.
+                if (val <= 0) return null;
                 const x = barOffset + i * (BAR_WIDTH + barGap);
                 const barH = (val / maxValue) * drawableHeight;
                 const barTop = paddingTop + drawableHeight - barH;
+                // Flip the tooltip below the bar when there isn't enough room
+                // above the bar to fit it under the y-axis labels.
+                const flipBelow = barTop < TOOLTIP_HEADROOM;
+                const tooltipTop = flipBelow ? barTop + 8 : barTop - 42;
                 return (
                   <Pressable
                     key={i}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${getValue(d)} ${unitLabel} في ${formatLabel(d.date, period)}`}
                     style={{
                       position: 'absolute',
                       ...getPosStyle(x - BAR_GAP / 2),
@@ -244,23 +325,32 @@ export function ReadingChart() {
                     }}
                     onPress={() => handleBarPress(i)}
                   >
-                    {selectedBar === i && val > 0 && (
+                    {selectedBar === i && (
                       <View
                         style={[
                           styles.tooltip,
                           {
-                            top: Math.max(barTop - 42, 0),
+                            top: tooltipTop,
                             backgroundColor: primaryColor,
                           },
                         ]}
                       >
-                        <ThemedText style={styles.tooltipText}>
+                        <ThemedText
+                          style={[
+                            styles.tooltipText,
+                            { color: onPrimaryTextColor },
+                          ]}
+                        >
                           {selectedValue}
                         </ThemedText>
                         <View
                           style={[
-                            styles.tooltipArrow,
-                            { borderTopColor: primaryColor },
+                            flipBelow
+                              ? styles.tooltipArrowUp
+                              : styles.tooltipArrow,
+                            flipBelow
+                              ? { borderBottomColor: primaryColor }
+                              : { borderTopColor: primaryColor },
                           ]}
                         />
                       </View>
@@ -276,6 +366,8 @@ export function ReadingChart() {
               {data.map((d, i) => {
                 if (!shouldShowLabel(d.date, i, period)) return null;
                 const x = barOffset + i * (BAR_WIDTH + barGap);
+                const labelWidth = BAR_WIDTH + barGap;
+                const labelX = x - barGap / 2;
                 return (
                   <ThemedText
                     key={i}
@@ -283,8 +375,8 @@ export function ReadingChart() {
                     style={[
                       styles.xLabel,
                       {
-                        ...getPosStyle(x),
-                        width: BAR_WIDTH,
+                        ...getPosStyle(labelX),
+                        width: labelWidth,
                         color: textColor,
                         fontSize: period <= 7 ? 10 : 9,
                       },
@@ -299,7 +391,7 @@ export function ReadingChart() {
         </ScrollView>
       </ThemedView>
 
-      {total === 0 && (
+      {!hasAnyReading && (
         <ThemedText
           style={[styles.emptyText, { color: textColor, opacity: 0.4 }]}
         >

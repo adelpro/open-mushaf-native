@@ -8,4 +8,9 @@ export const CHART_PADDING = { left: 36, right: 12, top: 42, bottom: 8 };
 export const BAR_WIDTH = 28;
 export const BAR_GAP = 20;
 export const BAR_RADIUS = 6;
-export const GRID_RATIOS = [0, 0.25, 0.5, 0.75, 1, 1.25];
+export const GRID_RATIOS = [0, 0.25, 0.5, 0.75, 1];
+
+// Reserved vertical space at the top of the chart for the tooltip.
+// Must be large enough that the tooltip can sit above the tallest bar
+// without overlapping the y-axis labels.
+export const TOOLTIP_HEADROOM = 48;
