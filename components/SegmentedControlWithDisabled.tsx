@@ -22,6 +22,7 @@ export function SegmentedControlWithDisabled({
   activeTextColor = '#fff',
   disabledTextColor = '#999',
   activeDisabledColor = '#E0E0E0',
+  disabledIndices = [],
 }: SegmentedControlProps) {
   // Default to -1;
   const [selectedIndex, setSelectedIndex] = useState(
@@ -36,7 +37,7 @@ export function SegmentedControlWithDisabled({
   return (
     <ThemedView style={styles.container}>
       {options.map((option, index) => {
-        const isDisabled = index === 0;
+        const isDisabled = disabledIndices.includes(index);
         return (
           <TouchableOpacity
             key={index}

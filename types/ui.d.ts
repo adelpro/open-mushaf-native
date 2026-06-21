@@ -19,4 +19,6 @@ export interface SegmentedControlProps {
   disabledTextColor?: string;
   /** Explicit background color for a disabled button that is active. */
   activeDisabledColor?: string;
+  /** Indices of options that should render as disabled and be non-interactive. */
+  disabledIndices?: number[];
 }
