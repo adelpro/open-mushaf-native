@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed iOS safe-area insets, RTL alignment, and back-button labels on physical devices
 - Fixed What's New modal layout and platform-specific changelog rendering on iOS
 
-## [Unreleased - 5.2]
+## [5.2]
 
 ### Added
 
