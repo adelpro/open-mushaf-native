@@ -215,7 +215,7 @@ export default function TrackerScreen() {
                 accessibilityLabel="إعادة التعيين"
               >
                 <ThemedView style={styles.resetButtonContent}>
-                  <Feather name="refresh-cw" size={16} />
+                  <Feather name="refresh-cw" size={16} color={textColor} />
                   <ThemedText style={styles.resetButtonText}>
                     إعادة التعيين
                   </ThemedText>
@@ -370,6 +370,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
+    backgroundColor: 'transparent',
   },
   resetButtonText: {
     fontFamily: 'Tajawal_400Regular',
