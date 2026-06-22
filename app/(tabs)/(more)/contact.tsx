@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 
 import { ContactForm, Seo, ThemedView } from '@/components';
 
@@ -9,7 +9,12 @@ export default function Contact() {
         title="المصحف المفتوح - تواصل بنا"
         description="تواصل معنا عبر نموذج الاتصال للاستفسارات والاقتراحات"
       />
-      <ContactForm />
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoid}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <ContactForm />
+      </KeyboardAvoidingView>
     </ThemedView>
   );
 }
@@ -23,5 +28,9 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 640,
     margin: 2,
+  },
+  keyboardAvoid: {
+    flex: 1,
+    width: '100%',
   },
 });

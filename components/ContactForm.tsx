@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text } from 'react-native';
 
 import { FontAwesome } from '@expo/vector-icons';
 
@@ -158,83 +158,96 @@ export function ContactForm() {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedText id="name" style={styles.label}>
-        الإسم
-      </ThemedText>
-      <ThemedTextInput
-        style={[styles.input]}
-        value={formData.name}
-        onChangeText={(text) => handleChange('name', text)}
-        placeholder="الإسم"
-        aria-labelledby="name"
-        accessibilityLabel="اسم المستخدم - يرجى إدخال اسمك"
-      />
-
-      <ThemedText id="email" style={styles.label}>
-        البريد الالكتروني
-      </ThemedText>
-      <ThemedTextInput
-        style={[styles.input]}
-        value={formData.email}
-        onChangeText={(text) => handleChange('email', text)}
-        placeholder="your.email@example.com"
-        placeholderTextColor={secondaryColor}
-        keyboardType="email-address"
-        aria-labelledby="email"
-        accessibilityLabel="البريد الإلكتروني - يرجى إدخال بريدك الإلكتروني"
-      />
-
-      <ThemedText id="message" style={styles.label}>
-        الرسالة
-      </ThemedText>
-      <ThemedTextInput
-        style={[styles.input, styles.messageInput, { color: textColor }]}
-        value={formData.message}
-        onChangeText={(text) => handleChange('message', text)}
-        placeholder="أكتب الرسالة هنا..."
-        placeholderTextColor={secondaryColor}
-        multiline
-        aria-labelledby="message"
-        accessibilityLabel="الرسالة - يرجى إدخال رسالتك"
-      />
-
-      <ThemedButton
-        style={[
-          isLoading && styles.disabledButton,
-          isLoading && { backgroundColor: secondaryColor },
-        ]}
-        variant="primary"
-        onPress={handleSubmit}
-        accessibilityLabel={isLoading ? 'Sending message' : 'Submit the form'}
-        accessibilityRole="button"
-        accessibilityState={{ disabled: isLoading }}
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
-        {isLoading ? (
-          <Text>
-            جاري الإرسال&nbsp;&nbsp;
-            <ActivityIndicator size="small" color="#fff" />
-          </Text>
-        ) : (
-          <Text>
-            إرسال&nbsp;&nbsp;
-            <FontAwesome name="send-o" size={24} />
-          </Text>
-        )}
-      </ThemedButton>
+        <ThemedText id="name" style={styles.label}>
+          الإسم
+        </ThemedText>
+        <ThemedTextInput
+          style={[styles.input]}
+          value={formData.name}
+          onChangeText={(text) => handleChange('name', text)}
+          placeholder="الإسم"
+          aria-labelledby="name"
+          accessibilityLabel="اسم المستخدم - يرجى إدخال اسمك"
+        />
+
+        <ThemedText id="email" style={styles.label}>
+          البريد الالكتروني
+        </ThemedText>
+        <ThemedTextInput
+          style={[styles.input]}
+          value={formData.email}
+          onChangeText={(text) => handleChange('email', text)}
+          placeholder="your.email@example.com"
+          placeholderTextColor={secondaryColor}
+          keyboardType="email-address"
+          aria-labelledby="email"
+          accessibilityLabel="البريد الإلكتروني - يرجى إدخال بريدك الإلكتروني"
+        />
+
+        <ThemedText id="message" style={styles.label}>
+          الرسالة
+        </ThemedText>
+        <ThemedTextInput
+          style={[styles.input, styles.messageInput, { color: textColor }]}
+          value={formData.message}
+          onChangeText={(text) => handleChange('message', text)}
+          placeholder="أكتب الرسالة هنا..."
+          placeholderTextColor={secondaryColor}
+          multiline
+          aria-labelledby="message"
+          accessibilityLabel="الرسالة - يرجى إدخال رسالتك"
+        />
+
+        <ThemedButton
+          style={[
+            isLoading && styles.disabledButton,
+            isLoading && { backgroundColor: secondaryColor },
+          ]}
+          variant="primary"
+          onPress={handleSubmit}
+          accessibilityLabel={isLoading ? 'Sending message' : 'Submit the form'}
+          accessibilityRole="button"
+          accessibilityState={{ disabled: isLoading }}
+        >
+          {isLoading ? (
+            <Text>
+              جاري الإرسال&nbsp;&nbsp;
+              <ActivityIndicator size="small" color="#fff" />
+            </Text>
+          ) : (
+            <Text>
+              إرسال&nbsp;&nbsp;
+              <FontAwesome name="send-o" size={24} />
+            </Text>
+          )}
+        </ThemedButton>
+      </ScrollView>
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+    flex: 1,
     width: '100%',
     maxWidth: 640,
     alignSelf: 'center',
     margin: 5,
+  },
+  scroll: {
+    flex: 1,
+    width: '100%',
+  },
+  scrollContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
   },
   label: {
     fontSize: 16,

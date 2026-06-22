@@ -56,6 +56,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed SegmentedControl internal state not syncing with `initialSelectedIndex` prop changes from the underlying atom
 - Fixed x-axis day names visibility on the 7-day chart by dynamically centering and expanding label containers to prevent Arabic weekday text truncation
 - Fixed Feather icon color in the tracker reset button and set a transparent background on the tracker layout
+- Fixed iOS keyboard covering the Send button on the Contact page by wrapping the form in `KeyboardAvoidingView` and `ScrollView`
+- Fixed page-flip sound playing only once on iOS by calling `seekTo(0)` before `play()` (expo-audio does not auto-rewind after playback)
 
 ## [5.1.0-athar] - 2026-03-20
 

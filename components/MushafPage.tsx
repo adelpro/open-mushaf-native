@@ -202,6 +202,10 @@ export function MushafPage() {
       });
 
       if (isFlipSoundEnabled) {
+        // expo-audio keeps the playhead at the end after playback finishes,
+        // so subsequent play() calls are silent. Rewind before each play.
+        // See: https://docs.expo.dev/versions/latest/sdk/audio/#playing-sounds
+        player.seekTo(0);
         player.play();
       }
 
