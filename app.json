@@ -3,11 +3,9 @@
     "name": "Open Mushaf",
     "slug": "open-mushaf-native",
     "owner": "adelpro",
-    "version": "5.2.0",
+    "version": "6.0.0",
     "orientation": "default",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -17,10 +15,7 @@
       "bundleIdentifier": "com.adelpro.openmushafnative",
       "requireFullScreen": true,
       "infoPlist": {
-        "UIBackgroundModes": [
-          "audio",
-          "audio"
-        ],
+        "UIBackgroundModes": ["audio", "audio"],
         "ITSAppUsesNonExemptEncryption": false
       }
     },
@@ -38,10 +33,7 @@
             "host": "quran.us.kg",
             "pathPrefix": "/"
           },
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ],
+          "category": ["BROWSABLE", "DEFAULT"],
           "autoVerify": true
         }
       ],
@@ -103,9 +95,7 @@
       [
         "react-native-android-widget",
         {
-          "fonts": [
-            "./assets/fonts/open_mushaf_icons.ttf"
-          ],
+          "fonts": ["./assets/fonts/open_mushaf_icons.ttf"],
           "widgets": [
             {
               "name": "OpenMushaf",

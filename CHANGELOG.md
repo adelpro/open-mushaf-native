@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.0-athar] - 2026-06-22
+
+### Added
+
+- **First public iOS App Store release** — Open Mushaf is now available on the Apple App Store as a universal iPhone and iPad app
+- iOS build profiles (`preview` and `production`) in `eas.json` for internal TestFlight and store distribution
+- iOS production build & submit pipeline (`eas build -p ios --profile production` and `eas submit -p ios`)
+- iOS bundle identifier `com.adelpro.openmushafnative` and supporting Info.plist entries (`ITSAppUsesNonExemptEncryption`, audio background mode)
+- iPad support (`supportsTablet: true`) so the Mushaf layout adapts to larger screens
+- App Store Connect metadata: privacy policy URL, App Privacy questionnaire answers, support URL, and marketing URL
+- Localized store listing assets (screenshots, app icon, and promotional text) for the App Store review and storefront
+
+### Changed
+
+- Hardened iOS release configuration (`requireFullScreen`, audio background mode, encryption disclosure) to satisfy App Review guidelines
+- Tuned iOS build settings (deployment target, Hermes JS engine, new architecture flag) for App Store compliance
+- Refined iOS-specific gestures, safe-area insets, and edge-to-edge layout for the production build
+- Aligned `app.json` `version` with the public release number on the App Store
+
+### Fixed
+
+- Resolved iOS-only build warnings and runtime issues surfaced during TestFlight validation
+- Fixed iOS safe-area insets, RTL alignment, and back-button labels on physical devices
+- Fixed What's New modal layout and platform-specific changelog rendering on iOS
+
 ## [Unreleased - 5.2]
 
 ### Added
