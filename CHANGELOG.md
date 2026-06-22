@@ -7,11 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased - 5.2]
 
+### Added
+
+- Interactive reading progress chart with daily and weekly metrics tracking (Pages / Hizbs) and selectable tracking periods (7, 30, 90 days)
+- Monthly grouping for the 90-day chart so longer tracking periods stay readable
+- Locale-aware digit and month-name formatting in the reading chart (Arabic-Indic / Persian / Western digits based on the device locale)
+- Dev-only mock data fallback so the reading chart renders in Expo Go (where MMKV cannot load) without overriding real history
+- Tracking records distinction: differentiate "no record yet" days from "read 0" days in chart calculations and visuals
+- `trackingStartedAt` caption so users who haven't filled the full window know the chart isn't missing data
+
 ### Changed
 
 - Optimized reading chart UI: styled both metric selectors (Pages/Hizbs) and daily/weekly togglers with symmetric, equal-width outlined buttons
 - Simplified reading statistics layout by removing period-over-period comparison text
 - Cleaned up daily progress tracking math and improved Arabic pluralization logic for fractional hizb counts
+- Reading chart now uses an "effective" daily average that only divides by days with a record, so recent starters aren't diluted by untracked days
+- Chart x-axis labels now render as day ranges ("D-D") with a secondary month label on month boundaries and a partial-bucket caption for incomplete trailing weeks/months
 
 ### Fixed
 
@@ -19,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed riwaya default mismatch: settings selector showed 'hafs' but the app loaded 'warsh' metadata on a fresh install
 - Fixed SegmentedControl internal state not syncing with `initialSelectedIndex` prop changes from the underlying atom
 - Fixed x-axis day names visibility on the 7-day chart by dynamically centering and expanding label containers to prevent Arabic weekday text truncation
+- Fixed Feather icon color in the tracker reset button and set a transparent background on the tracker layout
 
 ## [5.1.0-athar] - 2026-03-20
 
