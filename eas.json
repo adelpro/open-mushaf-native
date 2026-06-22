@@ -3,11 +3,30 @@
     "appVersionSource": "remote"
   },
   "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "channel": "development",
+      "android": {
+        "buildType": "apk",
+        "resourceClass": "medium",
+        "image": "latest"
+      },
+      "ios": {
+        "resourceClass": "m-medium",
+        "image": "latest"
+      }
+    },
     "preview": {
       "android": {
         "buildType": "apk",
         "distribution": "internal",
         "resourceClass": "medium",
+        "image": "latest"
+      },
+      "ios": {
+        "resourceClass": "m-medium",
+        "distribution": "internal",
         "image": "latest"
       },
       "channel": "preview"
@@ -16,6 +35,10 @@
       "android": {
         "buildType": "app-bundle",
         "resourceClass": "medium",
+        "image": "latest"
+      },
+      "ios": {
+        "resourceClass": "m-medium",
         "image": "latest"
       },
       "channel": "production",

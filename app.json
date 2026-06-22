@@ -5,7 +5,9 @@
     "owner": "adelpro",
     "version": "5.2.0",
     "orientation": "default",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -13,7 +15,14 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.adelpro.openmushafnative",
-      "requireFullScreen": true
+      "requireFullScreen": true,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio",
+          "audio"
+        ],
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -29,14 +38,21 @@
             "host": "quran.us.kg",
             "pathPrefix": "/"
           },
-          "category": ["BROWSABLE", "DEFAULT"],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ],
           "autoVerify": true
         }
       ],
       "softwareKeyboardLayoutMode": "resize",
       "jsEngine": "hermes",
       "package": "com.adelpro.openmushafnative",
-      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative"
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -56,7 +72,8 @@
         {
           "android": {
             "enableProguardInReleaseBuilds": true,
-            "enableShrinkResourcesInReleaseBuilds": true
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "enableMinifyInReleaseBuilds": true
           }
         }
       ],
@@ -75,13 +92,20 @@
       "expo-web-browser",
       "expo-router",
       "expo-font",
-      "expo-audio",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false
+        }
+      ],
       "expo-secure-store",
       "react-native-edge-to-edge",
       [
         "react-native-android-widget",
         {
-          "fonts": ["./assets/fonts/open_mushaf_icons.ttf"],
+          "fonts": [
+            "./assets/fonts/open_mushaf_icons.ttf"
+          ],
           "widgets": [
             {
               "name": "OpenMushaf",
