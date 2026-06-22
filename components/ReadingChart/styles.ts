@@ -98,12 +98,44 @@ export const styles = StyleSheet.create({
   xAxisRow: {
     flexDirection: 'row',
     position: 'relative',
-    height: 20,
+    // Tall enough for a 1- or 2-line label (week boundary spans two lines).
+    // 36 leaves headroom for the secondary text's intrinsic line-height +
+    // bottom padding so the captions (e.g. `أبريل`, `2 أيام`) are not
+    // clipped at the bottom of the row.
+    height: 36,
+  },
+  xLabelGroup: {
+    position: 'absolute',
+    alignItems: 'center',
+    // Fixed height so primary/secondary lines stack at the same vertical
+    // position across bars that have/don't have a secondary caption. Without
+    // this the group sizes to its content and bars without a secondary
+    // (`24-30`, `7-13`, `14-20`) end up shorter than ones with one
+    // (`31-6` / `أبريل`, `21-22` / `2 أيام`).
+    height: 36,
   },
   xLabel: {
     position: 'absolute',
+    top: 2,
+    left: 0,
+    right: 0,
     textAlign: 'center',
     opacity: 0.5,
+    fontFamily: 'Tajawal_400Regular',
+  },
+  // Optional second line, used to mark the end month on weekly bars that
+  // cross a month boundary (e.g. "28-4" / "يوليو"), or `N أيام` for a
+  // partial bucket. Anchored at `top: 18` so it sits on a consistent
+  // baseline beneath the primary line — tall enough that the Arabic glyphs
+  // (with their intrinsic descent) don't get clipped by the 36 px row.
+  xLabelSecondary: {
+    position: 'absolute',
+    top: 18,
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    opacity: 0.5,
+    fontSize: 8,
     fontFamily: 'Tajawal_400Regular',
   },
   touchLayer: {

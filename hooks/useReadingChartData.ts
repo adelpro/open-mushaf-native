@@ -14,20 +14,31 @@ import {
 import { daysAgo } from '@/utils';
 
 export type ChartMetric = 'hizbs' | 'pages';
-export type GroupBy = 'day' | 'week';
+export type GroupBy = 'day' | 'week' | 'month';
 
-// Sum a slice of daily records into a single 7-day bucket. The bucket
-// inherits its date from the last day in the slice (the most recent day
-// in the bucket is the most informative label anchor).
+// Sum a slice of daily records into a single weekly bucket. The bucket
+// inherits its `date` from the last day in the slice (the most recent day
+// in the bucket is the most informative label anchor) and computes
+// `weekStart` by walking back `chunk.length - 1` days from that anchor —
+// using the actual chunk length keeps the range accurate for the partial
+// trailing bucket that appears when the period isn't a multiple of 7
+// (e.g. 30 days → 4 full weeks + 2 days).
 const aggregateWeek = (
   daily: readonly DailyReadingRecord[],
-): DailyReadingRecord => ({
-  date: daily[daily.length - 1].date,
-  hizbsCompleted: parseFloat(
-    daily.reduce((s, d) => s + d.hizbsCompleted, 0).toFixed(1),
-  ),
-  pagesRead: daily.reduce((s, d) => s + d.pagesRead, 0),
-});
+): DailyReadingRecord => {
+  const end = new Date(daily[daily.length - 1].date);
+  const start = new Date(end);
+  start.setDate(end.getDate() - (daily.length - 1));
+  return {
+    date: end.toDateString(),
+    weekStart: start.toDateString(),
+    daysInBucket: daily.length,
+    hizbsCompleted: parseFloat(
+      daily.reduce((s, d) => s + d.hizbsCompleted, 0).toFixed(1),
+    ),
+    pagesRead: daily.reduce((s, d) => s + d.pagesRead, 0),
+  };
+};
 
 const aggregateByWeek = (
   daily: readonly DailyReadingRecord[],
@@ -38,6 +49,41 @@ const aggregateByWeek = (
     if (chunk.length > 0) weeks.push(aggregateWeek(chunk));
   }
   return weeks;
+};
+
+// Sum a slice of daily records into a single 30-day bucket. Same shape as
+// `aggregateWeek` — the bucket inherits its `date` from the last day in the
+// slice and walks back `chunk.length - 1` days to compute the start. Today
+// only the 90-day period exposes `groupBy='month'`, so `chunk.length` is
+// always 30, but the helper accepts partial trailing buckets for robustness
+// (matches the `aggregateWeek` contract so the same `daysInBucket` field
+// drives the partial-bucket visual treatment).
+const aggregateMonth = (
+  daily: readonly DailyReadingRecord[],
+): DailyReadingRecord => {
+  const end = new Date(daily[daily.length - 1].date);
+  const start = new Date(end);
+  start.setDate(end.getDate() - (daily.length - 1));
+  return {
+    date: end.toDateString(),
+    weekStart: start.toDateString(), // bucket start; re-using the field
+    daysInBucket: daily.length,
+    hizbsCompleted: parseFloat(
+      daily.reduce((s, d) => s + d.hizbsCompleted, 0).toFixed(1),
+    ),
+    pagesRead: daily.reduce((s, d) => s + d.pagesRead, 0),
+  };
+};
+
+const aggregateByMonth = (
+  daily: readonly DailyReadingRecord[],
+): DailyReadingRecord[] => {
+  const months: DailyReadingRecord[] = [];
+  for (let i = 0; i < daily.length; i += 30) {
+    const chunk = daily.slice(i, i + 30);
+    if (chunk.length > 0) months.push(aggregateMonth(chunk));
+  }
+  return months;
 };
 
 // `Constants.executionEnvironment` is `'storeClient'` only when running inside
@@ -118,9 +164,14 @@ export function useReadingChartData(
     return result;
   }, [history, todayTracker, todayPagesRead, period]);
 
-  // When grouping by week, the series collapses to weekly totals.
+  // When grouping by week/month, the series collapses to chunked totals.
   const chartData = useMemo(
-    () => (groupBy === 'week' ? aggregateByWeek(data) : data),
+    () =>
+      groupBy === 'week'
+        ? aggregateByWeek(data)
+        : groupBy === 'month'
+          ? aggregateByMonth(data)
+          : data,
     [groupBy, data],
   );
 

@@ -3,34 +3,123 @@ import { isWeb } from './isWeb';
 
 const AR_WEEKDAYS = ['أحد', 'إثنين', 'ثلاث', 'أربع', 'خميس', 'جمعة', 'سبت'];
 
+// Build 12 month names from the device's locale. Intl.DateTimeFormat is
+// supported in Hermes (RN 0.70+) and picks up the device locale by default.
+// Falls back to Modern Standard Arabic if Intl is unavailable (e.g. JSC on
+// a very old device). Computing once at module load keeps the per-render
+// hot path in `formatLabel` as cheap as a plain array lookup.
+const MONTH_NAMES: readonly string[] = (() => {
+  try {
+    const fmt = new Intl.DateTimeFormat(undefined, { month: 'long' });
+    // Anchor dates are arbitrary; only the month field matters, so any day
+    // in each month produces the localized name.
+    return Array.from({ length: 12 }, (_, i) =>
+      fmt.format(new Date(2026, i, 15)),
+    );
+  } catch {
+    return [
+      'يناير',
+      'فبراير',
+      'مارس',
+      'أبريل',
+      'مايو',
+      'يونيو',
+      'يوليو',
+      'أغسطس',
+      'سبتمبر',
+      'أكتوبر',
+      'نوفمبر',
+      'ديسمبر',
+    ];
+  }
+})();
+
+export type GroupBy = 'day' | 'week' | 'month';
+export type ChartLabel = { primary: string; secondary?: string };
+
 /**
- * Formats a date string for display on the reading chart's x-axis.
+ * Formats a date for display on the reading chart's x-axis.
  *
- * @param dateStr - The date string to format.
+ * For weekly-aggregated bars the primary label is the day range "D-D".
+ * The optional `secondary` line is shared between two signals (only one
+ * fires at a time):
+ *   - month boundary  → end-month name (`يونيو`, `يوليو`, …)
+ *   - partial bucket  → `N أيام` caption when `daysInBucket < 7`
+ * Month-boundary wins because a partial trailing week is always within
+ * the same calendar month as the previous full week.
+ *
+ * @param d - The chart record. `weekStart` is required only for weekly buckets.
  * @param period - The total tracking period in days.
- * @returns A formatted label string (e.g., weekday, day, or date formatting).
+ * @param groupBy - Granularity used to render the bars.
+ * @returns A `ChartLabel` with `primary` text and optional `secondary` line.
  */
-export function formatLabel(dateStr: string, period: number): string {
-  const d = new Date(dateStr);
-  if (period <= 7) return AR_WEEKDAYS[d.getDay()];
-  if (period <= 30) return d.getDate().toString();
-  return `${d.getMonth() + 1}/${d.getDate()}`;
+export function formatLabel(
+  d: { date: string; weekStart?: string; daysInBucket?: number },
+  period: number,
+  groupBy: GroupBy = 'day',
+): ChartLabel {
+  const end = new Date(d.date);
+
+  if (period <= 7) return { primary: AR_WEEKDAYS[end.getDay()] };
+
+  if (groupBy === 'month') {
+    const start = d.weekStart ? new Date(d.weekStart) : end;
+    const primary = `${start.getDate()}-${end.getDate()}`;
+    // Secondary line prefers year (Dec → Jan bucket) over month so the
+    // year is always visible when the bucket crosses a year boundary.
+    let secondary: string | undefined;
+    if (start.getFullYear() !== end.getFullYear()) {
+      secondary = `${end.getFullYear()}`;
+    } else if (start.getMonth() !== end.getMonth()) {
+      secondary = MONTH_NAMES[end.getMonth()];
+    } else if (d.daysInBucket !== undefined && d.daysInBucket < 30) {
+      // Defensive: today the 90-day period is a multiple of 30 so partial
+      // monthly buckets never render, but the path is here for parity
+      // with the weekly partial-bucket treatment.
+      secondary = `${d.daysInBucket} أيام`;
+    }
+    return { primary, secondary };
+  }
+
+  if (groupBy === 'week') {
+    const start = d.weekStart ? new Date(d.weekStart) : end;
+    const primary = `${start.getDate()}-${end.getDate()}`;
+    let secondary: string | undefined;
+    if (start.getMonth() !== end.getMonth()) {
+      secondary = MONTH_NAMES[end.getMonth()];
+    } else if (d.daysInBucket !== undefined && d.daysInBucket < 7) {
+      secondary = `${d.daysInBucket} أيام`;
+    }
+    return { primary, secondary };
+  }
+
+  if (period <= 30) return { primary: end.getDate().toString() };
+  return { primary: `${end.getMonth() + 1}/${end.getDate()}` };
 }
 
 /**
  * Determines whether a label should be displayed for a specific data point on the chart.
  * Minimizes chart clutter on larger periods by skipping middle labels.
  *
+ * For weekly-aggregated bars there are at most ~13 labels (for a 90-day
+ * window) — short enough that hiding them produces a chart where most
+ * bars look unlabeled. Show all weekly labels so the user can read every
+ * bucket; for 90-day daily the original day-1/day-15 anchor rule still
+ * keeps the axis legible.
+ *
  * @param dateStr - The date string associated with the current index.
  * @param index - The loop index of the current item.
  * @param period - The total tracking period duration in days.
+ * @param groupBy - When `'week'`, every label is shown (independent of `period`).
  * @returns True if the label should be visually rendered, false otherwise.
  */
 export function shouldShowLabel(
   dateStr: string,
   index: number,
   period: number,
+  groupBy: GroupBy = 'day',
 ): boolean {
+  if (groupBy === 'week' || groupBy === 'month') return true;
   if (period <= 7) return true;
   if (period <= 30)
     return index % 5 === 0 || index === 0 || index === period - 1;

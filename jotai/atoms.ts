@@ -72,6 +72,12 @@ export type DailyReadingRecord = {
   hizbsCompleted: number;
   pagesRead: number;
   date: string;
+  // Only populated for weekly-aggregated records so the chart can render
+  // "D-D" range labels. Absent on raw daily entries in `readingHistory`.
+  weekStart?: string;
+  // 1..7; <7 means the bucket is a partial week (only happens for the
+  // trailing bucket when the period isn't a multiple of 7).
+  daysInBucket?: number;
 };
 
 export const readingHistory = createAtomWithStorage<DailyReadingRecord[]>(
