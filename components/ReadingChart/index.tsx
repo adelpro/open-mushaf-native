@@ -58,6 +58,9 @@ export function ReadingChart() {
     maxValue,
     total,
     avg,
+    effectiveAvg,
+    recordsWithData,
+    trackingStartedAt,
     period,
     periodIndex,
     setPeriodIndex,
@@ -154,6 +157,12 @@ export function ReadingChart() {
   // not just when the sum is zero (a single 0.1 hizb day would otherwise
   // hide the message).
   const hasAnyReading = data.some((d) => getValue(d) > 0);
+  // `recordsWithData` counts the underlying daily slots that have a real
+  // record, regardless of the bar value. Lets us distinguish "user has
+  // been tracking for 22 days inside a 90-day window" from "user read 0
+  // on every tracked day", and drives the tracking-start caption.
+  const isPartialWindow =
+    groupBy === 'day' && recordsWithData > 0 && recordsWithData < period;
 
   const handlePeriodChange = useCallback(
     (index: number) => {
@@ -221,8 +230,16 @@ export function ReadingChart() {
           <ThemedText
             style={[styles.avgLabel, { color: textColor, opacity: 0.4 }]}
           >
-            المعدل: {isPages ? avg.toFixed(0) : avg.toFixed(1)} {unitLabel}/
-            {avgSuffix}
+            المعدل:{' '}
+            {isPages ? effectiveAvg.toFixed(0) : effectiveAvg.toFixed(1)}{' '}
+            {unitLabel}/{avgSuffix}
+          </ThemedText>
+        )}
+        {isPartialWindow && (
+          <ThemedText
+            style={[styles.avgLabel, { color: textColor, opacity: 0.4 }]}
+          >
+            بدأ التتبع قبل {recordsWithData} يوماً
           </ThemedText>
         )}
       </ThemedView>
@@ -330,7 +347,6 @@ export function ReadingChart() {
               })}
               {data.map((d, i) => {
                 const val = getValue(d);
-                if (val <= 0) return null;
                 const x = barOffset + i * (BAR_WIDTH + barGap);
                 const barH = (val / maxValue) * drawableHeight;
                 // Partial trailing week (period % 7 !== 0): render at lower
@@ -338,8 +354,23 @@ export function ReadingChart() {
                 // full 7-day week. Always tappable; only the fill changes.
                 const isPartial =
                   d.daysInBucket !== undefined && d.daysInBucket < 7;
+                // "No record" daily slot (user wasn't tracking yet, e.g.
+                // 68 untracked days in a 90-day window when the user has
+                // only been using the app for 22 days). Render a faint
+                // dashed placeholder so the timeline reads as "missing
+                // data" rather than "the user read 0". Weekly/monthly
+                // buckets never hit this branch because their aggregation
+                // collapses unrecorded stretches into partial buckets.
+                const isUntracked = !d.hasRecord && groupBy === 'day';
+                if (val <= 0 && !isUntracked) return null;
                 const fillOpacity =
-                  selectedBar === i ? 1 : isPartial ? 0.4 : 0.85;
+                  selectedBar === i
+                    ? 1
+                    : isPartial
+                      ? 0.4
+                      : isUntracked
+                        ? 0.25
+                        : 0.85;
                 return (
                   <Rect
                     key={i}
@@ -350,9 +381,11 @@ export function ReadingChart() {
                     rx={BAR_RADIUS}
                     fill={primaryColor}
                     opacity={fillOpacity}
-                    stroke={isPartial ? primaryColor : 'none'}
-                    strokeWidth={isPartial ? 1 : 0}
-                    strokeDasharray={isPartial ? '4 3' : undefined}
+                    stroke={isPartial || isUntracked ? primaryColor : 'none'}
+                    strokeWidth={isPartial || isUntracked ? 1 : 0}
+                    strokeDasharray={
+                      isPartial ? '4 3' : isUntracked ? '3 3' : undefined
+                    }
                   />
                 );
               })}
@@ -362,8 +395,11 @@ export function ReadingChart() {
               {data.map((d, i) => {
                 const val = getValue(d);
                 // Skip empty days so a tap on a zero-value bar never sets a
-                // "selection" that produces no visible feedback.
-                if (val <= 0) return null;
+                // "selection" that produces no visible feedback. Untracked
+                // days are skipped too — there's no value to show in the
+                // tooltip, and tapping a placeholder would just confuse.
+                if (val <= 0 || (!d.hasRecord && groupBy === 'day'))
+                  return null;
                 const x = barOffset + i * (BAR_WIDTH + barGap);
                 const barH = (val / maxValue) * drawableHeight;
                 const barTop = paddingTop + drawableHeight - barH;

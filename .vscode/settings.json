@@ -22,5 +22,11 @@
   "typescript.experimental.useTsgo": true,
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "chat.tools.terminal.autoApprove": {
+    "/^npx tsc --noEmit -p tsconfig\\.json; \\$LASTEXITCODE$/": {
+      "approve": true,
+      "matchCommandLine": true
+    }
   }
 }

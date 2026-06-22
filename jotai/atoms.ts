@@ -78,6 +78,13 @@ export type DailyReadingRecord = {
   // 1..7; <7 means the bucket is a partial week (only happens for the
   // trailing bucket when the period isn't a multiple of 7).
   daysInBucket?: number;
+  // `true` when this slot has a real record (either from `readingHistory`
+  // or from today's `dailyTrackerCompleted`). `false` when the slot was
+  // padded with zeros because the user wasn't tracking yet. Drives the
+  // "no record" visual treatment and the average calculation so a user
+  // who started tracking 22 days ago doesn't see their stats diluted by
+  // 68 untracked days in a 90-day window.
+  hasRecord?: boolean;
 };
 
 export const readingHistory = createAtomWithStorage<DailyReadingRecord[]>(

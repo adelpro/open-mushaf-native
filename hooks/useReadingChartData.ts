@@ -37,6 +37,11 @@ const aggregateWeek = (
       daily.reduce((s, d) => s + d.hizbsCompleted, 0).toFixed(1),
     ),
     pagesRead: daily.reduce((s, d) => s + d.pagesRead, 0),
+    // A weekly bucket counts as having a record if at least one underlying
+    // day had one. An empty bucket (user didn't track at all that week)
+    // stays at 0 with hasRecord=false so the chart can render it as "no
+    // data" instead of "read 0".
+    hasRecord: daily.some((d) => d.hasRecord),
   };
 };
 
@@ -72,6 +77,10 @@ const aggregateMonth = (
       daily.reduce((s, d) => s + d.hizbsCompleted, 0).toFixed(1),
     ),
     pagesRead: daily.reduce((s, d) => s + d.pagesRead, 0),
+    // Mirror `aggregateWeek`: a monthly bucket counts as recorded if any
+    // day inside it had a record. Keeps the "no data" vs "read 0"
+    // distinction intact when the user is partway through a 30-day bucket.
+    hasRecord: daily.some((d) => d.hasRecord),
   };
 };
 
@@ -134,7 +143,17 @@ export function useReadingChartData(
         const skip = seed(i) > 0.78; // ~22% of days have no reading
         const hizbs = skip ? 0 : parseFloat((seed(i + 1) * 3 + 0.5).toFixed(1));
         const pages = skip ? 0 : Math.round(seed(i + 2) * 12 + 1);
-        result.push({ date: dateStr, hizbsCompleted: hizbs, pagesRead: pages });
+        // In the dev mock every slot is "recorded" — `skip` toggles the
+        // *value* to zero but the slot itself is part of the synthetic
+        // dataset, so hasRecord stays true. This keeps the chart visually
+        // full during dev (no dashed-outline gaps) while production still
+        // gets the no-record treatment for untracked days.
+        result.push({
+          date: dateStr,
+          hizbsCompleted: hizbs,
+          pagesRead: pages,
+          hasRecord: true,
+        });
       }
       return result;
     }
@@ -142,23 +161,32 @@ export function useReadingChartData(
 
     const hizbMap = new Map<string, number>();
     const pagesMap = new Map<string, number>();
+    // Track which date strings had a real record. Used both to set
+    // `hasRecord` on each daily slot (so the chart can render "no data"
+    // vs "read 0") and to derive `trackingStartedAt` (the earliest date
+    // with a record in the current window).
+    const recordedDates = new Set<string>();
 
     for (const entry of history) {
       hizbMap.set(entry.date, entry.hizbsCompleted);
       pagesMap.set(entry.date, entry.pagesRead ?? 0);
+      recordedDates.add(entry.date);
     }
 
     hizbMap.set(todayTracker.date, todayTracker.value);
     pagesMap.set(todayTracker.date, todayPagesRead);
+    recordedDates.add(todayTracker.date);
 
     // Build daily records for the current period
     const result: DailyReadingRecord[] = [];
     for (let i = period - 1; i >= 0; i--) {
       const dateStr = daysAgo(i);
+      const hasRecord = recordedDates.has(dateStr);
       result.push({
         date: dateStr,
-        hizbsCompleted: hizbMap.get(dateStr) ?? 0,
-        pagesRead: pagesMap.get(dateStr) ?? 0,
+        hizbsCompleted: hasRecord ? (hizbMap.get(dateStr) ?? 0) : 0,
+        pagesRead: hasRecord ? (pagesMap.get(dateStr) ?? 0) : 0,
+        hasRecord,
       });
     }
     return result;
@@ -197,11 +225,30 @@ export function useReadingChartData(
   const unitCount = chartData.length || 1;
   const avg = total / unitCount;
 
+  // For the daily view only, recompute the average excluding buckets with
+  // no record so a user who started tracking 22 days ago doesn't see
+  // their 1-hizb/day pace reported as 0.24 hizb/day. Weekly/monthly
+  // averages already collapse the unrecorded stretch into zero-totals
+  // within each bucket, so we keep the simpler `avg` there.
+  const recordsWithData = data.filter((d) => d.hasRecord).length;
+  const effectiveAvg =
+    groupBy === 'day' && recordsWithData > 0 ? total / recordsWithData : avg;
+
+  // `trackingStartedAt` is the earliest recorded date in the current
+  // window — `null` when the user has no records at all (the empty state
+  // handles that). Rendered as a small caption so users who haven't yet
+  // filled the full 90-day window know the chart isn't missing data.
+  const trackingStartedAt =
+    recordsWithData > 0 ? (data.find((d) => d.hasRecord)?.date ?? null) : null;
+
   return {
     data: chartData,
     maxValue,
     total,
     avg,
+    effectiveAvg,
+    recordsWithData,
+    trackingStartedAt,
     period,
     periodIndex,
     setPeriodIndex,
