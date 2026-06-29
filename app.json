@@ -15,7 +15,6 @@
       "bundleIdentifier": "com.adelpro.openmushafnative",
       "requireFullScreen": true,
       "infoPlist": {
-        "UIBackgroundModes": ["audio", "audio"],
         "ITSAppUsesNonExemptEncryption": false
       }
     },
