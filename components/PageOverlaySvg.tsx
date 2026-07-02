@@ -1,0 +1,113 @@
+import React, { useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
+
+import { Polygon, Svg } from 'react-native-svg';
+
+import { polygonPointsString } from '@/utils/svgPolygon';
+
+import { ThemedText } from './ThemedText';
+
+/**
+ * Polygon-based overlay that replaces `PageOverlay.tsx` (the old
+ * rectangle heuristic). Renders one transparent `<Polygon>` per ayah
+ * on top of the rendered SVG. Tapping the polygon fires the callback.
+ *
+ * Coordinates: the polygon's vertices are already in the SVG's
+ * `viewBox` coordinate space. We pass the same viewBox to `<Svg>` so
+ * the polygons scale with the rendered mushaf.
+ *
+ * Props:
+ *  - polygons: hit regions for one page (from `useSvgPolygons`)
+ *  - viewBox:  the SVG's own viewBox; both source SVG and overlay use it
+ *  - activeAyah: { surah, ayah } currently selected (highlighted), or null
+ *  - highlightColor / highlightOpacity: theme-driven highlight style
+ *  - onPressAyah(surah, ayah): tap handler
+ */
+type Props = {
+  polygons: {
+    surahNumber: number;
+    ayahNumber: number;
+    polygon: string;
+  }[];
+  viewBox: { minX: number; minY: number; width: number; height: number };
+  activeAyah: { surah: number; ayah: number } | null;
+  highlightColor: string;
+  highlightOpacity?: number;
+  onPressAyah: (surah: number, ayah: number) => void;
+};
+
+export function PageOverlaySvg({
+  polygons,
+  viewBox,
+  activeAyah,
+  highlightColor,
+  highlightOpacity = 0.45,
+  onPressAyah,
+}: Props) {
+  // Normalize polygon vertices once per render. They never change
+  // for a given (qiraa, page) combo, but useMemo is cheap insurance
+  // against re-render storms.
+  const normalized = useMemo(
+    () =>
+      polygons.map((p) => ({
+        surah: p.surahNumber,
+        ayah: p.ayahNumber,
+        points: polygonPointsString(p.polygon),
+      })),
+    [polygons],
+  );
+
+  return (
+    <View
+      pointerEvents="box-none"
+      style={StyleSheet.absoluteFill}
+      accessible={false}
+    >
+      <Svg
+        style={StyleSheet.absoluteFill}
+        viewBox={`${viewBox.minX} ${viewBox.minY} ${viewBox.width} ${viewBox.height}`}
+        preserveAspectRatio="xMidYMid meet"
+        pointerEvents="box-none"
+      >
+        {/* Invisible catch-all to capture taps that miss every polygon. */}
+        <Polygon
+          points={`${viewBox.minX},${viewBox.minY} ${viewBox.minX + viewBox.width},${viewBox.minY} ${viewBox.minX + viewBox.width},${viewBox.minY + viewBox.height} ${viewBox.minX},${viewBox.minY + viewBox.height}`}
+          fill="transparent"
+        />
+        {normalized.map(({ surah, ayah, points }) => {
+          const isActive =
+            activeAyah != null &&
+            activeAyah.surah === surah &&
+            activeAyah.ayah === ayah;
+          return (
+            <Polygon
+              key={`${surah}-${ayah}`}
+              points={points}
+              fill={isActive ? highlightColor : 'transparent'}
+              fillOpacity={isActive ? highlightOpacity : 0}
+              onPress={() => onPressAyah(surah, ayah)}
+            />
+          );
+        })}
+      </Svg>
+    </View>
+  );
+}
+
+/**
+ * Inline error/empty state for the polygon overlay. Kept here so the
+ * call site (`MushafPageSvg`) doesn't need its own empty branch.
+ */
+export function PageOverlaySvgFallback({ message }: { message?: string }) {
+  return (
+    <View
+      pointerEvents="none"
+      style={[
+        StyleSheet.absoluteFill,
+        { alignItems: 'center', justifyContent: 'center' },
+      ]}
+    >
+      {message ? <ThemedText>{message}</ThemedText> : null}
+    </View>
+  );
+}

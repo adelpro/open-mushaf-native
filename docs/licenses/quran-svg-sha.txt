@@ -1,0 +1,25 @@
+quran-svg pinned commit SHA
+============================
+
+Repo:       https://github.com/quranpedia/quran-svg
+SHA:        1525aa7d6e94a4c17a051302767331ef500308ec
+Date:       2026-06-15
+Message:    "Restructure into qiraa/publisher; add Libyan Awqaf (Qalun) mushaf"
+Author:     dev@quranpedia.net
+Consumed:   2026-07-02 (first pinned consumption)
+By:         Adel Benyahia <adelpro@gmail.com>
+
+CONSTANTS
+---------
+This SHA MUST match the value of `PINNED_SHA` in
+`constants/svgCdn.ts`. If you bump the SHA in svgCdn.ts, update this file
+in the same commit and re-run the polygon regression tests (plan step 4).
+
+REDISTRIBUTION LICENSE
+----------------------
+**This SHA is BLOCKED from shipping to production until written
+redistribution permission from quranpedia.net is filed alongside this
+file as `quran-svg-permission.eml`.** Until then, builds that reference
+this SHA are dev-only and must not be uploaded to Play Store / App Store.
+
+See plan section 7 for the blocker policy.

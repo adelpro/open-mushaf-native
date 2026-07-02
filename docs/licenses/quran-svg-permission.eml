@@ -1,0 +1,67 @@
+From: adelpro@gmail.com
+To: dev@quranpedia.net
+Subject: Request for redistribution permission — quran-svg in open-mushaf-native
+
+Date: PENDING
+
+Body:
+
+Hi quranpedia team,
+
+I'm the maintainer of open-mushaf-native, an open-source Quran reader
+app for iOS, Android, and Web (https://github.com/adelpro/open-mushaf-native).
+It currently serves two mushafs (Hafs and Warsh from Medina Mushaf)
+as raster PNGs bundled into the install package.
+
+I'm planning a migration to vector SVG rendering using your
+quranpedia/quran-svg repository, which provides both the SVG pages and
+polygon-based hit-regions for true ayah selection. This is a much
+better technical fit than the raster approach.
+
+What I would like permission to do:
+
+1. Bundle (include in the install package) the Hafs and Warsh KFQC
+   pages from your repo, pinned to a specific commit SHA.
+
+2. At runtime, fetch the other four mushafs (Qalun-KFQC, Qalun-Libya,
+   Douri-KFQC, Shubah-KFQC) over the jsDelivr CDN from the same repo,
+   when a user chooses to download them. No redistribution to other
+   servers — the files are pulled straight from GitHub via jsDelivr's
+   edge cache, exactly as a browser would.
+
+3. Display the SVG pages and let users tap on ayahs (your polygon
+   data) to open a tafseer.
+
+The app is free, ad-free, and donation-supported. It is already
+published on the App Store (id 6783070437) and Play Store
+(com.adelpro.openmushafnative). Total installs: small but growing.
+
+Could you confirm in writing (a reply to this email is fine) that:
+
+- Bundling the Hafs and Warsh SVG pages in our APK is OK.
+- Fetching the other four mushafs from your repo at runtime via
+  jsDelivr is OK.
+- Citing quranpedia/quran-svg as the source in our app's "About"
+  screen is acceptable.
+
+I am happy to:
+- Credit quranpedia prominently in the app's About screen and on
+  the GitHub README.
+- Link to your website (https://quranpedia.net) from the app.
+- Not modify the SVG files in any way.
+- Pin to a specific commit SHA and not auto-update.
+
+Thank you for the work you put into this repo — it solves a real
+problem for Quran apps that previously had to ship raster scans of
+the mushaf.
+
+Best,
+Adel Benyahia
+
+---
+
+PLACEHOLDER FILE
+----------------
+This is a placeholder. Replace with the actual correspondence once
+permission is received. Do NOT remove the placeholder wording above
+until the permission email is on file.

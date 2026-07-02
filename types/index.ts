@@ -26,6 +26,8 @@ export * from './search';
 
 export * from './ui';
 
+export * from './quran-svg';
+
 export type { QuranText } from 'quran-search-engine';
 
 export type { MorphologyAya } from 'quran-search-engine';

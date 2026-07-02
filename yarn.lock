@@ -5447,6 +5447,11 @@ expo-eas-client@~1.0.8:
   resolved "https://registry.yarnpkg.com/expo-eas-client/-/expo-eas-client-1.0.8.tgz#f1fa7cbc6b6000046119466c6ded8a77e5a4b1f8"
   integrity sha512-5or11NJhSeDoHHI6zyvQDW2cz/yFyE+1Cz8NTs5NK8JzC7J0JrkUgptWtxyfB6Xs/21YRNifd3qgbBN3hfKVgA==
 
+expo-file-system@^57.0.0:
+  version "57.0.0"
+  resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-57.0.0.tgz#d7afbb2ff0a269113a00a688c1f6ba89404df56c"
+  integrity sha512-G+eytNuNGMiS7dbdj1j0nAYMowXnNr1vpO+jss6nQvBlRxshcGBFMtk8xfc67ynz0MUVkzod7WwKO7Vf1iOaJw==
+
 expo-file-system@~19.0.21:
   version "19.0.21"
   resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-19.0.21.tgz#e96a68107fb629cf0dd1906fe7b46b566ff13e10"
@@ -8949,10 +8954,10 @@ queue@6.0.2:
   dependencies:
     inherits "~2.0.3"
 
-quran-search-engine@0.3.1-athar-rc.3:
-  version "0.3.1-athar-rc.3"
-  resolved "https://registry.yarnpkg.com/quran-search-engine/-/quran-search-engine-0.3.1-athar-rc.3.tgz#91d624b0e06aae62dc7e7177207a3d1d7f7ab0b5"
-  integrity sha512-1RfV8i/Y5adkYvxdNlKc4lFy3ZG3IBjYSPv3v+8zeQb1MNnaqSMNoLhZ2nT+ZovHt/RQvhOh73UP/YVrdN1LiQ==
+quran-search-engine@0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/quran-search-engine/-/quran-search-engine-0.3.2.tgz#71ae8393dd0abf0c9307132d2af81362ff81d2dd"
+  integrity sha512-8EY7kWl/wzUNS65n+0U7fkiVh7uSchC+n70JCt9AB9dvSBVYu/q8trw7YcOAaUDrjfWPVZfeQggDURZEIejlEQ==
   dependencies:
     fuse.js "^7.0.0"
 
