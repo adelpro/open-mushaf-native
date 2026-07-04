@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 
 import { Directory, File, Paths } from 'expo-file-system';
 
-import { type Qiraa } from '@/constants/svgCdn';
+import { type Qiraa, quranSvgPageUrl } from '@/constants/svgCdn';
 
 import { useQuranMetadata } from './useQuranMetadata';
 
@@ -66,18 +67,55 @@ export function useSvgText(args: {
             `Page ${page} out of range 1..${defaultNumberOfPages}`,
           );
         }
-        const dir = new Directory(Paths.document, 'mushaf', qiraa);
-        const padded = String(page).padStart(3, '0');
-
         let xml: string;
-        try {
-          xml = await new File(dir, `${padded}-surah${activeSurah}.svg`).text();
-        } catch (e) {
-          if (activeSurah != null) {
-            // Multi-surah variant missing — fall back to the default page SVG.
-            xml = await new File(dir, `${padded}.svg`).text();
-          } else {
-            throw e;
+        // Only the surah-scoped variant gets the multi-surah fallback dance —
+        // when no `activeSurah` is requested we just load the default page.
+        const variantSuffix =
+          activeSurah != null ? `-surah${activeSurah}.svg` : null;
+        if (Platform.OS === 'web') {
+          // `expo-file-system` v57+ Directory/File/Paths is Android/iOS/tvOS only
+          // (no documented web fallback). On web, skip the local FS cache and
+          // fetch the SVG straight from the pinned CDN defined in svgCdn.ts.
+          const defaultUrl = quranSvgPageUrl(qiraa, page);
+          const variantUrl =
+            variantSuffix == null
+              ? null
+              : defaultUrl.replace(/\.svg$/, variantSuffix);
+          const primaryUrl = variantUrl ?? defaultUrl;
+          try {
+            const res = await fetch(primaryUrl);
+            if (!res.ok) {
+              throw new Error(`HTTP ${res.status} fetching ${primaryUrl}`);
+            }
+            xml = stripAyahNamespace(await res.text());
+          } catch (e) {
+            if (variantUrl != null) {
+              // Multi-surah variant missing — fall back to the default page SVG.
+              const fallback = await fetch(defaultUrl);
+              if (!fallback.ok) {
+                throw new Error(
+                  `HTTP ${fallback.status} fetching ${defaultUrl}`,
+                );
+              }
+              xml = stripAyahNamespace(await fallback.text());
+            } else {
+              throw e;
+            }
+          }
+        } else {
+          const dir = new Directory(Paths.document, 'mushaf', qiraa);
+          const padded = String(page).padStart(3, '0');
+          const primaryPath = `${padded}${variantSuffix ?? '.svg'}`;
+
+          try {
+            xml = await new File(dir, primaryPath).text();
+          } catch (e) {
+            if (variantSuffix != null) {
+              // Multi-surah variant missing — fall back to the default page SVG.
+              xml = await new File(dir, `${padded}.svg`).text();
+            } else {
+              throw e;
+            }
           }
         }
 
@@ -118,4 +156,21 @@ function extractViewBox(xml: string): {
   if (parts.length !== 4 || parts.some((n) => !Number.isFinite(n))) return null;
   const [minX, minY, width, height] = parts as [number, number, number, number];
   return { minX, minY, width, height };
+}
+
+/**
+ * The upstream quranpedia/quran-svg XML uses a custom `xmlns:ayah`
+ * namespace for per-element medallion metadata (`ayah:x`, `ayah:y`).
+ * We already get the same coordinates from the per-page polygon JSON,
+ * so the namespace is redundant. Worse, on web `react-native-svg`
+ * passes every attribute through to the DOM, where React 19 rejects
+ * the resulting camelCased props (`ayahX`, `ayahY`, `xmlnsAyah`) as
+ * unknown DOM attributes and floods the console with warnings. Strip
+ * both the namespace declaration and the namespaced attributes before
+ * handing the SVG to the renderer.
+ */
+function stripAyahNamespace(svgXml: string): string {
+  return svgXml
+    .replace(/\s+xmlns:ayah="[^"]*"/g, '')
+    .replace(/\s+ayah:[a-zA-Z][a-zA-Z0-9-]*="[^"]*"/g, '');
 }

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 
 import { Directory, File, Paths } from 'expo-file-system';
 
-import { type Qiraa } from '@/constants/svgCdn';
+import { type Qiraa, quranSvgJsonUrl } from '@/constants/svgCdn';
 import type { QuranSvgPageAyah } from '@/types/quran-svg';
 
 import { useQuranMetadata } from './useQuranMetadata';
@@ -45,9 +46,22 @@ export function useSvgPolygons(args: { qiraa: Qiraa; page: number }): {
           );
         }
         const padded = String(page).padStart(3, '0');
-        const dir = new Directory(Paths.document, 'mushaf', qiraa);
-        const raw = await new File(dir, `${padded}.json`).text();
-        const parsed = JSON.parse(raw) as unknown;
+        let parsed: unknown;
+        if (Platform.OS === 'web') {
+          // `expo-file-system` v57+ Directory/File/Paths is Android/iOS/tvOS only
+          // (no documented web fallback). On web, fetch JSON straight from the
+          // pinned CDN defined in svgCdn.ts.
+          const url = quranSvgJsonUrl(qiraa, page);
+          const res = await fetch(url);
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status} fetching ${url}`);
+          }
+          parsed = await res.json();
+        } else {
+          const dir = new Directory(Paths.document, 'mushaf', qiraa);
+          const raw = await new File(dir, `${padded}.json`).text();
+          parsed = JSON.parse(raw) as unknown;
+        }
         if (!Array.isArray(parsed)) {
           throw new Error(
             `Polygon JSON for ${qiraa}/${padded} is not an array`,

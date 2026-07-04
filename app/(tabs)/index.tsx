@@ -13,6 +13,8 @@ import {
   TopMenu,
   TutorialGuide,
 } from '@/components';
+import { MushafPageSvg } from '@/components/MushafPageSvg';
+import type { Qiraa } from '@/constants/svgCdn';
 import {
   currentAppVersion,
   finishedTutorial,
@@ -56,7 +58,11 @@ export default function HomeScreen() {
         ) : (
           <>
             <TopMenu />
-            <MushafPage />
+            {isWeb ? (
+              <MushafPageSvg qiraa={mushafRiwayaValue as Qiraa} />
+            ) : (
+              <MushafPage />
+            )}
           </>
         )}
       </Pressable>

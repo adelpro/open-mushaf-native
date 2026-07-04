@@ -74,14 +74,19 @@ export function PageOverlaySvg({
           points={`${viewBox.minX},${viewBox.minY} ${viewBox.minX + viewBox.width},${viewBox.minY} ${viewBox.minX + viewBox.width},${viewBox.minY + viewBox.height} ${viewBox.minX},${viewBox.minY + viewBox.height}`}
           fill="transparent"
         />
-        {normalized.map(({ surah, ayah, points }) => {
+        {normalized.map(({ surah, ayah, points }, i) => {
           const isActive =
             activeAyah != null &&
             activeAyah.surah === surah &&
             activeAyah.ayah === ayah;
           return (
             <Polygon
-              key={`${surah}-${ayah}`}
+              // Include the array index: upstream JSON sometimes emits
+              // multiple entries with the same (surahNumber, ayahNumber)
+              // (e.g. surah-header band placeholders on page 9, where
+              // every header polygon reports `{surah:0, ayah:0}`).
+              // The original `${surah}-${ayah}` key then collides.
+              key={`${surah}-${ayah}-${i}`}
               points={points}
               fill={isActive ? highlightColor : 'transparent'}
               fillOpacity={isActive ? highlightOpacity : 0}
