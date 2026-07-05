@@ -22,10 +22,11 @@ import {
   ThemedText,
   ThemedView,
 } from '@/components';
+import { RiwayaSelector } from '@/components/RiwayaSelector';
 import {
   READING_THEME_KEYS,
   READING_THEME_LABELS,
-  riwayaOptions,
+  RIWAYA_ARABIC_LABEL,
 } from '@/constants';
 import { useColors } from '@/hooks';
 import {
@@ -37,7 +38,7 @@ import {
   readingTheme,
   showTrackerNotification,
 } from '@/jotai/atoms';
-import { isWeb, RiwayaByIndice, RiwayaByValue } from '@/utils';
+import { isWeb } from '@/utils';
 import { clearStorageAndReload } from '@/utils/storage/clearStorage';
 
 export default function SettingsScreen() {
@@ -55,6 +56,8 @@ export default function SettingsScreen() {
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const [readingThemeValue, setReadingThemeValue] = useAtom(readingTheme);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+
+  const [riwayaSelectorVisible, setRiwayaSelectorVisible] = useState(false);
 
   const toggleFlipSoundSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
@@ -327,18 +330,49 @@ export default function SettingsScreen() {
             إختيار الرواية :
           </ThemedText>
         </ThemedView>
-        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
-          <SegmentedControl
-            options={riwayaOptions}
-            initialSelectedIndex={RiwayaByIndice(mushafRiwayaValue)}
-            activeColor={primaryColor}
-            textColor={primaryColor}
-            onSelectionChange={(index: number) => {
-              const selectedRiwaya = RiwayaByValue(index);
-              setMushafRiwayaValue(selectedRiwaya);
-            }}
-          />
-        </Pressable>
+
+        <ThemedView
+          style={[
+            styles.settingsSection,
+            styles.columnSection,
+            { backgroundColor: cardColor },
+          ]}
+        >
+          <Pressable
+            style={styles.fullWidthContainer}
+            onPress={() => setRiwayaSelectorVisible(true)}
+            accessibilityRole="button"
+            accessibilityLabel={`اختيار الرواية (الحالية: ${RIWAYA_ARABIC_LABEL[mushafRiwayaValue]})`}
+          >
+            <ThemedView style={styles.iconTextContainer}>
+              <Feather
+                name="book-open"
+                size={24}
+                color={iconColor}
+                style={styles.iconStyle}
+              />
+              <ThemedText type="defaultSemiBold" style={styles.itemText}>
+                الرواية الحالية: {RIWAYA_ARABIC_LABEL[mushafRiwayaValue]}
+              </ThemedText>
+            </ThemedView>
+            <Feather
+              name="chevron-left"
+              size={24}
+              color={iconColor}
+              style={{ marginRight: 8 }}
+            />
+          </Pressable>
+        </ThemedView>
+        {/* Riwaya Selector Modal */}
+        <RiwayaSelector
+          visible={riwayaSelectorVisible}
+          onClose={() => setRiwayaSelectorVisible(false)}
+          currentRiwaya={mushafRiwayaValue}
+          onSelect={(newRiwaya) => {
+            setMushafRiwayaValue(newRiwaya);
+            setRiwayaSelectorVisible(false);
+          }}
+        />
       </ThemedView>
       {!isWeb && (
         <ThemedView

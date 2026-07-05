@@ -3,7 +3,8 @@ import { Platform } from 'react-native';
 
 import { Directory, File, Paths } from 'expo-file-system';
 
-import { type Qiraa, quranSvgPageUrl } from '@/constants/svgCdn';
+import { quranSvgPageUrl } from '@/constants/svgCdn';
+import { Riwaya } from '@/types';
 
 import { useQuranMetadata } from './useQuranMetadata';
 
@@ -14,8 +15,8 @@ import { useQuranMetadata } from './useQuranMetadata';
  * qiraat are downloaded on demand.
  *
  * Cache layout (relative to `Paths.document`):
- *   mushaf/<qiraa>/<page>.svg
- *   mushaf/<qiraa>/<page>.json
+ *   mushaf/<riwaya>/<page>.svg
+ *   mushaf/<riwaya>/<page>.json
  *
  * Returns `{ text, viewBox, isLoading, error }`.
  *
@@ -25,7 +26,7 @@ import { useQuranMetadata } from './useQuranMetadata';
  * page SVG if the variant isn't found in the cache.
  */
 export function useSvgText(args: {
-  qiraa: Qiraa;
+  riwaya: Riwaya;
   page: number;
   activeSurah?: number;
 }): {
@@ -39,7 +40,7 @@ export function useSvgText(args: {
   isLoading: boolean;
   error: string | null;
 } {
-  const { qiraa, page, activeSurah } = args;
+  const { riwaya, page, activeSurah } = args;
   const [text, setText] = useState<string | null>(null);
   const [viewBox, setViewBox] = useState<{
     minX: number;
@@ -76,7 +77,7 @@ export function useSvgText(args: {
           // `expo-file-system` v57+ Directory/File/Paths is Android/iOS/tvOS only
           // (no documented web fallback). On web, skip the local FS cache and
           // fetch the SVG straight from the pinned CDN defined in svgCdn.ts.
-          const defaultUrl = quranSvgPageUrl(qiraa, page);
+          const defaultUrl = quranSvgPageUrl(riwaya, page);
           const variantUrl =
             variantSuffix == null
               ? null
@@ -103,7 +104,7 @@ export function useSvgText(args: {
             }
           }
         } else {
-          const dir = new Directory(Paths.document, 'mushaf', qiraa);
+          const dir = new Directory(Paths.document, 'mushaf', riwaya);
           const padded = String(page).padStart(3, '0');
           const primaryPath = `${padded}${variantSuffix ?? '.svg'}`;
 
@@ -135,7 +136,7 @@ export function useSvgText(args: {
     return () => {
       cancelled = true;
     };
-  }, [qiraa, page, activeSurah, defaultNumberOfPages]);
+  }, [riwaya, page, activeSurah, defaultNumberOfPages]);
 
   return { text, viewBox, isLoading, error };
 }

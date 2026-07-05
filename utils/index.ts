@@ -4,7 +4,7 @@ export * from './getVersion';
 
 export * from './isRTL';
 
-export * from './riwaya';
+export * from './riwayaHelper';
 
 export * from './isDEBUG';
 

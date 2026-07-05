@@ -5,7 +5,6 @@ import { useAtomValue, useSetAtom } from 'jotai/react';
 
 import {
   ChangeLogs,
-  MushafPage,
   ReadingPositionBanner,
   SelectRiwaya,
   Seo,
@@ -14,13 +13,13 @@ import {
   TutorialGuide,
 } from '@/components';
 import { MushafPageSvg } from '@/components/MushafPageSvg';
-import type { Qiraa } from '@/constants/svgCdn';
 import {
   currentAppVersion,
   finishedTutorial,
   mushafRiwaya,
   topMenuState,
 } from '@/jotai/atoms';
+import { Riwaya } from '@/types';
 import { getAppVersion, isWeb } from '@/utils';
 
 export default function HomeScreen() {
@@ -58,11 +57,8 @@ export default function HomeScreen() {
         ) : (
           <>
             <TopMenu />
-            {isWeb ? (
-              <MushafPageSvg qiraa={mushafRiwayaValue as Qiraa} />
-            ) : (
-              <MushafPage />
-            )}
+
+            <MushafPageSvg riwaya={mushafRiwayaValue as Riwaya} />
           </>
         )}
       </Pressable>

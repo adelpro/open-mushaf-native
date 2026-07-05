@@ -28,9 +28,9 @@ import { parseAyahPolygonsFromSvg } from '@/utils/svgParser';
 import { PageOverlaySvg } from './PageOverlaySvg';
 import { TafseerPopup } from './TafseerPopup';
 
-type Props = { qiraa: Riwaya; activeSurah?: number };
+type Props = { riwaya: Riwaya; activeSurah?: number };
 
-export function MushafPageSvg({ qiraa, activeSurah }: Props) {
+export function MushafPageSvg({ riwaya, activeSurah }: Props) {
   const colorScheme = useColorScheme();
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
   const { currentPage, setCurrentPage } = useCurrentPage();
@@ -51,7 +51,7 @@ export function MushafPageSvg({ qiraa, activeSurah }: Props) {
     viewBox,
     isLoading: svgIsLoading,
     error: svgError,
-  } = useSvgText({ qiraa, page: currentPage, activeSurah });
+  } = useSvgText({ riwaya, page: currentPage, activeSurah });
 
   // Parse ayah polygons from SVG (metadata + d-string)
   const ayahs = useMemo(
