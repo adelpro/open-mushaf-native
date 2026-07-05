@@ -14,7 +14,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
 
 import { READING_THEMES } from '@/constants/readingThemes';
-import { type Qiraa } from '@/constants/svgCdn';
 import {
   useColors,
   useCurrentPage,
@@ -23,12 +22,13 @@ import {
   useSvgText,
 } from '@/hooks';
 import { mushafContrast, readingTheme } from '@/jotai/atoms';
+import { Riwaya } from '@/types';
 import { parseAyahPolygonsFromSvg } from '@/utils/svgParser';
 
 import { PageOverlaySvg } from './PageOverlaySvg';
 import { TafseerPopup } from './TafseerPopup';
 
-type Props = { qiraa: Qiraa; activeSurah?: number };
+type Props = { qiraa: Riwaya; activeSurah?: number };
 
 export function MushafPageSvg({ qiraa, activeSurah }: Props) {
   const colorScheme = useColorScheme();

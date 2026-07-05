@@ -20,6 +20,8 @@
  * below honor the override transparently.
  */
 
+import { Riwaya } from '@/types';
+
 const PINNED_SHA = '1525aa7d6e94a4c17a051302767331ef500308ec';
 // 2026-06-15 — "Restructure into qiraa/publisher; add Libyan Awqaf (Qalun) mushaf"
 
@@ -44,16 +46,9 @@ export const QURAN_TAFSEER_CDN_BASE: string =
  * The six qiraat we support. The first two are bundled in the APK; the
  * other four are downloaded on demand from the CDN above.
  */
-export type Qiraa =
-  | 'hafs'
-  | 'warsh'
-  | 'qalon-kfqc'
-  | 'qalon-libya-awqaf'
-  | 'douri-kfqc'
-  | 'shubah-kfqc';
 
 /** Maps our qiraa enum to the upstream repo's `<qiraa>/<publisher>` path. */
-export const QIRA_TO_UPSTREAM_PATH: Record<Qiraa, string> = {
+export const RIWAYA_TO_UPSTREAM_PATH: Record<Riwaya, string> = {
   hafs: 'hafs/kfqc',
   warsh: 'warsh/kfqc',
   'qalon-kfqc': 'qalon/kfqc',
@@ -63,7 +58,7 @@ export const QIRA_TO_UPSTREAM_PATH: Record<Qiraa, string> = {
 };
 
 /** Human-readable Arabic label for each qiraa, used in the UI (TopMenu etc.). */
-export const QIRA_ARABIC_LABEL: Record<Qiraa, string> = {
+export const RIWAYA_ARABIC_LABEL: Record<Riwaya, string> = {
   hafs: 'حفص',
   warsh: 'ورش',
   'qalon-kfqc': 'قالون',
@@ -73,7 +68,7 @@ export const QIRA_ARABIC_LABEL: Record<Qiraa, string> = {
 };
 
 /** Default page count for each qiraat. Used by download progress UI. */
-export const QIRA_DEFAULT_PAGE_COUNT: Record<Qiraa, number> = {
+export const RIWAYA_DEFAULT_PAGE_COUNT: Record<Riwaya, number> = {
   hafs: 604,
   warsh: 604,
   'qalon-kfqc': 604,
@@ -83,15 +78,15 @@ export const QIRA_DEFAULT_PAGE_COUNT: Record<Qiraa, number> = {
 };
 
 /** Build a URL for a single page SVG on the CDN. */
-export function quranSvgPageUrl(qiraa: Qiraa, page: number): string {
-  const path = QIRA_TO_UPSTREAM_PATH[qiraa];
+export function quranSvgPageUrl(qiraa: Riwaya, page: number): string {
+  const path = RIWAYA_TO_UPSTREAM_PATH[qiraa];
   const padded = String(page).padStart(3, '0');
   return `${QURAN_SVG_CDN_BASE}/mushafs/${path}/svg/${padded}.svg`;
 }
 
 /** Build a URL for a single page JSON (polygon hit-regions) on the CDN. */
-export function quranSvgJsonUrl(qiraa: Qiraa, page: number): string {
-  const path = QIRA_TO_UPSTREAM_PATH[qiraa];
+export function quranSvgJsonUrl(riwaya: Riwaya, page: number): string {
+  const path = RIWAYA_TO_UPSTREAM_PATH[riwaya];
   const padded = String(page).padStart(3, '0');
   return `${QURAN_SVG_CDN_BASE}/mushafs/${path}/json/${padded}.json`;
 }
@@ -101,5 +96,5 @@ export function quranTafseerUrl(key: string): string {
   return `${QURAN_TAFSEER_CDN_BASE}/${key}.json`;
 }
 
-/** Qiraat that ship pre-bundled inside the APK (no download needed). */
-export const BUNDLED_QIRAA: readonly Qiraa[] = ['hafs', 'warsh'];
+/** RIWAYA that ship pre-bundled inside the APK (no download needed). */
+export const BUNDLED_RIWAYA: readonly Riwaya[] = ['hafs', 'warsh'];
