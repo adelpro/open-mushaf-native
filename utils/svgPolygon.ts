@@ -100,3 +100,40 @@ export function extractSvgViewBox(
   const [minX, minY, width, height] = parts as [number, number, number, number];
   return { minX, minY, width, height };
 }
+
+/**
+ * Extract ayah hit‑regions DIRECTLY from the SVG’s embedded
+ * `<path class="ayahPolygon" surah=... ayah=... d=... />` elements.
+ *
+ * This bypasses the broken per‑page JSON files (which have `surahNumber: 0,
+ * ayahNumber: 0` on most pages). The SVG itself carries the authoritative,
+ * correctly‑attributed data, exactly like the `warsh‑digital‑mushaf` reference
+ * app does via DOM queries.
+ */
+export function parseAyahPolygonsFromSvg(svgXml: string): {
+  surahNumber: number;
+  ayahNumber: number;
+  polygon: string;
+}[] {
+  const results: {
+    surahNumber: number;
+    ayahNumber: number;
+    polygon: string;
+  }[] = [];
+  const pathTagRe = /<path\b[^>]*class="ayahPolygon"[^>]*\/?>/g;
+  let match: RegExpExecArray | null;
+  while ((match = pathTagRe.exec(svgXml))) {
+    const tag = match[0];
+    const surahAttr = tag.match(/\bsurah="(\d+)"/);
+    const ayahAttr = tag.match(/\bayah="(\d+)"/);
+    const dAttr = tag.match(/\bd="([^"]*)"/);
+    if (surahAttr && ayahAttr && dAttr) {
+      results.push({
+        surahNumber: Number(surahAttr[1]),
+        ayahNumber: Number(ayahAttr[1]),
+        polygon: dAttr[1],
+      });
+    }
+  }
+  return results;
+}

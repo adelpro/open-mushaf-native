@@ -11,7 +11,6 @@ export * from './usePanGestureHandler';
 export * from './useQuranMetadata';
 export * from './useQuranSearch';
 export * from './useReadingChartData';
-export * from './useSvgPolygons';
 export * from './useSvgText';
 export * from './useTafseerContent';
 export * from './useThemeColor';
