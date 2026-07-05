@@ -62,6 +62,16 @@ export const QIRA_TO_UPSTREAM_PATH: Record<Qiraa, string> = {
   'shubah-kfqc': 'shubah/kfqc',
 };
 
+/** Human-readable Arabic label for each qiraa, used in the UI (TopMenu etc.). */
+export const QIRA_ARABIC_LABEL: Record<Qiraa, string> = {
+  hafs: 'حفص',
+  warsh: 'ورش',
+  'qalon-kfqc': 'قالون',
+  'qalon-libya-awqaf': 'قالون الليبي',
+  'douri-kfqc': 'الدوري',
+  'shubah-kfqc': 'شعبة',
+};
+
 /** Default page count for each qiraat. Used by download progress UI. */
 export const QIRA_DEFAULT_PAGE_COUNT: Record<Qiraa, number> = {
   hafs: 604,

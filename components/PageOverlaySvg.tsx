@@ -69,10 +69,16 @@ export function PageOverlaySvg({
         preserveAspectRatio="xMidYMid meet"
         pointerEvents="box-none"
       >
-        {/* Invisible catch-all to capture taps that miss every polygon. */}
+        {/* Invisible catch-all to capture taps that miss every polygon.
+            `fill="none"` is used (not `fill="transparent"`) because Firefox
+            parses SVG `transparent` inconsistently across attribute vs.
+            style-scoping boundaries and can fall back to the SVG default
+            `black` fill — see https://bugzilla.mozilla.org/show_bug.cgi?id=629228.
+            `fill="none"` is reliably invisible in every browser. */}
         <Polygon
           points={`${viewBox.minX},${viewBox.minY} ${viewBox.minX + viewBox.width},${viewBox.minY} ${viewBox.minX + viewBox.width},${viewBox.minY + viewBox.height} ${viewBox.minX},${viewBox.minY + viewBox.height}`}
-          fill="transparent"
+          fill="none"
+          pointerEvents="auto"
         />
         {normalized.map(({ surah, ayah, points }, i) => {
           const isActive =
@@ -88,8 +94,9 @@ export function PageOverlaySvg({
               // The original `${surah}-${ayah}` key then collides.
               key={`${surah}-${ayah}-${i}`}
               points={points}
-              fill={isActive ? highlightColor : 'transparent'}
+              fill={isActive ? highlightColor : 'none'}
               fillOpacity={isActive ? highlightOpacity : 0}
+              pointerEvents="auto"
               onPress={() => onPressAyah(surah, ayah)}
             />
           );

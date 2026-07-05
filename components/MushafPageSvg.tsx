@@ -1,13 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
   StyleSheet,
   useColorScheme,
   useWindowDimensions,
+  View,
 } from 'react-native';
 
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAtomValue } from 'jotai/react';
+import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
@@ -17,7 +20,6 @@ import { QIRA_TO_UPSTREAM_PATH, type Qiraa } from '@/constants/svgCdn';
 import {
   useColors,
   useCurrentPage,
-  useOrientation,
   usePanGestureHandler,
   useQuranMetadata,
   useSvgPolygons,
@@ -49,12 +51,13 @@ type Props = {
 
 export function MushafPageSvg({ qiraa, activeSurah }: Props) {
   const colorScheme = useColorScheme();
-  const { width: windowWidth } = useWindowDimensions();
-  const { isLandscape } = useOrientation();
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
   const { currentPage, setCurrentPage } = useCurrentPage();
   const { tintColor, ivoryColor } = useColors();
   const { specsData } = useQuranMetadata();
   const { defaultNumberOfPages = 604 } = specsData ?? {};
+  const router = useRouter();
+  const { temporary } = useLocalSearchParams<{ temporary?: string }>();
 
   const mushafContrastValue = useAtomValue(mushafContrast);
   const readingThemeValue = useAtomValue(readingTheme);
@@ -93,8 +96,14 @@ export function MushafPageSvg({ qiraa, activeSurah }: Props) {
       if (next < 1 || next > defaultNumberOfPages) return;
       if (next === currentPage) return;
       setCurrentPage(next);
+      // Mirror MushafPage.tsx: keep the URL in sync so the address bar
+      // reflects the current page and deep-links work.
+      router.setParams({
+        page: next.toString(),
+        ...(temporary ? { temporary: temporary.toString() } : {}),
+      });
     },
-    [currentPage, defaultNumberOfPages, setCurrentPage],
+    [currentPage, defaultNumberOfPages, setCurrentPage, router, temporary],
   );
   const { translateX, panGestureHandler } = usePanGestureHandler(
     handlePageChange,
@@ -105,12 +114,15 @@ export function MushafPageSvg({ qiraa, activeSurah }: Props) {
   void Platform.OS; // mark unused-import tolerated for future web keyboard handler
 
   // The MushafPage original full-bleeds the image; we do the same for
-  // the SVG by sizing the SvgXml to the page width.
-  const pageWidth = Math.min(windowWidth, 640);
-  // viewBox.aspect = width / height → height = width / aspect
-  const pageHeight = viewBox
-    ? pageWidth * (viewBox.height / viewBox.width)
-    : pageWidth * 1.4286; // matches 345x550 fallback
+  // the SVG. Size is constrained by BOTH windowWidth (cap at 640 so
+  // very wide windows don't blow up the SVG) AND windowHeight (so the
+  // SVG never overflows the viewport vertically). We solve by picking
+  // the smaller of the two candidate widths.
+  const aspectRatio = viewBox ? viewBox.height / viewBox.width : 1.4286; // matches 345x550 fallback
+  const widthByWindowCap = Math.min(windowWidth, 640);
+  const widthByHeightCap = windowHeight / aspectRatio;
+  const pageWidth = Math.min(widthByWindowCap, widthByHeightCap);
+  const pageHeight = pageWidth * aspectRatio;
 
   if (svgError) {
     return (
@@ -144,10 +156,19 @@ export function MushafPageSvg({ qiraa, activeSurah }: Props) {
       ? `rgba(26, 26, 26, ${1 - mushafContrastValue})`
       : themeConfig.backgroundColor || ivoryColor;
 
-  // Image opacity also reflects theme + dark mode.
-  const opacityStyle =
+  // The upstream SVG paints glyphs with `fill="#231f20"` (near-black) on
+  // a transparent background. On the dark theme the page background is
+  // also dark, so the mushaf text becomes invisible. We invert the
+  // rendered SVG so dark fills become light. The filter is applied to
+  // a wrapper <View> (not directly to <SvgXml>) because react-native-svg's
+  // web component does not reliably forward CSS `filter` to the underlying
+  // <svg> DOM element — wrapping in a plain <View> ensures the filter
+  // cascades via React Native Web's standard style pipeline. The polygon
+  // overlay is rendered OUTSIDE this wrapper so its fills (transparent /
+  // theme-driven) are unaffected.
+  const svgWrapStyle =
     colorScheme === 'dark'
-      ? { opacity: mushafContrastValue }
+      ? { opacity: mushafContrastValue, filter: 'invert(1)' }
       : themeConfig.imageOpacity < 1
         ? { opacity: themeConfig.imageOpacity }
         : null;
@@ -157,45 +178,40 @@ export function MushafPageSvg({ qiraa, activeSurah }: Props) {
       style={[styles.fill, { backgroundColor: bg }]}
       edges={['top']}
     >
-      <Animated.View style={{ transform: [{ translateX }] }}>
-        {isLandscape ? null : (
-          <SvgXml
-            xml={svgText}
-            width={pageWidth}
-            height={pageHeight}
-            preserveAspectRatio="xMidYMid meet"
-            // pan gesture comes from a wrapping View; SVG itself does
-            // not need to receive touches (overlay handles those).
-            pointerEvents="none"
-            {...(opacityStyle ?? {})}
-          />
-        )}
-        {/* Polygons sit on top of the rendered SVG and capture taps.
-            We render them in screen-pixel space (no viewBox transform)
-            by using the same width/height as SvgXml above. */}
-        {(() => {
-          // Use a separate <Svg> with the same viewBox so polygon
-          // vertices map 1:1 to the screen rect below it.
-          return (
-            <SvgXmlOverlay
-              ayahs={ayahs}
-              viewBox={viewBox}
+      <GestureDetector gesture={panGestureHandler}>
+        <Animated.View style={{ transform: [{ translateX }] }}>
+          {/* Wrapper View applies the dark-mode `invert(1)` filter plus
+              image opacity. Kept outside the polygon overlay so its
+              transparent / theme-driven fills are not affected. */}
+          <View style={svgWrapStyle ?? undefined}>
+            <SvgXml
+              xml={svgText}
               width={pageWidth}
               height={pageHeight}
-              activeAyah={
-                selectedAya
-                  ? { surah: selectedAya.surah, ayah: selectedAya.aya }
-                  : null
-              }
-              highlightColor={highlightColor}
-              onPressAyah={handlePolygonPress}
+              preserveAspectRatio="xMidYMid meet"
+              // pan gesture comes from a wrapping View; SVG itself does
+              // not need to receive touches (overlay handles those).
+              pointerEvents="none"
             />
-          );
-        })()}
-        {/* Pan gesture wrapper for swipe-to-next-page. Reuses the
-            gesture config from the original MushafPage. */}
-        <PanCatcher translateX={translateX} handler={panGestureHandler} />
-      </Animated.View>
+          </View>
+          {/* Polygons sit on top of the rendered SVG and capture taps.
+              We render them in screen-pixel space (no viewBox transform)
+              by using the same width/height as SvgXml above. */}
+          <SvgXmlOverlay
+            ayahs={ayahs}
+            viewBox={viewBox}
+            width={pageWidth}
+            height={pageHeight}
+            activeAyah={
+              selectedAya
+                ? { surah: selectedAya.surah, ayah: selectedAya.aya }
+                : null
+            }
+            highlightColor={highlightColor}
+            onPressAyah={handlePolygonPress}
+          />
+        </Animated.View>
+      </GestureDetector>
 
       {ayahs.length === 0 ? (
         <PageOverlaySvgFallback message="No polygons for this page" />
@@ -241,37 +257,19 @@ function SvgXmlOverlay(props: {
   );
 }
 
-/**
- * Lightweight pan gesture catcher. The actual gesture wiring is in
- * `usePanGestureHandler` (lifted from the original PNG MushafPage);
- * this component is a thin view wrapper.
- */
-function PanCatcher({
-  translateX: _translateX,
-  handler,
-}: {
-  translateX: unknown;
-  handler: unknown;
-}) {
-  // The original MushafPage wraps the page in <GestureDetector>. For
-  // now we re-use that pattern by exposing a no-op marker; the real
-  // integration lands in step 5 (useSvgPagePreloader is step 5 but
-  // pan-gesture wiring is local to MushafPage and should move with
-  // the page).
-  void _translateX;
-  void handler;
-  return null;
-}
-
 const styles = StyleSheet.create({
-  fill: { flex: 1 },
+  fill: { flex: 1, width: '100%', height: '100%' },
   loadingContainer: {
     flex: 1,
+    width: '100%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   errorContainer: {
     flex: 1,
+    width: '100%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
