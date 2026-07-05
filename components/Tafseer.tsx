@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { useAtom } from 'jotai/react';
 import HTMLView from 'react-native-htmlview';
 
+import { quranTafseerUrl, TafseerKey } from '@/constants/TafseerCdn';
 import {
   hasNoTafseerContent,
   useColors,
@@ -11,12 +12,13 @@ import {
   useTafseerContent,
 } from '@/hooks';
 import { tafseerTab } from '@/jotai/atoms';
-import { TafseerAya, TafseerTabs } from '@/types';
+import { TafseerAya } from '@/types';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-const tabLabels: Partial<Record<TafseerTabs, string>> = {
+// Map from internal keys to display labels (matches TafseerKey)
+const tabLabels: Record<TafseerKey, string> = {
   katheer: 'إبن كثير',
   maany: 'معاني القرآن',
   earab: 'إعراب القرآن',
@@ -25,195 +27,86 @@ const tabLabels: Partial<Record<TafseerTabs, string>> = {
   qortoby: 'القرطبي',
   tabary: 'الطبري',
   saady: 'السعدي',
-  wahidy: 'أسباب النزول',
+  'nozool-wahidy': 'أسباب النزول',
   tanweer: 'التحرير و التنوير',
-  waseet: 'الوسيط',
 };
 
-/**
- * Component configuration mapping the targeted verse payload rendering bounds.
- */
 type Props = {
-  /** The local Aya number in the bounds of the active `surah`. */
   aya: number;
-  /** The active Surah numeric ID. */
   surah: number;
-  /** Opacity override for animation bounds. */
   opacity?: number;
 };
 
-/**
- * Core Tafseer reading component connecting to static textual databases (`tabary.json`, `katheer.json`, etc.).
- * Includes a segmented selector toggling horizontally across varying scholar interpretations.
- *
- * @param props - Mapped bounding variables.
- * @returns A `<View>` displaying localized HTML interpretations bounded by user selection.
- */
 export function Tafseer({ aya, surah, opacity = 1 }: Props) {
   const { tintColor, textColor } = useColors();
-  const { surahData } = useQuranMetadata();
+  const { surahData, specsData } = useQuranMetadata();
+  const { countBesmalAya } = specsData ?? {};
+
   const [surahName, setSurahName] = useState<string>('');
-  const [selectedTabValue, setSelectedTab] = useAtom(tafseerTab);
+  const [selectedTab, setSelectedTab] = useAtom(tafseerTab) as [
+    TafseerKey,
+    (key: TafseerKey) => void,
+  ];
   const [tafseerData, setTafseerData] = useState<TafseerAya[] | null>(null);
-  const [tabsWithContent, setTabsWithContent] = useState<
-    Record<TafseerTabs, boolean>
-  >({} as Record<TafseerTabs, boolean>);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const { specsData } = useQuranMetadata();
-
-  const { countBesmalAya } = specsData;
-
-  const formattedTafseerHtml = useTafseerContent({ tafseerData, surah, aya });
-  const isCurrentTabEmpty = hasNoTafseerContent({ tafseerData, surah, aya });
+  // Cache loaded data per tab to avoid repeated fetches
+  const [cache, setCache] = useState<Record<TafseerKey, TafseerAya[] | null>>(
+    {} as Record<TafseerKey, TafseerAya[] | null>,
+  );
 
   useEffect(() => {
     const currentSurah = surahData.find((s) => s.number === surah);
     setSurahName(currentSurah?.name ?? '');
   }, [surah, surahData]);
 
-  // Add a state to track if we've loaded all tafseer data
-  const [allTafseersLoaded, setAllTafseersLoaded] = useState(false);
-
-  // Reset tabsWithContent when surah or aya changes
+  // Fetch tafseer data when selectedTab, surah, or aya changes
   useEffect(() => {
-    // Reset the content availability state when surah or aya changes
-    setTabsWithContent({} as Record<TafseerTabs, boolean>);
-    setAllTafseersLoaded(false);
-  }, [surah, aya]);
-
-  // Load all tafseer data to check content availability
-  useEffect(() => {
-    if (!allTafseersLoaded) {
-      const loadAllTafseers = async () => {
-        const tabsToCheck = Object.keys(tabLabels) as TafseerTabs[];
-
-        for (const tab of tabsToCheck) {
-          try {
-            let tafseerJSON;
-
-            // Use the same import logic as in loadTafseerData
-            switch (tab) {
-              case 'baghawy':
-                tafseerJSON = await import('@/assets/tafaseer/baghawy.json');
-                break;
-              case 'earab':
-                tafseerJSON = await import('@/assets/tafaseer/earab.json');
-                break;
-              case 'katheer':
-                tafseerJSON = await import('@/assets/tafaseer/katheer.json');
-                break;
-              case 'maany':
-                tafseerJSON = await import('@/assets/tafaseer/maany.json');
-                break;
-              case 'muyassar':
-                tafseerJSON = await import('@/assets/tafaseer/muyassar.json');
-                break;
-              case 'qortoby':
-                tafseerJSON = await import('@/assets/tafaseer/qortoby.json');
-                break;
-              case 'saady':
-                tafseerJSON = await import('@/assets/tafaseer/saady.json');
-                break;
-              case 'tabary':
-                tafseerJSON = await import('@/assets/tafaseer/tabary.json');
-                break;
-              case 'wahidy':
-                tafseerJSON =
-                  await import('@/assets/tafaseer/nozool-wahidy.json');
-                break;
-              case 'tanweer':
-                tafseerJSON = await import('@/assets/tafaseer/tanweer.json');
-                break;
-              case 'waseet':
-                tafseerJSON = await import('@/assets/tafaseer/waseet.json');
-                break;
-              default:
-                continue;
-            }
-
-            const data =
-              (tafseerJSON?.default as TafseerAya[]) ||
-              (tafseerJSON as TafseerAya[]);
-            const hasContent = !hasNoTafseerContent({
-              tafseerData: data,
-              surah,
-              aya,
-            });
-
-            setTabsWithContent((prev) => ({
-              ...prev,
-              [tab]: hasContent,
-            }));
-          } catch {
-            // If there's an error loading the tafseer, mark it as not having content
-            setTabsWithContent((prev) => ({
-              ...prev,
-              [tab]: false,
-            }));
-          }
-        }
-
-        setAllTafseersLoaded(true);
-      };
-
-      loadAllTafseers();
-    }
-  }, [surah, aya, allTafseersLoaded]);
-
-  const loadTafseerData = useCallback(async () => {
-    let tafseerJSON;
-    try {
-      switch (selectedTabValue) {
-        case 'baghawy':
-          tafseerJSON = await import('@/assets/tafaseer/baghawy.json');
-          break;
-        case 'earab':
-          tafseerJSON = await import('@/assets/tafaseer/earab.json');
-          break;
-        case 'katheer':
-          tafseerJSON = await import('@/assets/tafaseer/katheer.json');
-          break;
-        case 'maany':
-          tafseerJSON = await import('@/assets/tafaseer/maany.json');
-          break;
-        case 'muyassar':
-          tafseerJSON = await import('@/assets/tafaseer/muyassar.json');
-          break;
-        case 'qortoby':
-          tafseerJSON = await import('@/assets/tafaseer/qortoby.json');
-          break;
-        case 'saady':
-          tafseerJSON = await import('@/assets/tafaseer/saady.json');
-          break;
-        case 'tabary':
-          tafseerJSON = await import('@/assets/tafaseer/tabary.json');
-          break;
-        case 'wahidy':
-          tafseerJSON = await import('@/assets/tafaseer/nozool-wahidy.json');
-          break;
-        case 'tanweer':
-          tafseerJSON = await import('@/assets/tafaseer/tanweer.json');
-          break;
-        case 'waseet':
-          tafseerJSON = await import('@/assets/tafaseer/waseet.json');
-          break;
-        default:
-          // Fallback to katheer if the selected tab is somehow not in the list
-          // or if it's one of the newly added ones and something went wrong.
-          // However, with the fixes, this default should ideally not be hit for tanweer/waseet.
-          tafseerJSON = await import('@/assets/tafaseer/katheer.json');
+    const fetchTafseer = async () => {
+      // If we have cached data for this tab, use it
+      if (cache[selectedTab] !== undefined) {
+        setTafseerData(cache[selectedTab]);
+        setError(null);
+        return;
       }
-      setTafseerData(
-        (tafseerJSON.default as TafseerAya[]) || (tafseerJSON as TafseerAya[]),
-      );
-    } catch {
-      setTafseerData(null);
-    }
-  }, [selectedTabValue]);
 
-  useEffect(() => {
-    loadTafseerData();
-  }, [loadTafseerData]);
+      setLoading(true);
+      setError(null);
+      try {
+        const url = quranTafseerUrl(selectedTab);
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        const json = await response.json();
+        const data = (json as TafseerAya[]) || [];
+        setTafseerData(data);
+        // Cache it
+        setCache((prev) => ({ ...prev, [selectedTab]: data }));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'فشل تحميل التفسير');
+        setTafseerData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTafseer();
+  }, [selectedTab, surah, aya, cache]); // re‑fetch if surah/aya changes (even if cached data exists, we keep it; the hook `useTafseerContent` will filter by surah/aya)
+
+  // Reset cache when surah or aya changes? We could keep cache but the content check might need fresh.
+  // Actually we want to keep the data but the hasNoTafseerContent will check within the same surah/aya.
+  // So we don't need to reset cache.
+
+  const formattedTafseerHtml = useTafseerContent({
+    tafseerData,
+    surah,
+    aya,
+  });
+
+  // Get list of tabs (all keys from tabLabels)
+  const tabKeys = Object.keys(tabLabels) as TafseerKey[];
 
   return (
     <ThemedView
@@ -222,39 +115,41 @@ export function Tafseer({ aya, surah, opacity = 1 }: Props) {
       <ThemedText style={[styles.title, { backgroundColor: 'transparent' }]}>
         {surahName} - الآية {countBesmalAya ? aya : aya - 1}
       </ThemedText>
-      <ThemedView style={[styles.tabs, { backgroundColor: 'transparent' }]}>
-        {Object.keys(tabLabels).map((key) => {
-          const tabKey = key as TafseerTabs;
 
-          // Use tabsWithContent to check if the tab has content
-          // For the current tab, use isCurrentTabEmpty as a fallback if not yet in tabsWithContent
-          const isCurrentTab = tabKey === selectedTabValue;
-          const hasNoContent =
-            tabsWithContent[tabKey] === false ||
-            (isCurrentTab &&
-              isCurrentTabEmpty &&
-              tabsWithContent[tabKey] === undefined);
+      <ThemedView style={[styles.tabs, { backgroundColor: 'transparent' }]}>
+        {tabKeys.map((tabKey) => {
+          const isSelected = tabKey === selectedTab;
+          // Only show disabled state if we have loaded the data for this tab and it's empty
+          const hasContent =
+            cache[tabKey] !== undefined
+              ? !hasNoTafseerContent({
+                  tafseerData: cache[tabKey],
+                  surah,
+                  aya,
+                })
+              : true; // assume it has content until proven otherwise (we can't know without fetch)
+
+          const isDisabled = !hasContent && cache[tabKey] !== undefined;
 
           return (
             <Pressable
               key={tabKey}
               style={[
                 styles.tabButton,
-                selectedTabValue === tabKey && styles.activeTab,
-                selectedTabValue === tabKey && {
-                  borderColor: tintColor,
-                },
-                hasNoContent && styles.disabledTab,
+                isSelected && styles.activeTab,
+                isSelected && { borderColor: tintColor },
+                isDisabled && styles.disabledTab,
                 { backgroundColor: 'transparent' },
               ]}
               onPress={() => setSelectedTab(tabKey)}
               accessibilityLabel={`${tabLabels[tabKey]} tab for Surah ${surahName}, Aya ${aya}`}
               accessibilityHint={`Tap to see the tafseer for Surah ${surahName}, Aya ${aya} from ${tabLabels[tabKey]}`}
+              disabled={isDisabled}
             >
               <ThemedText
                 style={[
                   { color: tintColor, backgroundColor: 'transparent' },
-                  hasNoContent && styles.disabledTabText,
+                  isDisabled && styles.disabledTabText,
                 ]}
               >
                 {tabLabels[tabKey]}
@@ -264,9 +159,15 @@ export function Tafseer({ aya, surah, opacity = 1 }: Props) {
         })}
       </ThemedView>
 
-      {tafseerData ? (
+      {loading ? (
+        <ActivityIndicator size="large" color={tintColor} />
+      ) : error ? (
+        <ThemedText style={{ color: 'red', textAlign: 'center', padding: 20 }}>
+          {error}
+        </ThemedText>
+      ) : tafseerData ? (
         <ThemedView style={{ flex: 1 }}>
-          {/* @ts-ignore - Ignoring type error for HTMLView component */}
+          {/* @ts-ignore - HTMLView types may be incomplete */}
           <HTMLView
             value={formattedTafseerHtml}
             style={{
@@ -295,7 +196,9 @@ export function Tafseer({ aya, surah, opacity = 1 }: Props) {
           />
         </ThemedView>
       ) : (
-        <ActivityIndicator size="large" color={tintColor} />
+        <ThemedText style={{ textAlign: 'center', padding: 20 }}>
+          لا يوجد تفسير لهذه الآية
+        </ThemedText>
       )}
     </ThemedView>
   );

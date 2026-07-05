@@ -32,22 +32,12 @@ export const QURAN_SVG_CDN_BASE: string =
   (typeof process !== 'undefined' && process.env?.EXPO_PUBLIC_QURAN_SVG_CDN) ||
   DEFAULT_CDN_BASE;
 
-/** Tafaseer mirror — separate repo to avoid bloating quran-svg with our files. */
-const TAFSEER_PINNED_SHA_PLACEHOLDER =
-  '<set after creating adelpro/quran-tafaseer-mirror>';
-const TAFSEER_CDN_BASE = `https://cdn.jsdelivr.net/gh/adelpro/quran-tafaseer-mirror@${TAFSEER_PINNED_SHA_PLACEHOLDER}`;
-
-export const QURAN_TAFSEER_CDN_BASE: string =
-  (typeof process !== 'undefined' &&
-    process.env?.EXPO_PUBLIC_QURAN_TAFSEER_CDN) ||
-  TAFSEER_CDN_BASE;
-
 /**
- * The six qiraat we support. The first two are bundled in the APK; the
+ * The six riwaya we support. The first two are bundled in the APK; the
  * other four are downloaded on demand from the CDN above.
  */
 
-/** Maps our qiraa enum to the upstream repo's `<qiraa>/<publisher>` path. */
+/** Maps our riwaya enum to the upstream repo's `<qiraa>/<publisher>` path. */
 export const RIWAYA_TO_UPSTREAM_PATH: Record<Riwaya, string> = {
   hafs: 'hafs/kfqc',
   warsh: 'warsh/kfqc',
@@ -90,11 +80,3 @@ export function quranSvgJsonUrl(riwaya: Riwaya, page: number): string {
   const padded = String(page).padStart(3, '0');
   return `${QURAN_SVG_CDN_BASE}/mushafs/${path}/json/${padded}.json`;
 }
-
-/** Build a URL for a tafseer JSON on the tafseer mirror CDN. */
-export function quranTafseerUrl(key: string): string {
-  return `${QURAN_TAFSEER_CDN_BASE}/${key}.json`;
-}
-
-/** RIWAYA that ship pre-bundled inside the APK (no download needed). */
-export const BUNDLED_RIWAYA: readonly Riwaya[] = ['hafs', 'warsh'];
