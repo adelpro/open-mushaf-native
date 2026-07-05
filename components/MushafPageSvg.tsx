@@ -10,8 +10,8 @@ import {
 
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAtomValue } from 'jotai/react';
-import { GestureDetector } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { runOnJS } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
 
@@ -208,7 +208,7 @@ export function MushafPageSvg({ qiraa, activeSurah }: Props) {
                 : null
             }
             highlightColor={highlightColor}
-            onPressAyah={handlePolygonPress}
+            onLongPressAyah={handlePolygonPress}
           />
         </Animated.View>
       </GestureDetector>
@@ -244,7 +244,7 @@ function SvgXmlOverlay(props: {
   height: number;
   activeAyah: { surah: number; ayah: number } | null;
   highlightColor: string;
-  onPressAyah: (surah: number, ayah: number) => void;
+  onLongPressAyah: (surah: number, ayah: number) => void;
 }) {
   return (
     <PageOverlaySvg
@@ -252,7 +252,7 @@ function SvgXmlOverlay(props: {
       viewBox={props.viewBox}
       activeAyah={props.activeAyah}
       highlightColor={props.highlightColor}
-      onPressAyah={props.onPressAyah}
+      onLongPressAyah={props.onLongPressAyah}
     />
   );
 }

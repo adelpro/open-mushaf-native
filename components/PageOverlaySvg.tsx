@@ -21,7 +21,9 @@ import { ThemedText } from './ThemedText';
  *  - viewBox:  the SVG's own viewBox; both source SVG and overlay use it
  *  - activeAyah: { surah, ayah } currently selected (highlighted), or null
  *  - highlightColor / highlightOpacity: theme-driven highlight style
- *  - onPressAyah(surah, ayah): tap handler
+ *  - delayLongPress: ms before a press is treated as long-press (default 500)
+ *  - onLongPressAyah(surah, ayah): fires after delayLongPress of press
+ *    on a polygon. Used to open the tafseer popup for the pressed ayah.
  */
 type Props = {
   polygons: {
@@ -33,7 +35,9 @@ type Props = {
   activeAyah: { surah: number; ayah: number } | null;
   highlightColor: string;
   highlightOpacity?: number;
-  onPressAyah: (surah: number, ayah: number) => void;
+  /** Fires after `delayLongPress` ms of uninterrupted press (default 500ms). */
+  delayLongPress?: number;
+  onLongPressAyah: (surah: number, ayah: number) => void;
 };
 
 export function PageOverlaySvg({
@@ -42,7 +46,8 @@ export function PageOverlaySvg({
   activeAyah,
   highlightColor,
   highlightOpacity = 0.45,
-  onPressAyah,
+  delayLongPress = 500,
+  onLongPressAyah,
 }: Props) {
   // Normalize polygon vertices once per render. They never change
   // for a given (qiraa, page) combo, but useMemo is cheap insurance
@@ -97,7 +102,8 @@ export function PageOverlaySvg({
               fill={isActive ? highlightColor : 'none'}
               fillOpacity={isActive ? highlightOpacity : 0}
               pointerEvents="auto"
-              onPress={() => onPressAyah(surah, ayah)}
+              delayLongPress={delayLongPress}
+              onLongPress={() => onLongPressAyah(surah, ayah)}
             />
           );
         })}

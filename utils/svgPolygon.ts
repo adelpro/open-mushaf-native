@@ -67,6 +67,26 @@ export function polygonBounds(points: Point[]): {
   return { minX, minY, maxX, maxY };
 }
 
+/**
+ * Standard ray-casting point-in-polygon test. Returns true if the point
+ * `(x, y)` is strictly inside the polygon (boundary counts as outside).
+ * Used to hit-test touch coordinates against an ayah polygon from the
+ * upstream per-page JSON.
+ */
+export function pointInPolygon(point: Point, polygon: Point[]): boolean {
+  if (polygon.length < 3) return false;
+  const [x, y] = point;
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const [xi, yi] = polygon[i];
+    const [xj, yj] = polygon[j];
+    const intersects =
+      yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+    if (intersects) inside = !inside;
+  }
+  return inside;
+}
+
 /** Extract the viewBox dimensions from the SVG XML string's `<svg viewBox=...>`. */
 export function extractSvgViewBox(
   svgXml: string,
