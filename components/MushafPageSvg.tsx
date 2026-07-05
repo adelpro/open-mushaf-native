@@ -70,6 +70,12 @@ export function MushafPageSvg({ qiraa, activeSurah }: Props) {
     setShowTafseer(true);
   }, []);
 
+  // NEW: closes popup and clears selection
+  const handleClosePopup = useCallback(() => {
+    setShowTafseer(false);
+    setSelectedAya(null);
+  }, []);
+
   const handlePageChange = useCallback(
     (delta: number) => {
       const next = currentPage + delta;
@@ -139,7 +145,7 @@ export function MushafPageSvg({ qiraa, activeSurah }: Props) {
       </GestureDetector>
       <TafseerPopup
         show={showTafseer}
-        setShow={setShowTafseer}
+        setShow={handleClosePopup}
         aya={selectedAya?.ayah ?? 0}
         surah={selectedAya?.surah ?? 0}
       />
