@@ -275,6 +275,42 @@ try {
     }),
   );
 
+  // Cache Mushaf SVG files (one per page)
+  registerRoute(
+    ({ url }) => {
+      return (
+        url.pathname.includes('/mushafs/') && url.pathname.endsWith('.svg')
+      );
+    },
+    new StaleWhileRevalidate({
+      cacheName: 'mushaf-svgs',
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 30, // keep last 30 pages (or increase for your needs)
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+        }),
+      ],
+    }),
+  );
+
+  // Cache Mushaf JSON files (polygon data)
+  registerRoute(
+    ({ url }) => {
+      return (
+        url.pathname.includes('/mushafs/') && url.pathname.endsWith('.json')
+      );
+    },
+    new StaleWhileRevalidate({
+      cacheName: 'mushaf-json',
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 30,
+          maxAgeSeconds: 30 * 24 * 60 * 60,
+        }),
+      ],
+    }),
+  );
+
   // Add a fallback for navigation requests when offline
   workbox.routing.setCatchHandler(async ({ event }) => {
     // Return the offline page for navigation requests
