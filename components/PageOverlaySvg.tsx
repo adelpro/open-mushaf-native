@@ -1,9 +1,13 @@
-import React, { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Polygon, Svg } from 'react-native-svg';
 
-import { polygonPointsString } from '@/utils/svgPolygon';
+import {
+  parsePolygonPoints,
+  pointInPolygon,
+  polygonPointsString,
+} from '@/utils/svgPolygon';
 
 import { ThemedText } from './ThemedText';
 
@@ -61,12 +65,51 @@ export function PageOverlaySvg({
       })),
     [polygons],
   );
+  const [layout, setLayout] = useState({ width: 0, height: 0 });
+
+  const handleLongPress = (event: any) => {
+    if (!layout.width || !layout.height) return;
+
+    const locationX = event?.nativeEvent?.locationX;
+    const locationY = event?.nativeEvent?.locationY;
+    if (typeof locationX !== 'number' || typeof locationY !== 'number') return;
+
+    const aspectRatio = viewBox.width / viewBox.height;
+    const containerAspect = layout.width / layout.height;
+    let scale = 1;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    if (containerAspect > aspectRatio) {
+      scale = layout.height / viewBox.height;
+      offsetX = (layout.width - viewBox.width * scale) / 2;
+    } else {
+      scale = layout.width / viewBox.width;
+      offsetY = (layout.height - viewBox.height * scale) / 2;
+    }
+
+    const x = (locationX - offsetX) / scale + viewBox.minX;
+    const y = (locationY - offsetY) / scale + viewBox.minY;
+
+    const match = normalized.find(({ points, surah, ayah }) => {
+      const polygon = parsePolygonPoints(points);
+      return pointInPolygon([x, y], polygon);
+    });
+
+    if (match) {
+      onLongPressAyah(match.surah, match.ayah);
+    }
+  };
 
   return (
     <View
       pointerEvents="box-none"
       style={StyleSheet.absoluteFill}
       accessible={false}
+      onLayout={(event) => {
+        const { width, height } = event.nativeEvent.layout;
+        setLayout({ width, height });
+      }}
     >
       <Svg
         style={StyleSheet.absoluteFill}
@@ -90,6 +133,7 @@ export function PageOverlaySvg({
             activeAyah != null &&
             activeAyah.surah === surah &&
             activeAyah.ayah === ayah;
+
           return (
             <Polygon
               // Include the array index: upstream JSON sometimes emits
@@ -102,12 +146,17 @@ export function PageOverlaySvg({
               fill={isActive ? highlightColor : 'none'}
               fillOpacity={isActive ? highlightOpacity : 0}
               pointerEvents="auto"
-              delayLongPress={delayLongPress}
-              onLongPress={() => onLongPressAyah(surah, ayah)}
             />
           );
         })}
       </Svg>
+      <Pressable
+        style={StyleSheet.absoluteFill}
+        pointerEvents="auto"
+        delayLongPress={delayLongPress}
+        onLongPress={handleLongPress}
+        accessible={false}
+      />
     </View>
   );
 }
