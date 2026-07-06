@@ -118,7 +118,14 @@ export function MushafPageSvg({ riwaya, activeSurah }: Props) {
       edges={['top']}
     >
       <GestureDetector gesture={panGestureHandler}>
-        <Animated.View style={{ transform: [{ translateX }] }}>
+        <Animated.View
+          style={{
+            transform: [{ translateX }],
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
           <View style={{ width: pageWidth, height: pageHeight }}>
             {/* Original SVG – display only */}
             <SvgXml
