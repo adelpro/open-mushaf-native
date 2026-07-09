@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Platform } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { Platform, useColorScheme } from 'react-native';
 
 import { Directory, File, Paths } from 'expo-file-system';
 
@@ -7,6 +7,20 @@ import { quranSvgPageUrl } from '@/constants/svgCdn';
 import { Riwaya } from '@/types';
 
 import { useQuranMetadata } from './useQuranMetadata';
+
+/**
+ * The upstream quranpedia/quran-svg XML hardcodes a small set of fill
+ * colors for every text and ornament path. Five of the six qiraaat
+ * use `#231f20` (near-black); the Libya Awqaf (Qalon) mushaf uses
+ * `#b8924e` (a gold/brown ornament). The page background in light
+ * mode is ivory/white, so the originals work fine. In dark mode the
+ * container switches to `rgba(26, 26, 26, ...)` which makes the SVG
+ * text invisible. Swapping both fills to an off-white in dark mode
+ * restores legibility without re-fetching the (large) SVG from the
+ * CDN — the transform runs on the cached XML in memory.
+ */
+const SVG_TEXT_FILL_DARK_FROM = ['#231f20', '#b8924e'];
+const SVG_TEXT_FILL_DARK = '#f0ebe5';
 
 /**
  * Reads the raw SVG XML text for a single mushaf page from the local
@@ -41,7 +55,7 @@ export function useSvgText(args: {
   error: string | null;
 } {
   const { riwaya, page, activeSurah } = args;
-  const [text, setText] = useState<string | null>(null);
+  const [rawText, setRawText] = useState<string | null>(null);
   const [viewBox, setViewBox] = useState<{
     minX: number;
     minY: number;
@@ -51,14 +65,27 @@ export function useSvgText(args: {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const colorScheme = useColorScheme();
   const { specsData } = useQuranMetadata();
   const { defaultNumberOfPages = 604 } = specsData ?? {};
+
+  // Recolor the cached XML in memory based on the current color scheme.
+  // Keyed on rawText + colorScheme so toggling dark mode doesn't re-fetch.
+  const text = useMemo(() => {
+    if (!rawText) return null;
+    if (colorScheme !== 'dark') return rawText;
+    let recolored = rawText;
+    for (const fill of SVG_TEXT_FILL_DARK_FROM) {
+      recolored = recolored.replaceAll(fill, SVG_TEXT_FILL_DARK);
+    }
+    return recolored;
+  }, [rawText, colorScheme]);
 
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
     setError(null);
-    setText(null);
+    setRawText(null);
     setViewBox(null);
 
     const load = async () => {
@@ -121,7 +148,7 @@ export function useSvgText(args: {
         }
 
         if (cancelled) return;
-        setText(xml);
+        setRawText(xml);
         setViewBox(extractViewBox(xml));
       } catch (err) {
         if (!cancelled) {

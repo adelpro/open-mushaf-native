@@ -57,7 +57,7 @@ export function UnifiedSvgPage({
                 d={path.d}
                 fill={isActive ? highlightColor : 'transparent'}
                 fillOpacity={isActive ? highlightOpacity : 0}
-                pointerEvents="auto"
+                style={{ pointerEvents: 'auto' }}
                 onLongPress={() => onLongPressAyah(surah, ayah)}
               />
             );
@@ -66,7 +66,7 @@ export function UnifiedSvgPage({
               <Path
                 key={path.id || `text-${index}`}
                 d={path.d}
-                pointerEvents="none"
+                style={{ pointerEvents: 'none' }}
               />
             );
           }

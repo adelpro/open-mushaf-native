@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import uuid from 'expo-modules-core/src/uuid';
+import { randomUUID } from 'expo-crypto';
 import { Stack } from 'expo-router';
 import { useAtom } from 'jotai';
 import Toggle from 'react-native-toggle-input';
@@ -210,7 +210,7 @@ export default function RemindersScreen() {
     if (!newTitle.trim()) return;
 
     const newReminder: Reminder = {
-      id: `custom-${uuid.v4()}`,
+      id: `custom-${randomUUID()}`,
       title: newTitle.trim(),
       body: newTitle.trim(),
       enabled: false,
@@ -576,10 +576,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 14,
     elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
   },
   cardHeader: {
     flexDirection: 'row',

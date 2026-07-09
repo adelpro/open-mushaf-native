@@ -1,5 +1,2 @@
 export type ExternalLinkType =
-  | `http${string}`
-  | `https${string}`
-  | `mailto${string}`
-  | `tel${string}`;
+  `http${string}` | `https${string}` | `mailto${string}` | `tel${string}`;

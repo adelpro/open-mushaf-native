@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 import { getDefaultStore } from 'jotai';
 import { useAtomValue } from 'jotai/react';
 import { requestWidgetUpdate } from 'react-native-android-widget';
@@ -30,6 +32,11 @@ export const useUpdateAndroidWidget = () => {
   const riwaya = useAtomValue(mushafRiwaya) || 'warsh';
 
   const updateAndroidWidget = async () => {
+    // react-native-android-widget is Android-only; on web/iOS the
+    // requestWidgetUpdate() callback would fire widgetNotFound() every
+    // call and flood the console.
+    if (Platform.OS !== 'android') return;
+
     try {
       const store = getDefaultStore();
       const dailyGoal = store.get(dailyTrackerGoal);

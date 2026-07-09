@@ -133,7 +133,7 @@ export function MushafPageSvg({ riwaya, activeSurah }: Props) {
               width={pageWidth}
               height={pageHeight}
               preserveAspectRatio="xMidYMid meet"
-              pointerEvents="none"
+              style={{ pointerEvents: 'none' }}
             />
             {/* Interactive overlay – same viewBox, same size */}
             {viewBox && (

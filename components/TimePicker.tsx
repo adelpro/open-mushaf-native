@@ -134,9 +134,9 @@ const Wheel = ({
           {
             backgroundColor: primaryColor + '18',
             borderColor: primaryColor + '40',
+            pointerEvents: 'none' as const,
           },
         ]}
-        pointerEvents="none"
       />
       <FlatList
         ref={flatListRef}

@@ -5,7 +5,9 @@
     "owner": "adelpro",
     "version": "6.0.1",
     "orientation": "default",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -23,7 +25,6 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
       "intentFilters": [
         {
           "action": "VIEW",
@@ -32,7 +33,10 @@
             "host": "quran.us.kg",
             "pathPrefix": "/"
           },
-          "category": ["BROWSABLE", "DEFAULT"],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ],
           "autoVerify": true
         }
       ],
@@ -96,7 +100,9 @@
       [
         "react-native-android-widget",
         {
-          "fonts": ["./assets/fonts/open_mushaf_icons.ttf"],
+          "fonts": [
+            "./assets/fonts/open_mushaf_icons.ttf"
+          ],
           "widgets": [
             {
               "name": "OpenMushaf",
@@ -112,7 +118,9 @@
             }
           ]
         }
-      ]
+      ],
+      "expo-image",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true,

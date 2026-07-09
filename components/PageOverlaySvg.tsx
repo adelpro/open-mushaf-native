@@ -74,17 +74,21 @@ export function PageOverlaySvg({
 
   return (
     <View
-      style={[StyleSheet.absoluteFill, { width, height }]}
+      style={[
+        StyleSheet.absoluteFill,
+        { width, height, pointerEvents: 'box-none' as const },
+      ]}
       onLayout={(e) => setLayout(e.nativeEvent.layout)}
-      pointerEvents="box-none"
     >
       <Svg
         width={width}
         height={height}
         viewBox={`${viewBox.minX} ${viewBox.minY} ${viewBox.width} ${viewBox.height}`}
         preserveAspectRatio="xMidYMid meet"
-        style={StyleSheet.absoluteFill}
-        pointerEvents="box-none"
+        style={[
+          StyleSheet.absoluteFill,
+          { pointerEvents: 'box-none' as const },
+        ]}
       >
         {processed.map(({ surahNumber, ayahNumber, polygon }, index) => {
           const isActive =
@@ -98,14 +102,14 @@ export function PageOverlaySvg({
               d={polygon}
               fill={isActive ? highlightColor : 'transparent'}
               fillOpacity={isActive ? highlightOpacity : 0}
-              pointerEvents="none" // no direct events – handled by Pressable
+              // no direct events – handled by Pressable
+              style={{ pointerEvents: 'none' }}
             />
           );
         })}
       </Svg>
       <Pressable
-        style={StyleSheet.absoluteFill}
-        pointerEvents="auto"
+        style={[StyleSheet.absoluteFill, { pointerEvents: 'auto' as const }]}
         delayLongPress={delayLongPress}
         onLongPress={handleLongPress}
         accessible={false}
