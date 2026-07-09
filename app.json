@@ -52,7 +52,25 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "react-native-android-widget",
+      [
+        "react-native-android-widget",
+        {
+          "fonts": ["./assets/fonts/open_mushaf_icons.ttf"],
+          "widgets": [
+            {
+              "name": "OpenMushaf",
+              "label": "المصحف المفتوح",
+              "minWidth": 320,
+              "minHeight": 120,
+              "initialEnabled": true,
+              "previewImage": "./assets/widgets/widget-preview.png",
+              "updatePeriodMillis": 3600000,
+              "resizeMode": "horizontal",
+              "description": "Open Mushaf Widget"
+            }
+          ]
+        }
+      ],
       [
         "expo-notifications",
         {
@@ -93,26 +111,6 @@
       ],
       "expo-secure-store",
       "react-native-edge-to-edge",
-      [
-        "react-native-android-widget",
-        {
-          "fonts": ["./assets/fonts/open_mushaf_icons.ttf"],
-          "widgets": [
-            {
-              "name": "OpenMushaf",
-              "label": "Open Mushaf Widget",
-              "minWidth": "320dp",
-              "minHeight": "120dp",
-              "targetCellWidth": 5,
-              "targetCellHeight": 2,
-              "description": "Open Mushaf Widget",
-              "previewImage": "./assets/widgets/widget-preview.png",
-              "resizeMode": "horizontal | vertical",
-              "updatePeriodMillis": 3600000
-            }
-          ]
-        }
-      ],
       "expo-image",
       "expo-status-bar"
     ],
