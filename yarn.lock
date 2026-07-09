@@ -11082,7 +11082,7 @@ __metadata:
     react-dom: "npm:19.2.3"
     react-helmet-async: "npm:^2.0.5"
     react-native: "npm:0.86.0"
-    react-native-android-widget: "npm:^0.17.2"
+    react-native-android-widget: "npm:^0.20.3"
     react-native-awesome-slider: "npm:^2.9.0"
     react-native-edge-to-edge: "npm:1.6.0"
     react-native-gesture-handler: "npm:~2.32.0"
@@ -11738,9 +11738,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-android-widget@npm:^0.17.2":
-  version: 0.17.3
-  resolution: "react-native-android-widget@npm:0.17.3"
+"react-native-android-widget@npm:^0.20.3":
+  version: 0.20.3
+  resolution: "react-native-android-widget@npm:0.20.3"
   peerDependencies:
     expo: ">=54.0.0"
     react: "*"
@@ -11748,7 +11748,7 @@ __metadata:
   peerDependenciesMeta:
     expo:
       optional: true
-  checksum: 10c0/a46464a16352872f1fa787ea41c3c488932ddcb7fe3de40050383730d561fcf90e8208d9ebb5b1b3d5661ce5f8cf4b58e4ebf84ad67e610b7a943665278cbdfa
+  checksum: 10c0/cee78f9218cb7bf9ffaa4bd3976962124e758fe0610f2eaff58f1daccaef2961f08ee09747aaa7eeb90ef0ee2a70b3ab6157c2cd9377a356a7df3fd33aa25068
   languageName: node
   linkType: hard
 

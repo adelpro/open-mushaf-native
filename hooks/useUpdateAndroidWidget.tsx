@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, useColorScheme } from 'react-native';
 
 import { getDefaultStore } from 'jotai';
 import { useAtomValue } from 'jotai/react';
@@ -30,6 +30,9 @@ import AndroidWidget from '@/widgets/android';
 export const useUpdateAndroidWidget = () => {
   const savedPage = useAtomValue(currentSavedPage);
   const riwaya = useAtomValue(mushafRiwaya) || 'warsh';
+  const colorScheme = useColorScheme();
+  const widgetColorScheme =
+    colorScheme === 'light' || colorScheme === 'dark' ? colorScheme : undefined;
 
   const updateAndroidWidget = async () => {
     // react-native-android-widget is Android-only; on web/iOS the
@@ -81,6 +84,7 @@ export const useUpdateAndroidWidget = () => {
         renderWidget: () => (
           <AndroidWidget
             dailyGoal={dailyGoal}
+            colorScheme={widgetColorScheme}
             dailyCompleted={dailyCompleted}
             currentPage={currentPage}
             currentSurahNumber={currentSurahNumber}
