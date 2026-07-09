@@ -73,12 +73,12 @@ export function useSvgText(args: {
   // Keyed on rawText + colorScheme so toggling dark mode doesn't re-fetch.
   const text = useMemo(() => {
     if (!rawText) return null;
-    if (colorScheme !== 'dark') return rawText;
+    if (colorScheme !== 'dark') return fixAyahPolygonOpacity(rawText);
     let recolored = rawText;
     for (const fill of SVG_TEXT_FILL_DARK_FROM) {
       recolored = recolored.replaceAll(fill, SVG_TEXT_FILL_DARK);
     }
-    return recolored;
+    return fixAyahPolygonOpacity(recolored);
   }, [rawText, colorScheme]);
 
   useEffect(() => {
@@ -201,4 +201,16 @@ function stripAyahNamespace(svgXml: string): string {
   return svgXml
     .replace(/\s+xmlns:ayah="[^"]*"/g, '')
     .replace(/\s+ayah:[a-zA-Z][a-zA-Z0-9-]*="[^"]*"/g, '');
+}
+
+export function fixAyahPolygonOpacity(svgString: string): string {
+  // Add fill-opacity="0" to all ayahPolygon paths that don't already have it
+  // We'll use a regex to find <path class="ayahPolygon" ...> and insert fill-opacity="0" after the class
+  // But we need to be careful to not duplicate if it exists.
+  // A simple approach: replace all occurrences of `<path class="ayahPolygon"` with `<path class="ayahPolygon" fill-opacity="0"`
+  const svg = svgString.replace(
+    /<path class="ayahPolygon"/g,
+    '<path class="ayahPolygon" fill-opacity="0"',
+  );
+  return svg;
 }

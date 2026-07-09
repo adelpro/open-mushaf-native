@@ -14,6 +14,8 @@ type PageOverlaySvgProps = {
   highlightColor: string;
   highlightOpacity?: number;
   delayLongPress?: number;
+  /** Called on a short press (tap) – toggles the top menu */
+  onPress?: () => void;
   onLongPressAyah: (surah: number, ayah: number) => void;
 };
 
@@ -26,6 +28,7 @@ export function PageOverlaySvg({
   highlightColor,
   highlightOpacity = 0.45,
   delayLongPress = 500,
+  onPress,
   onLongPressAyah,
 }: PageOverlaySvgProps) {
   // Precompute points for hit-testing and keep d for rendering
@@ -102,8 +105,6 @@ export function PageOverlaySvg({
               d={polygon}
               fill={isActive ? highlightColor : 'transparent'}
               fillOpacity={isActive ? highlightOpacity : 0}
-              // no direct events – handled by Pressable
-              style={{ pointerEvents: 'none' }}
             />
           );
         })}
@@ -111,6 +112,7 @@ export function PageOverlaySvg({
       <Pressable
         style={[StyleSheet.absoluteFill, { pointerEvents: 'auto' as const }]}
         delayLongPress={delayLongPress}
+        onPress={onPress} // <-- Added
         onLongPress={handleLongPress}
         accessible={false}
       />

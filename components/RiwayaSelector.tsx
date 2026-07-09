@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Modal,
-  Pressable,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 
@@ -44,9 +38,9 @@ export function RiwayaSelector({
       animationType="fade"
       onRequestClose={onClose}
     >
-      <TouchableWithoutFeedback onPress={onClose}>
+      <Pressable onPress={onClose} style={{ flex: 1 }}>
         <View style={styles.overlay}>
-          <TouchableWithoutFeedback>
+          <Pressable onPress={() => {}} style={styles.modalWrapper}>
             <ThemedView style={[styles.modal, { backgroundColor: cardColor }]}>
               <View style={styles.header}>
                 <ThemedText type="title" style={styles.title}>
@@ -57,7 +51,7 @@ export function RiwayaSelector({
                 </Pressable>
               </View>
 
-              <View style={styles.list}>
+              <ScrollView style={styles.list}>
                 {sortedRiwayat.map((riwaya) => {
                   const isSelected = riwaya === currentRiwaya;
                   return (
@@ -87,11 +81,11 @@ export function RiwayaSelector({
                     </Pressable>
                   );
                 })}
-              </View>
+              </ScrollView>
             </ThemedView>
-          </TouchableWithoutFeedback>
+          </Pressable>
         </View>
-      </TouchableWithoutFeedback>
+      </Pressable>
     </Modal>
   );
 }
@@ -104,12 +98,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  modalWrapper: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    maxWidth: 400,
+  },
   modal: {
     width: '100%',
-    maxWidth: 400,
     borderRadius: 12,
     padding: 20,
-    maxHeight: '80%',
+    maxHeight: '80%', // Keeps your scrolling fix intact
   },
   header: {
     flexDirection: 'row',

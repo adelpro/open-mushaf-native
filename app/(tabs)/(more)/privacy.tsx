@@ -90,7 +90,6 @@ export default function PrivacyScreen() {
 
       <TouchableOpacity
         style={styles.link}
-        onPress={() => console.log('Privacy policy link clicked')}
         accessibilityRole="link"
         accessibilityLabel="عرض تفاصيل سياسة الخصوصية"
         accessibilityHint="ينقلك إلى صفحة تحتوي على تفاصيل سياسة الخصوصية كاملة"
