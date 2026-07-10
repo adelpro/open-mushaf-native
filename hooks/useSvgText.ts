@@ -53,6 +53,7 @@ export function useSvgText(args: {
   } | null;
   isLoading: boolean;
   error: string | null;
+  errorKind: SvgTextErrorKind | null;
 } {
   const { riwaya, page, activeSurah } = args;
   const [rawText, setRawText] = useState<string | null>(null);
@@ -64,6 +65,7 @@ export function useSvgText(args: {
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [errorKind, setErrorKind] = useState<SvgTextErrorKind | null>(null);
 
   const colorScheme = useColorScheme();
   const { specsData } = useQuranMetadata();
@@ -85,64 +87,164 @@ export function useSvgText(args: {
     let cancelled = false;
     setIsLoading(true);
     setError(null);
+    setErrorKind(null);
     setRawText(null);
     setViewBox(null);
 
     const load = async () => {
       try {
         if (page < 1 || page > defaultNumberOfPages) {
-          throw new Error(
+          throw new SvgTextError(
+            'out-of-range',
             `Page ${page} out of range 1..${defaultNumberOfPages}`,
           );
         }
-        let xml: string;
+
         // Only the surah-scoped variant gets the multi-surah fallback dance —
         // when no `activeSurah` is requested we just load the default page.
         const variantSuffix =
           activeSurah != null ? `-surah${activeSurah}.svg` : null;
-        if (Platform.OS === 'web') {
-          // `expo-file-system` v57+ Directory/File/Paths is Android/iOS/tvOS only
-          // (no documented web fallback). On web, skip the local FS cache and
-          // fetch the SVG straight from the pinned CDN defined in svgCdn.ts.
-          const defaultUrl = quranSvgPageUrl(riwaya, page);
-          const variantUrl =
-            variantSuffix == null
-              ? null
-              : defaultUrl.replace(/\.svg$/, variantSuffix);
-          const primaryUrl = variantUrl ?? defaultUrl;
+        const defaultUrl = quranSvgPageUrl(riwaya, page);
+        const variantUrl =
+          variantSuffix == null
+            ? null
+            : defaultUrl.replace(/\.svg$/, variantSuffix);
+        const primaryUrl = variantUrl ?? defaultUrl;
+
+        // Fetch the SVG XML from the pinned CDN. Returns
+        // `fetch-failed` if the response is non-2xx; throws (caller
+        // catches as `not-cached-offline` when this is on a disk-miss
+        // path) on a network error.
+        const fetchFromCdn = async (
+          url: string,
+          throwAsOfflineOnReject: boolean,
+        ): Promise<string> => {
           try {
-            const res = await fetch(primaryUrl);
+            const res = await fetch(url);
             if (!res.ok) {
-              throw new Error(`HTTP ${res.status} fetching ${primaryUrl}`);
+              throw new SvgTextError(
+                'fetch-failed',
+                `HTTP ${res.status} fetching ${url}`,
+              );
             }
-            xml = stripAyahNamespace(await res.text());
+            return stripAyahNamespace(await res.text());
+          } catch (err) {
+            if (throwAsOfflineOnReject && err instanceof SvgTextError) {
+              // Already classified — let the caller decide if the
+              // overall error is `fetch-failed` or `not-cached-offline`.
+              throw err;
+            }
+            if (throwAsOfflineOnReject) {
+              throw new SvgTextError(
+                'not-cached-offline',
+                err instanceof Error ? err.message : String(err),
+              );
+            }
+            throw err;
+          }
+        };
+
+        let xml!: string;
+        if (Platform.OS === 'web') {
+          // `expo-file-system` v57+ Directory/File/Paths is Android/iOS/tvOS
+          // only (no documented web fallback). On web, skip the local FS
+          // cache and fetch the SVG straight from the pinned CDN; the SW's
+          // `mushaf-svgs` route (StaleWhileRevalidate, 30 entries / 30 d)
+          // covers casual browsing, and `mushaf-download-<riwaya>` (added
+          // in Phase 5) holds the explicit offline download.
+          try {
+            xml = await fetchFromCdn(primaryUrl, false);
           } catch (e) {
             if (variantUrl != null) {
-              // Multi-surah variant missing — fall back to the default page SVG.
-              const fallback = await fetch(defaultUrl);
-              if (!fallback.ok) {
-                throw new Error(
-                  `HTTP ${fallback.status} fetching ${defaultUrl}`,
-                );
-              }
-              xml = stripAyahNamespace(await fallback.text());
+              xml = await fetchFromCdn(defaultUrl, false);
             } else {
               throw e;
             }
           }
         } else {
+          // Native: try the local FS cache first. If the page isn't on disk
+          // yet (the offline download hasn't run, or pages are still
+          // streaming in), fall back to the CDN. The fetched XML is cached
+          // in memory by `useMemo` for the lifetime of this component; Phase 2
+          // will additionally persist fetched pages to disk so the second
+          // read is offline. The cache layout, populated by the upcoming
+          // download hooks, is:
+          //   Paths.document/mushaf/<riwaya>/<NNN>.svg
+          //   Paths.document/mushaf/<riwaya>/<NNN>-surah<S>.svg
           const dir = new Directory(Paths.document, 'mushaf', riwaya);
           const padded = String(page).padStart(3, '0');
           const primaryPath = `${padded}${variantSuffix ?? '.svg'}`;
+          const fallbackPath = `${padded}.svg`;
 
+          let fromDisk = false;
           try {
             xml = await new File(dir, primaryPath).text();
-          } catch (e) {
+            fromDisk = true;
+          } catch {
             if (variantSuffix != null) {
-              // Multi-surah variant missing — fall back to the default page SVG.
-              xml = await new File(dir, `${padded}.svg`).text();
-            } else {
-              throw e;
+              try {
+                xml = await new File(dir, fallbackPath).text();
+                fromDisk = true;
+              } catch {
+                // Disk miss on both variants — fall through to network.
+              }
+            }
+          }
+
+          if (!fromDisk) {
+            // Disk miss: the network fetch result is *not* from the
+            // local cache. If `fetch` rejects (network unreachable,
+            // DNS failure, etc.) we want `errorKind: 'not-cached-offline'`
+            // so the UI can offer a Download CTA, not a generic
+            // fetch-failed error. The throwAsOfflineOnReject flag
+            // asks fetchFromCdn to wrap a non-typed throw as
+            // not-cached-offline so the consumer gets a usable kind.
+            let classified: SvgTextError | null = null;
+            try {
+              xml = await fetchFromCdn(primaryUrl, true);
+            } catch (e) {
+              if (e instanceof SvgTextError) {
+                classified = e;
+              } else {
+                classified = new SvgTextError(
+                  'not-cached-offline',
+                  e instanceof Error ? e.message : String(e),
+                );
+              }
+              if (variantUrl != null) {
+                try {
+                  xml = await fetchFromCdn(defaultUrl, true);
+                  classified = null;
+                } catch (e2) {
+                  if (e2 instanceof SvgTextError) {
+                    classified = e2;
+                  } else {
+                    classified = new SvgTextError(
+                      'not-cached-offline',
+                      e2 instanceof Error ? e2.message : String(e2),
+                    );
+                  }
+                }
+              }
+            }
+            if (classified) throw classified;
+            // Phase 2: persist the page we just fetched so the second
+            // read is offline. Best-effort — a write failure must NOT
+            // fail the in-memory render, otherwise online reading
+            // regresses when the disk is full. We only persist the
+            // primary path (default `<NNN>.svg`), since the surah
+            // variant is rare and costs no perceptible benefit offline.
+            try {
+              const writeDir = new Directory(Paths.document, 'mushaf', riwaya);
+              if (!writeDir.exists) writeDir.create({ intermediates: true });
+              const writeFile = new File(
+                writeDir,
+                fallbackPath /* always the default variant */,
+              );
+              if (!writeFile.info().exists) writeFile.create();
+              writeFile.write(xml);
+            } catch {
+              // ignore — read path still works in memory
             }
           }
         }
@@ -152,7 +254,13 @@ export function useSvgText(args: {
         setViewBox(extractViewBox(xml));
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : String(err));
+          if (err instanceof SvgTextError) {
+            setError(err.message);
+            setErrorKind(err.kind);
+          } else {
+            setError(err instanceof Error ? err.message : String(err));
+            setErrorKind('unknown');
+          }
         }
       } finally {
         if (!cancelled) setIsLoading(false);
@@ -165,7 +273,7 @@ export function useSvgText(args: {
     };
   }, [riwaya, page, activeSurah, defaultNumberOfPages]);
 
-  return { text, viewBox, isLoading, error };
+  return { text, viewBox, isLoading, error, errorKind };
 }
 
 function extractViewBox(xml: string): {
@@ -201,6 +309,20 @@ function stripAyahNamespace(svgXml: string): string {
   return svgXml
     .replace(/\s+xmlns:ayah="[^"]*"/g, '')
     .replace(/\s+ayah:[a-zA-Z][a-zA-Z0-9-]*="[^"]*"/g, '');
+}
+
+/** Discriminated failure modes for `useSvgText`. Consumers (notably
+ *  `MushafPageSvg`) use `errorKind` to pick the right copy + CTA. */
+export type SvgTextErrorKind =
+  'out-of-range' | 'not-cached-offline' | 'fetch-failed' | 'unknown';
+
+export class SvgTextError extends Error {
+  readonly kind: SvgTextErrorKind;
+  constructor(kind: SvgTextErrorKind, message: string) {
+    super(message);
+    this.kind = kind;
+    this.name = 'SvgTextError';
+  }
 }
 
 export function fixAyahPolygonOpacity(svgString: string): string {

@@ -68,6 +68,35 @@ export default function MoreScreen() {
           },
         ]}
       >
+        {/* ─── Reading & preferences ─── */}
+        <ThemedButton
+          onPress={() => {
+            router.push('/settings');
+          }}
+          variant="primary"
+          style={styles.button}
+        >
+          <View style={styles.buttonContent}>
+            <SettingsSVG width={24} height={24} style={styles.svg} />
+            <Text style={styles.buttonText}>الإعدادات</Text>
+          </View>
+        </ThemedButton>
+        <ThemedButton
+          onPress={() => {
+            router.push('/downloads');
+          }}
+          variant="primary"
+          style={styles.button}
+        >
+          <View style={styles.buttonContent}>
+            <MaterialCommunityIcons
+              name="download-circle-outline"
+              size={24}
+              color="white"
+            />
+            <Text style={styles.buttonText}>التنزيلات</Text>
+          </View>
+        </ThemedButton>
         {!isWeb && (
           <ThemedButton
             onPress={() => {
@@ -88,18 +117,6 @@ export default function MoreScreen() {
         )}
         <ThemedButton
           onPress={() => {
-            router.push('/settings');
-          }}
-          variant="primary"
-          style={styles.button}
-        >
-          <View style={styles.buttonContent}>
-            <SettingsSVG width={24} height={24} style={styles.svg} />
-            <Text style={styles.buttonText}>الإعدادات</Text>
-          </View>
-        </ThemedButton>
-        <ThemedButton
-          onPress={() => {
             router.push('/bookmarks');
           }}
           variant="primary"
@@ -110,6 +127,9 @@ export default function MoreScreen() {
             <Text style={styles.buttonText}>العلامات المرجعية</Text>
           </View>
         </ThemedButton>
+
+        {/* ─── Help & info ─── */}
+        <ThemedText style={styles.sectionLabel}>المساعدة</ThemedText>
         <ThemedButton
           onPress={() => {
             router.push('/privacy');
@@ -175,6 +195,9 @@ export default function MoreScreen() {
             <Text style={styles.buttonText}>حول التطبيق</Text>
           </View>
         </ThemedButton>
+
+        {/* ─── Share ─── */}
+        <ThemedText style={styles.sectionLabel}>شارك</ThemedText>
         <ThemedButton
           onPress={handleShare}
           variant="primary"
@@ -261,6 +284,11 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 50,
+    // Pin to the intended mobile width on web too. ThemedButton's
+    // default `width: '90%'` stretches these across the viewport
+    // on wide web viewports, which the user reads as "malformed".
+    width: 300,
+    maxWidth: '90%',
   },
   buttonContent: {
     flexDirection: 'row',
@@ -280,6 +308,15 @@ const styles = StyleSheet.create({
   },
   svg: {
     color: 'white',
+  },
+  sectionLabel: {
+    width: 300,
+    textAlign: 'center',
+    fontSize: 13,
+    fontFamily: 'Tajawal_700Bold',
+    opacity: 0.5,
+    letterSpacing: 1,
+    marginTop: 8,
   },
 
   // Modal Styles (adapted from settings.tsx)

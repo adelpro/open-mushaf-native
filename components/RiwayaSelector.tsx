@@ -5,7 +5,7 @@ import { Feather } from '@expo/vector-icons';
 
 import { ThemedText, ThemedView } from '@/components';
 import { RIWAYA_ARABIC_LABEL } from '@/constants';
-import { useColors } from '@/hooks';
+import { useColors, useDownloadStatus } from '@/hooks';
 import { Riwaya } from '@/types';
 import { RIWAYAT_LIST } from '@/utils/riwayaHelper';
 
@@ -23,6 +23,7 @@ export function RiwayaSelector({
   onSelect,
 }: RiwayaSelectorProps) {
   const { cardColor, primaryColor, iconColor } = useColors();
+  const { riwayaIsDownloaded } = useDownloadStatus();
 
   // Sort by Arabic label (optional)
   const sortedRiwayat = React.useMemo(() => {
@@ -54,6 +55,11 @@ export function RiwayaSelector({
               <ScrollView style={styles.list}>
                 {sortedRiwayat.map((riwaya) => {
                   const isSelected = riwaya === currentRiwaya;
+                  const isDownloaded = riwayaIsDownloaded(riwaya);
+                  // Dim non-downloaded riwayat (offline-unready) so
+                  // users see at a glance which is safe to read on
+                  // the road or in the mosque.
+                  const isDimmed = !isDownloaded && !isSelected;
                   return (
                     <Pressable
                       key={riwaya}
@@ -62,22 +68,31 @@ export function RiwayaSelector({
                         isSelected && {
                           backgroundColor: primaryColor + '20',
                         },
+                        isDimmed && styles.itemDimmed,
                       ]}
                       onPress={() => onSelect(riwaya)}
                       accessibilityRole="radio"
                       accessibilityState={{ checked: isSelected }}
                     >
-                      <ThemedText
-                        style={[
-                          styles.itemText,
-                          isSelected && { color: primaryColor },
-                        ]}
-                      >
-                        {RIWAYA_ARABIC_LABEL[riwaya]}
-                      </ThemedText>
-                      {isSelected && (
+                      <View style={styles.itemLabelRow}>
+                        <Feather
+                          name={isDownloaded ? 'check-circle' : 'download'}
+                          size={14}
+                          color={isDownloaded ? primaryColor : iconColor + '66'}
+                          style={styles.itemIcon}
+                        />
+                        <ThemedText
+                          style={[
+                            styles.itemText,
+                            isSelected && { color: primaryColor },
+                          ]}
+                        >
+                          {RIWAYA_ARABIC_LABEL[riwaya]}
+                        </ThemedText>
+                      </View>
+                      {isSelected ? (
                         <Feather name="check" size={20} color={primaryColor} />
-                      )}
+                      ) : null}
                     </Pressable>
                   );
                 })}
@@ -132,6 +147,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 8,
     marginBottom: 4,
+  },
+  itemDimmed: {
+    opacity: 0.5,
+  },
+  itemLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  itemIcon: {
+    marginEnd: 8,
   },
   itemText: {
     fontSize: 18,

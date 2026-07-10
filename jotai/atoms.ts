@@ -1,5 +1,6 @@
 import { observe } from 'jotai-effect';
 
+import { TafseerKey } from '@/constants/TafseerCdn';
 import { Reminder, TafseerTabs } from '@/types';
 import { Riwaya } from '@/types/riwaya';
 
@@ -188,3 +189,25 @@ export type Bookmark = {
 };
 
 export const bookmarks = createAtomWithStorage<Bookmark[]>('Bookmarks', []);
+
+// Offline-downloads module. The "Downloaded*" lists are the source of
+// truth for "what is offline-ready" — the on-disk filesystem state is
+// authoritative for byte counts, but the lists make queries cheap and
+// reactive. `firstLaunchSeenDownloads` controls the first-launch
+// checklist popup. `downloadOptions` is reserved for future options
+// (e.g. "only on Wi-Fi"); keeps the shape ready for Phase 6 polish.
+export const downloadedRiwayat = createAtomWithStorage<Riwaya[]>(
+  'DownloadedRiwayat',
+  [],
+);
+export const downloadedTafseers = createAtomWithStorage<TafseerKey[]>(
+  'DownloadedTafseers',
+  [],
+);
+export const firstLaunchSeenDownloads = createAtomWithStorage<boolean>(
+  'FirstLaunchSeenDownloads',
+  false,
+);
+export const downloadOptions = createAtomWithStorage<{
+  onlyOnWifi: boolean;
+}>(`DownloadOptions`, { onlyOnWifi: false });

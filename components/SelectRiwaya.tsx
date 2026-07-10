@@ -1,13 +1,14 @@
 import React from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
+import { Feather } from '@expo/vector-icons';
 import { useAtom } from 'jotai/react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { riwayaOptions } from '@/constants';
-import { useColors } from '@/hooks';
+import { RIWAYA_ARABIC_LABEL, riwayaOptions } from '@/constants';
+import { useColors, useDownloadStatus } from '@/hooks';
 import { mushafRiwaya } from '@/jotai/atoms';
-import { RiwayaByIndice, RiwayaByValue } from '@/utils';
+import { getRiwayaByIndex, getRiwayaIndex } from '@/utils/riwayaHelper';
 
 import { SegmentedControl } from './SegmentControl';
 import { ThemedText } from './ThemedText';
@@ -20,7 +21,8 @@ import { ThemedView } from './ThemedView';
  */
 export function SelectRiwaya() {
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
-  const { primaryColor } = useColors();
+  const { primaryColor, iconColor } = useColors();
+  const { downloadedRiwayaList } = useDownloadStatus();
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
@@ -35,15 +37,41 @@ export function SelectRiwaya() {
           <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
             <SegmentedControl
               options={riwayaOptions}
-              initialSelectedIndex={RiwayaByIndice(mushafRiwayaValue)}
+              initialSelectedIndex={getRiwayaIndex(mushafRiwayaValue)}
               activeColor={primaryColor}
               textColor={primaryColor}
               onSelectionChange={(index: number) => {
-                const selectedRiwaya = RiwayaByValue(index);
+                const selectedRiwaya = getRiwayaByIndex(index);
                 setMushafRiwayaValue(selectedRiwaya);
               }}
             />
           </Pressable>
+          <View style={styles.downloadedHintRow}>
+            <Feather
+              name={downloadedRiwayaList.length > 0 ? 'check-circle' : 'info'}
+              size={13}
+              color={
+                downloadedRiwayaList.length > 0
+                  ? primaryColor
+                  : iconColor + '99'
+              }
+            />
+            <ThemedText
+              style={[
+                styles.downloadedHint,
+                {
+                  color:
+                    downloadedRiwayaList.length > 0
+                      ? iconColor + '99'
+                      : iconColor + '66',
+                },
+              ]}
+            >
+              {downloadedRiwayaList.length > 0
+                ? `محمّل: ${downloadedRiwayaList.map((r) => RIWAYA_ARABIC_LABEL[r]).join(' · ')}`
+                : 'لا توجد روايات محمّلة — افتح الإعدادات > التنزيلات'}
+            </ThemedText>
+          </View>
         </ThemedView>
       </ThemedView>
     </SafeAreaView>
@@ -77,5 +105,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     textAlign: 'center',
     marginBottom: 20,
+  },
+  downloadedHintRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    marginTop: 10,
+  },
+  downloadedHint: {
+    fontSize: 12,
+    textAlign: 'center',
   },
 });
