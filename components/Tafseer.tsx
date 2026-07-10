@@ -351,6 +351,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   tabButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 15,
   },
@@ -364,8 +367,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'line-through',
   },
   tabDownloadedBadge: {
-    marginStart: 4,
-    marginTop: 1,
+    marginHorizontal: 3,
   },
   notDownloadedCard: {
     borderWidth: 1,

@@ -57,18 +57,11 @@ export function UnifiedSvgPage({
                 d={path.d}
                 fill={isActive ? highlightColor : 'transparent'}
                 fillOpacity={isActive ? highlightOpacity : 0}
-                style={{ pointerEvents: 'auto' }}
                 onLongPress={() => onLongPressAyah(surah, ayah)}
               />
             );
           } else {
-            return (
-              <Path
-                key={path.id || `text-${index}`}
-                d={path.d}
-                style={{ pointerEvents: 'none' }}
-              />
-            );
+            return <Path key={path.id || `text-${index}`} d={path.d} />;
           }
         })}
       </Svg>

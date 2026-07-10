@@ -232,7 +232,6 @@ export function MushafPageSvg({ riwaya, activeSurah }: Props) {
                     width={pageWidth}
                     height={pageHeight}
                     preserveAspectRatio="xMidYMid meet"
-                    pointerEvents="none"
                   />
                 </View>
                 {viewBox && (

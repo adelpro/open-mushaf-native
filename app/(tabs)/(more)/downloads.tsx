@@ -1,18 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  Alert,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
-import { Stack, useFocusEffect, useRouter } from 'expo-router';
+import { Stack, useFocusEffect } from 'expo-router';
 import { useAtom } from 'jotai/react';
 
-import { ThemedButton, ThemedText, ThemedView } from '@/components';
+import { ThemedText, ThemedView } from '@/components';
 import { RIWAYA_ARABIC_LABEL } from '@/constants/svgCdn';
 import { TAFSEER_ARABIC_LABEL, TafseerKey } from '@/constants/TafseerCdn';
 import { useNotification } from '@/Context/NotificationProvider';
@@ -130,7 +123,6 @@ function CollapsibleSection({
 }
 
 export default function DownloadsScreen() {
-  const router = useRouter();
   const { notify } = useNotification();
   const { primaryColor, dangerColor, cardColor, textColor, iconColor } =
     useColors();
@@ -447,14 +439,6 @@ export default function DownloadsScreen() {
             تنزيل التفسير يجعله متاحًا دون اتصال عند الضغط المطوّل على أي آية.
           </ThemedText>
         </CollapsibleSection>
-
-        <ThemedButton
-          variant="outlined-secondary"
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          رجوع
-        </ThemedButton>
       </ScrollView>
     </>
   );
@@ -488,7 +472,6 @@ function RiwayaCard({
   primaryColor,
   dangerColor,
   textColor,
-  iconColor,
   onDownload,
   onCancel,
   onDelete,
@@ -592,7 +575,7 @@ function ActionChip({
   disabled?: boolean;
 }) {
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
       disabled={disabled}
       style={[styles.chip, disabled && { opacity: 0.4 }]}
@@ -603,7 +586,7 @@ function ActionChip({
       <ThemedText style={[styles.chipLabel, { color: iconColor }]}>
         {label}
       </ThemedText>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
