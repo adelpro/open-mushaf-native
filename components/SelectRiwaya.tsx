@@ -5,19 +5,28 @@ import { Feather } from '@expo/vector-icons';
 import { useAtom } from 'jotai/react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { ThemedText, ThemedView } from '@/components';
 import { RIWAYA_ARABIC_LABEL, riwayaOptions } from '@/constants';
 import { useColors, useDownloadStatus } from '@/hooks';
 import { mushafRiwaya } from '@/jotai/atoms';
 import { getRiwayaByIndex, getRiwayaIndex } from '@/utils/riwayaHelper';
 
 import { SegmentedControl } from './SegmentControl';
-import { ThemedText } from './ThemedText';
-import { ThemedView } from './ThemedView';
 
 /**
- * A setting component integrating `SegmentedControl` to manipulate the active `mushafRiwaya` atom.
+ * A setting component integrating `SegmentedControl` to manipulate
+ * the active `mushafRiwaya` atom.
  *
- * @returns An interactive UI block explicitly for mutating the global Riwaya state.
+ * The selector itself **does not gate the switch on offline
+ * status**. Picking a non-downloaded riwaya just sets the active
+ * value — the mashaf page falls back to the CDN on disk miss
+ * (see `hooks/useSvgText.ts`), so the user can read online. To
+ * actually take content offline, the user navigates to the
+ * Downloads page (via the hub in `app/(tabs)/(more)/index.tsx`)
+ * which is the single source of truth for download actions.
+ *
+ * @returns An interactive UI block explicitly for mutating the
+ *   global Riwaya state.
  */
 export function SelectRiwaya() {
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
@@ -41,8 +50,7 @@ export function SelectRiwaya() {
               activeColor={primaryColor}
               textColor={primaryColor}
               onSelectionChange={(index: number) => {
-                const selectedRiwaya = getRiwayaByIndex(index);
-                setMushafRiwayaValue(selectedRiwaya);
+                setMushafRiwayaValue(getRiwayaByIndex(index));
               }}
             />
           </Pressable>
@@ -77,6 +85,7 @@ export function SelectRiwaya() {
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   safeArea: {
     width: '100%',

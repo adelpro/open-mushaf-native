@@ -63,7 +63,9 @@ try {
                 return (
                   cacheName.startsWith('workbox-') &&
                   !cacheName.includes('quran-images') &&
-                  !cacheName.includes('google-fonts')
+                  !cacheName.includes('google-fonts') &&
+                  !cacheName.startsWith('mushaf-download-') &&
+                  !cacheName.startsWith('tafseer-download-')
                 );
               })
               .map((cacheName) => {

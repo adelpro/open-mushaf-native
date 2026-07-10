@@ -25,7 +25,6 @@ export function RiwayaSelector({
   const { cardColor, primaryColor, iconColor } = useColors();
   const { riwayaIsDownloaded } = useDownloadStatus();
 
-  // Sort by Arabic label (optional)
   const sortedRiwayat = React.useMemo(() => {
     return [...RIWAYAT_LIST].sort((a, b) =>
       RIWAYA_ARABIC_LABEL[a].localeCompare(RIWAYA_ARABIC_LABEL[b]),
@@ -56,9 +55,6 @@ export function RiwayaSelector({
                 {sortedRiwayat.map((riwaya) => {
                   const isSelected = riwaya === currentRiwaya;
                   const isDownloaded = riwayaIsDownloaded(riwaya);
-                  // Dim non-downloaded riwayat (offline-unready) so
-                  // users see at a glance which is safe to read on
-                  // the road or in the mosque.
                   const isDimmed = !isDownloaded && !isSelected;
                   return (
                     <Pressable
@@ -124,7 +120,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 12,
     padding: 20,
-    maxHeight: '80%', // Keeps your scrolling fix intact
+    maxHeight: '80%',
   },
   header: {
     flexDirection: 'row',

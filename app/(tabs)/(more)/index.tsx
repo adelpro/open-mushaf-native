@@ -301,17 +301,25 @@ const styles = StyleSheet.create({
     width: 300,
     height: 50,
     alignItems: 'center',
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 1,
+    // Padding kept as small as possible so a 20px Arabic font with a
+    // 28px lineHeight still fits inside the 50px-tall button without
+    // clipping dots/diacritics. Top + bottom = 8px → 42px of inner
+    // vertical space.
   },
   buttonText: {
-    marginStart: 5,
-    marginEnd: 5,
+    marginHorizontal: 5,
     color: 'white',
-    fontSize: 24,
-    lineHeight: 26,
-    paddingHorizontal: 5,
+    fontSize: 20,
+    lineHeight: 28,
     fontFamily: 'Tajawal_400Regular',
     textAlignVertical: 'center',
+    // Android adds its own top/bottom padding around <Text> glyphs by
+    // default, which clips Arabic dots/diacritics. Disabling it lets
+    // our `lineHeight`/`padding` control vertical metrics. No-op on
+    // iOS and web.
+    includeFontPadding: false,
   },
   svg: {
     color: 'white',
@@ -374,8 +382,12 @@ const styles = StyleSheet.create({
     maxWidth: '90%',
     height: StyleSheet.hairlineWidth,
     backgroundColor: 'rgba(255,255,255,0.15)',
-    marginTop: 3,
-    marginBottom: 3,
+    // Negative margins pull the separator 10px closer to the buttons
+    // above and below — combined with the container's `gap: 20`,
+    // the visible space between a button and the line is 10px, while
+    // button-to-button spacing stays at the full 20px.
+    marginTop: -10,
+    marginBottom: -10,
     alignSelf: 'center',
   },
 });

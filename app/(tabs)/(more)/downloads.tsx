@@ -1,5 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 import { Stack, useFocusEffect } from 'expo-router';
@@ -138,6 +145,7 @@ export default function DownloadsScreen() {
   const [rows, setRows] = useState<RiwayaRow[]>([]);
   const [tafseerRows, setTafseerRows] = useState<TafseerRow[]>([]);
   const [totalBytes, setTotalBytes] = useState(0);
+  const [quotaBytes, setQuotaBytes] = useState<number | null>(null);
   const [busyRiwaya, setBusyRiwaya] = useState<Riwaya | null>(null);
   const [busyTafseer, setBusyTafseer] = useState<TafseerKey | null>(null);
   // Per-section collapse state. Defaults to expanded so users see
@@ -166,7 +174,30 @@ export default function DownloadsScreen() {
     setTafseerRows(nextTafseers);
     const snap = await getStorageSnapshot();
     setTotalBytes(snap.totalBytes);
+    // Web-only: ask the browser for its storage quota so the UI can
+    // show "X of Y used" instead of just "X used". Feature-detected;
+    // Safari still lags behind on `navigator.storage` so the JSON
+    // could be `undefined` — in that case we just keep the prior
+    // value (or `null` on first render).
+    if (Platform.OS === 'web' && typeof navigator !== 'undefined') {
+      const storage = (
+        navigator as Navigator & {
+          storage?: { estimate?: () => Promise<StorageEstimate> };
+        }
+      ).storage;
+      if (storage?.estimate) {
+        try {
+          const est = await storage.estimate();
+          setQuotaBytes(typeof est.quota === 'number' ? est.quota : null);
+        } catch {
+          // ignore — quota remains whatever it was
+        }
+      }
+    }
   }, []);
+
+  const quotaFraction =
+    quotaBytes && quotaBytes > 0 ? Math.min(1, totalBytes / quotaBytes) : 0;
 
   // Refresh on focus so deltas (delete / finish) reflect immediately.
   useFocusEffect(
@@ -309,6 +340,30 @@ export default function DownloadsScreen() {
           <ThemedText style={styles.summaryBytes}>
             {formatBytes(totalBytes)}
           </ThemedText>
+          {Platform.OS === 'web' && quotaBytes ? (
+            <>
+              <ThemedText style={styles.summaryMeta}>
+                من أصل {formatBytes(quotaBytes)} (
+                {Math.round(quotaFraction * 100)}%)
+              </ThemedText>
+              <View style={styles.summaryBar}>
+                <View
+                  style={[
+                    styles.summaryBarFill,
+                    {
+                      width: `${quotaFraction * 100}%`,
+                      backgroundColor:
+                        quotaFraction > 0.9
+                          ? '#d23f3f'
+                          : quotaFraction > 0.7
+                            ? '#d29c3f'
+                            : primaryColor,
+                    },
+                  ]}
+                />
+              </View>
+            </>
+          ) : null}
           <ThemedText style={styles.summaryMeta}>
             {downloadedTafseersList.length} تفسير · {downloaded.length} رواية
           </ThemedText>
@@ -716,6 +771,18 @@ const styles = StyleSheet.create({
     fontSize: 13,
     opacity: 0.6,
     marginTop: 4,
+  },
+  summaryBar: {
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: 'rgba(127,127,127,0.18)',
+    marginTop: 6,
+    width: '60%',
+    overflow: 'hidden',
+  },
+  summaryBarFill: {
+    height: '100%',
+    borderRadius: 3,
   },
   sectionTitle: {
     marginBottom: 10,

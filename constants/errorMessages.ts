@@ -25,6 +25,18 @@ export const ERROR_MESSAGES = {
   // Static UI
   PAGE_NOT_FOUND: 'هذه الصفحة غير متاحة حالياً.',
 
+  // Downloads (offline-downloads feature)
+  DOWNLOAD_FAILED: 'فشل التنزيل. تحقق من اتصالك بالإنترنت.',
+  DOWNLOAD_IN_PROGRESS:
+    'جاري تنزيل محتوى آخر. انتظر حتى ينتهي قبل بدء واحد جديد.',
+  DELETE_FAILED: 'تعذّر حذف التنزيل. حاول مرة أخرى.',
+  STORAGE_FULL:
+    'لا توجد مساحة تخزين كافية على الجهاز. احذف بعض التنزيلات وحاول مجدداً.',
+  RIWAYA_OFFLINE_NOT_CACHED:
+    'هذه الصفحة من الرواية غير محمّلة. ثبّت الرواية من الإعدادات > التنزيلات.',
+  TAFSEER_OFFLINE_NOT_CACHED:
+    'هذا التفسير غير محمّل. ثبّته من الإعدادات > التنزيلات.',
+
   // Fallback
   UNKNOWN_ERROR: 'حدث خطأ ما، يرجى المحاولة مرة أخرى لاحقاً.',
 } as const;

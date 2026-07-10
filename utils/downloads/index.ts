@@ -1,32 +1,39 @@
 /**
- * Public entrypoint for the offline-download module. Metro picks the
- * right per-platform implementation by resolving `./downloads`:
- *   - iOS/Android: `./downloads.ts` (expo-file-system, current)
- *   - Web:        `./downloads.web.ts` (added in Phase 5 with Cache API)
+ * Public entrypoint for the offline-download module. Runtime
+ * dispatch between implementations because Metro's platform-
+ * extension resolution (`downloads.web.ts` / `downloads.native.ts`)
+ * isn't reflected in the TypeScript module resolver. Both sibling
+ * files share an identical signature so `index.ts` picks one at
+ * module-load time based on `Platform.OS`.
  *
- * Until Phase 5, importing on web will throw because `./downloads.web.ts`
- * does not yet exist — that's intentional. The downloads UI is hidden
- * on web until Phase 5 wires up the SW + Cache API parity.
+ * On web, the hooks speak the Cache API + `navigator.storage.
+ * estimate()`; on native they speak `expo-file-system` v57.
  */
 
-export {
-  isMushafPageCached,
-  readMushafPageFromDisk,
-  persistMushafPage,
-  downloadMushafPage,
-  getMushafRiwayaDownloadedPages,
-  getMushafRiwayaDirSizeBytes,
-  deleteMushafRiwaya,
-  riwayaTotalPages,
-  riwayaEstimatedBytes,
-  isTafseerCached,
-  readTafseerFromDisk,
-  persistTafseer,
-  downloadTafseer,
-  getTafseerFileSizeBytes,
-  deleteTafseer,
-  getStorageSnapshot,
-} from './downloads';
+import { Platform } from 'react-native';
+
+import * as nativeImpl from './downloads.native';
+import * as webImpl from './downloads.web';
+
+const impl = Platform.OS === 'web' ? webImpl : nativeImpl;
+
+export const isMushafPageCached = impl.isMushafPageCached;
+export const readMushafPageFromDisk = impl.readMushafPageFromDisk;
+export const persistMushafPage = impl.persistMushafPage;
+export const downloadMushafPage = impl.downloadMushafPage;
+export const getMushafRiwayaDownloadedPages =
+  impl.getMushafRiwayaDownloadedPages;
+export const getMushafRiwayaDirSizeBytes = impl.getMushafRiwayaDirSizeBytes;
+export const deleteMushafRiwaya = impl.deleteMushafRiwaya;
+export const riwayaTotalPages = impl.riwayaTotalPages;
+export const riwayaEstimatedBytes = impl.riwayaEstimatedBytes;
+export const isTafseerCached = impl.isTafseerCached;
+export const readTafseerFromDisk = impl.readTafseerFromDisk;
+export const persistTafseer = impl.persistTafseer;
+export const downloadTafseer = impl.downloadTafseer;
+export const getTafseerFileSizeBytes = impl.getTafseerFileSizeBytes;
+export const deleteTafseer = impl.deleteTafseer;
+export const getStorageSnapshot = impl.getStorageSnapshot;
 
 export {
   RIWAYA_PAGE_COUNTS,
