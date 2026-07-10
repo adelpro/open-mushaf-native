@@ -16,6 +16,7 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import BookmarkSVG from '@/assets/svgs/bookmark.svg';
+import DownloadSVG from '@/assets/svgs/download.svg';
 import HelpSVG from '@/assets/svgs/help.svg';
 import InfoSVG from '@/assets/svgs/info.svg';
 import MailSVG from '@/assets/svgs/mail.svg';
@@ -30,26 +31,25 @@ import { isWeb } from '@/utils/isWeb';
 export default function MoreScreen() {
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const { cardColor, iconColor, textColor } = useColors(); // Added textColor for modal message
+  const { cardColor, iconColor, textColor } = useColors();
   const { isLandscape } = useOrientation();
   const insets = useSafeAreaInsets();
 
   const handleShare = async () => {
-    let shareUrl = 'https://www.quran.us.kg'; // Default/Web URL
+    let shareUrl = 'https://www.quran.us.kg';
 
     if (Platform.OS === 'android') {
       shareUrl =
         'https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative';
     }
-    // No specific iOS URL for now, it will use the default shareUrl.
 
     try {
       await Share.share({
         message:
           'شارك هذا التطبيق القرآني مع الآخرين | Open Mushaf Native\n' +
           shareUrl,
-        url: shareUrl, // URL is included for platforms that support it well
-        title: 'Open Mushaf Native', // Optional, mainly for Android
+        url: shareUrl,
+        title: 'Open Mushaf Native',
       });
     } catch (error: any) {
       setErrorMessage(error.message || 'An unexpected error occurred.');
@@ -89,11 +89,7 @@ export default function MoreScreen() {
           style={styles.button}
         >
           <View style={styles.buttonContent}>
-            <MaterialCommunityIcons
-              name="download-circle-outline"
-              size={24}
-              color="white"
-            />
+            <DownloadSVG width={24} height={24} style={styles.svg} />
             <Text style={styles.buttonText}>التنزيلات</Text>
           </View>
         </ThemedButton>
