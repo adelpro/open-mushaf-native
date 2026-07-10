@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
+  Platform,
+  Pressable,
+  type PressableProps,
+  type PressableStateCallbackType,
   StyleSheet,
   Text,
-  TouchableOpacity,
-  type TouchableOpacityProps,
+  type ViewStyle,
 } from 'react-native';
 
 import { useColors } from '@/hooks';
 
-/**
- * Expanding default properties native to `TouchableOpacityProps`.
- * Added standardized coloring parameters referencing Jotai styling atoms.
- */
-export type ThemedButtonProps = TouchableOpacityProps & {
+export type ThemedButtonProps = Omit<PressableProps, 'children'> & {
   lightColor?: string;
   darkColor?: string;
-  /** Enforces a standardized stylistic approach via internal switch evaluation. */
+  children?: React.ReactNode;
   variant?:
     | 'default'
     | 'primary'
@@ -28,13 +27,17 @@ export type ThemedButtonProps = TouchableOpacityProps & {
     | 'outlined-danger-secondary';
 };
 
-/**
- * A generalized accessible interaction element overriding pure `TouchableOpacity` behaviors
- * matching established color schemas automatically while providing robust touch feedback.
- *
- * @param props - Mapped stylistic hooks.
- * @returns A theme-matching interactive button structure.
- */
+// RN's ViewStyle types only allow 'solid' | 'dotted' | 'dashed' for outlineStyle,
+// but RN Web also supports 'none' at runtime. Cast at the boundary instead of
+// weakening the whole stylesheet's typing.
+const webOutlineNone = { outlineStyle: 'none' } as unknown as ViewStyle;
+const webFocusRing = {
+  outlineStyle: 'solid',
+  outlineWidth: 2,
+  outlineColor: 'rgba(255, 255, 255, 0.8)',
+  outlineOffset: 2,
+} as unknown as ViewStyle;
+
 export function ThemedButton({
   style,
   lightColor,
@@ -50,7 +53,6 @@ export function ThemedButton({
     dangerLightColor,
     backgroundColor,
   } = useColors();
-  const [isPressed, setIsPressed] = useState<boolean>(false);
 
   const getVariantStyles = () => {
     switch (variant) {
@@ -67,15 +69,9 @@ export function ThemedButton({
           color: 'white',
         };
       case 'outlined-primary':
-        return {
-          borderColor: primaryColor,
-          color: primaryColor,
-        };
+        return { borderColor: primaryColor, color: primaryColor };
       case 'outlined-secondary':
-        return {
-          borderColor: secondaryColor,
-          color: secondaryColor,
-        };
+        return { borderColor: secondaryColor, color: secondaryColor };
       case 'danger':
         return {
           backgroundColor: dangerColor,
@@ -102,32 +98,36 @@ export function ThemedButton({
         };
       case 'default':
       default:
-        return {
-          backgroundColor: 'blue',
-          borderColor: 'blue',
-          color: 'white',
-        };
+        return { backgroundColor: 'blue', borderColor: 'blue', color: 'white' };
     }
   };
 
   const variantStyles = getVariantStyles();
 
   return (
-    <TouchableOpacity
+    <Pressable
       accessibilityRole="button"
-      style={[
+      style={(
+        state: PressableStateCallbackType & {
+          hovered?: boolean;
+          focused?: boolean;
+        },
+      ) => [
         {
           backgroundColor: variantStyles.backgroundColor ?? backgroundColor,
           borderColor: variantStyles.borderColor,
           borderWidth: 1,
         },
-        isPressed && { opacity: 0.8 },
         styles.base,
-        style,
+        Platform.OS === 'web' && webOutlineNone,
+        state.pressed && { opacity: 0.8 },
+        Platform.OS === 'web' &&
+          state.hovered &&
+          !state.pressed &&
+          styles.hovered,
+        Platform.OS === 'web' && state.focused && webFocusRing,
+        typeof style === 'function' ? style(state) : style,
       ]}
-      activeOpacity={0.8}
-      onPressIn={() => setIsPressed(true)}
-      onPressOut={() => setIsPressed(false)}
       {...rest}
     >
       <Text
@@ -135,7 +135,7 @@ export function ThemedButton({
       >
         {children}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
@@ -151,6 +151,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.2)',
     elevation: 5,
+  },
+  hovered: {
+    opacity: 0.9,
+    boxShadow: '0px 6px 8px rgba(0, 0, 0, 0.25)',
   },
   text: {
     fontFamily: 'Tajawal_500Medium',

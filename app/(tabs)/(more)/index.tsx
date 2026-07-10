@@ -129,7 +129,12 @@ export default function MoreScreen() {
         </ThemedButton>
 
         {/* ─── Help & info ─── */}
-        <ThemedText style={styles.sectionLabel}>المساعدة</ThemedText>
+        <View
+          style={[
+            styles.sectionLabel,
+            { backgroundColor: textColor, opacity: 0.15 },
+          ]}
+        />
         <ThemedButton
           onPress={() => {
             router.push('/privacy');
@@ -197,7 +202,12 @@ export default function MoreScreen() {
         </ThemedButton>
 
         {/* ─── Share ─── */}
-        <ThemedText style={styles.sectionLabel}>شارك</ThemedText>
+        <View
+          style={[
+            styles.sectionLabel,
+            { backgroundColor: textColor, opacity: 0.15 },
+          ]}
+        />
         <ThemedButton
           onPress={handleShare}
           variant="primary"
@@ -295,6 +305,7 @@ const styles = StyleSheet.create({
     width: 300,
     height: 50,
     alignItems: 'center',
+    padding: 10,
   },
   buttonText: {
     marginStart: 5,
@@ -308,15 +319,6 @@ const styles = StyleSheet.create({
   },
   svg: {
     color: 'white',
-  },
-  sectionLabel: {
-    width: 300,
-    textAlign: 'center',
-    fontSize: 13,
-    fontFamily: 'Tajawal_700Bold',
-    opacity: 0.5,
-    letterSpacing: 1,
-    marginTop: 8,
   },
 
   // Modal Styles (adapted from settings.tsx)
@@ -343,7 +345,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    // borderBottomColor will be set by theme
     minHeight: 40,
   },
   modalTitle: {
@@ -371,5 +372,14 @@ const styles = StyleSheet.create({
   modalButton: {
     width: '40%', // Adjust as needed for a single button
     maxWidth: 120, // Adjust as needed
+  },
+  sectionLabel: {
+    width: 300,
+    maxWidth: '90%',
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    marginTop: 3,
+    marginBottom: 3,
+    alignSelf: 'center',
   },
 });
