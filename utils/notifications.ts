@@ -22,7 +22,6 @@ export const setupNotificationChannel = async () => {
     await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
       name: 'تذكيرات القراءة',
       importance: Notifications.AndroidImportance.HIGH,
-      sound: 'default',
       vibrationPattern: [0, 250, 250, 250],
       lightColor: '#1E5243',
     });
@@ -71,7 +70,6 @@ export const scheduleReminder = async (reminder: Reminder): Promise<string> => {
     content: {
       title: reminder.title,
       body: reminder.body ?? 'حان وقت القراءة',
-      sound: 'default',
       ...(Platform.OS === 'android' && {
         channelId: CHANNEL_ID,
       }),

@@ -60,8 +60,8 @@
             {
               "name": "OpenMushaf",
               "label": "المصحف المفتوح",
-              "minWidth": 320,
-              "minHeight": 120,
+              "minWidth": "320dp",
+              "minHeight": "120dp",
               "initialEnabled": true,
               "previewImage": "./assets/widgets/widget-preview.png",
               "updatePeriodMillis": 3600000,
