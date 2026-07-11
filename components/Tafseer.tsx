@@ -11,7 +11,11 @@ import { useRouter } from 'expo-router';
 import { useAtom } from 'jotai/react';
 import HTMLView from 'react-native-htmlview';
 
-import { quranTafseerUrl, TafseerKey } from '@/constants/TafseerCdn';
+import {
+  quranTafseerUrl,
+  TAFSEER_ARABIC_LABEL,
+  TafseerKey,
+} from '@/constants/TafseerCdn';
 import {
   hasNoTafseerContent,
   useColors,
@@ -26,19 +30,13 @@ import { persistTafseer, readTafseerFromDisk } from '@/utils/downloads';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-// Map from internal keys to display labels (matches TafseerKey)
-const tabLabels: Record<TafseerKey, string> = {
-  katheer: 'إبن كثير',
-  maany: 'معاني القرآن',
-  earab: 'إعراب القرآن',
-  baghawy: 'البغوي',
-  muyassar: 'الميسر',
-  qortoby: 'القرطبي',
-  tabary: 'الطبري',
-  saady: 'السعدي',
-  'nozool-wahidy': 'أسباب النزول',
-  tanweer: 'التحرير و التنوير',
-};
+/**
+ * Canonical display order for the tafseer tabs. Pulled from
+ * `TAFSEER_ARABIC_LABEL` so the popup matches the Downloads screen —
+ * one source of truth for tafseer metadata lives in
+ * `@/constants/TafseerCdn`.
+ */
+const TAB_KEYS = Object.keys(TAFSEER_ARABIC_LABEL) as TafseerKey[];
 
 type Props = {
   aya: number;
@@ -142,9 +140,6 @@ export function Tafseer({ aya, surah, opacity = 1 }: Props) {
     aya,
   });
 
-  // Get list of tabs (all keys from tabLabels)
-  const tabKeys = Object.keys(tabLabels) as TafseerKey[];
-
   return (
     <ThemedView
       style={[styles.container, opacity !== undefined ? { opacity } : {}]}
@@ -154,7 +149,7 @@ export function Tafseer({ aya, surah, opacity = 1 }: Props) {
       </ThemedText>
 
       <ThemedView style={[styles.tabs, { backgroundColor: 'transparent' }]}>
-        {tabKeys.map((tabKey) => {
+        {TAB_KEYS.map((tabKey) => {
           const isSelected = tabKey === selectedTab;
           // Only show disabled state if we have loaded the data for this tab and it's empty
           const hasContent =
@@ -180,17 +175,18 @@ export function Tafseer({ aya, surah, opacity = 1 }: Props) {
                 { backgroundColor: 'transparent' },
               ]}
               onPress={() => setSelectedTab(tabKey)}
-              accessibilityLabel={`${tabLabels[tabKey]} tab for Surah ${surahName}, Aya ${aya}`}
-              accessibilityHint={`Tap to see the tafseer for Surah ${surahName}, Aya ${aya} from ${tabLabels[tabKey]}`}
+              accessibilityLabel={`${TAFSEER_ARABIC_LABEL[tabKey]} tab for Surah ${surahName}, Aya ${aya}`}
+              accessibilityHint={`Tap to see the tafseer for Surah ${surahName}, Aya ${aya} from ${TAFSEER_ARABIC_LABEL[tabKey]}`}
               disabled={isDisabled}
             >
               <ThemedText
+                numberOfLines={1}
                 style={[
                   { color: tintColor, backgroundColor: 'transparent' },
                   isDisabled && styles.disabledTabText,
                 ]}
               >
-                {tabLabels[tabKey]}
+                {TAFSEER_ARABIC_LABEL[tabKey]}
               </ThemedText>
               {isDownloaded ? (
                 <Feather
@@ -346,14 +342,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 2,
-    justifyContent: 'flex-start',
+    gap: 6,
     marginBottom: 10,
   },
   tabButton: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    flexShrink: 1,
     paddingVertical: 10,
     paddingHorizontal: 15,
   },
