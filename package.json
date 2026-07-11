@@ -48,7 +48,8 @@
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "clean:all": "rimraf node_modules .expo android ios",
     "fresh": "yarn clean:all && yarn install && yarn prebuild",
-    "docs:start": "cd docs && npx fumapress"
+    "docs:start": "cd docs && npx fumapress",
+    "eas-build-pre-install": "corepack enable"
   },
   "jest": {
     "preset": "jest-expo"
