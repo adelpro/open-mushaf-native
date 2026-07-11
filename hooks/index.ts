@@ -4,7 +4,6 @@ export * from './useDailyTrackerReset';
 export * from './useDebounce';
 export * from './useDownloadStatus';
 export * from './useImagePreloader';
-export * from './useImagesArray';
 export * from './useMushafDownload';
 export * from './useTafseerDownload';
 export * from './useNotificationStyles';

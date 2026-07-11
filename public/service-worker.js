@@ -62,7 +62,6 @@ try {
                 // Add logic to identify old caches if needed
                 return (
                   cacheName.startsWith('workbox-') &&
-                  !cacheName.includes('quran-images') &&
                   !cacheName.includes('google-fonts') &&
                   !cacheName.startsWith('mushaf-download-') &&
                   !cacheName.startsWith('tafseer-download-')
@@ -127,30 +126,6 @@ try {
         new ExpirationPlugin({
           maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
           maxEntries: 30,
-        }),
-      ],
-    }),
-  );
-
-  // Cache Quran page images on-demand (only when user loads them)
-  // This aligns with your useImagePreloader hook
-  registerRoute(
-    ({ request }) => {
-      if (request.destination !== 'image') return false;
-
-      const url = request.url;
-      return (
-        url.includes('/mushaf-data/') ||
-        // url.includes('/assets/assets/') ||
-        url.includes('/assets/')
-      );
-    },
-    new CacheFirst({
-      cacheName: 'quran-images',
-      plugins: [
-        new ExpirationPlugin({
-          maxEntries: 100, // Keep a limited number of entries
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
         }),
       ],
     }),
