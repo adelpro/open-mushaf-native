@@ -1,37 +1,134 @@
-# Ignore node_modules since it will be installed during the build process
+# ==========================================
+
+# 1. YARN V4 (CRITICAL RULES)
+
+# ==========================================
+
+# KEEP: .yarn/releases/ (the yarn binary) and .yarn/plugins/
+
+# IGNORE: The massive cache (EAS will run 'yarn install' fresh)
+
+.yarn/cache/
+
+# .yarn/ <-- DO NOT uncomment this. Keep the binary!
+
+# ==========================================
+
+# 2. DEPENDENCIES & BUILDS
+
+# ==========================================
+
 node_modules/
-
-# Ignore logs and temporary files
-npm-debug.log
-yarn-error.log
-*.log
-
-# Ignore local development settings
-.DS_Store
-.idea/
-.vscode/
-.env.local
-.env
-.env.development
-
-# Ignore build artifacts
 build/
-builds/
-
-# Expo generated files (you may want to ignore them if they are not needed in the build process)
-.expo/
-
 dist/
 web/
 web:build/
+
+# EAS GENERATED NATIVE FOLDERS (never commit these)
+
 android/
 ios/
 
-# Ignore design files
-design/
-screenshots/
+# ==========================================
 
-# Firebase
+# 3. EXPO / METRO CACHE
+
+# ==========================================
+
+.expo/
+.expo-shared/
+.metro-cache/
+
+# ==========================================
+
+# 4. ENVIRONMENT & LOCAL FILES
+
+# ==========================================
+
+.env*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# ==========================================
+
+# 5. LOGS
+
+# ==========================================
+
+*.log
+npm-debug.log
+yarn-error.log
+
+# ==========================================
+
+# 6. DESIGN & RAW SOURCE FILES (IGNORE THESE)
+
+# ==========================================
+
+# If your app ONLY uses optimized, compressed SVGs from a specific folder,
+
+# you can safely ignore the 'source' versions of these files.
+
+design-src/ # Raw Figma/Illustrator exports
+raw-assets/ # Unoptimized originals
+docs/ # Project documentation (markdown, PDFs)
+screenshots/ # App store preview images
+*.psd
+*.ai
+*.fig
+*.sketch
+*.xd
+
+# ==========================================
+
+# 7. CRITICAL ASSETS: WHAT TO KEEP
+
+# ==========================================
+
+# IMPORTANT: If your app loads SVGs from 'assets/svgs' or 'assets/quran/pages',
+
+# DO NOT add 'assets/' to this list!
+
+# ONLY ignore subfolders that contain generated or raw files.
+
+# Example (uncomment if you have them):
+
+# assets/raw-design/
+
+# assets/unoptimized/
+
+# ==========================================
+
+# 8. DATABASE / GENERATED DATA (If applicable)
+
+# ==========================================
+
+# If you have a pre-bundled SQLite DB (e.g., assets/quran.db) that the app reads,
+
+# KEEP it. If it's generated during the build, IGNORE it.
+
+# assets/database/generated.db
+
+# ==========================================
+
+# 9. FIREBASE / SECRETS
+
+# ==========================================
+
 firebase.json
 google-services.json
-.firebase
+.firebase/
+
+# ==========================================
+
+# 10. CODE QUALITY CACHES
+
+# ==========================================
+
+.eslintcache
+.prettiercache
+.parcel-cache
+*.tsbuildinfo

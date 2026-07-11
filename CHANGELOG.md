@@ -5,7 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [7.0.0] - Unreleased
+
+### Added
+
+- **Offline Downloads for Mushaf Riwayat** – Users can now download entire riwayat (Hafs, Warsh, etc.) for offline reading, with download progress tracking and resumable support
+- **Web Storage Quota UI** – Visual feedback and management for browser storage limits on the web platform, with split downloads implementation for large riwayat
+- **Estimated Download Sizes** – Display size estimates for each riwayat before the user confirms the download
+- **Multi-Riwaya Selector** – New settings UI to switch between riwayat (Hafs, Warsh, Qaloon, etc.) dynamically
+- **Long-Press Ayah Selection** – Implemented point-in-polygon touch detection and long-press gestures to select specific ayahs directly from the SVG Mushaf pages
+- **Arabic Labels for Riwayat** – Added native Arabic script labels for all qiraat/riwayat in the settings interface
+- **Responsive Android Widget Layouts** – Improved Android home-screen widget layouts that adapt to different screen sizes, with better daily tracker synchronization
+- **Internal Submit Channel for iOS** – Added `internal` submit channel to EAS workflow for streamlined TestFlight internal testing
+
+### Changed
+
+- **Upgraded from Expo SDK 53 to Expo SDK 57** – Major runtime upgrade with improved performance, new architecture flags, and Hermes JS engine enhancements, this was done gradually 53 -> 54 -> 55 -> 56 -> 57
+- **Consolidated Data Architecture** – Tafseer and Riwaya data are now merged into single sources of truth (`1b4ac35`, `9f7cbf5`), eliminating duplicate data and improving maintainability
+- **Service Worker Caching** – Updated the service worker to cache SVG pages, significantly improving offline web loading performance
+- **CDN Migration for Tafseer** – Tafseer JSON files are now loaded from jsDelivr CDN, reducing the initial bundle size and enabling faster updates
+- **Component Modernization** – Migrated `ThemedButton` to React Native `Pressable` for better performance and reduced overhead
+- **Naming Standardization** – Replaced all `qiraa` terminology with `riwaya` across the entire codebase for consistency with Islamic terminology
+- **Downloads Screen Overhaul** – Cleaned up the downloads screen UI and fixed tafseer tab styling for a more cohesive experience
+- **Section Labels Updated** – Improved clarity of section labels throughout the app
+
+### Fixed
+
+- **SVG Rendering Issues** – Fixed black background rendering on SVGs across multiple devices and themes, and centered Mushaf pages properly
+- **Ayah Selection & Overlay** – Fixed aya overlay visibility, cleared selection on tafseer popup close, and corrected the displayed ayah number in the tafseer popup
+- **Android Widget Build Errors** – Resolved React Native compile errors and Android widget configuration issues (`2dde4f4`, `3f97340`)
+- **Notifications & Widget Sync** – Fixed notification triggers and widget data synchronization with the daily reading tracker
+- **EAS Build Pipeline** – Added `corepack enable` to EAS build steps to fix Yarn v4 compatibility issues, and fixed the iOS workflow configuration for internal distribution
+- **Icon Replacement** – Replaced the download icon with a properly rendered SVG variant
+
+### Refactored
+
+- **SVG Rendering Pipeline** – Added new hooks and components (`576f45a`) for Quran page SVG rendering with enhanced web platform support and optimized polygon key handling
+- **Service Worker Logic** – Streamlined caching strategies for web deployment
+
+- **Removed unused ressources** - Removed pngs and tafseers json data, these will be downloeded from cdn
+
+## [6.0.1] - 2026-07-10
+
+### Added
+
+- **IOS release** - First IOS release
 
 ## [6.0.0-athar] - 2026-06-22
 
