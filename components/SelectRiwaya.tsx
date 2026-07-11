@@ -6,10 +6,14 @@ import { useAtom } from 'jotai/react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText, ThemedView } from '@/components';
-import { RIWAYA_ARABIC_LABEL, riwayaOptions } from '@/constants';
+import { RIWAYA_ARABIC_LABEL } from '@/constants/riwayas';
 import { useColors, useDownloadStatus } from '@/hooks';
 import { mushafRiwaya } from '@/jotai/atoms';
-import { getRiwayaByIndex, getRiwayaIndex } from '@/utils/riwayaHelper';
+import {
+  getRiwayaByIndex,
+  getRiwayaIndex,
+  RIWAYAT_OPTIONS,
+} from '@/utils/riwayaHelper';
 
 import { SegmentedControl } from './SegmentControl';
 
@@ -45,7 +49,7 @@ export function SelectRiwaya() {
           </ThemedText>
           <Pressable style={[{ width: '100%' }]} accessibilityRole="radiogroup">
             <SegmentedControl
-              options={riwayaOptions}
+              options={RIWAYAT_OPTIONS.map((o) => o.label)}
               initialSelectedIndex={getRiwayaIndex(mushafRiwayaValue)}
               activeColor={primaryColor}
               textColor={primaryColor}

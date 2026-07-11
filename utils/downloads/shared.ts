@@ -4,18 +4,13 @@
  * here so the file is bundled into iOS, Android, and web equally.
  */
 
+import { type Riwaya, RIWAYA_PAGE_COUNTS } from '@/constants/riwayas';
 import type { TafseerKey } from '@/constants/TafseerCdn';
-import type { Riwaya } from '@/types';
 
-/** Page count per riwaya, mirrored from constants/svgCdn.ts. */
-export const RIWAYA_PAGE_COUNTS: Record<Riwaya, number> = {
-  hafs: 604,
-  warsh: 604,
-  'qalon-kfqc': 604,
-  'qalon-libya-awqaf': 612,
-  'douri-kfqc': 604,
-  'shubah-kfqc': 604,
-};
+// Re-exported from `@/constants/riwayas` so consumers that import
+// `RIWAYA_PAGE_COUNTS` from `@/utils/downloads` (via index.ts) keep
+// working. Source of truth lives in `constants/riwayas.ts`.
+export { RIWAYA_PAGE_COUNTS };
 
 /**
  * Rough per-page SVG size. Used for the "Estimated size" line that

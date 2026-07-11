@@ -25,11 +25,11 @@
  * the Cache API.
  */
 
-import { quranSvgPageUrl, RIWAYA_DEFAULT_PAGE_COUNT } from '@/constants/svgCdn';
+import { quranSvgPageUrl } from '@/constants/svgCdn';
 import { quranTafseerUrl, TafseerKey } from '@/constants/TafseerCdn';
 import { Riwaya } from '@/types';
 
-import { RIWAYA_PAGE_COUNTS } from './shared';
+import { RIWAYA_PAGE_COUNTS, SVG_PAGE_BYTES_ESTIMATE } from './shared';
 
 // All cache names live in one object so the service-worker cleanup
 // allowlist (see `public/service-worker.js`) and this file can
@@ -155,7 +155,7 @@ export function riwayaTotalPages(riwaya: Riwaya): number {
 }
 
 export const riwayaEstimatedBytes = (riwaya: Riwaya): number =>
-  RIWAYA_DEFAULT_PAGE_COUNT[riwaya] * 12_000;
+  RIWAYA_PAGE_COUNTS[riwaya] * SVG_PAGE_BYTES_ESTIMATE;
 
 /* ────── tafseer cache ────── */
 

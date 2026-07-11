@@ -1,21 +1,20 @@
-import { RIWAYA_ARABIC_LABEL } from '@/constants';
-import { Riwaya } from '@/types';
+import {
+  type Riwaya,
+  RIWAYA_ARABIC_LABEL,
+  RIWAYAT_LIST,
+} from '@/constants/riwayas';
 
-/** List of all supported riwayat (order matters for indexing). */
-export const RIWAYAT_LIST: Riwaya[] = [
-  'hafs',
-  'warsh',
-  'qalon-kfqc',
-  'qalon-libya-awqaf',
-  'douri-kfqc',
-  'shubah-kfqc',
-];
+// Re-export so existing consumers that import `RIWAYAT_LIST` /
+// `RIWAYA_ARABIC_LABEL` from `@/utils/riwayaHelper` keep working
+// without changes.
+export { RIWAYA_ARABIC_LABEL, RIWAYAT_LIST };
 
 /** Options for pickers – each with a human‑readable label. */
-export const RIWAYAT_OPTIONS = RIWAYAT_LIST.map((value) => ({
-  value,
-  label: RIWAYA_ARABIC_LABEL[value],
-}));
+export const RIWAYAT_OPTIONS: { value: Riwaya; label: string }[] =
+  RIWAYAT_LIST.map((value) => ({
+    value,
+    label: RIWAYA_ARABIC_LABEL[value],
+  }));
 
 /** Get the numeric index of a riwaya (used by segmented controls). */
 export function getRiwayaIndex(riwaya: Riwaya): number {

@@ -18,9 +18,13 @@
  * Override at runtime: set `EXPO_PUBLIC_QURAN_SVG_CDN` in `.env` to a
  * different base URL (e.g. a local mirror during dev). The two helpers
  * below honor the override transparently.
+ *
+ * Riwaya metadata (Arabic labels, upstream paths, page counts) lives in
+ * `@/constants/riwayas` — the canonical single source of truth. This
+ * file only handles the CDN URL helpers.
  */
 
-import { Riwaya } from '@/types';
+import { type Riwaya, RIWAYA_TO_UPSTREAM_PATH } from '@/constants/riwayas';
 
 const PINNED_SHA = '1525aa7d6e94a4c17a051302767331ef500308ec';
 // 2026-06-15 — "Restructure into qiraa/publisher; add Libyan Awqaf (Qalun) mushaf"
@@ -36,36 +40,6 @@ export const QURAN_SVG_CDN_BASE: string =
  * The six riwaya we support. The first two are bundled in the APK; the
  * other four are downloaded on demand from the CDN above.
  */
-
-/** Maps our riwaya enum to the upstream repo's `<qiraa>/<publisher>` path. */
-export const RIWAYA_TO_UPSTREAM_PATH: Record<Riwaya, string> = {
-  hafs: 'hafs/kfqc',
-  warsh: 'warsh/kfqc',
-  'qalon-kfqc': 'qalon/kfqc',
-  'qalon-libya-awqaf': 'qalon/libya-awqaf',
-  'douri-kfqc': 'douri/kfqc',
-  'shubah-kfqc': 'shubah/kfqc',
-};
-
-/** Human-readable Arabic label for each qiraa, used in the UI (TopMenu etc.). */
-export const RIWAYA_ARABIC_LABEL: Record<Riwaya, string> = {
-  hafs: 'حفص',
-  warsh: 'ورش',
-  'qalon-kfqc': 'قالون',
-  'qalon-libya-awqaf': 'قالون الليبي',
-  'douri-kfqc': 'الدوري',
-  'shubah-kfqc': 'شعبة',
-};
-
-/** Default page count for each qiraat. Used by download progress UI. */
-export const RIWAYA_DEFAULT_PAGE_COUNT: Record<Riwaya, number> = {
-  hafs: 604,
-  warsh: 604,
-  'qalon-kfqc': 604,
-  'qalon-libya-awqaf': 612,
-  'douri-kfqc': 604,
-  'shubah-kfqc': 604,
-};
 
 /** Build a URL for a single page SVG on the CDN. */
 export function quranSvgPageUrl(qiraa: Riwaya, page: number): string {

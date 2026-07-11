@@ -13,7 +13,7 @@ import { Stack, useFocusEffect } from 'expo-router';
 import { useAtom } from 'jotai/react';
 
 import { ThemedText, ThemedView } from '@/components';
-import { RIWAYA_ARABIC_LABEL } from '@/constants/svgCdn';
+import { RIWAYA_ARABIC_LABEL } from '@/constants';
 import { TAFSEER_ARABIC_LABEL, TafseerKey } from '@/constants/TafseerCdn';
 import { useNotification } from '@/Context/NotificationProvider';
 import {
