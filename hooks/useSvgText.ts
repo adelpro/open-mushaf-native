@@ -326,13 +326,22 @@ export class SvgTextError extends Error {
 }
 
 export function fixAyahPolygonOpacity(svgString: string): string {
-  // Add fill-opacity="0" to all ayahPolygon paths that don't already have it
-  // We'll use a regex to find <path class="ayahPolygon" ...> and insert fill-opacity="0" after the class
-  // But we need to be careful to not duplicate if it exists.
-  // A simple approach: replace all occurrences of `<path class="ayahPolygon"` with `<path class="ayahPolygon" fill-opacity="0"`
-  const svg = svgString.replace(
-    /<path class="ayahPolygon"/g,
-    '<path class="ayahPolygon" fill-opacity="0"',
+  // The quranpedia/quran-svg XML hardcodes a black fill on every
+  // <path class="ayahPolygon" …> hit-test overlay. Hafs ships with
+  // fill-opacity="0" already baked in; the rest don't, so we inject it
+  // here. Attribute *order* varies by page — most riwaya emit
+  // `class="ayahPolygon"` first, but douri/kfqc pages 1-2 emit
+  // `id="verse-…" class="ayahPolygon"`. Anchor on `<path\b` and the
+  // closing `/>` so we never cross a tag boundary, and skip polygons
+  // that already set fill-opacity (idempotent against upstream).
+  return svgString.replace(
+    /<path\b([^>]*?)class="ayahPolygon"([^>]*?)\/?>/g,
+    (match, before, after) => {
+      const innerAttrs = before + after;
+      if (/\bfill-opacity\s*=/.test(innerAttrs)) {
+        return match;
+      }
+      return `<path${before}class="ayahPolygon"${after} fill-opacity="0"/>`;
+    },
   );
-  return svg;
 }

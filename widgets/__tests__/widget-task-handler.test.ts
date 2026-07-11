@@ -1,0 +1,146 @@
+import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  currentSavedPage,
+  dailyTrackerCompleted,
+  dailyTrackerGoal,
+  mushafRiwaya,
+} from '@/jotai/atoms';
+
+// `getDefaultStore` is mocked via `vi.mock` below — we just need its
+// `get` method here to drive the atoms to specific values.
+const storeState = new Map();
+vi.mock('jotai', () => ({
+  // Preserve real exports (atom creators, hooks) so the module under
+  // test can do `import { getDefaultStore } from 'jotai'` and reach
+  // our mock.
+  getDefaultStore: () => ({
+    get: (atom) => storeState.get(atom),
+    set: (atom, value) => storeState.set(atom, value),
+  }),
+}));
+
+// `widgets/android.tsx` imports the native widget primitives which
+// crash in node. We replace the default export with a sentinel that
+// the test can detect in `renderWidget` calls.
+const AndroidWidgetMock = vi.fn(() => null);
+vi.mock('../android', () => ({
+  default: AndroidWidgetMock,
+}));
+
+const { widgetTaskHandler } = await import('../widget-task-handler');
+
+function makeProps(
+  action: WidgetTaskHandlerProps['widgetAction'],
+  clickAction?: string,
+): WidgetTaskHandlerProps {
+  const renderWidget = vi.fn();
+  const props = {
+    widgetInfo: {
+      widgetName: 'OpenMushaf',
+      widgetId: 1,
+      width: 320,
+      height: 120,
+      screenInfo: {
+        screenHeightDp: 640,
+        screenWidthDp: 360,
+        density: 2,
+        densityDpi: 320,
+      },
+    },
+    widgetAction: action,
+    clickAction,
+    clickActionData: undefined,
+    renderWidget,
+  } as unknown as WidgetTaskHandlerProps;
+  return props;
+}
+
+describe('widgetTaskHandler', () => {
+  beforeEach(() => {
+    AndroidWidgetMock.mockClear();
+    storeState.clear();
+    // Seed the atoms with deterministic values.
+    storeState.set(dailyTrackerGoal, 5);
+    storeState.set(dailyTrackerCompleted, {
+      value: 2,
+      date: new Date().toDateString(),
+    });
+    storeState.set(currentSavedPage, 42);
+    storeState.set(mushafRiwaya, 'hafs');
+  });
+
+  it('renders the widget on WIDGET_ADDED with the current reading state', async () => {
+    const props = makeProps('WIDGET_ADDED');
+    await widgetTaskHandler(props);
+
+    expect(props.renderWidget).toHaveBeenCalledTimes(1);
+    // The first arg to renderWidget should be the { light, dark }
+    // representation. Confirm both branches built an element.
+    const rendered = props.renderWidget.mock.calls[0][0];
+    expect(rendered).toHaveProperty('light');
+    expect(rendered).toHaveProperty('dark');
+
+    // AndroidWidget was invoked twice — once for each scheme. Confirm
+    // the sentinel got the right values for at least one of them.
+    expect(AndroidWidgetMock).toHaveBeenCalledTimes(2);
+    const firstCall = AndroidWidgetMock.mock.calls[0][0];
+    expect(firstCall.dailyGoal).toBe(5);
+    expect(firstCall.dailyCompleted).toBe(2);
+    expect(firstCall.currentPage).toBe(42);
+    expect(firstCall.colorScheme).toBe('light');
+    const secondCall = AndroidWidgetMock.mock.calls[1][0];
+    expect(secondCall.colorScheme).toBe('dark');
+  });
+
+  it('renders on WIDGET_UPDATE and WIDGET_RESIZED', async () => {
+    for (const action of ['WIDGET_UPDATE', 'WIDGET_RESIZED'] as const) {
+      const props = makeProps(action);
+      await widgetTaskHandler(props);
+      expect(props.renderWidget).toHaveBeenCalledTimes(1);
+    }
+  });
+
+  it('does not render on WIDGET_DELETED', async () => {
+    const props = makeProps('WIDGET_DELETED');
+    await widgetTaskHandler(props);
+    expect(props.renderWidget).not.toHaveBeenCalled();
+  });
+
+  it('does not re-render on WIDGET_CLICK (clicks are user gestures, not state changes)', async () => {
+    // The widget's root uses clickAction="OPEN_APP" which is intercepted
+    // by the library before reaching this handler. Custom click actions
+    // would still arrive here, but re-rendering on every click is wasted
+    // IPC. Verify the handler is a no-op for WIDGET_CLICK.
+    const props = makeProps('WIDGET_CLICK', 'CUSTOM_ACTION');
+    await widgetTaskHandler(props);
+    expect(props.renderWidget).not.toHaveBeenCalled();
+  });
+
+  it('treats an unknown widget name as the default widget rather than crashing', async () => {
+    const props = makeProps('WIDGET_UPDATE');
+    (props.widgetInfo as { widgetName: string }).widgetName = 'NotARealWidget';
+    await expect(widgetTaskHandler(props)).resolves.not.toThrow();
+    expect(props.renderWidget).toHaveBeenCalledTimes(1);
+  });
+
+  it('resets dailyCompleted when the stored date is not today', async () => {
+    storeState.set(dailyTrackerCompleted, {
+      value: 99,
+      date: 'Wed Jan 01 1970',
+    });
+    const props = makeProps('WIDGET_UPDATE');
+    await widgetTaskHandler(props);
+    const firstCall = AndroidWidgetMock.mock.calls[0][0];
+    expect(firstCall.dailyCompleted).toBe(0);
+  });
+
+  it('loads Warsh metadata when the riwaya is warsh', async () => {
+    storeState.set(mushafRiwaya, 'warsh');
+    const props = makeProps('WIDGET_UPDATE');
+    await widgetTaskHandler(props);
+    expect(props.renderWidget).toHaveBeenCalled();
+    expect(AndroidWidgetMock).toHaveBeenCalled();
+  });
+});

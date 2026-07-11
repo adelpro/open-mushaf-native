@@ -20,6 +20,13 @@ iOS (App Store), Android (Play Store), and Web (Firebase Hosting).
 - **Storage:** `react-native-mmkv` (sync). Do not wrap reads in async.
 - **Fonts:** Amiri + Tajawal via `@expo-google-fonts`. Do not bundle fonts
   in `assets/fonts/`.
+  - **Exception:** `assets/fonts/open_mushaf_icons.ttf` is bundled for
+    the Android home-screen widget only. It is referenced by
+    `widgets/android.tsx` via the `react-native-android-widget`'s
+    `IconWidget` and is configured in `app.json` under the
+    `react-native-android-widget` plugin's `fonts` array. It is **not**
+    loaded by the app's text rendering (which uses Amiri/Tajawal) and
+    does not affect iOS or web.
 - **Tests:** Vitest (`yarn test`). `jest-expo` is in deps for one-off
   snapshot tests but the day-to-day runner is Vitest.
 

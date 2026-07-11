@@ -37,7 +37,10 @@ export function getSurahNumberByPage(surahs: Surah[], page: number): number {
  *
  * @param thumns - The array of Thumn metadata.
  * @param page - The page number to evaluate.
- * @returns An object containing the 1-indexed `thumnInJuz` and `juzNumber`.
+ * @returns An object containing the 1-indexed `hizbNumber` (1..60),
+ *   `thumnInJuz` (1..16), and `juzNumber` (1..30). Falls back to
+ *   `{ hizbNumber: 1, thumnInJuz: 1, juzNumber: 1 }` if no thumn covers
+ *   the page (shouldn't happen for pages 1..604).
  */
 export function getJuzPositionByPage(thumns: Thumn[], page: number) {
   const thumn = thumns.find(
@@ -46,13 +49,14 @@ export function getJuzPositionByPage(thumns: Thumn[], page: number) {
       (index === thumns.length - 1 || page < thumns[index + 1].startingPage),
   );
 
-  if (!thumn) return { thumnInJuz: 1, juzNumber: 1 };
+  if (!thumn) return { hizbNumber: 1, thumnInJuz: 1, juzNumber: 1 };
 
   // Calculate position within Juz (each Juz has 2 hizbs = 16 thumns)
   const juzNumber = Math.ceil(thumn.hizb_number / 2);
   const thumnInJuz = ((thumn.hizb_number - 1) * 8 + thumn.thumn) % 16 || 16;
+  const hizbNumber = thumn.hizb_number;
 
-  return { thumnInJuz, juzNumber };
+  return { hizbNumber, thumnInJuz, juzNumber };
 }
 
 /**

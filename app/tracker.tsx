@@ -48,9 +48,16 @@ export default function TrackerScreen() {
         )
       : 0;
 
-  const incrementDailyGoal = () => setDailyTrackerGoalValue((prev) => prev + 1);
-  const decrementDailyGoal = () =>
+  const incrementDailyGoal = () => {
+    setDailyTrackerGoalValue((prev) => prev + 1);
+    // Push to the widget so the daily-goal change shows up immediately,
+    // not only on the next page navigation.
+    void updateAndroidWidget();
+  };
+  const decrementDailyGoal = () => {
     setDailyTrackerGoalValue((prev) => Math.max(1, prev - 1));
+    void updateAndroidWidget();
+  };
 
   // Consolidated reset logic into one function
   const performReset = async () => {
