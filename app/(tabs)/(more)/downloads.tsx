@@ -33,6 +33,7 @@ import {
   getStorageSnapshot,
   getTafseerFileSizeBytes,
   isTafseerCached,
+  riwayaEstimatedBytes,
   riwayaTotalPages,
 } from '@/utils/downloads';
 import { resourceKeyOf } from '@/utils/downloads/types';
@@ -64,6 +65,8 @@ interface RiwayaRow {
   pagesDownloaded: number;
   pagesTotal: number;
   bytes: number;
+  /** Upper-bound estimate (pages × ~12 KB) shown when nothing is on disk yet. */
+  estimatedBytes: number;
 }
 
 interface TafseerRow {
@@ -161,6 +164,7 @@ export default function DownloadsScreen() {
         pagesDownloaded: await getMushafRiwayaDownloadedPages(riwaya),
         pagesTotal: riwayaTotalPages(riwaya),
         bytes: await getMushafRiwayaDirSizeBytes(riwaya),
+        estimatedBytes: riwayaEstimatedBytes(riwaya),
       })),
     );
     setRows(nextRiwayas);
@@ -571,8 +575,13 @@ function RiwayaCard({
         )}
       </View>
 
-      <ThemedText style={styles.cardMeta}>
-        {row.pagesTotal} صفحة · {formatBytes(row.bytes)}
+      <ThemedText
+        style={[styles.cardMeta, row.bytes === 0 && { opacity: 0.7 }]}
+      >
+        {row.pagesTotal} صفحة ·{' '}
+        {row.bytes === 0
+          ? `≈ ${formatBytes(row.estimatedBytes)}`
+          : formatBytes(row.bytes)}
       </ThemedText>
 
       <View style={styles.progressBarTrack}>
