@@ -13,8 +13,12 @@ import { Stack, useFocusEffect } from 'expo-router';
 import { useAtom } from 'jotai/react';
 
 import { ThemedText, ThemedView } from '@/components';
-import { RIWAYA_ARABIC_LABEL } from '@/constants';
-import { TAFSEER_ARABIC_LABEL, TafseerKey } from '@/constants/TafseerCdn';
+import { RIWAYA_ARABIC_LABEL, RIWAYAT_LIST } from '@/constants';
+import {
+  TAFSEER_ARABIC_LABEL,
+  TafseerKey,
+  TAFSEERS_LIST,
+} from '@/constants/TafseerCdn';
 import { useNotification } from '@/Context/NotificationProvider';
 import {
   useColors,
@@ -38,27 +42,8 @@ import {
 } from '@/utils/downloads';
 import { resourceKeyOf } from '@/utils/downloads/types';
 
-const RIWAYAS: Riwaya[] = [
-  'hafs',
-  'warsh',
-  'qalon-kfqc',
-  'qalon-libya-awqaf',
-  'douri-kfqc',
-  'shubah-kfqc',
-];
-
-const TAFSEER_KEYS: TafseerKey[] = [
-  'baghawy',
-  'earab',
-  'katheer',
-  'maany',
-  'muyassar',
-  'nozool-wahidy',
-  'qortoby',
-  'saady',
-  'tabary',
-  'tanweer',
-];
+const RIWAYAS = [...RIWAYAT_LIST];
+const TAFSEER_KEYS = [...TAFSEERS_LIST];
 
 interface RiwayaRow {
   riwaya: Riwaya;

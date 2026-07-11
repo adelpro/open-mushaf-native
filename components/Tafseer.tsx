@@ -15,6 +15,7 @@ import {
   quranTafseerUrl,
   TAFSEER_ARABIC_LABEL,
   TafseerKey,
+  TAFSEERS_LIST,
 } from '@/constants/TafseerCdn';
 import {
   hasNoTafseerContent,
@@ -31,12 +32,11 @@ import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
 /**
- * Canonical display order for the tafseer tabs. Pulled from
- * `TAFSEER_ARABIC_LABEL` so the popup matches the Downloads screen —
- * one source of truth for tafseer metadata lives in
- * `@/constants/TafseerCdn`.
+ * Canonical display order for the tafseer tabs. Pulled from the
+ * `TAFSEERS` tuple in `@/constants/TafseerCdn` so the popup matches
+ * the Downloads screen — one source of truth for tafseer metadata.
  */
-const TAB_KEYS = Object.keys(TAFSEER_ARABIC_LABEL) as TafseerKey[];
+const TAB_KEYS = [...TAFSEERS_LIST];
 
 type Props = {
   aya: number;
