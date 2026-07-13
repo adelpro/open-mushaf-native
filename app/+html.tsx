@@ -219,16 +219,13 @@ if ('serviceWorker' in navigator) {
       
       // Add timeout fallback to ensure the app continues loading even if service worker registration takes too long
       let swRegistrationTimeout = setTimeout(() => {
-        // console.warn('Service worker registration timed out');
         if (notificationElement) {
           notificationElement.style.display = 'none';
         }
       }, 10000); // hide after 10 seconds
-      
+
       navigator.serviceWorker.register('/service-worker.js')
         .then(registration => {
-          // console.log('Service Worker registered with scope:', registration.scope);
-          
           // Clear the timeout since registration was successful
           clearTimeout(swRegistrationTimeout);
           
@@ -335,9 +332,4 @@ if ('serviceWorker' in navigator) {
     }, [messageChannel.port2]);
   }
 }
-
-// Example: To test this from your browser's developer console (after the page loads):
-// navigator.serviceWorker.controller.postMessage({ type: 'SW_STATE_UPDATE', message: 'Test notification!', duration: 3000 });
-// navigator.serviceWorker.controller.postMessage({ type: 'SW_STATE_UPDATE', message: 'Another message, stays until hidden.' });
-// navigator.serviceWorker.controller.postMessage({ type: 'SW_STATE_UPDATE', hide: true });
 `;

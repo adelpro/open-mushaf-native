@@ -16,8 +16,6 @@ export * from './specs';
 
 export * from './hizb';
 
-export * from './overlay-element';
-
 export * from './thumn';
 
 export * from './reminder';
@@ -25,8 +23,6 @@ export * from './reminder';
 export * from './search';
 
 export * from './ui';
-
-export * from './quran-svg';
 
 export * from './riwaya';
 

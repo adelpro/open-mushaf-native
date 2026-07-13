@@ -1,5 +1,3 @@
-export type ReminderType = 'daily' | 'weekly';
-
 export type ReminderPreset = 'wird' | 'mulk' | 'kahf' | 'custom';
 
 export type Reminder = {
@@ -14,7 +12,7 @@ export type Reminder = {
   /** Minute (0-59) */
   minute: number;
   /** Repeat frequency */
-  type: ReminderType;
+  type: 'daily' | 'weekly';
   /** Day of week for weekly reminders (1=Sunday, 6=Friday, 7=Saturday) */
   dayOfWeek?: number;
   /** Scheduled notification identifier from expo-notifications */

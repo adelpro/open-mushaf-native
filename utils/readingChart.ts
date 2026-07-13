@@ -47,8 +47,8 @@ const toLocalDigits: (n: number) => string = (() => {
   }
 })();
 
-export type GroupBy = 'day' | 'week' | 'month';
-export type ChartLabel = { primary: string; secondary?: string };
+type GroupBy = 'day' | 'week' | 'month';
+type ChartLabel = { primary: string; secondary?: string };
 
 /**
  * Formats a date for display on the reading chart's x-axis.

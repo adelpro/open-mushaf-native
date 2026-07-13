@@ -1,4 +1,3 @@
-// --- NEW: parseAyahPolygonsFromSvg ---
 export function parseAyahPolygonsFromSvg(svgXml: string): {
   surahNumber: number;
   ayahNumber: number;
@@ -27,57 +26,7 @@ export function parseAyahPolygonsFromSvg(svgXml: string): {
   return results;
 }
 
-export interface ParsedPath {
-  d: string;
-  class?: string;
-  surah?: string;
-  ayah?: string;
-  id?: string;
-  number?: string;
-}
-
-export interface ParsedSvg {
-  viewBox: { minX: number; minY: number; width: number; height: number };
-  paths: ParsedPath[];
-}
-
-/**
- * Parse an SVG string and extract all <path> elements and the viewBox.
- * Works entirely with regex – no external libraries needed.
- */
-export function parseSvg(svgXml: string): ParsedSvg | null {
-  // Extract viewBox
-  const viewBoxMatch = svgXml.match(/<svg\b[^>]*\bviewBox\s*=\s*"([^"]+)"/i);
-  if (!viewBoxMatch) return null;
-  const viewBoxParts = viewBoxMatch[1].trim().split(/\s+/).map(Number);
-  if (viewBoxParts.length !== 4 || viewBoxParts.some(isNaN)) return null;
-  const [minX, minY, width, height] = viewBoxParts;
-  const viewBox = { minX, minY, width, height };
-
-  // Extract all <path> tags, even those nested inside <g>
-  const pathRegex = /<path\b([^>]*?)\/?>/gi;
-  const paths: ParsedPath[] = [];
-  let match: RegExpExecArray | null;
-  while ((match = pathRegex.exec(svgXml)) !== null) {
-    const attrs = match[1];
-    const d = attrs.match(/\bd="([^"]*)"/)?.[1];
-    if (!d) continue;
-    const cls = attrs.match(/\bclass="([^"]*)"/)?.[1];
-    const surah = attrs.match(/\bsurah="([^"]*)"/)?.[1];
-    const ayah = attrs.match(/\bayah="([^"]*)"/)?.[1];
-    const id = attrs.match(/\bid="([^"]*)"/)?.[1];
-    const number = attrs.match(/\bnumber="([^"]*)"/)?.[1];
-    paths.push({ d, class: cls, surah, ayah, id, number });
-  }
-
-  return { viewBox, paths };
-}
-
-// utils/svgPolygon.ts
-
 export type Point = readonly [number, number];
-
-// ... existing functions ...
 
 /**
  * Parse an SVG path `d` string (absolute commands M, L, Z)

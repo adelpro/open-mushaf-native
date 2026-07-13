@@ -128,11 +128,7 @@ export function Tafseer({ aya, surah, opacity = 1 }: Props) {
     };
 
     fetchTafseer();
-  }, [selectedTab, surah, aya, cache]); // re‑fetch if surah/aya changes (even if cached data exists, we keep it; the hook `useTafseerContent` will filter by surah/aya)
-
-  // Reset cache when surah or aya changes? We could keep cache but the content check might need fresh.
-  // Actually we want to keep the data but the hasNoTafseerContent will check within the same surah/aya.
-  // So we don't need to reset cache.
+  }, [selectedTab, surah, aya, cache]);
 
   const formattedTafseerHtml = useTafseerContent({
     tafseerData,
