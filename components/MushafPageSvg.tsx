@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  Platform,
   Pressable,
   StyleSheet,
   useColorScheme,
@@ -22,6 +21,7 @@ import { READING_THEMES } from '@/constants/readingThemes';
 import {
   useColors,
   useCurrentPage,
+  useImagePreloader,
   usePanGestureHandler,
   useQuranMetadata,
   useSvgText,
@@ -115,7 +115,9 @@ export function MushafPageSvg({ riwaya, activeSurah }: Props) {
     1.0,
   );
 
-  void Platform.OS;
+  // Prefetch a 4-page window of mushaf SVGs around `currentPage` so
+  // page-to-page navigation feels instant. Side-effect-only hook.
+  useImagePreloader(currentPage);
 
   // Calculate page dimensions based on the available container height
   const aspectRatio = viewBox ? viewBox.height / viewBox.width : 1.4286;
