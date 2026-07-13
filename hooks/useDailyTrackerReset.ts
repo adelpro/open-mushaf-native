@@ -10,6 +10,7 @@ import {
   readingHistory,
   yesterdayPage,
 } from '@/jotai/atoms';
+import { getTodayHizbsRead } from '@/utils/dailyTracker';
 
 export function useDailyTrackerReset() {
   const [dailyTracker, setDailyTracker] = useAtom(dailyTrackerCompleted);
@@ -33,9 +34,15 @@ export function useDailyTrackerReset() {
     if (tracker.date !== today) {
       const pagesRead = Math.max(0, savedPage - yesterdayPageValue.value);
 
-      if (tracker.value > 0 || pagesRead > 0) {
+      if (pagesRead > 0) {
+        // Today's hizbs are derived from the same page delta the rest
+        // of the tracker uses (see utils/dailyTracker.ts) — the atom's
+        // own `.value` was never incremented and would always be 0.
         const entry: DailyReadingRecord = {
-          hizbsCompleted: tracker.value,
+          hizbsCompleted: getTodayHizbsRead(
+            savedPage,
+            yesterdayPageValue.value,
+          ),
           pagesRead,
           date: tracker.date,
         };

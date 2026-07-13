@@ -19,10 +19,11 @@ import { useColors, useQuranMetadata } from '@/hooks';
 import {
   bottomMenuState,
   currentSavedPage,
-  dailyTrackerCompleted,
   dailyTrackerGoal,
   topMenuState,
+  yesterdayPage,
 } from '@/jotai/atoms';
+import { getTodayProgressFraction } from '@/utils/dailyTracker';
 import {
   getJuzPositionByPage,
   getSurahNameByPage,
@@ -96,20 +97,18 @@ export function TopMenu() {
   const [showBottomMenuState, setBottomMenuState] = useAtom(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] = useAtom(topMenuState);
   const currentSavedPageValue = useAtomValue(currentSavedPage);
+  const yesterdayPageValue = useAtomValue(yesterdayPage);
 
   const dailyTrackerGoalValue = useAtomValue(dailyTrackerGoal);
-  const dailyTrackerCompletedValue = useAtomValue(dailyTrackerCompleted);
 
   useEffect(() => {
-    const newProgress =
-      dailyTrackerGoalValue > 0
-        ? Math.min(
-            1,
-            dailyTrackerCompletedValue.value / 8 / (dailyTrackerGoalValue / 8),
-          )
-        : 0;
+    const newProgress = getTodayProgressFraction(
+      currentSavedPageValue as number,
+      yesterdayPageValue.value,
+      dailyTrackerGoalValue,
+    );
     setProgressValue(newProgress);
-  }, [dailyTrackerGoalValue, dailyTrackerCompletedValue.value]);
+  }, [currentSavedPageValue, yesterdayPageValue.value, dailyTrackerGoalValue]);
 
   const toggleMenu = () => {
     setBottomMenuState((state) => !state);

@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   currentSavedPage,
-  dailyTrackerCompleted,
   dailyTrackerGoal,
   mushafRiwaya,
+  yesterdayPage,
 } from '@/jotai/atoms';
 
 // `getDefaultStore` is mocked via `vi.mock` below — we just need its
@@ -62,12 +62,15 @@ describe('widgetTaskHandler', () => {
     AndroidWidgetMock.mockClear();
     storeState.clear();
     // Seed the atoms with deterministic values.
+    // `dailyCompleted` is derived from
+    // `(currentSavedPage - yesterdayPage.value) * 60 / 604` — seed
+    // those two atoms instead of the (now-unused) dailyTrackerCompleted.
     storeState.set(dailyTrackerGoal, 5);
-    storeState.set(dailyTrackerCompleted, {
-      value: 2,
+    storeState.set(currentSavedPage, 42);
+    storeState.set(yesterdayPage, {
+      value: 22,
       date: new Date().toDateString(),
     });
-    storeState.set(currentSavedPage, 42);
     storeState.set(mushafRiwaya, 'hafs');
   });
 
@@ -87,7 +90,8 @@ describe('widgetTaskHandler', () => {
     expect(AndroidWidgetMock).toHaveBeenCalledTimes(2);
     const firstCall = AndroidWidgetMock.mock.calls[0][0];
     expect(firstCall.dailyGoal).toBe(5);
-    expect(firstCall.dailyCompleted).toBe(2);
+    // (42 - 22) / (604/60) = 1.987 — derived from page delta.
+    expect(firstCall.dailyCompleted).toBeCloseTo(1.987, 3);
     expect(firstCall.currentPage).toBe(42);
     expect(firstCall.colorScheme).toBe('light');
     const secondCall = AndroidWidgetMock.mock.calls[1][0];
@@ -125,10 +129,13 @@ describe('widgetTaskHandler', () => {
     expect(props.renderWidget).toHaveBeenCalledTimes(1);
   });
 
-  it('resets dailyCompleted when the stored date is not today', async () => {
-    storeState.set(dailyTrackerCompleted, {
-      value: 99,
-      date: 'Wed Jan 01 1970',
+  it('clamps dailyCompleted to 0 when yesterdayPage is at or past currentSavedPage', async () => {
+    // Defensive path: if yesterdayPage.value >= currentSavedPage (e.g.
+    // the user navigated backwards or never moved forward today), the
+    // page delta is non-positive and dailyCompleted is clamped to 0.
+    storeState.set(yesterdayPage, {
+      value: 100,
+      date: new Date().toDateString(),
     });
     const props = makeProps('WIDGET_UPDATE');
     await widgetTaskHandler(props);

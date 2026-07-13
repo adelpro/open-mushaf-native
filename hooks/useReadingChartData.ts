@@ -7,11 +7,11 @@ import { CHART_PERIODS } from '@/constants';
 import {
   currentSavedPage,
   DailyReadingRecord,
-  dailyTrackerCompleted,
   readingHistory,
   yesterdayPage,
 } from '@/jotai/atoms';
 import { daysAgo } from '@/utils';
+import { getTodayHizbsRead } from '@/utils/dailyTracker';
 
 export type ChartMetric = 'hizbs' | 'pages';
 export type GroupBy = 'day' | 'week' | 'month';
@@ -117,13 +117,20 @@ export function useReadingChartData(
   groupBy: GroupBy = 'day',
 ) {
   const history = useAtomValue(readingHistory);
-  const todayTracker = useAtomValue(dailyTrackerCompleted);
   const savedPage = useAtomValue(currentSavedPage);
   const yesterday = useAtomValue(yesterdayPage);
   const [periodIndex, setPeriodIndex] = useState(0);
   const period = CHART_PERIODS[periodIndex].days;
 
+  const todayDateStr = new Date().toDateString();
   const todayPagesRead = Math.max(0, (savedPage as number) - yesterday.value);
+  // Today's hizbs are derived from the same page delta `todayPagesRead`
+  // uses — the `dailyTrackerCompleted.value` atom was never wired up to
+  // be incremented, so reading it would always return 0 here.
+  const todayHizbsRead = getTodayHizbsRead(
+    savedPage as number,
+    yesterday.value,
+  );
 
   const data: DailyReadingRecord[] = useMemo(() => {
     // ─── DEV_MOCK: only used in Expo Go or with no real history ───────────────
@@ -173,9 +180,9 @@ export function useReadingChartData(
       recordedDates.add(entry.date);
     }
 
-    hizbMap.set(todayTracker.date, todayTracker.value);
-    pagesMap.set(todayTracker.date, todayPagesRead);
-    recordedDates.add(todayTracker.date);
+    hizbMap.set(todayDateStr, todayHizbsRead);
+    pagesMap.set(todayDateStr, todayPagesRead);
+    recordedDates.add(todayDateStr);
 
     // Build daily records for the current period
     const result: DailyReadingRecord[] = [];
@@ -190,7 +197,7 @@ export function useReadingChartData(
       });
     }
     return result;
-  }, [history, todayTracker, todayPagesRead, period]);
+  }, [history, todayDateStr, todayHizbsRead, todayPagesRead, period]);
 
   // When grouping by week/month, the series collapses to chunked totals.
   const chartData = useMemo(

@@ -16,11 +16,12 @@ import warshSurahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/sur
 import warshThumns from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/thumn.json';
 import {
   currentSavedPage,
-  dailyTrackerCompleted,
   dailyTrackerGoal,
   mushafRiwaya,
+  yesterdayPage,
 } from '@/jotai/atoms';
 import { Surah, Thumn } from '@/types';
+import { getTodayHizbsRead } from '@/utils/dailyTracker';
 import {
   getJuzPositionByPage,
   getSurahNumberByPage,
@@ -63,13 +64,17 @@ export const useUpdateAndroidWidget = () => {
       const store = getDefaultStore();
       const dailyGoal = store.get(dailyTrackerGoal);
       const currentPage = store.get(currentSavedPage) || 1;
-      const dailyCompletedAtom = store.get(dailyTrackerCompleted);
+      const yesterdayPageAtom = store.get(yesterdayPage);
       const riwaya = store.get(mushafRiwaya) || 'warsh';
 
-      // Validate Daily Completed — reset if the stored date isn't today.
-      const today = new Date().toDateString();
-      const dailyCompleted =
-        dailyCompletedAtom.date === today ? dailyCompletedAtom.value : 0;
+      // Today's hizbs are derived from the page delta
+      // (currentSavedPage - yesterdayPage.value). Previously read from
+      // `dailyTrackerCompleted.value`, which was never incremented and
+      // therefore always reported 0.
+      const dailyCompleted = getTodayHizbsRead(
+        currentPage,
+        yesterdayPageAtom.value,
+      );
 
       // Select surah and thumn metadata based on riwaya
       const surahs = (riwaya === 'hafs' ? hafsSurahs : warshSurahs) as Surah[];

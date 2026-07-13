@@ -851,6 +851,7 @@ const styles = StyleSheet.create({
   chipLabel: {
     fontSize: 14,
     fontFamily: 'Tajawal_500Medium',
+    lineHeight: 18,
   },
   footnote: {
     fontSize: 12,

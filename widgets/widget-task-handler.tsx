@@ -9,11 +9,12 @@ import warshSurahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/sur
 import warshThumns from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/thumn.json';
 import {
   currentSavedPage,
-  dailyTrackerCompleted,
   dailyTrackerGoal,
   mushafRiwaya,
+  yesterdayPage,
 } from '@/jotai/atoms';
 import { Surah, Thumn } from '@/types';
+import { getTodayHizbsRead } from '@/utils/dailyTracker';
 import {
   getJuzPositionByPage,
   getSurahNumberByPage,
@@ -47,8 +48,8 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
 
   // Read data from atoms
   const dailyGoal = store.get(dailyTrackerGoal);
-  const dailyCompletedData = store.get(dailyTrackerCompleted);
   const currentPage = store.get(currentSavedPage);
+  const yesterdayPageData = store.get(yesterdayPage);
   const riwaya = store.get(mushafRiwaya) || 'warsh';
 
   let dailyCompleted = 0;
@@ -56,10 +57,11 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
   let currentHizbNumber = 1;
 
   try {
-    // Validate Daily Goal Date
-    const today = new Date().toDateString();
-    dailyCompleted =
-      dailyCompletedData.date === today ? dailyCompletedData.value : 0;
+    // Today's hizbs are derived from the page delta
+    // (currentSavedPage - yesterdayPage.value). The previous
+    // implementation read `dailyTrackerCompleted.value`, which was
+    // never incremented and therefore always returned 0 here.
+    dailyCompleted = getTodayHizbsRead(currentPage, yesterdayPageData.value);
 
     let surahs: Surah[] = [];
     let thumns: Thumn[] = [];

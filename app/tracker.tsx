@@ -1,10 +1,9 @@
-// Import useState, Modal, and Feather
 import React, { useState } from 'react';
 import { Modal, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
-import { useAtom } from 'jotai/react';
+import { useAtom, useAtomValue } from 'jotai/react';
 
 import {
   ReadingChart,
@@ -15,10 +14,11 @@ import {
 } from '@/components';
 import { useColors, useCurrentPage, useUpdateAndroidWidget } from '@/hooks';
 import {
-  dailyTrackerCompleted,
+  currentSavedPage,
   dailyTrackerGoal,
   yesterdayPage,
 } from '@/jotai/atoms';
+import { getTodayHizbsRead } from '@/utils/dailyTracker';
 
 export default function TrackerScreen() {
   const { iconColor, cardColor, primaryColor, textColor, ivoryColor } =
@@ -29,23 +29,23 @@ export default function TrackerScreen() {
 
   const [dailyTrackerGoalValue, setDailyTrackerGoalValue] =
     useAtom(dailyTrackerGoal);
-  const [dailyTrackerCompletedValue, setDailyTrackerCompletedValue] = useAtom(
-    dailyTrackerCompleted,
-  );
   const [yesterdayPageValue, setYesterdayPageValue] = useAtom(yesterdayPage);
+  const atomSavedPage = useAtomValue(currentSavedPage);
   // Add state for modal visibility
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
-  // Both `dailyTrackerCompletedValue.value` and `dailyTrackerGoalValue` are
-  // expressed in hizbs (1-indexed: 1..60), so a straight ratio is correct.
-  // Hizbs are 1-indexed and there are 8 thumns per hizb — the stepper changes
-  // the goal by 1 full hizb at a time.
+  // Today's reading progress is derived from the difference between the
+  // current page and the page recorded at the end of the previous day
+  // (see utils/dailyTracker.ts). `dailyTrackerCompleted.value` was a
+  // placeholder that no writer ever incremented, so reading it always
+  // returned 0 — replaced by a derived computation here.
+  const todayHizbs = getTodayHizbsRead(
+    atomSavedPage as number,
+    yesterdayPageValue.value,
+  );
   const dailyProgress =
     dailyTrackerGoalValue > 0
-      ? Math.min(
-          100,
-          (dailyTrackerCompletedValue.value / dailyTrackerGoalValue) * 100,
-        )
+      ? Math.min(100, (todayHizbs / dailyTrackerGoalValue) * 100)
       : 0;
 
   const incrementDailyGoal = () => {
@@ -59,7 +59,10 @@ export default function TrackerScreen() {
     void updateAndroidWidget();
   };
 
-  // Consolidated reset logic into one function
+  // Consolidated reset logic into one function. Today's progress is now
+  // derived from `currentSavedPage - yesterdayPage.value`, so the reset
+  // just needs to set yesterday's page back to the current page — that
+  // makes today's page delta zero, which is the desired effect.
   const performReset = async () => {
     if (typeof savedPage === 'number' && savedPage > 0) {
       setYesterdayPageValue({
@@ -68,10 +71,6 @@ export default function TrackerScreen() {
       });
     }
 
-    setDailyTrackerCompletedValue({
-      value: 0,
-      date: new Date().toDateString(),
-    });
     // Update Android widget
     await updateAndroidWidget();
     setConfirmModalVisible(false); // Close modal after reset
@@ -145,7 +144,7 @@ export default function TrackerScreen() {
             </ThemedView>
 
             <ThemedText style={styles.infoText}>
-              قراءة {getHizbText(dailyTrackerCompletedValue.value)} من أصل{' '}
+              قراءة {getHizbText(todayHizbs)} من أصل{' '}
               {getHizbText(dailyTrackerGoalValue)}
             </ThemedText>
 
@@ -244,7 +243,6 @@ export default function TrackerScreen() {
             activeOpacity={1}
             onPress={() => setConfirmModalVisible(false)} // Close on overlay press
             accessibilityLabel="إغلاق نافذة التأكيد"
-            accessibilityRole="button"
           >
             {/* Prevent modal closing when pressing inside content */}
             <ThemedView
@@ -371,7 +369,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
-  resetButton: { paddingHorizontal: 16, paddingVertical: 8 }, // This padding controls the space around the icon and text
+  resetButton: { paddingHorizontal: 16, paddingVertical: 8 },
   resetButtonContent: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -409,7 +407,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     borderBottomWidth: 1,
     minHeight: 40,
-    backgroundColor: 'transparent', // Ensure header background is transparent if content has color
+    backgroundColor: 'transparent',
   },
   modalTitle: {
     fontSize: 18,
@@ -431,10 +429,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    backgroundColor: 'transparent', // Ensure actions background is transparent
+    backgroundColor: 'transparent',
   },
   modalButton: {
-    width: '40%', // Use percentage for better responsiveness
-    maxWidth: 120, // Add maxWidth to prevent buttons getting too large
+    width: '40%',
+    maxWidth: 120,
   },
 });
