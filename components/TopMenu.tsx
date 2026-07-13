@@ -10,8 +10,8 @@ import {
 import { router, useLocalSearchParams } from 'expo-router';
 import { useAtom, useAtomValue } from 'jotai/react';
 import { removeTashkeel } from 'quran-search-engine';
-import * as Progress from 'react-native-progress';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Circle, Svg } from 'react-native-svg';
 
 import { ThemedView } from '@/components/ThemedView';
 import {} from '@/constants';
@@ -29,6 +29,58 @@ import {
 } from '@/utils/quranMetadataUtils';
 
 const ICON_SIZE = 32;
+
+type DailyProgressRingProps = {
+  size: number;
+  thickness: number;
+  progress: number;
+  color: string;
+  unfilledColor: string;
+};
+
+/**
+ * Tiny circular progress ring for the daily-tracker badge in the top menu.
+ * Pure react-native-svg (no Animated wrappers) so React 19 + react-native-web
+ * does not see a `collapsable={false}` prop on the DOM `path` element.
+ */
+function DailyProgressRing({
+  size,
+  thickness,
+  progress,
+  color,
+  unfilledColor,
+}: DailyProgressRingProps) {
+  const clamped = Math.max(0, Math.min(1, progress));
+  const radius = (size - thickness) / 2;
+  const center = size / 2;
+  const circumference = 2 * Math.PI * radius;
+  const dashOffset = circumference * (1 - clamped);
+  return (
+    <Svg width={size} height={size}>
+      <Circle
+        cx={center}
+        cy={center}
+        r={radius}
+        stroke={unfilledColor}
+        strokeWidth={thickness}
+        fill="none"
+      />
+      <Circle
+        cx={center}
+        cy={center}
+        r={radius}
+        stroke={color}
+        strokeWidth={thickness}
+        fill="none"
+        strokeDasharray={circumference}
+        strokeDashoffset={dashOffset}
+        strokeLinecap="round"
+        transform={`rotate(-90 ${center} ${center})`}
+      />
+    </Svg>
+  );
+}
+
 /**
  * Overlay control panel typically accessible via a soft tap on the Mushaf view.
  * Exposes core interaction triggers (Search, Bookmarks, and Settings navigators).
@@ -145,13 +197,11 @@ export function TopMenu() {
               accessibilityRole="button"
             >
               <View style={styles.progressContainer}>
-                <Progress.Circle
+                <DailyProgressRing
                   size={26}
+                  thickness={3.5}
                   progress={progressValue}
                   color={tintColor}
-                  showsText={false}
-                  thickness={3.5}
-                  borderWidth={0}
                   unfilledColor={'rgba(128, 128, 128, 0.4)'}
                 />
                 {progressValue === 1 && (
