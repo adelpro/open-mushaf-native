@@ -851,7 +851,14 @@ const styles = StyleSheet.create({
   chipLabel: {
     fontSize: 14,
     fontFamily: 'Tajawal_500Medium',
-    lineHeight: 18,
+    lineHeight: 22,
+    // Android-specific: tight `lineHeight` with Arabic glyphs + Tajawal's
+    // ascent/descent clips the top of the text inside the line box.
+    // The project-wide pattern (`ChapterCard`, `SurahCard`, `TopMenu`)
+    // is to drop Android's extra font padding and center the glyphs
+    // vertically — see the same combo at e.g. ChapterCard.tsx:105-106.
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   footnote: {
     fontSize: 12,
