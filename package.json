@@ -71,6 +71,7 @@
     "@react-native-picker/picker": "2.11.4",
     "@react-native/assets-registry": "^0.75.4",
     "@react-navigation/native-stack": "^7.0.0",
+    "@shopify/react-native-skia": "^2.8.0",
     "cross-env": "^7.0.3",
     "expo": "^57",
     "expo-application": "~57.0.0",

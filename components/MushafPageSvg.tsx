@@ -14,8 +14,9 @@ import { useAtomValue, useSetAtom } from 'jotai/react';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SvgXml } from 'react-native-svg';
 
+import { SkiaMushafPage } from '@/components/svg/SkiaMushafPage';
+import { PageOverlaySvg } from '@/components/svg/SkiaPageOverlay';
 import { RIWAYA_ARABIC_LABEL } from '@/constants';
 import { READING_THEMES } from '@/constants/readingThemes';
 import {
@@ -30,7 +31,6 @@ import { mushafContrast, readingTheme, topMenuState } from '@/jotai/atoms';
 import { Riwaya } from '@/types';
 import { parseAyahPolygonsFromSvg } from '@/utils/svgParser';
 
-import { PageOverlaySvg } from './PageOverlaySvg';
 import { TafseerPopup } from './TafseerPopup';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -229,11 +229,10 @@ export function MushafPageSvg({ riwaya, activeSurah }: Props) {
             ) : (
               <View style={{ width: pageWidth, height: pageHeight }}>
                 <View style={svgWrapStyle ?? undefined}>
-                  <SvgXml
+                  <SkiaMushafPage
                     xml={svgText}
                     width={pageWidth}
                     height={pageHeight}
-                    preserveAspectRatio="xMidYMid meet"
                   />
                 </View>
                 {viewBox && (

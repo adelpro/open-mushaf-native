@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Path, Svg } from 'react-native-svg';
+import { Canvas, Path } from '@shopify/react-native-skia';
 
 import { parsePathToPoints, pointInPolygon } from '@/utils/svgParser';
 
-type PageOverlaySvgProps = {
+export type PageOverlaySvgProps = {
   polygons: { surahNumber: number; ayahNumber: number; polygon: string }[];
   viewBox: { minX: number; minY: number; width: number; height: number };
   width: number;
@@ -19,6 +19,14 @@ type PageOverlaySvgProps = {
   onLongPressAyah: (surah: number, ayah: number) => void;
 };
 
+/**
+ * Hit-test overlay drawn on top of the Mushaf page SVG. Each ayah polygon is
+ * rendered as a Skia `<Path>` (transparent fill except for the active ayah)
+ * and a sibling absolutely-positioned `Pressable` captures long-presses, maps
+ * the touch back into SVG viewBox space, and runs `pointInPolygon` against
+ * the precomputed polygon point list. The hit-test math is preserved 1:1
+ * from the previous `react-native-svg` implementation.
+ */
 export function PageOverlaySvg({
   polygons,
   viewBox,
@@ -31,7 +39,7 @@ export function PageOverlaySvg({
   onPress,
   onLongPressAyah,
 }: PageOverlaySvgProps) {
-  // Precompute points for hit-testing and keep d for rendering
+  // Precompute points for hit-testing and keep the SVG path "d" for rendering.
   const processed = useMemo(
     () =>
       polygons.map((p) => ({
@@ -43,12 +51,15 @@ export function PageOverlaySvg({
 
   const [layout, setLayout] = useState({ width: 0, height: 0 });
 
-  const handleLongPress = (event: any) => {
+  const handleLongPress = (event: {
+    nativeEvent: { locationX: number; locationY: number };
+  }) => {
     if (!layout.width || !layout.height) return;
     const { locationX, locationY } = event.nativeEvent;
     if (typeof locationX !== 'number' || typeof locationY !== 'number') return;
 
-    // Map screen coordinates to SVG viewBox space (same as SvgXml scaling)
+    // Map screen coordinates to SVG viewBox space (matches the previous
+    // SvgXml scaling — `preserveAspectRatio="xMidYMid meet"` semantics).
     const aspectRatio = viewBox.width / viewBox.height;
     const containerAspect = layout.width / layout.height;
     let scale = 1;
@@ -83,11 +94,7 @@ export function PageOverlaySvg({
       ]}
       onLayout={(e) => setLayout(e.nativeEvent.layout)}
     >
-      <Svg
-        width={width}
-        height={height}
-        viewBox={`${viewBox.minX} ${viewBox.minY} ${viewBox.width} ${viewBox.height}`}
-        preserveAspectRatio="xMidYMid meet"
+      <Canvas
         style={[
           StyleSheet.absoluteFill,
           { pointerEvents: 'box-none' as const },
@@ -95,24 +102,26 @@ export function PageOverlaySvg({
       >
         {processed.map(({ surahNumber, ayahNumber, polygon }, index) => {
           const isActive =
-            activeAyah &&
+            activeAyah !== null &&
             activeAyah.surah === surahNumber &&
             activeAyah.ayah === ayahNumber;
 
           return (
             <Path
               key={`${surahNumber}-${ayahNumber}-${index}`}
-              d={polygon}
-              fill={isActive ? highlightColor : 'transparent'}
-              fillOpacity={isActive ? highlightOpacity : 0}
+              path={polygon}
+              // Skia's <Path> parses the SVG "d" string natively. The polygon
+              // stays invisible unless this ayah is the active selection.
+              color={isActive ? highlightColor : 'transparent'}
+              opacity={isActive ? highlightOpacity : 0}
             />
           );
         })}
-      </Svg>
+      </Canvas>
       <Pressable
         style={[StyleSheet.absoluteFill, { pointerEvents: 'auto' as const }]}
         delayLongPress={delayLongPress}
-        onPress={onPress} // <-- Added
+        onPress={onPress}
         onLongPress={handleLongPress}
         accessible={false}
       />
