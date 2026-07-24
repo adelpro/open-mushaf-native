@@ -15,16 +15,16 @@ import {
   View,
 } from 'react-native';
 
-import {
-  ReadingChartBars,
-  ReadingChartYAxis,
-} from '@/components/svg/ReadingChartSvg';
+import Svg, { Line, Rect, Text as SvgText } from 'react-native-svg';
+
 import { Colors } from '@/constants';
 import {
   BAR_GAP,
+  BAR_RADIUS,
   BAR_WIDTH,
   CHART_PADDING,
   CHART_PERIODS,
+  GRID_RATIOS,
   TOOLTIP_HEADROOM,
 } from '@/constants/readingChart';
 import { ChartMetric, GroupBy, useColors, useReadingChartData } from '@/hooks';
@@ -37,11 +37,10 @@ import { styles } from './styles';
 
 /**
  * The primary statistical charting component driving the User's daily read tracking.
- * Maps reading outputs (pages/hizbs) against custom date vectors using a
- * `@shopify/react-native-skia` Canvas to provide a responsive bar-chart
- * visualization of completion timelines.
+ * Maps reading outputs (pages/hizbs) against custom date vectors using `react-native-svg` plotting
+ * to provide a responsive bar-chart visualization of completion timelines.
  *
- * @returns An interactive chart wrapped in a horizontal scroll context.
+ * @returns An interactive `<Svg>` map and scroll context wrapped safely.
  */
 export function ReadingChart() {
   const { primaryColor, textColor, cardColor } = useColors();
@@ -297,13 +296,25 @@ export function ReadingChart() {
       )}
 
       <ThemedView style={[styles.chartWrapper, bg]} onLayout={onChartLayout}>
-        <ReadingChartYAxis
+        <Svg
+          width={CHART_PADDING.left}
           height={chartHeight}
-          drawableHeight={drawableHeight}
-          paddingTop={paddingTop}
-          maxValue={maxValue}
-          textColor={textColor}
-        />
+          style={styles.yAxis}
+        >
+          {GRID_RATIOS.map((r) => (
+            <SvgText
+              key={r}
+              x={CHART_PADDING.left - 6}
+              y={paddingTop + drawableHeight * (1 - r) + 4}
+              textAnchor="end"
+              fontSize={10}
+              fill={textColor}
+              opacity={0.5}
+            >
+              {(maxValue * r).toFixed(1)}
+            </SvgText>
+          ))}
+        </Svg>
 
         <ScrollView
           ref={scrollRef}
@@ -315,28 +326,68 @@ export function ReadingChart() {
           <ThemedView
             style={{ width: svgWidth, backgroundColor: 'transparent' }}
           >
-            <ReadingChartBars
-              width={svgWidth}
-              height={chartHeight}
-              drawableHeight={drawableHeight}
-              paddingTop={paddingTop}
-              barOffset={barOffset}
-              data={
-                data as unknown as Parameters<
-                  typeof ReadingChartBars
-                >[0]['data']
-              }
-              getValue={
-                getValue as unknown as Parameters<
-                  typeof ReadingChartBars
-                >[0]['getValue']
-              }
-              maxValue={maxValue}
-              primaryColor={primaryColor}
-              textColor={textColor}
-              selectedBar={selectedBar}
-              groupBy={groupBy}
-            />
+            <Svg width={svgWidth} height={chartHeight}>
+              {GRID_RATIOS.map((r) => {
+                const y = paddingTop + drawableHeight * (1 - r);
+                return (
+                  <Line
+                    key={r}
+                    x1={0}
+                    y1={y}
+                    x2={svgWidth}
+                    y2={y}
+                    stroke={textColor}
+                    strokeOpacity={0.1}
+                    strokeWidth={0.5}
+                    strokeDasharray="8 7"
+                  />
+                );
+              })}
+              {data.map((d, i) => {
+                const val = getValue(d);
+                const x = barOffset + i * (BAR_WIDTH + barGap);
+                const barH = (val / maxValue) * drawableHeight;
+                // Partial trailing week (period % 7 !== 0): render at lower
+                // opacity + dashed stroke so the user can see it's not a
+                // full 7-day week. Always tappable; only the fill changes.
+                const isPartial =
+                  d.daysInBucket !== undefined && d.daysInBucket < 7;
+                // "No record" daily slot (user wasn't tracking yet, e.g.
+                // 68 untracked days in a 90-day window when the user has
+                // only been using the app for 22 days). Render a faint
+                // dashed placeholder so the timeline reads as "missing
+                // data" rather than "the user read 0". Weekly/monthly
+                // buckets never hit this branch because their aggregation
+                // collapses unrecorded stretches into partial buckets.
+                const isUntracked = !d.hasRecord && groupBy === 'day';
+                if (val <= 0 && !isUntracked) return null;
+                const fillOpacity =
+                  selectedBar === i
+                    ? 1
+                    : isPartial
+                      ? 0.4
+                      : isUntracked
+                        ? 0.25
+                        : 0.85;
+                return (
+                  <Rect
+                    key={i}
+                    x={x}
+                    y={paddingTop + drawableHeight - barH}
+                    width={BAR_WIDTH}
+                    height={Math.max(barH, 0)}
+                    rx={BAR_RADIUS}
+                    fill={primaryColor}
+                    opacity={fillOpacity}
+                    stroke={isPartial || isUntracked ? primaryColor : 'none'}
+                    strokeWidth={isPartial || isUntracked ? 1 : 0}
+                    strokeDasharray={
+                      isPartial ? '4 3' : isUntracked ? '3 3' : undefined
+                    }
+                  />
+                );
+              })}
+            </Svg>
 
             <View style={[styles.touchLayer, { height: chartHeight }]}>
               {data.map((d, i) => {
