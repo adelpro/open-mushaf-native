@@ -9,10 +9,9 @@ import {
 } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useAtom, useAtomValue } from 'jotai/react';
-import { removeTashkeel } from 'quran-search-engine';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Circle, Svg } from 'react-native-svg';
 
-import { DailyProgressRing } from '@/components/svg/DailyProgressRing';
 import { ThemedView } from '@/components/ThemedView';
 import {} from '@/constants';
 import { useColors, useQuranMetadata } from '@/hooks';
@@ -29,7 +28,69 @@ import {
   getSurahNameByPage,
 } from '@/utils/quranMetadataUtils';
 
+/**
+ * Strip Arabic tashkeel (diacritical marks) so the surah name
+ * renders cleanly inside the small top-menu bar. Replaces the
+ * drop-tashkeel utility from `quran-search-engine` which is being
+ * removed in Phase 5.
+ */
+const TASHKEEL_RANGE = /[ؐ-ًؚ-ٟۖ-ٰۭ]/g;
+function removeTashkeel(input: string): string {
+  return input.replace(TASHKEEL_RANGE, '');
+}
+
 const ICON_SIZE = 32;
+
+type DailyProgressRingProps = {
+  size: number;
+  thickness: number;
+  progress: number;
+  color: string;
+  unfilledColor: string;
+};
+
+/**
+ * Tiny circular progress ring for the daily-tracker badge in the top menu.
+ * Pure react-native-svg (no Animated wrappers) so React 19 + react-native-web
+ * does not see a `collapsable={false}` prop on the DOM `path` element.
+ */
+function DailyProgressRing({
+  size,
+  thickness,
+  progress,
+  color,
+  unfilledColor,
+}: DailyProgressRingProps) {
+  const clamped = Math.max(0, Math.min(1, progress));
+  const radius = (size - thickness) / 2;
+  const center = size / 2;
+  const circumference = 2 * Math.PI * radius;
+  const dashOffset = circumference * (1 - clamped);
+  return (
+    <Svg width={size} height={size}>
+      <Circle
+        cx={center}
+        cy={center}
+        r={radius}
+        stroke={unfilledColor}
+        strokeWidth={thickness}
+        fill="none"
+      />
+      <Circle
+        cx={center}
+        cy={center}
+        r={radius}
+        stroke={color}
+        strokeWidth={thickness}
+        fill="none"
+        strokeDasharray={circumference}
+        strokeDashoffset={dashOffset}
+        strokeLinecap="round"
+        transform={`rotate(-90 ${center} ${center})`}
+      />
+    </Svg>
+  );
+}
 
 /**
  * Overlay control panel typically accessible via a soft tap on the Mushaf view.

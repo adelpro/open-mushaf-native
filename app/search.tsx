@@ -1,216 +1,145 @@
-import React, { useEffect, useRef, useState } from 'react';
+/**
+ * Online-only Quran search backed by qurani.ai's `/search`
+ * endpoint.
+ *
+ * Inputs are debounced by the caller (we just mirror state into
+ * `query`). Results stream in from `useQuranSearch`, which handles
+ * the network fetch + abort when the input changes. Offline state
+ * shows an explicit retry CTA — search isn't cached locally in this
+ * phase (no morphology download).
+ */
+
+import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 
-import morphologyDataRaw from '@/assets/search/quran-morphology.json';
-import wordMapJSON from '@/assets/search/word-map.json';
-import {
-  SearchAdvancedOptions,
-  SearchColorLegend,
-  SearchEmptyState,
-  SearchInput,
-  SearchResultItem,
-  SearchSkeleton,
-  Seo,
-  TafseerPopup,
-  ThemedText,
-  ThemedView,
-} from '@/components';
+import { Feather } from '@expo/vector-icons';
+import { Stack } from 'expo-router';
+import { useAtomValue } from 'jotai/react';
+
+import { Seo, TafseerPopup, ThemedText, ThemedView } from '@/components';
+import { SearchEmptyState } from '@/components/SearchEmptyState';
+import { SearchInput } from '@/components/SearchInput';
+import { SearchResultItem } from '@/components/searchResultItem';
+import { SearchSkeleton } from '@/components/SearchSkeleton';
 import {
   useColors,
   useDebounce,
-  useQuranMetadata,
   useQuranSearch,
+  useRiwayaCache,
 } from '@/hooks';
-import { SearchOptions } from '@/types';
+import { firstLaunchDone } from '@/jotai/atoms';
 
-const MORPH = morphologyDataRaw;
-const WORD_MAP = new Map(
-  Object.entries(wordMapJSON),
-) as import('quran-search-engine').WordMap;
+const PAGE_SIZE = 50;
 
 export default function Search() {
-  const { quranData, isLoading, error } = useQuranMetadata();
   const { tintColor, primaryColor, secondaryColor, dangerColor } = useColors();
-
-  const PAGE_SIZE = 50;
+  const firstLaunchDoneValue = useAtomValue(firstLaunchDone);
+  const cache = useRiwayaCache();
+  const layoutNumberByGid = cache.layoutNumberByGid;
 
   const [inputText, setInputText] = useState('');
   const [query, setQuery] = useState('');
-  const [showOptions, setShowOptions] = useState(false);
-  const [advancedOptions, setAdvancedOptions] = useState<SearchOptions>({
-    lemma: false,
-    root: false,
-    fuzzy: false,
-    semantic: false,
-    isRegex: false,
-  });
-  const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
   const [page, setPage] = useState(1);
-  const [results, setResults] = useState<any[]>([]);
-  const [hasMore, setHasMore] = useState(false);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
-  const [isOptionChanging, setIsOptionChanging] = useState(false);
-
-  const listRef = useRef<FlatList>(null);
+  const [selectedAya, setSelectedAya] = useState<{
+    gid: number;
+    surah: number;
+    layoutAyah: number;
+  } | null>(null);
 
   const handleSearch = useDebounce((text: string) => {
-    setIsTyping(false);
     setPage(1);
-    setHasMore(false);
     setQuery(text);
-  }, 300);
+  }, 350);
 
-  const { pageResults, counts } = useQuranSearch({
-    quranData,
-    morphologyData: MORPH,
-    wordMap: WORD_MAP,
+  const onChangeText = useCallback(
+    (text: string) => {
+      setInputText(text);
+      handleSearch(text);
+    },
+    [handleSearch],
+  );
+
+  // Reset to page 1 when query changes.
+  useEffect(() => {
+    setPage(1);
+  }, [query]);
+
+  const { results, totalCount, isLoading, error, reload } = useQuranSearch({
     query,
-    advancedOptions,
-    fuseInstance: null,
     page,
     limit: PAGE_SIZE,
   });
 
-  useEffect(() => {
-    if (!query.trim()) {
-      setResults([]);
-      setHasMore(false);
-      setIsLoadingMore(false);
-      setIsOptionChanging(false);
-      return;
-    }
+  const handleSelectAya = useCallback(
+    (selected: { gid: number; surah: number; numberInSurah: number }) => {
+      // Resolve to per-narration layoutAyah so the popup renders the
+      // number that matches the user's chosen riwaya.
+      const nIS = layoutNumberByGid.get(selected.gid) ?? selected.numberInSurah;
+      setSelectedAya({
+        gid: selected.gid,
+        surah: selected.surah,
+        layoutAyah: nIS,
+      });
+    },
+    [layoutNumberByGid],
+  );
 
-    if (!pageResults) return;
-
-    setResults((prev) => {
-      if (page === 1) return pageResults;
-      const existingIds = new Set(prev.map((r) => r.gid));
-      const newItems = pageResults.filter((r) => !existingIds.has(r.gid));
-      return [...prev, ...newItems];
-    });
-
-    const more = pageResults.length === PAGE_SIZE;
-    setHasMore(more);
-    setIsLoadingMore(false);
-    setIsOptionChanging(false);
-
-    if (page === 1 && listRef.current) {
-      listRef.current.scrollToOffset({ offset: 0, animated: false });
-    }
-  }, [pageResults, page, query]);
-
-  const toggleOption = (option: keyof SearchOptions) => {
-    if (query.trim()) {
-      setIsOptionChanging(true);
-      setPage(1);
-    }
-
-    requestAnimationFrame(() => {
-      setAdvancedOptions((prev) => ({ ...prev, [option]: !prev[option] }));
-    });
-  };
-
-  if (isLoading)
+  // Block access until the wizard is done.
+  if (!firstLaunchDoneValue) {
     return (
-      <ThemedView style={styles.container}>
-        <ActivityIndicator size="large" color={tintColor} />
+      <ThemedView style={styles.center}>
+        <ThemedText>اختر رواية أولاً من شاشة الإعداد</ThemedText>
       </ThemedView>
     );
-
-  if (error)
-    return (
-      <ThemedView style={styles.container}>
-        <ThemedText type="defaultSemiBold">{error}</ThemedText>
-      </ThemedView>
-    );
-
-  const selectedLabels: string[] = [];
-  if (advancedOptions.lemma) selectedLabels.push(`صيغة: ${counts.lemma}`);
-  if (advancedOptions.root) selectedLabels.push(`جذر: ${counts.root}`);
-  if (advancedOptions.fuzzy) selectedLabels.push(`تقريبي: ${counts.fuzzy}`);
-  if (advancedOptions.semantic)
-    selectedLabels.push(`دلالي: ${(counts as any).semantic || 0}`);
-  if (advancedOptions.isRegex) selectedLabels.push(`النمط (Regex)`);
-
-  const counterText =
-    query.trim() === ''
-      ? ''
-      : selectedLabels.length > 0
-        ? `عدد النتائج: ${counts.total} (${selectedLabels.join('، ')})`
-        : `عدد النتائج: ${counts.total} (نص)`;
-
-  const isBusy = isTyping || isOptionChanging;
-  const showNoResults =
-    !isBusy &&
-    !isLoading &&
-    query.trim() !== '' &&
-    pageResults !== undefined &&
-    pageResults !== null &&
-    results.length === 0 &&
-    pageResults.length === 0;
+  }
 
   return (
     <ThemedView style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: 'بحث',
+          headerTitleStyle: { fontFamily: 'Tajawal_400Regular' },
+        }}
+      />
+      <Seo
+        title="البحث - المصحف المفتوح"
+        description="البحث في آيات القرآن الكريم"
+      />
+
       <SearchInput
         value={inputText}
-        onChangeText={(text: string) => {
-          setInputText(text);
-          if (text.trim()) {
-            setIsTyping(true);
-          } else {
-            setIsTyping(false);
-          }
-          handleSearch(text);
+        onChangeText={onChangeText}
+        isTyping={isLoading && results.length === 0}
+        isSearching={isLoading}
+        showOptions={false}
+        setShowOptions={() => {
+          /* options UI is Phase 5-follow-up */
         }}
-        isTyping={isTyping}
-        isSearching={isBusy}
-        showOptions={showOptions}
-        setShowOptions={setShowOptions}
         primaryColor={primaryColor}
         secondaryColor={secondaryColor}
       />
 
-      {showOptions && (
-        <SearchAdvancedOptions
-          advancedOptions={advancedOptions}
-          toggleOption={toggleOption}
-        />
-      )}
-
       {query ? (
-        <ThemedText style={styles.resultCount}>{counterText}</ThemedText>
+        <ThemedText style={styles.countLine}>
+          عدد النتائج: {totalCount} عبر الإنترنت
+        </ThemedText>
       ) : null}
 
-      {(counts as any)?.range &&
-      (counts as any).range > 0 &&
-      results.length > 0 ? (
+      {error ? (
         <ThemedView
-          style={{
-            backgroundColor: '#e8f5e9',
-            padding: 12,
-            borderRadius: 8,
-            marginBottom: 10,
-            borderColor: '#4caf50',
-            borderWidth: 1,
-          }}
+          style={[styles.errorCard, { borderColor: dangerColor + '88' }]}
         >
-          <ThemedText
-            style={{
-              textAlign: 'center',
-              color: '#2e7d32',
-              fontWeight: 'bold',
-            }}
-          >
-            بحث بالنطاق: تم العثور على {(counts as any).range} آية.
-            {'\n'}يمكنك الضغط على أي من النتائج أسفله للانتقال مباشرة للآية.
+          <Feather name="alert-circle" size={18} color={dangerColor} />
+          <ThemedText style={[styles.errorText, { color: dangerColor }]}>
+            {error}
+          </ThemedText>
+          <ThemedText style={styles.retryLink} onPress={reload}>
+            إعادة المحاولة
           </ThemedText>
         </ThemedView>
       ) : null}
 
-      <SearchColorLegend />
-
-      {isBusy && results.length === 0 ? (
+      {isLoading && results.length === 0 ? (
         <FlatList
           data={[1, 2, 3, 4, 5, 6]}
           keyExtractor={(item) => item.toString()}
@@ -219,40 +148,30 @@ export default function Search() {
         />
       ) : (
         <FlatList
-          ref={listRef}
           data={results}
-          style={{ opacity: isBusy && results.length > 0 ? 0.5 : 1 }}
-          keyExtractor={(item) => item.gid.toString()}
+          keyExtractor={(item) => item.number.toString()}
           renderItem={({ item }) => (
             <SearchResultItem
               item={item}
-              onSelectAya={(selected: { aya: number; surah: number }) =>
-                setSelectedAya(selected)
-              }
-              disabled={isBusy && results.length > 0}
+              onSelectAya={handleSelectAya}
+              disabled={isLoading}
             />
           )}
           onEndReached={() => {
-            if (!hasMore || isLoadingMore) return;
-            setIsLoadingMore(true);
-            setPage((prev) => prev + 1);
+            if (isLoading) return;
+            if (results.length >= totalCount) return;
+            setPage((p) => p + 1);
           }}
           onEndReachedThreshold={0.5}
           ListFooterComponent={
-            isLoadingMore ? (
+            isLoading ? (
               <ThemedView style={{ paddingVertical: 12 }}>
                 <ActivityIndicator size="small" color={tintColor} />
               </ThemedView>
             ) : null
           }
           ListEmptyComponent={
-            !query.trim() && !inputText.trim() ? (
-              <SearchEmptyState
-                type="initial"
-                primaryColor={primaryColor}
-                dangerColor={dangerColor}
-              />
-            ) : showNoResults ? (
+            query.trim() && !isLoading ? (
               <SearchEmptyState
                 type="no-results"
                 primaryColor={primaryColor}
@@ -263,22 +182,52 @@ export default function Search() {
         />
       )}
 
-      <TafseerPopup
-        show={selectedAya.aya > 0}
-        setShow={() => setSelectedAya({ aya: 0, surah: 0 })}
-        aya={selectedAya.aya}
-        surah={selectedAya.surah}
-      />
-
-      <Seo
-        title="البحث - المصحف المفتوح"
-        description="البحث في آيات القرآن الكريم"
-      />
+      {selectedAya ? (
+        <TafseerPopup
+          show
+          setShow={() => setSelectedAya(null)}
+          gid={selectedAya.gid}
+          surah={selectedAya.surah}
+          layoutAyah={selectedAya.layoutAyah}
+        />
+      ) : null}
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14 },
+  container: {
+    flex: 1,
+    padding: 20,
+    gap: 12,
+  },
+  center: {
+    flex: 1,
+    padding: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  countLine: {
+    fontSize: 13,
+    opacity: 0.7,
+    marginBottom: 4,
+  },
+  errorCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    padding: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  errorText: {
+    flex: 1,
+    fontSize: 13,
+  },
+  retryLink: {
+    fontSize: 13,
+    textDecorationLine: 'underline',
+    opacity: 0.8,
+  },
 });

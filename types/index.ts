@@ -26,6 +26,6 @@ export * from './ui';
 
 export * from './riwaya';
 
-export type { QuranText } from 'quran-search-engine';
+export type { QuranText } from './quran-api-types';
 
-export type { MorphologyAya } from 'quran-search-engine';
+export type { MorphologyAya } from './quran-api-types';

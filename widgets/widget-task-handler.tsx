@@ -3,22 +3,20 @@
 import { getDefaultStore } from 'jotai';
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
 
-import hafsSurahs from '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/surah.json';
-import hafsThumns from '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/thumn.json';
-import warshSurahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
-import warshThumns from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/thumn.json';
 import {
   currentSavedPage,
   dailyTrackerGoal,
+  firstLaunchDone,
   mushafRiwaya,
   yesterdayPage,
 } from '@/jotai/atoms';
-import { Surah, Thumn } from '@/types';
-import { getTodayHizbsRead } from '@/utils/dailyTracker';
+import type { Riwaya } from '@/types';
+import type { QuranApiText } from '@/types/quran-api';
 import {
-  getJuzPositionByPage,
-  getSurahNumberByPage,
-} from '@/utils/quranMetadataUtils';
+  isRiwayaBundleCached,
+  readRiwayaBundleFromDisk,
+} from '@/utils/api/qurani/cache';
+import { getTodayHizbsRead } from '@/utils/dailyTracker';
 
 import AndroidWidget from './android';
 
@@ -27,9 +25,49 @@ const nameToWidget = {
 };
 
 /**
+ * Phase-6 helper: compute the user's current surah number and
+ * hizb number for the saved page, sourced from the qurani.ai
+ * narration bundle on disk.
+ *
+ *   const { surah, hizb } = await deriveSurahHizb(riwaya, currentPage);
+ *
+ * Returns `{surah: 1, hizb: 1}` (safe defaults) when the cache is
+ * missing or the page is out of range. The widget renders with
+ * these defaults so it still shows meaningful data even before
+ * the user has run the wizard.
+ */
+async function deriveSurahHizb(
+  riwaya: Riwaya | undefined,
+  page: number,
+): Promise<{ surah: number; hizb: number }> {
+  if (!riwaya || page < 1) return { surah: 1, hizb: 1 };
+  try {
+    if (!(await isRiwayaBundleCached(riwaya))) {
+      return { surah: 1, hizb: 1 };
+    }
+    const raw = await readRiwayaBundleFromDisk(riwaya);
+    if (!raw) return { surah: 1, hizb: 1 };
+    const flat: QuranApiText[] = JSON.parse(raw);
+    // Pick the first ayah on this page; it gives us both surah and
+    // hizb in one read.
+    const onPage = flat.find((a) => a.page === page);
+    if (!onPage) return { surah: 1, hizb: 1 };
+    const hizb = Math.ceil(onPage.hizbQuarter / 4);
+    return { surah: onPage.surah, hizb };
+  } catch {
+    return { surah: 1, hizb: 1 };
+  }
+}
+
+/**
  * Task handler for the Android home-screen widget. Reads the user's
  * reading state from the Jotai store (backed by MMKV) and re-renders
  * the widget on lifecycle events.
+ *
+ * Phase 6: derives `currentSurahNumber` / `currentHizbNumber` from
+ * the qurani.ai narration cache (`Paths.document/open-mushaf/api/
+ * <riwaya>/bundle.json`). Falls back to `(1, 1)` when the wizard
+ * hasn't run yet or the cache is otherwise missing.
  *
  * `WIDGET_CLICK` is intentionally not handled: the widget root uses
  * the built-in `clickAction="OPEN_APP"`, which the library intercepts
@@ -46,46 +84,32 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
 
   const store = getDefaultStore();
 
-  // Read data from atoms
+  // Read data from atoms.
   const dailyGoal = store.get(dailyTrackerGoal);
   const currentPage = store.get(currentSavedPage);
   const yesterdayPageData = store.get(yesterdayPage);
-  const riwaya = store.get(mushafRiwaya) || 'warsh';
+  const riwaya = store.get(mushafRiwaya) ?? undefined;
+  const firstLaunchDoneValue = store.get(firstLaunchDone);
 
+  // Today's hizbs are derived from the page delta
+  // (currentSavedPage - yesterdayPage.value). The previous
+  // implementation read `dailyTrackerCompleted.value`, which was
+  // never incremented and therefore always returned 0 here.
   let dailyCompleted = 0;
-  let currentSurahNumber = 1;
-  let currentHizbNumber = 1;
-
   try {
-    // Today's hizbs are derived from the page delta
-    // (currentSavedPage - yesterdayPage.value). The previous
-    // implementation read `dailyTrackerCompleted.value`, which was
-    // never incremented and therefore always returned 0 here.
     dailyCompleted = getTodayHizbsRead(currentPage, yesterdayPageData.value);
-
-    let surahs: Surah[] = [];
-    let thumns: Thumn[] = [];
-
-    // Load metadata files based on Riwaya
-    if (riwaya === 'hafs') {
-      surahs = hafsSurahs as Surah[];
-      thumns = hafsThumns;
-    } else {
-      // Default to Warsh
-      surahs = warshSurahs as Surah[];
-      thumns = warshThumns;
-    }
-
-    // Calculate Reading Position
-    if (surahs.length > 0) {
-      currentSurahNumber = getSurahNumberByPage(surahs, currentPage);
-    }
-    if (thumns.length > 0) {
-      currentHizbNumber = getJuzPositionByPage(thumns, currentPage).hizbNumber;
-    }
   } catch (e) {
-    console.error('Error parsing widget data', e);
+    console.error('Error computing daily progress', e);
   }
+
+  // Phase 6: derive current surah/hizb from the qurani.ai cache
+  // when the wizard has completed; otherwise show safe defaults so
+  // the widget can render meaningful data even before the user
+  // downloads anything.
+  const { surah: currentSurahNumber, hizb: currentHizbNumber } =
+    firstLaunchDoneValue
+      ? await deriveSurahHizb(riwaya as Riwaya | undefined, currentPage)
+      : { surah: 1, hizb: 1 };
 
   const widgetProps = {
     dailyGoal,

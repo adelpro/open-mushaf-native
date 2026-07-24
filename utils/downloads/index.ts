@@ -8,6 +8,11 @@
  *
  * On web, the hooks speak the Cache API + `navigator.storage.
  * estimate()`; on native they speak `expo-file-system` v57.
+ *
+ * Per Phase 0 of the qurani.ai integration plan, the mushaf-SVG
+ * download path is removed; only tafseer cache lives here now.
+ * Narration text bundles are wired in `utils/api/qurani/cache/`
+ * (Phase 2), re-exported below so consumers have a single barrel.
  */
 
 import { Platform } from 'react-native';
@@ -17,29 +22,28 @@ import * as webImpl from './downloads.web';
 
 const impl = Platform.OS === 'web' ? webImpl : nativeImpl;
 
-export const isMushafPageCached = impl.isMushafPageCached;
-export const readMushafPageFromDisk = impl.readMushafPageFromDisk;
-export const persistMushafPage = impl.persistMushafPage;
-export const downloadMushafPage = impl.downloadMushafPage;
-export const getMushafRiwayaDownloadedPages =
-  impl.getMushafRiwayaDownloadedPages;
-export const getMushafRiwayaDirSizeBytes = impl.getMushafRiwayaDirSizeBytes;
-export const deleteMushafRiwaya = impl.deleteMushafRiwaya;
-export const riwayaTotalPages = impl.riwayaTotalPages;
-export const riwayaEstimatedBytes = impl.riwayaEstimatedBytes;
 export const isTafseerCached = impl.isTafseerCached;
 export const readTafseerFromDisk = impl.readTafseerFromDisk;
 export const persistTafseer = impl.persistTafseer;
 export const downloadTafseer = impl.downloadTafseer;
 export const getTafseerFileSizeBytes = impl.getTafseerFileSizeBytes;
 export const deleteTafseer = impl.deleteTafseer;
+
+/* Riwaya cache helpers (Phase 2). Re-exported from
+ * `utils/api/qurani/cache` so consumers have a single download barrel. */
+export {
+  isRiwayaBundleCached,
+  readRiwayaBundleFromDisk,
+  persistRiwayaBundle,
+  deleteRiwaya,
+  getRiwayaBundleBytes,
+} from '@/utils/api/qurani/cache';
+
 export const getStorageSnapshot = impl.getStorageSnapshot;
 
 export {
-  RIWAYA_PAGE_COUNTS,
-  RIWAYA_SIZE_ESTIMATE_BYTES,
+  NARRATION_SIZE_ESTIMATE_BYTES,
   TAFSEER_SIZE_ESTIMATE_BYTES,
-  SVG_PAGE_BYTES_ESTIMATE,
   formatBytes,
 } from './shared';
 

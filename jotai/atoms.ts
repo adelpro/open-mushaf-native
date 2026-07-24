@@ -1,6 +1,7 @@
 import { observe } from 'jotai-effect';
 
 import { TafseerKey } from '@/constants/TafseerCdn';
+import type { TranslationKey } from '@/constants/translations';
 import { Reminder, TafseerTabs } from '@/types';
 import { Riwaya } from '@/types/riwaya';
 
@@ -128,6 +129,15 @@ observe((get, set) => {
   }
 });
 
+// Note on migration: the previous SVG-era build stored downloaded
+// riwayas under the `DownloadedRiwayat` MMKV key (a `Riwaya[]`).
+// That storage key is no longer read anywhere — the qurani.ai
+// integration has not yet shipped, so no users have live data
+// to migrate. When the new build ships, the wizard re-runs for
+// everyone (because `firstLaunchDone` is empty), so even if a
+// user somehow had old data on disk, the cache layer will
+// re-download from qurani.ai on first run.
+
 // Reading theme: 'default' | 'sepia' | 'highContrast'
 export const readingTheme = createAtomWithStorage<string>(
   'ReadingTheme',
@@ -194,10 +204,9 @@ export const bookmarks = createAtomWithStorage<Bookmark[]>('Bookmarks', []);
 // truth for "what is offline-ready" — the on-disk filesystem state is
 // authoritative for byte counts, but the lists make queries cheap and
 // reactive. `firstLaunchSeenDownloads` controls the first-launch
-// checklist popup. `downloadOptions` is reserved for future options
-// (e.g. "only on Wi-Fi"); keeps the shape ready for Phase 6 polish.
-export const downloadedRiwayat = createAtomWithStorage<Riwaya[]>(
-  'DownloadedRiwayat',
+// checklist popup.
+export const downloadedRiwaya = createAtomWithStorage<Riwaya[]>(
+  'DownloadedRiwaya',
   [],
 );
 export const downloadedTafseers = createAtomWithStorage<TafseerKey[]>(
@@ -208,6 +217,59 @@ export const firstLaunchSeenDownloads = createAtomWithStorage<boolean>(
   'FirstLaunchSeenDownloads',
   false,
 );
-export const downloadOptions = createAtomWithStorage<{
-  onlyOnWifi: boolean;
-}>(`DownloadOptions`, { onlyOnWifi: false });
+
+// ────── Phase 1: qurani.ai first-launch wizard state ──────
+//
+// The first-launch flow (see `app/(first-launch)/index.tsx`) blocks
+// the home tab until the user has picked a riwaya and downloaded its
+// Quran text from qurani.ai. `firstLaunchDone` flips to true once
+// the wizard succeeds — it never re-arms on its own. Re-downloading
+// a different riwaya from the Downloads page does NOT toggle it.
+//
+// `downloadedRiwaya` tracks which riwayas are on disk
+// (e.g. `['hafs', 'warsh']`). It is informational — the
+// actual disk state lives under
+// `Paths.document/open-mushaf/api/<riwaya>/`, and
+// `isRiwayaBundleCached(riwaya)` is the source of truth at read
+// time. The atom exists so consumers (badges, progress UI) can
+// reactively re-render when a download completes without polling
+// the filesystem.
+//
+// `lastSelectedRiwaya` lets the app re-open in the user's last-used
+// riwaya even if the wizard hasn't completed yet — useful when the
+// user is partway through a multi-step download flow.
+//
+// `quranApiCacheVersion` lets us invalidate the cached narration
+// bundle if the qurani.ai response schema drifts in a way that
+// changes the shape we rely on (e.g. adding a new top-level field).
+export const firstLaunchDone = createAtomWithStorage<boolean>(
+  'FirstLaunchDone',
+  false,
+);
+export const lastSelectedRiwaya = createAtomWithStorage<Riwaya | undefined>(
+  'LastSelectedRiwaya',
+  undefined,
+);
+export const quranApiCacheVersion = createAtomWithStorage<number>(
+  'QuranApiCacheVersion',
+  1,
+);
+
+// ────── Phase 4: translation selection state ──────
+//
+// `selectedTranslation` is the translation the Tafseer popup renders
+// below the Arabic tafseer text (if the corresponding JSON is
+// downloaded). `null` means "show no translation" — useful for users
+// who read Arabic natively or are offline.
+//
+// `downloadedTranslations` is informational — the actual disk state
+// lives under `Paths.document/open-mushaf/translation/<id>.json`,
+// and `isTranslationCached(id)` is the source of truth at read time.
+export const selectedTranslation = createAtomWithStorage<TranslationKey | null>(
+  'SelectedTranslation',
+  null,
+);
+export const downloadedTranslations = createAtomWithStorage<TranslationKey[]>(
+  'DownloadedTranslations',
+  [],
+);

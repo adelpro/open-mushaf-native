@@ -5,7 +5,6 @@ import { Feather } from '@expo/vector-icons';
 import { useAtom } from 'jotai/react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ThemedText, ThemedView } from '@/components';
 import { RIWAYA_ARABIC_LABEL } from '@/constants/riwayas';
 import { useColors, useDownloadStatus } from '@/hooks';
 import { mushafRiwaya } from '@/jotai/atoms';
@@ -16,6 +15,8 @@ import {
 } from '@/utils/riwayaHelper';
 
 import { SegmentedControl } from './SegmentControl';
+import { ThemedText } from './ThemedText';
+import { ThemedView } from './ThemedView';
 
 /**
  * A setting component integrating `SegmentedControl` to manipulate

@@ -14,7 +14,7 @@ import { useMemo } from 'react';
 import { useAtomValue } from 'jotai';
 
 import { TafseerKey } from '@/constants/TafseerCdn';
-import { downloadedRiwayat, downloadedTafseers } from '@/jotai/atoms';
+import { downloadedRiwaya, downloadedTafseers } from '@/jotai/atoms';
 import { Riwaya } from '@/types';
 
 export interface DownloadStatus {
@@ -27,7 +27,7 @@ export interface DownloadStatus {
 }
 
 export function useDownloadStatus(): DownloadStatus {
-  const riwayaSet = useAtomValue(downloadedRiwayat);
+  const riwayaSet = useAtomValue(downloadedRiwaya);
   const tafseerSet = useAtomValue(downloadedTafseers);
 
   return useMemo<DownloadStatus>(() => {

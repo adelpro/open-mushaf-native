@@ -13,6 +13,13 @@
  *   `Object.fromEntries(...)` because TS can't infer the narrow key
  *   type through `Object.fromEntries`; the cast is sound because the
  *   tuple covers every member of the union exactly once.
+ *
+ * **Phase 1 update:** `qalon-libya-awqaf` was removed. It was a
+ * Libyan Awqaf publisher mushaf (612 pages) with no qurani.ai
+ * equivalent — keeping it would have meant mixing our 604-page
+ * Madinah layout with a publisher-specific page count. The remaining
+ * 5 riwayas all map 1:1 to qurani.ai narrations (see
+ * `constants/quraniEditions.ts`).
  */
 export const RIWAYAS = [
   {
@@ -32,12 +39,6 @@ export const RIWAYAS = [
     arabic: 'قالون',
     upstream: 'qalon/kfqc',
     pages: 604,
-  },
-  {
-    id: 'qalon-libya-awqaf',
-    arabic: 'قالون الليبي',
-    upstream: 'qalon/libya-awqaf',
-    pages: 612,
   },
   {
     id: 'douri-kfqc',

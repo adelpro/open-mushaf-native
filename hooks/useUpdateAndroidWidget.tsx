@@ -10,22 +10,20 @@ import {
   type WidgetRepresentation,
 } from 'react-native-android-widget';
 
-import hafsSurahs from '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/surah.json';
-import hafsThumns from '@/assets/quran-metadata/mushaf-elmadina-hafs-assim/thumn.json';
-import warshSurahs from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json';
-import warshThumns from '@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/thumn.json';
 import {
   currentSavedPage,
   dailyTrackerGoal,
+  firstLaunchDone,
   mushafRiwaya,
   yesterdayPage,
 } from '@/jotai/atoms';
-import { Surah, Thumn } from '@/types';
-import { getTodayHizbsRead } from '@/utils/dailyTracker';
+import type { Riwaya } from '@/types';
+import type { QuranApiText } from '@/types/quran-api';
 import {
-  getJuzPositionByPage,
-  getSurahNumberByPage,
-} from '@/utils/quranMetadataUtils';
+  isRiwayaBundleCached,
+  readRiwayaBundleFromDisk,
+} from '@/utils/api/qurani/cache';
+import { getTodayHizbsRead } from '@/utils/dailyTracker';
 import AndroidWidget from '@/widgets/android';
 
 // `widgetNotFound` fires once per `requestWidgetUpdate` call when the
@@ -35,16 +33,40 @@ import AndroidWidget from '@/widgets/android';
 let widgetNotFoundLogged = false;
 
 /**
- * Hook to manage updates for an Android home-screen widget.
- * Prepares the current user reading state and issues an update request
- * to the underlying Android environment.
+ * Phase-6 helper: derive `currentSurahNumber` + `currentHizbNumber`
+ * for a page from the qurani.ai narration cache on disk. Falls back
+ * to `(1, 1)` when the cache is missing or the page is out of range.
  *
- * Data is always read from the Jotai default store (backed by MMKV),
- * which gives us a synchronous, always-fresh snapshot regardless of
- * which React component calls `updateAndroidWidget()`. We deliberately
- * do not subscribe to atoms inside this hook — callers drive the
- * update timing, and a closure over React state would be stale across
- * calls.
+ * Mirrors `widgets/widget-task-handler.tsx`'s helper so both paths
+ * surface consistent numbers regardless of which side fires first.
+ */
+async function deriveSurahHizb(
+  riwaya: Riwaya | undefined,
+  page: number,
+): Promise<{ surah: number; hizb: number }> {
+  if (!riwaya || page < 1) return { surah: 1, hizb: 1 };
+  try {
+    if (!(await isRiwayaBundleCached(riwaya))) {
+      return { surah: 1, hizb: 1 };
+    }
+    const raw = await readRiwayaBundleFromDisk(riwaya);
+    if (!raw) return { surah: 1, hizb: 1 };
+    const flat: QuranApiText[] = JSON.parse(raw);
+    const onPage = flat.find((a) => a.page === page);
+    if (!onPage) return { surah: 1, hizb: 1 };
+    const hizb = Math.ceil(onPage.hizbQuarter / 4);
+    return { surah: onPage.surah, hizb };
+  } catch {
+    return { surah: 1, hizb: 1 };
+  }
+}
+
+/**
+ * Hook to manage updates for an Android home-screen widget.
+ *
+ * Phase 6 update: currentSurahNumber / currentHizbNumber are now
+ * derived from the qurani.ai narration cache (read from
+ * `Paths.document/open-mushaf/api/<riwaya>/bundle.json`).
  *
  * Light/dark theme is handled by passing both variants via the
  * `{ light, dark }` WidgetRepresentation. The system picks the right
@@ -65,7 +87,8 @@ export const useUpdateAndroidWidget = () => {
       const dailyGoal = store.get(dailyTrackerGoal);
       const currentPage = store.get(currentSavedPage) || 1;
       const yesterdayPageAtom = store.get(yesterdayPage);
-      const riwaya = store.get(mushafRiwaya) || 'warsh';
+      const riwaya = store.get(mushafRiwaya) ?? undefined;
+      const firstLaunchDoneValue = store.get(firstLaunchDone);
 
       // Today's hizbs are derived from the page delta
       // (currentSavedPage - yesterdayPage.value). Previously read from
@@ -76,19 +99,11 @@ export const useUpdateAndroidWidget = () => {
         yesterdayPageAtom.value,
       );
 
-      // Select surah and thumn metadata based on riwaya
-      const surahs = (riwaya === 'hafs' ? hafsSurahs : warshSurahs) as Surah[];
-      const thumns = (riwaya === 'hafs' ? hafsThumns : warshThumns) as Thumn[];
-
-      // Calculate current surah (fall back to 1 if metadata is empty)
-      const currentSurahNumber =
-        surahs.length > 0 ? getSurahNumberByPage(surahs, currentPage) : 1;
-
-      // Calculate current hizb (fall back to 1 if metadata is empty)
-      const currentHizbNumber =
-        thumns.length > 0
-          ? getJuzPositionByPage(thumns, currentPage).hizbNumber
-          : 1;
+      // Phase 6: derive surah/hizb from the qurani.ai cache.
+      const { surah: currentSurahNumber, hizb: currentHizbNumber } =
+        firstLaunchDoneValue
+          ? await deriveSurahHizb(riwaya as Riwaya | undefined, currentPage)
+          : { surah: 1, hizb: 1 };
 
       const buildWidget = (info: WidgetInfo, scheme: 'light' | 'dark') => (
         <AndroidWidget

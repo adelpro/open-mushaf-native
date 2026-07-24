@@ -1,19 +1,26 @@
 /**
- * Hook for managing a single tafseer offline download at a time. Mirrors
- * `useMushafDownload` but operates on one `TafseerKey` (each tafseer
- * JSON is one ~3 MB file instead of 604 small files, so there's no
- * loop — just one fetch + persist).
+ * Hook for managing a single tafseer offline download at a time.
  *
  *   const { startTafseer, cancel, isBusy, progress } = useTafseerDownload();
  *   await startTafseer('muyassar');
  *
- * The hook writes through the `downloadProgressAtom` shared with
- * `useMushafDownload`, so a single progress overlay on the settings
- * page can show both kinds of in-flight work.
+ * Each tafseer JSON is one ~3 MB file — there's no loop, just a
+ * single fetch + persist. Writes go through `downloadProgressAtom`,
+ * shared with `useRiwayaDownload` so the Downloads page renders one
+ * unified progress overlay.
  *
- * Phase 3 implementation. Cancel is honored via `AbortSignal` so the
- * Cancel chip on the downloads UI actually kills the in-flight fetch
- * (not just stops new work).
+ * Phase 3 keeps the static-CDN path (`cdn.jsdelivr.net/.../assets/
+ * tafaseer/<key>.json`) and the per-tafseer `{id, sura, aya, text}`
+ * JSON shape. Phase 4 will introduce `useQuranTafseerDownload` for
+ * the 50+ qurani.ai tafseers (separate hook, separate storage path
+ * under `Paths.document/open-mushaf/tafseer/<edition-id>.json`).
+ * The `tafseer` resource kind in `utils/downloads/types.ts` already
+ * accommodates both: a single hook per source keeps the Downloads UI
+ * list easy to render.
+ *
+ * Cancel is honored via `AbortSignal` so the Cancel chip on the
+ * Downloads UI actually kills the in-flight fetch (not just stops
+ * new work).
  */
 
 import { useCallback, useMemo, useRef } from 'react';
@@ -28,10 +35,11 @@ import {
 } from '@/utils/downloads';
 import { DownloadProgress, resourceKeyOf } from '@/utils/downloads/types';
 
-// The download progress atom is owned by useMushafDownload; consumers
-// can import `downloadProgressAtom` / `useDownloadProgress` from
-// `@/hooks` (they're re-exported via the hooks barrel).
-import { downloadProgressAtom } from './useMushafDownload';
+// The download progress atom now lives in `useDownloadProgress.ts`
+// (extracted from the deleted `useMushafDownload.ts`). Consumers can
+// still import `downloadProgressAtom` / `useDownloadProgress` from
+// `@/hooks` via the hooks barrel.
+import { downloadProgressAtom } from './useDownloadProgress';
 
 // -- the hook --------------------------------------------------------
 export function useTafseerDownload() {

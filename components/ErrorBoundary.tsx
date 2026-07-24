@@ -74,8 +74,11 @@ export class ErrorBoundary extends Component<
   };
 
   private get colors() {
-    const scheme = Appearance.getColorScheme() ?? 'light';
-    return Colors[scheme];
+    // `Appearance.getColorScheme()` returns `ColorSchemeName | null`;
+    // coerce any non-`'dark'` value (including `'unspecified'` and `null`)
+    // to the light palette so the type index stays narrow.
+    const scheme = Appearance.getColorScheme();
+    return scheme === 'dark' ? Colors.dark : Colors.light;
   }
 
   renderDefaultFallback(): ReactNode {

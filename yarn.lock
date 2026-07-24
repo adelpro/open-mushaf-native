@@ -3185,31 +3185,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shopify/react-native-skia@npm:^2.8.0":
-  version: 2.8.0
-  resolution: "@shopify/react-native-skia@npm:2.8.0"
-  dependencies:
-    canvaskit-wasm: "npm:0.41.0"
-    react-native-skia-android: "npm:150.0.0"
-    react-native-skia-apple-ios: "npm:150.0.0"
-    react-native-skia-apple-macos: "npm:150.0.0"
-    react-native-skia-apple-tvos: "npm:150.0.0"
-    react-reconciler: "npm:0.31.0"
-  peerDependencies:
-    react: ">=19.0"
-    react-native: ">=0.78"
-    react-native-reanimated: ">=3.19.1"
-  peerDependenciesMeta:
-    react-native:
-      optional: true
-    react-native-reanimated:
-      optional: true
-  bin:
-    setup-skia-web: scripts/setup-canvaskit.js
-  checksum: 10c0/c7e8df03caf82d524859a6d88dcff0183f8912d918edfc87c7ec6ad17795722487ea84d469f5074641ddb61d28488d76c0d0e271003861b7cd0f11e2546df8c5
-  languageName: node
-  linkType: hard
-
 "@simple-libs/stream-utils@npm:^2.0.0":
   version: 2.0.0
   resolution: "@simple-libs/stream-utils@npm:2.0.0"
@@ -4177,13 +4152,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webgpu/types@npm:0.1.21":
-  version: 0.1.21
-  resolution: "@webgpu/types@npm:0.1.21"
-  checksum: 10c0/74de9683b70064aeadcdd31381747650b323e7e2183fb38f90a35f1a79f80ad267c0a2ee5010c264befb3d31ad213dbdffa04897e2808f6b04feff8d66bc53e0
-  languageName: node
-  linkType: hard
-
 "@xmldom/xmldom@npm:^0.8.8":
   version: 0.8.13
   resolution: "@xmldom/xmldom@npm:0.8.13"
@@ -5141,15 +5109,6 @@ __metadata:
   version: 1.0.30001803
   resolution: "caniuse-lite@npm:1.0.30001803"
   checksum: 10c0/71586e9c84633cf766b208448eb76f860ec6e3befffc626d1f004e1902da063a7ab96cc94d1f4b36c0324e12997b3325a726de3287edfec91d0df495627a1d43
-  languageName: node
-  linkType: hard
-
-"canvaskit-wasm@npm:0.41.0":
-  version: 0.41.0
-  resolution: "canvaskit-wasm@npm:0.41.0"
-  dependencies:
-    "@webgpu/types": "npm:0.1.21"
-  checksum: 10c0/a55eb2cb627f2cdf017e05dba794c35225725af13c223c573ffb04f9f783d16e6c80fa0eb21a712c7b0a56f29dc0a693aee1eee61fe75e2b74e821a10236d8ef
   languageName: node
   linkType: hard
 
@@ -7920,7 +7879,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fuse.js@npm:^7.0.0, fuse.js@npm:^7.1.0":
+"fuse.js@npm:^7.1.0":
   version: 7.4.2
   resolution: "fuse.js@npm:7.4.2"
   checksum: 10c0/b83e50e0cdbeca995ea373e19569c7d89a8a9af64e5752cc23d06e823332a699a5f14f0c6e4036f7e2b4cbd9ed960761cec6b20ea8a3bf3905b1af0cfa296447
@@ -11069,7 +11028,6 @@ __metadata:
     "@react-native-picker/picker": "npm:2.11.4"
     "@react-native/assets-registry": "npm:^0.75.4"
     "@react-navigation/native-stack": "npm:^7.0.0"
-    "@shopify/react-native-skia": "npm:^2.8.0"
     "@types/jest": "npm:^29.5.12"
     "@types/react": "npm:~19.2.10"
     "@types/react-native-htmlview": "npm:^0.16.5"
@@ -11118,7 +11076,6 @@ __metadata:
     jotai-effect: "npm:^2.0.2"
     metro: "npm:^0.84.2"
     prettier: "npm:^3.3.3"
-    quran-search-engine: "npm:0.3.2"
     react: "npm:19.2.3"
     react-compiler-runtime: "npm:^19.0.0-beta-df7b47d-20241124"
     react-dom: "npm:19.2.3"
@@ -11672,15 +11629,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"quran-search-engine@npm:0.3.2":
-  version: 0.3.2
-  resolution: "quran-search-engine@npm:0.3.2"
-  dependencies:
-    fuse.js: "npm:^7.0.0"
-  checksum: 10c0/48681492bf3bd616a2d4cc7240643c2d82c6d2e7afe75f20fdf3732f59526e447fa5be370ea72ea3f3f258bf1c01d1f5971d7aec735ddb181eb2ee26d948b6e9
-  languageName: node
-  linkType: hard
-
 "range-parser@npm:~1.2.1":
   version: 1.2.1
   resolution: "range-parser@npm:1.2.1"
@@ -11925,34 +11873,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-skia-android@npm:150.0.0":
-  version: 150.0.0
-  resolution: "react-native-skia-android@npm:150.0.0"
-  checksum: 10c0/fd350a8151e0a27eeba6a1be32b93a4998f624b95c5f56d048115173d932b3340fcd150ef89c230e868f5ce26d6332ff1273b32eaf83a087523daf18cdf049be
-  languageName: node
-  linkType: hard
-
-"react-native-skia-apple-ios@npm:150.0.0":
-  version: 150.0.0
-  resolution: "react-native-skia-apple-ios@npm:150.0.0"
-  checksum: 10c0/b911b1decb12c6c95de52db071cb2f4765164e8960ce0104ee16e9158611270982c82908242175f68579728775764e8d5587f336788b2988a3d5c645cc4c2405
-  languageName: node
-  linkType: hard
-
-"react-native-skia-apple-macos@npm:150.0.0":
-  version: 150.0.0
-  resolution: "react-native-skia-apple-macos@npm:150.0.0"
-  checksum: 10c0/55225587e5802c680cc909e860e935248a155f4a241f892e1916dfe3b7deadf75aa0ef42033d0341b842844af77baabf22b7b661417524c6bd05c474321ecd56
-  languageName: node
-  linkType: hard
-
-"react-native-skia-apple-tvos@npm:150.0.0":
-  version: 150.0.0
-  resolution: "react-native-skia-apple-tvos@npm:150.0.0"
-  checksum: 10c0/04c554c5ac3b45db95ec44ea8343ae9f78469f1c5f6e54fb76e728912f9f0eaec540dd76c2b047b69934e5a9f07e219c667fdff63280dd315b0125fbd5830f74
-  languageName: node
-  linkType: hard
-
 "react-native-svg-transformer@npm:^1.5.0":
   version: 1.5.3
   resolution: "react-native-svg-transformer@npm:1.5.3"
@@ -12081,17 +12001,6 @@ __metadata:
   bin:
     react-native: cli.js
   checksum: 10c0/47a569c47a22b37526ac54e17d1f42c6a191ca7cd30230bc16ee5307ac53da1db89d27ba20c76e9756fb646866d89fedfc1852b1ddc15c47bde45c899079096a
-  languageName: node
-  linkType: hard
-
-"react-reconciler@npm:0.31.0":
-  version: 0.31.0
-  resolution: "react-reconciler@npm:0.31.0"
-  dependencies:
-    scheduler: "npm:^0.25.0"
-  peerDependencies:
-    react: ^19.0.0
-  checksum: 10c0/97920e1866c7206e200c3920c133c2e85f62a3c54fd9bc4b83c10c558d83d98eb378caab4fe37498e0cc1b1b2665d898627f2ae2537b29c8ab295ec8abc0c580
   languageName: node
   linkType: hard
 
@@ -12643,13 +12552,6 @@ __metadata:
   dependencies:
     loose-envify: "npm:^1.1.0"
   checksum: 10c0/26383305e249651d4c58e6705d5f8425f153211aef95f15161c151f7b8de885f24751b377e4a0b3dd42cce09aad3f87a61dab7636859c0d89b7daf1a1e2a5c78
-  languageName: node
-  linkType: hard
-
-"scheduler@npm:^0.25.0":
-  version: 0.25.0
-  resolution: "scheduler@npm:0.25.0"
-  checksum: 10c0/a4bb1da406b613ce72c1299db43759526058fdcc413999c3c3e0db8956df7633acf395cb20eb2303b6a65d658d66b6585d344460abaee8080b4aa931f10eaafe
   languageName: node
   linkType: hard
 

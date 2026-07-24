@@ -10,14 +10,14 @@ import {
 
 // `getDefaultStore` is mocked via `vi.mock` below — we just need its
 // `get` method here to drive the atoms to specific values.
-const storeState = new Map();
+const storeState = new Map<unknown, unknown>();
 vi.mock('jotai', () => ({
   // Preserve real exports (atom creators, hooks) so the module under
   // test can do `import { getDefaultStore } from 'jotai'` and reach
   // our mock.
   getDefaultStore: () => ({
-    get: (atom) => storeState.get(atom),
-    set: (atom, value) => storeState.set(atom, value),
+    get: (atom: unknown) => storeState.get(atom),
+    set: (atom: unknown, value: unknown) => storeState.set(atom, value),
   }),
 }));
 
@@ -29,7 +29,12 @@ vi.mock('../android', () => ({
   default: AndroidWidgetMock,
 }));
 
-const { widgetTaskHandler } = await import('../widget-task-handler');
+// Dynamic import deferred until after `vi.mock` registrations above.
+// `vi.mock` is hoisted, but using `await import` keeps the test
+// deterministic without relying on top-level await (which the
+// project's tsconfig forbids).
+type WidgetTaskHandlerModule = typeof import('../widget-task-handler');
+let widgetTaskHandlerModule: WidgetTaskHandlerModule;
 
 function makeProps(
   action: WidgetTaskHandlerProps['widgetAction'],
@@ -58,7 +63,7 @@ function makeProps(
 }
 
 describe('widgetTaskHandler', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     AndroidWidgetMock.mockClear();
     storeState.clear();
     // Seed the atoms with deterministic values.
@@ -72,43 +77,53 @@ describe('widgetTaskHandler', () => {
       date: new Date().toDateString(),
     });
     storeState.set(mushafRiwaya, 'hafs');
+
+    widgetTaskHandlerModule = await import('../widget-task-handler');
   });
 
   it('renders the widget on WIDGET_ADDED with the current reading state', async () => {
     const props = makeProps('WIDGET_ADDED');
-    await widgetTaskHandler(props);
+    await widgetTaskHandlerModule.widgetTaskHandler(props);
 
     expect(props.renderWidget).toHaveBeenCalledTimes(1);
     // The first arg to renderWidget should be the { light, dark }
     // representation. Confirm both branches built an element.
-    const rendered = props.renderWidget.mock.calls[0][0];
+    const rendered = (
+      props.renderWidget as unknown as { mock: { calls: unknown[][] } }
+    ).mock.calls[0][0] as { light: unknown; dark: unknown };
     expect(rendered).toHaveProperty('light');
     expect(rendered).toHaveProperty('dark');
 
     // AndroidWidget was invoked twice — once for each scheme. Confirm
     // the sentinel got the right values for at least one of them.
     expect(AndroidWidgetMock).toHaveBeenCalledTimes(2);
-    const firstCall = AndroidWidgetMock.mock.calls[0][0];
+    const mockCalls = AndroidWidgetMock.mock.calls as unknown[][];
+    const firstCall = mockCalls[0][0] as {
+      dailyGoal: number;
+      dailyCompleted: number;
+      currentPage: number;
+      colorScheme: string;
+    };
     expect(firstCall.dailyGoal).toBe(5);
     // (42 - 22) / (604/60) = 1.987 — derived from page delta.
     expect(firstCall.dailyCompleted).toBeCloseTo(1.987, 3);
     expect(firstCall.currentPage).toBe(42);
     expect(firstCall.colorScheme).toBe('light');
-    const secondCall = AndroidWidgetMock.mock.calls[1][0];
+    const secondCall = mockCalls[1][0] as { colorScheme: string };
     expect(secondCall.colorScheme).toBe('dark');
   });
 
   it('renders on WIDGET_UPDATE and WIDGET_RESIZED', async () => {
     for (const action of ['WIDGET_UPDATE', 'WIDGET_RESIZED'] as const) {
       const props = makeProps(action);
-      await widgetTaskHandler(props);
+      await widgetTaskHandlerModule.widgetTaskHandler(props);
       expect(props.renderWidget).toHaveBeenCalledTimes(1);
     }
   });
 
   it('does not render on WIDGET_DELETED', async () => {
     const props = makeProps('WIDGET_DELETED');
-    await widgetTaskHandler(props);
+    await widgetTaskHandlerModule.widgetTaskHandler(props);
     expect(props.renderWidget).not.toHaveBeenCalled();
   });
 
@@ -118,14 +133,16 @@ describe('widgetTaskHandler', () => {
     // would still arrive here, but re-rendering on every click is wasted
     // IPC. Verify the handler is a no-op for WIDGET_CLICK.
     const props = makeProps('WIDGET_CLICK', 'CUSTOM_ACTION');
-    await widgetTaskHandler(props);
+    await widgetTaskHandlerModule.widgetTaskHandler(props);
     expect(props.renderWidget).not.toHaveBeenCalled();
   });
 
   it('treats an unknown widget name as the default widget rather than crashing', async () => {
     const props = makeProps('WIDGET_UPDATE');
     (props.widgetInfo as { widgetName: string }).widgetName = 'NotARealWidget';
-    await expect(widgetTaskHandler(props)).resolves.not.toThrow();
+    await expect(
+      widgetTaskHandlerModule.widgetTaskHandler(props),
+    ).resolves.not.toThrow();
     expect(props.renderWidget).toHaveBeenCalledTimes(1);
   });
 
@@ -138,15 +155,16 @@ describe('widgetTaskHandler', () => {
       date: new Date().toDateString(),
     });
     const props = makeProps('WIDGET_UPDATE');
-    await widgetTaskHandler(props);
-    const firstCall = AndroidWidgetMock.mock.calls[0][0];
+    await widgetTaskHandlerModule.widgetTaskHandler(props);
+    const mockCalls = AndroidWidgetMock.mock.calls as unknown[][];
+    const firstCall = mockCalls[0][0] as { dailyCompleted: number };
     expect(firstCall.dailyCompleted).toBe(0);
   });
 
   it('loads Warsh metadata when the riwaya is warsh', async () => {
     storeState.set(mushafRiwaya, 'warsh');
     const props = makeProps('WIDGET_UPDATE');
-    await widgetTaskHandler(props);
+    await widgetTaskHandlerModule.widgetTaskHandler(props);
     expect(props.renderWidget).toHaveBeenCalled();
     expect(AndroidWidgetMock).toHaveBeenCalled();
   });

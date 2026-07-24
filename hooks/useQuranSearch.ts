@@ -1,174 +1,131 @@
-import { useEffect, useMemo, useState } from 'react';
-
-import {
-  LRUCache,
-  search,
-  type SearchResponse,
-  type WordMap,
-} from 'quran-search-engine';
-
-import { MorphologyAya, QuranText, SearchOptions } from '@/types';
-
-interface Counts {
-  simple: number;
-  lemma: number;
-  root: number;
-  fuzzy: number;
-  semantic: number;
-  total: number;
-}
-
-interface UseQuranSearchProps {
-  quranData: QuranText[] | null;
-  morphologyData: MorphologyAya[];
-  wordMap: WordMap;
-  semanticMap?: any;
-  phoneticMap?: any;
-  invertedIndex?: any;
-  query: string;
-  advancedOptions: SearchOptions;
-  fuseInstance: any | null;
-  page: number;
-  limit: number;
-}
-
-// Global cache instance across re-renders
-const searchCache = new LRUCache<string, any>(100);
-
 /**
- * Hook to interface with the core Quran search engine.
- * Processes queries, normalizes Arabic text, and fetches matches across the loaded metadata.
+ * Phase-5 rewrite of `useQuranSearch` against qurani.ai's
+ * `/search/<keyword>` endpoint. Online-only.
+ *
+ * Inputs:
+ *   - `query`         — debounced search text (caller is responsible
+ *                        for debouncing; the hook itself only
+ *                        guards against empty queries)
+ *   - `edition`       — qurani.ai edition id (defaults to the active
+ *                        riwaya's qurani.ai edition)
+ *   - `page`, `limit` — pagination
+ *
+ * Returns `{ results, totalCount, isLoading, error }`. The `gid` of
+ * each result is the qurani.ai canonical id, suitable for routing
+ * back to a page via `usePageBundle({page, riwaya})`.
+ *
+ * The previous implementation imported `quran-search-engine` and
+ * ran a local search against bundled morphology + word-map. The
+ * package is dropped in this phase (see `package.json`) and the
+ * `assets/search/` folder is deleted.
  */
+
+import { useCallback, useEffect, useState } from 'react';
+
+import { useAtomValue } from 'jotai/react';
+
+import { RIWAYA_TO_QURANI_EDITION } from '@/constants/quraniEditions';
+import { mushafRiwaya } from '@/jotai/atoms';
+import { QuranApiError, searchQuran } from '@/utils/api/qurani';
+import type { SearchHit } from '@/utils/api/qurani';
+
+export type SearchStatus = 'idle' | 'loading' | 'ready' | 'error';
+
+export type UseQuranSearchState = {
+  results: SearchHit[];
+  totalCount: number;
+  isLoading: boolean;
+  error: string | null;
+  /** Force a re-fetch (e.g. retry CTA on the search screen). */
+  reload: () => void;
+};
+
+type UseQuranSearchArgs = {
+  query: string;
+  /** Optional override; defaults to the active riwaya's qurani.ai edition. */
+  edition?: string;
+  page?: number;
+  limit?: number;
+};
+
 export function useQuranSearch({
-  quranData,
-  morphologyData,
-  wordMap,
-  semanticMap,
-  phoneticMap,
-  invertedIndex,
   query,
-  advancedOptions,
-  fuseInstance,
-  page,
-  limit,
-}: UseQuranSearchProps) {
-  const [pageResults, setPageResults] = useState<QuranText[]>([]);
-  const [counts, setCounts] = useState<Counts>({
-    simple: 0,
-    lemma: 0,
-    root: 0,
-    fuzzy: 0,
-    semantic: 0,
-    total: 0,
-  });
+  edition,
+  page = 1,
+  limit = 20,
+}: UseQuranSearchArgs): UseQuranSearchState {
+  const riwaya = useAtomValue(mushafRiwaya);
+  const resolvedEdition =
+    edition ?? (riwaya ? RIWAYA_TO_QURANI_EDITION[riwaya] : 'quran-hafs');
 
-  // Convert morphology array to Map format for the package
-  const morphologyMap = useMemo(() => {
-    const map = new Map<number, MorphologyAya>();
-    if (!morphologyData) return map;
-    for (const morph of morphologyData) {
-      map.set(morph.gid, morph);
-    }
-    return map;
-  }, [morphologyData]);
+  const [results, setResults] = useState<SearchHit[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [status, setStatus] = useState<SearchStatus>('idle');
+  const [error, setError] = useState<string | null>(null);
+  const [nonce, setNonce] = useState(0);
 
-  // Convert quran array to Map format for the v0.3 package
-  const quranMap = useMemo(() => {
-    const map = new Map<number, QuranText>();
-    if (!quranData) return map;
-    for (const verse of quranData) {
-      map.set(verse.gid, verse);
-    }
-    return map;
-  }, [quranData]);
+  const reload = useCallback(() => setNonce((n) => n + 1), []);
 
   useEffect(() => {
-    if (!quranData || quranData.length === 0) {
-      setPageResults([]);
-      setCounts({
-        simple: 0,
-        lemma: 0,
-        root: 0,
-        fuzzy: 0,
-        semantic: 0,
-        total: 0,
-      });
+    const trimmed = query.trim();
+    if (!trimmed) {
+      setResults([]);
+      setTotalCount(0);
+      setStatus('idle');
+      setError(null);
       return;
     }
 
-    // Allow english characters, logic operators, and numbers for ranges/phonetics/semantics
-    let processedQuery = (query ?? '').trim();
+    const controller = new AbortController();
+    let cancelled = false;
+    setStatus('loading');
+    setError(null);
 
-    if (!processedQuery) {
-      setPageResults([]);
-      setCounts({
-        simple: 0,
-        lemma: 0,
-        root: 0,
-        fuzzy: 0,
-        semantic: 0,
-        total: 0,
-      });
-      return;
-    }
+    (async () => {
+      try {
+        const response = await searchQuran(
+          trimmed,
+          {
+            edition: resolvedEdition,
+            size: limit,
+            page,
+          },
+          controller.signal,
+        );
+        if (cancelled) return;
+        setResults(response.ayahs);
+        setTotalCount(response.count);
+        setStatus('ready');
+      } catch (err) {
+        if (cancelled) return;
+        if (err instanceof QuranApiError && err.kind === 'aborted') {
+          // Request was cancelled by a newer search; stay quiet.
+          return;
+        }
+        setResults([]);
+        setTotalCount(0);
+        setStatus('error');
+        setError(
+          err instanceof QuranApiError
+            ? `qurani.ai ${err.kind}: ${err.message}`
+            : err instanceof Error
+              ? err.message
+              : String(err),
+        );
+      }
+    })();
 
-    try {
-      // New v0.3 API: search(query, context, options, pagination, fuseIndex, cache)
-      const response: SearchResponse<QuranText> = search(
-        processedQuery,
-        {
-          quranData: quranMap,
-          morphologyMap,
-          wordMap,
-          semanticMap,
-          phoneticMap,
-          invertedIndex,
-        },
-        advancedOptions,
-        {
-          page,
-          limit,
-        },
-        fuseInstance,
-        searchCache,
-      );
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, [query, resolvedEdition, page, limit, nonce]);
 
-      setCounts({
-        simple: response.counts.simple || 0,
-        lemma: response.counts.lemma || 0,
-        root: response.counts.root || 0,
-        fuzzy: response.counts.fuzzy || 0,
-        semantic: (response.counts as any).semantic || 0,
-        total: response.counts.total || 0,
-      });
-
-      setPageResults((response.results as QuranText[]) || []);
-    } catch (error) {
-      console.error('Search error:', error);
-      setPageResults([]);
-      setCounts({
-        simple: 0,
-        lemma: 0,
-        root: 0,
-        fuzzy: 0,
-        semantic: 0,
-        total: 0,
-      });
-    }
-  }, [
-    query,
-    quranData,
-    quranMap,
-    morphologyMap,
-    wordMap,
-    semanticMap,
-    phoneticMap,
-    invertedIndex,
-    advancedOptions,
-    page,
-    limit,
-    fuseInstance,
-  ]);
-
-  return { pageResults, counts };
+  return {
+    results,
+    totalCount,
+    isLoading: status === 'loading',
+    error,
+    reload,
+  };
 }

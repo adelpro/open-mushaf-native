@@ -35,7 +35,7 @@ export type LayoutPreset = {
  *   text.
  */
 export function layoutFor(width?: number, height?: number): LayoutPreset {
-  const compact = (height ?? 0) > 0 && height < 100;
+  const compact = height !== undefined && height > 0 && height < 100;
   const wide = (width ?? 0) >= 400;
 
   if (compact) {

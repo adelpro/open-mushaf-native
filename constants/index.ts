@@ -13,5 +13,3 @@ export * from './readingChart';
 export * from './panGesture';
 
 export * from './errorMessages';
-
-export * from './svgCdn';

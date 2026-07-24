@@ -15,12 +15,13 @@ import { bottomMenuState } from '@/jotai/atoms';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const theme = colorScheme === 'dark' ? Colors.dark : Colors.light;
   const menuStateValue = useAtomValue<boolean>(bottomMenuState);
   const insets = useSafeAreaInsets();
   return (
     <Tabs
       screenOptions={() => ({
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: theme.tint,
         tabBarLabelPosition: 'below-icon',
         tabBarStyle: {
           display: menuStateValue ? 'flex' : 'none',

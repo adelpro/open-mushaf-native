@@ -8,7 +8,7 @@ import {
 
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useAtom } from 'jotai/react';
+import { useAtom, useAtomValue } from 'jotai/react';
 import HTMLView from 'react-native-htmlview';
 
 import {
@@ -18,13 +18,15 @@ import {
   TAFSEERS_LIST,
 } from '@/constants/TafseerCdn';
 import {
+  findTafseerByGid,
   hasNoTafseerContent,
   useColors,
   useDownloadStatus,
   useQuranMetadata,
-  useTafseerContent,
+  useRiwayaCache,
+  useTranslation,
 } from '@/hooks';
-import { tafseerTab } from '@/jotai/atoms';
+import { selectedTranslation, tafseerTab } from '@/jotai/atoms';
 import { TafseerAya } from '@/types';
 import { persistTafseer, readTafseerFromDisk } from '@/utils/downloads';
 
@@ -39,17 +41,28 @@ import { ThemedView } from './ThemedView';
 const TAB_KEYS = [...TAFSEERS_LIST];
 
 type Props = {
+  /** qurani.ai gid (canonical internal id, 1..6236). Phase 3 looks up
+   *  gid → (sura, nIS) via the narration cache, then finds the row.
+   *  Phase 4 (qurani.ai tafseers) skips the indirection and looks up
+   *  directly by gid. */
+  gid: number;
+  /** Per-narration ayah number (the user's chosen riwaya's `numberInSurah`). */
   aya: number;
+  /** Surah number (1..114). */
   surah: number;
   opacity?: number;
 };
 
-export function Tafseer({ aya, surah, opacity = 1 }: Props) {
+export function Tafseer({ gid, aya, surah, opacity = 1 }: Props) {
   const { tintColor, textColor, primaryColor } = useColors();
-  const { surahData, specsData } = useQuranMetadata();
-  const { countBesmalAya } = specsData ?? {};
+  const { surahData } = useQuranMetadata();
+  const { layoutNumberByGid, isReady: isCacheReady } = useRiwayaCache();
   const router = useRouter();
   const { tafseerIsDownloaded } = useDownloadStatus();
+  const translationId = useAtomValue(selectedTranslation);
+  const { getText: getTranslationText } = useTranslation({
+    translationId,
+  });
 
   const [surahName, setSurahName] = useState<string>('');
   const [selectedTab, setSelectedTab] = useAtom(tafseerTab) as [
@@ -130,18 +143,35 @@ export function Tafseer({ aya, surah, opacity = 1 }: Props) {
     fetchTafseer();
   }, [selectedTab, surah, aya, cache]);
 
-  const formattedTafseerHtml = useTafseerContent({
-    tafseerData,
-    surah,
-    aya,
-  });
+  // Phase 3 gid-first lookup: when the narration cache is ready, use
+  // gid + layoutNumberByGid to resolve the lookup. The legacy
+  // (sura, aya) lookup inside `useTafseerContent` is kept as a
+  // fallback when the cache isn't ready (defensive — shouldn't
+  // happen in practice since the cache is loaded on app boot).
+  const gidResolved = isCacheReady ? layoutNumberByGid.get(gid) : undefined;
+
+  const formattedTafseerHtml =
+    isCacheReady && gidResolved !== undefined
+      ? (() => {
+          const row = findTafseerByGid(
+            tafseerData,
+            gid,
+            surah,
+            layoutNumberByGid,
+          );
+          if (!row?.text || row.text === '<p></p>') {
+            return '<p>لا يوجد تفسير.</p>';
+          }
+          return `<div>${row.text}</div>`;
+        })()
+      : '';
 
   return (
     <ThemedView
       style={[styles.container, opacity !== undefined ? { opacity } : {}]}
     >
       <ThemedText style={[styles.title, { backgroundColor: 'transparent' }]}>
-        {surahName} - الآية {countBesmalAya ? aya : aya - 1}
+        {surahName} - الآية {aya}
       </ThemedText>
 
       <ThemedView style={[styles.tabs, { backgroundColor: 'transparent' }]}>
@@ -309,6 +339,27 @@ export function Tafseer({ aya, surah, opacity = 1 }: Props) {
                 }}
                 addLineBreaks={false}
               />
+              {translationId
+                ? (() => {
+                    const translationText = getTranslationText(gid);
+                    if (!translationText) return null;
+                    return (
+                      <ThemedView
+                        style={[
+                          styles.translationBlock,
+                          { borderTopColor: textColor + '22' },
+                        ]}
+                      >
+                        <ThemedText style={styles.translationLabel}>
+                          ترجمة ({translationId})
+                        </ThemedText>
+                        <ThemedText style={styles.translationText}>
+                          {translationText}
+                        </ThemedText>
+                      </ThemedView>
+                    );
+                  })()
+                : null}
             </ThemedView>
           ) : (
             <ThemedText style={{ textAlign: 'center', padding: 20 }}>
@@ -360,6 +411,24 @@ const styles = StyleSheet.create({
   },
   tabDownloadedBadge: {
     marginHorizontal: 3,
+  },
+  translationBlock: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+  },
+  translationLabel: {
+    fontSize: 12,
+    opacity: 0.7,
+    marginBottom: 6,
+    fontFamily: 'Tajawal_500Medium',
+  },
+  translationText: {
+    fontSize: 16,
+    lineHeight: 26,
+    textAlign: 'left',
+    writingDirection: 'ltr',
+    fontFamily: 'Tajawal_400Regular',
   },
   notDownloadedCard: {
     borderWidth: 1,

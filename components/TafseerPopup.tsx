@@ -15,18 +15,29 @@ import { Colors } from '@/constants/Colors';
 
 import { Tafseer } from './Tafseer';
 import { ThemedView } from './ThemedView';
+
 /**
- * Shared props connecting the parent overlay coordinates to this popup component.
+ * Shared props connecting the parent overlay coordinates to this popup
+ * component.
+ *
+ * Phase 1 update: callers now pass the qurani.ai gid (canonical
+ * internal id), the surah number, and the per-narration layout ayah
+ * number (which Tafseer's existing `(sura, aya)` lookup uses to find
+ * the tafseer row). We deliberately keep `aya` and `surah` in the
+ * `Tafseer` component signature unchanged so the lookup table doesn't
+ * need to be migrated in this phase.
  */
 type Props = {
   /** Trigger declaring if the popup is visibly snapped open. */
   show: boolean;
   /** Modifier hook for flipping the `show` boolean. */
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  /** Focus Aya ID. */
-  aya: number;
-  /** Focus Surah ID. */
+  /** qurani.ai gid of the selected ayah (canonical internal id). */
+  gid: number;
+  /** Focus Surah number (1..114). */
   surah: number;
+  /** Per-narration per-surah ayah number — Tafseer looks up by this. */
+  layoutAyah: number;
 };
 
 /**
@@ -36,7 +47,7 @@ type Props = {
  * @param props - Mapping variables.
  * @returns The bottom-anchored animated drawer.
  */
-export function TafseerPopup({ show, setShow, aya, surah }: Props) {
+export function TafseerPopup({ show, setShow, gid, surah, layoutAyah }: Props) {
   const colorScheme = useColorScheme();
   const theme = colorScheme === 'dark' ? 'dark' : 'light';
   const tintColor = Colors[theme].tint;
@@ -109,7 +120,7 @@ export function TafseerPopup({ show, setShow, aya, surah }: Props) {
         <Suspense
           fallback={<ActivityIndicator size="large" color={tintColor} />}
         >
-          <Tafseer aya={aya} surah={surah} opacity={opacity} />
+          <Tafseer gid={gid} aya={layoutAyah} surah={surah} opacity={opacity} />
         </Suspense>
       </BottomSheetScrollView>
     </BottomSheet>

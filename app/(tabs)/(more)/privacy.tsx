@@ -19,8 +19,9 @@ import { isRTL } from '@/utils';
 export default function PrivacyScreen() {
   const [selectedTab, setSelectedTab] = useState('arabic'); // Default to Arabic
   const colorScheme = useColorScheme();
-  const currentColor = Colors[colorScheme ?? 'light'].tint;
-  const backgroundColor = Colors[colorScheme ?? 'light'].background;
+  const theme = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const currentColor = theme.tint;
+  const backgroundColor = theme.background;
 
   return (
     <ThemedView style={styles.container}>

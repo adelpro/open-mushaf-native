@@ -1,166 +1,42 @@
 /**
- * Native implementation of the offline-download module backed by
- * `expo-file-system` v57. iOS/Android only — the web variant ships in
- * Phase 5 as `downloads.web.ts`. Metro picks this file by default on
- * native; until Phase 5, importing on web will fail at runtime (the
- * downloads UI is gated to native for now).
+ * Native implementation of the open-mushaf app's offline-download
+ * module backed by `expo-file-system` v57. iOS/Android only — the web
+ * variant ships in `downloads.web.ts`. Metro picks this file by
+ * default on native.
+ *
+ * Per Phase 0 of the qurani.ai integration plan, the mushaf-SVG
+ * download path is removed. Narration text bundles and per-page
+ * snapshots are persisted by `utils/api/qurani/cache/native.ts`,
+ * which the Downloads page consumes via the `@/utils/downloads`
+ * barrel re-exports.
+ *
+ * Storage layout (under the app's Documents directory):
+ *
+ *   Paths.document/open-mushaf/api/<riwaya>/...    ← qurani.ai cache
+ *   Paths.document/open-mushaf/tafseer/<key>.json ← tafseer cache
+ *
+ * The `open-mushaf/` top-level prefix is the app's private-data
+ * namespace — matches the `open-mushaf-*` cache-name prefix used
+ * on web so both storage backends are inspectable in parallel.
  */
 
 import { Directory, File, Paths } from 'expo-file-system';
 
-import { quranSvgPageUrl } from '@/constants/svgCdn';
 import { quranTafseerUrl, TafseerKey } from '@/constants/TafseerCdn';
+import { TRANSLATIONS_LIST } from '@/constants/translations';
 import { Riwaya } from '@/types';
+import {
+  getRiwayaBundleBytes,
+  getTranslationBytes,
+} from '@/utils/api/qurani/cache';
 
-import { RIWAYA_PAGE_COUNTS, RIWAYA_SIZE_ESTIMATE_BYTES } from './shared';
-
-/* ---------------- Mushaf (riwaya) page cache ---------------- */
-
-/** Build a Directory handle for `<Paths.document>/mushaf/<riwaya>`. */
-function mushafDir(riwaya: Riwaya): Directory {
-  return new Directory(Paths.document, 'mushaf', riwaya);
-}
-
-/** Lazily create the per-riwaya directory and return it. */
-function ensureMushafDir(riwaya: Riwaya): Directory {
-  const dir = mushafDir(riwaya);
-  if (!dir.exists) dir.create({ intermediates: true });
-  return dir;
-}
-
-/** Build the on-disk filename for a given page. */
-function pageFilename(page: number): string {
-  return `${String(page).padStart(3, '0')}.svg`;
-}
-
-/** Returns true if the given mushaf page is on disk. */
-export async function isMushafPageCached(
-  riwaya: Riwaya,
-  page: number,
-): Promise<boolean> {
-  try {
-    const dir = ensureMushafDir(riwaya);
-    const file = new File(dir, pageFilename(page));
-    return file.info().exists;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Read a single mushaf page from disk. Throws if the file is missing;
- * callers should check with `isMushafPageCached` first.
- */
-export async function readMushafPageFromDisk(
-  riwaya: Riwaya,
-  page: number,
-): Promise<string> {
-  const dir = ensureMushafDir(riwaya);
-  const file = new File(dir, pageFilename(page));
-  return file.text();
-}
-
-/**
- * Write a mushaf page to disk, creating the file and parent directory
- * if needed. Best-effort: returns the byte count when the write
- * succeeded, or 0 on failure so the caller can ignore persist errors
- * during read paths.
- */
-export async function persistMushafPage(
-  riwaya: Riwaya,
-  page: number,
-  xml: string,
-): Promise<number> {
-  try {
-    const dir = ensureMushafDir(riwaya);
-    const file = new File(dir, pageFilename(page));
-    if (!file.info().exists) file.create();
-    file.write(xml);
-    return xml.length;
-  } catch {
-    return 0;
-  }
-}
-
-/** Fetch one page from the CDN and write it to disk. */
-export async function downloadMushafPage(
-  riwaya: Riwaya,
-  page: number,
-  signal?: AbortSignal,
-): Promise<{ bytes: number }> {
-  const url = quranSvgPageUrl(riwaya, page);
-  const res = await fetch(url, signal ? { signal } : undefined);
-  if (!res.ok) {
-    throw new Error(`HTTP ${res.status} fetching ${url}`);
-  }
-  const text = await res.text();
-  const bytes = await persistMushafPage(riwaya, page, text);
-  return { bytes };
-}
-
-/** Number of pages currently downloaded for this riwaya (count of files). */
-export async function getMushafRiwayaDownloadedPages(
-  riwaya: Riwaya,
-): Promise<number> {
-  try {
-    const dir = mushafDir(riwaya);
-    if (!dir.exists) return 0;
-    let count = 0;
-    for (const entry of dir.list()) {
-      const isFile = !(entry instanceof Directory);
-      if (isFile) count++;
-    }
-    return count;
-  } catch {
-    return 0;
-  }
-}
-
-/** Bytes used on disk by this riwaya's directory. */
-export async function getMushafRiwayaDirSizeBytes(
-  riwaya: Riwaya,
-): Promise<number> {
-  try {
-    const dir = mushafDir(riwaya);
-    if (!dir.exists) return 0;
-    let sum = 0;
-    for (const entry of dir.list()) {
-      const isFile = !(entry instanceof Directory);
-      if (isFile && entry.info().exists) {
-        sum += entry.info().size ?? 0;
-      }
-    }
-    return sum;
-  } catch {
-    return 0;
-  }
-}
-
-/** Remove a riwaya's cache directory from disk. */
-export async function deleteMushafRiwaya(riwaya: Riwaya): Promise<void> {
-  try {
-    const dir = mushafDir(riwaya);
-    if (dir.exists) dir.delete();
-  } catch {
-    // Ignore: directory may not exist or be partially writable.
-  }
-}
-
-/** Returns an upper-bound estimate of the downloaded pages, used for
- *  "are we done?" checks before kicking off a download. */
-export function riwayaTotalPages(riwaya: Riwaya): number {
-  return RIWAYA_PAGE_COUNTS[riwaya];
-}
-
-/** Upper-bound estimate of bytes a full riwaya will occupy on disk. */
-export function riwayaEstimatedBytes(riwaya: Riwaya): number {
-  return RIWAYA_SIZE_ESTIMATE_BYTES[riwaya];
-}
+/** App-private storage root. Matches the web cache-name prefix. */
+const APP_ROOT = 'open-mushaf';
 
 /* ---------------- Tafseer cache ---------------- */
 
 function tafseerDir(): Directory {
-  return new Directory(Paths.document, 'tafseer');
+  return new Directory(Paths.document, APP_ROOT, 'tafseer');
 }
 
 function ensureTafseerDir(): Directory {
@@ -239,7 +115,7 @@ export async function getTafseerFileSizeBytes(
 
 export async function deleteTafseer(key: TafseerKey): Promise<void> {
   try {
-    const dir = ensureTafseerDir();
+    const dir = tafseerDir();
     const file = new File(dir, tafseerFilename(key));
     if (file.info().exists) file.delete();
   } catch {
@@ -262,37 +138,45 @@ const TAFSEER_KEYS: TafseerKey[] = [
   'tanweer',
 ];
 
-const RIWAYAS: Riwaya[] = [
-  'hafs',
-  'warsh',
-  'qalon-kfqc',
-  'qalon-libya-awqaf',
-  'douri-kfqc',
-  'shubah-kfqc',
-];
-
 /**
  * Recompute per-resource and grand-total bytes used on disk by the
  * Downloads feature. Cheap enough to call from the settings page on
  * every focus, but only updates after the active downloads idle out.
+ *
+ * `byRiwaya` is keyed by the app `Riwaya` literal so the Downloads
+ * page can look up bytes by the row it renders.
  */
 export async function getStorageSnapshot(): Promise<{
   totalBytes: number;
-  byRiwaya: Partial<Record<Riwaya, number>>;
+  byRiwaya: Record<string, number>;
   byTafseer: Partial<Record<TafseerKey, number>>;
+  byTranslation: Record<string, number>;
 }> {
-  const byRiwaya: Partial<Record<Riwaya, number>> = {};
-  let total = 0;
-  for (const riwaya of RIWAYAS) {
-    const bytes = await getMushafRiwayaDirSizeBytes(riwaya);
-    byRiwaya[riwaya] = bytes;
-    total += bytes;
-  }
   const byTafseer: Partial<Record<TafseerKey, number>> = {};
+  let total = 0;
   for (const key of TAFSEER_KEYS) {
     const bytes = await getTafseerFileSizeBytes(key);
     byTafseer[key] = bytes;
     total += bytes;
   }
-  return { totalBytes: total, byRiwaya, byTafseer };
+  const byRiwaya: Record<string, number> = {};
+  const NARRATIONS: Riwaya[] = [
+    'hafs',
+    'warsh',
+    'qalon-kfqc',
+    'douri-kfqc',
+    'shubah-kfqc',
+  ];
+  for (const riwaya of NARRATIONS) {
+    const bytes = await getRiwayaBundleBytes(riwaya);
+    byRiwaya[riwaya] = bytes;
+    total += bytes;
+  }
+  const byTranslation: Record<string, number> = {};
+  for (const id of TRANSLATIONS_LIST) {
+    const bytes = await getTranslationBytes(id);
+    byTranslation[id] = bytes;
+    total += bytes;
+  }
+  return { totalBytes: total, byRiwaya, byTafseer, byTranslation };
 }

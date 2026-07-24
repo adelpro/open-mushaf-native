@@ -1,10 +1,10 @@
 /**
- * Shared constants for the offline-download module: page counts,
- * pre-download size estimates, and a byte formatter. No platform code
- * here so the file is bundled into iOS, Android, and web equally.
+ * Shared constants for the offline-download module: pre-download size
+ * estimates and a byte formatter. No platform code here so the file
+ * is bundled into iOS, Android, and web equally.
  */
 
-import { type Riwaya, RIWAYA_PAGE_COUNTS } from '@/constants/riwayas';
+import { RIWAYA_PAGE_COUNTS } from '@/constants/riwayas';
 import type { TafseerKey } from '@/constants/TafseerCdn';
 
 // Re-exported from `@/constants/riwayas` so consumers that import
@@ -13,20 +13,13 @@ import type { TafseerKey } from '@/constants/TafseerCdn';
 export { RIWAYA_PAGE_COUNTS };
 
 /**
- * Rough per-page SVG size. Used for the "Estimated size" line that
- * appears before a user has actually downloaded a riwaya. Real sizes
- * are measured at runtime via `getMushafRiwayaDirSizeBytes`.
+ * Rough size of the per-narration Quran text bundle downloaded from
+ * qurani.ai (`/quran/<narration>`). Used for the "Estimated size"
+ * line on the Downloads page before a user has actually downloaded
+ * a narration. Real sizes are measured at runtime via
+ * `getNarrationBytes(narration)` (Phase 2).
  */
-export const SVG_PAGE_BYTES_ESTIMATE = 12_000; // 12 KB
-
-/** Rough pre-download size estimate per riwaya. */
-export const RIWAYA_SIZE_ESTIMATE_BYTES: Record<Riwaya, number> =
-  Object.fromEntries(
-    Object.entries(RIWAYA_PAGE_COUNTS).map(([k, pages]) => [
-      k,
-      pages * SVG_PAGE_BYTES_ESTIMATE,
-    ]),
-  ) as Record<Riwaya, number>;
+export const NARRATION_SIZE_ESTIMATE_BYTES = 2_000_000; // 2 MB
 
 /**
  * Pre-download size estimates per tafseer. Captured from the actual

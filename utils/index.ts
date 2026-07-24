@@ -1,3 +1,5 @@
+export * from './firstLaunchRoute';
+
 export * from './getVersion';
 
 export * from './isRTL';

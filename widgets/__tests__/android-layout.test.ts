@@ -90,7 +90,9 @@ describe('withHexAlpha', () => {
     expect(withHexAlpha('#1E5243AA', '33')).toBe('#1E524333');
   });
   it('trims surrounding whitespace', () => {
-    expect(withHexAlpha('  #1E5243  ', '33')).toBe('#1E524333');
+    // Cast: `HexColor` template literal requires leading `#`, but the
+    // function actually trims any whitespace before validating.
+    expect(withHexAlpha('  #1E5243  ' as `#${string}`, '33')).toBe('#1E524333');
   });
 });
 

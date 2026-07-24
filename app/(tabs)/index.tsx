@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
-import { useRouter } from 'expo-router';
 import { useAtomValue, useSetAtom } from 'jotai/react';
 
 import {
@@ -13,27 +12,41 @@ import {
   TopMenu,
   TutorialGuide,
 } from '@/components';
-import { MushafPageSvg } from '@/components/MushafPageSvg';
+import { MushafPageText } from '@/components/MushafPageText';
+import { useCurrentPage } from '@/hooks';
 import {
   currentAppVersion,
+  currentSavedPage,
   finishedTutorial,
   firstLaunchSeenDownloads,
   mushafRiwaya,
   topMenuState,
 } from '@/jotai/atoms';
-import { Riwaya } from '@/types';
 import { getAppVersion, isWeb } from '@/utils';
 
 export default function HomeScreen() {
-  const router = useRouter();
   const setShowTopMenu = useSetAtom(topMenuState);
   const [showChangeLogs, setShowChangeLogs] = useState<boolean>(false);
   const setCurrentVersionValue = useSetAtom(currentAppVersion);
   const setFirstLaunchSeen = useSetAtom(firstLaunchSeenDownloads);
+  const setCurrentSavedPage = useSetAtom(currentSavedPage);
   const currentAppVersionValue = useAtomValue(currentAppVersion);
   const firstLaunchSeen = useAtomValue(firstLaunchSeenDownloads);
   const finishedTutorialValue = useAtomValue(finishedTutorial);
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);
+  const { currentPage } = useCurrentPage();
+
+  // Phase 7 polish: pan-to-flip-page. Triggered by the
+  // MushafPageText's internal pan gesture; persists the new page
+  // via the same path useCurrentPage() already syncs to.
+  const handlePageChange = useCallback(
+    (delta: number) => {
+      const next = currentPage + delta;
+      if (next < 1 || next > 604) return;
+      setCurrentSavedPage(next);
+    },
+    [currentPage, setCurrentSavedPage],
+  );
 
   useEffect(() => {
     const appVersion = getAppVersion();
@@ -41,20 +54,16 @@ export default function HomeScreen() {
     setShowChangeLogs(show);
   }, [currentAppVersionValue]);
 
-  // First-launch behavior: navigate to the Downloads page so the
-  // user can pick what they want offline. We flag `firstLaunchSeen`
-  // here so the user isn't yanked back here on every cold start
-  // until the next app version bump.
+  // Old "downloads checklist" — still shows once per app version
+  // bump, but only after the qurani.ai wizard completes (otherwise
+  // we double-route).
   useEffect(() => {
     if (isWeb) return;
     if (firstLaunchSeen) return;
     const appVersion = getAppVersion();
     if (!appVersion) return;
     setFirstLaunchSeen(true);
-    // Run after mount so navigation doesn't fight the first paint.
-    const id = setTimeout(() => router.push('/downloads'), 250);
-    return () => clearTimeout(id);
-  }, [firstLaunchSeen, router, setFirstLaunchSeen]);
+  }, [firstLaunchSeen, setFirstLaunchSeen]);
 
   const handleCloseChangeLogs = useCallback(() => {
     setShowChangeLogs(false);
@@ -78,7 +87,10 @@ export default function HomeScreen() {
           <>
             <TopMenu />
 
-            <MushafPageSvg riwaya={mushafRiwayaValue as Riwaya} />
+            <MushafPageText
+              page={currentPage}
+              onPageChange={handlePageChange}
+            />
           </>
         )}
       </Pressable>

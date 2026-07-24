@@ -10,7 +10,7 @@ import {
 
 import { Feather } from '@expo/vector-icons';
 import { Stack, useFocusEffect } from 'expo-router';
-import { useAtom } from 'jotai/react';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai/react';
 
 import { ThemedText, ThemedView } from '@/components';
 import { RIWAYA_ARABIC_LABEL, RIWAYAT_LIST } from '@/constants';
@@ -23,41 +23,42 @@ import { useNotification } from '@/Context/NotificationProvider';
 import {
   useColors,
   useDownloadProgress,
-  useMushafDownload,
+  useRiwayaDownload,
   useTafseerDownload,
 } from '@/hooks';
-import { downloadedRiwayat, downloadedTafseers } from '@/jotai/atoms';
-import { Riwaya } from '@/types';
 import {
-  deleteMushafRiwaya,
+  downloadedRiwaya,
+  downloadedTafseers,
+  mushafRiwaya,
+} from '@/jotai/atoms';
+import type { Riwaya } from '@/types';
+import { getRiwayaBundleBytes } from '@/utils/api/qurani/cache';
+import {
+  deleteRiwaya,
   deleteTafseer,
   formatBytes,
-  getMushafRiwayaDirSizeBytes,
-  getMushafRiwayaDownloadedPages,
   getStorageSnapshot,
   getTafseerFileSizeBytes,
+  isRiwayaBundleCached,
   isTafseerCached,
-  riwayaEstimatedBytes,
-  riwayaTotalPages,
+  NARRATION_SIZE_ESTIMATE_BYTES,
+  resourceKeyOf,
 } from '@/utils/downloads';
-import { resourceKeyOf } from '@/utils/downloads/types';
 
-const RIWAYAS = [...RIWAYAT_LIST];
 const TAFSEER_KEYS = [...TAFSEERS_LIST];
-
-interface RiwayaRow {
-  riwaya: Riwaya;
-  pagesDownloaded: number;
-  pagesTotal: number;
-  bytes: number;
-  /** Upper-bound estimate (pages × ~12 KB) shown when nothing is on disk yet. */
-  estimatedBytes: number;
-}
 
 interface TafseerRow {
   key: TafseerKey;
   cached: boolean;
   bytes: number;
+}
+
+interface RiwayaRow {
+  riwaya: Riwaya;
+  bytes: number;
+  cached: boolean;
+  /** Estimated bytes for the download (~2 MB / riwaya bundle). */
+  estimatedBytes: number;
 }
 
 type RowStatus = 'downloading' | 'done' | 'pending';
@@ -122,37 +123,40 @@ export default function DownloadsScreen() {
   const { primaryColor, dangerColor, cardColor, textColor, iconColor } =
     useColors();
 
-  const [downloaded, setDownloaded] = useAtom(downloadedRiwayat);
+  const [downloadedRiwayaList, setDownloadedRiwaya] = useAtom(downloadedRiwaya);
   const [downloadedTafseersList, setDownloadedTafseers] =
     useAtom(downloadedTafseers);
-  const progressMap = useDownloadProgress();
+  const currentRiwaya = useAtomValue(mushafRiwaya);
+  const setCurrentRiwaya = useSetAtom(mushafRiwaya);
 
-  const { startRiwaya, cancel: cancelRiwaya } = useMushafDownload();
+  const progressMap = useDownloadProgress();
+  const { startRiwaya, cancel: cancelRiwaya, isBusy } = useRiwayaDownload();
   const { startTafseer, cancel: cancelTafseer } = useTafseerDownload();
 
-  const [rows, setRows] = useState<RiwayaRow[]>([]);
+  const [riwayaRows, setRiwayaRows] = useState<RiwayaRow[]>([]);
   const [tafseerRows, setTafseerRows] = useState<TafseerRow[]>([]);
   const [totalBytes, setTotalBytes] = useState(0);
   const [quotaBytes, setQuotaBytes] = useState<number | null>(null);
   const [busyRiwaya, setBusyRiwaya] = useState<Riwaya | null>(null);
   const [busyTafseer, setBusyTafseer] = useState<TafseerKey | null>(null);
-  // Per-section collapse state. Defaults to expanded so users see
-  // everything on first visit. Local state only — collapse preference
-  // is ephemeral (not persisted to MMKV).
   const [riwayaSectionExpanded, setRiwayaSectionExpanded] = useState(true);
   const [tafseerSectionExpanded, setTafseerSectionExpanded] = useState(true);
 
   const refreshSizes = useCallback(async () => {
     const nextRiwayas: RiwayaRow[] = await Promise.all(
-      RIWAYAS.map(async (riwaya) => ({
-        riwaya,
-        pagesDownloaded: await getMushafRiwayaDownloadedPages(riwaya),
-        pagesTotal: riwayaTotalPages(riwaya),
-        bytes: await getMushafRiwayaDirSizeBytes(riwaya),
-        estimatedBytes: riwayaEstimatedBytes(riwaya),
-      })),
+      RIWAYAT_LIST.map(async (riwaya) => {
+        const cached = await isRiwayaBundleCached(riwaya);
+        const bytes = cached ? await getRiwayaBundleBytes(riwaya) : 0;
+        return {
+          riwaya,
+          bytes,
+          cached,
+          estimatedBytes: NARRATION_SIZE_ESTIMATE_BYTES,
+        };
+      }),
     );
-    setRows(nextRiwayas);
+    setRiwayaRows(nextRiwayas);
+
     const nextTafseers: TafseerRow[] = await Promise.all(
       TAFSEER_KEYS.map(async (key) => ({
         key,
@@ -161,13 +165,9 @@ export default function DownloadsScreen() {
       })),
     );
     setTafseerRows(nextTafseers);
+
     const snap = await getStorageSnapshot();
     setTotalBytes(snap.totalBytes);
-    // Web-only: ask the browser for its storage quota so the UI can
-    // show "X of Y used" instead of just "X used". Feature-detected;
-    // Safari still lags behind on `navigator.storage` so the JSON
-    // could be `undefined` — in that case we just keep the prior
-    // value (or `null` on first render).
     if (Platform.OS === 'web' && typeof navigator !== 'undefined') {
       const storage = (
         navigator as Navigator & {
@@ -179,7 +179,7 @@ export default function DownloadsScreen() {
           const est = await storage.estimate();
           setQuotaBytes(typeof est.quota === 'number' ? est.quota : null);
         } catch {
-          // ignore — quota remains whatever it was
+          // ignore
         }
       }
     }
@@ -188,15 +188,12 @@ export default function DownloadsScreen() {
   const quotaFraction =
     quotaBytes && quotaBytes > 0 ? Math.min(1, totalBytes / quotaBytes) : 0;
 
-  // Refresh on focus so deltas (delete / finish) reflect immediately.
   useFocusEffect(
     useCallback(() => {
       refreshSizes();
     }, [refreshSizes]),
   );
 
-  // And refresh whenever any progress transitions to "done" — the size
-  // snapshot needs to update as the last few bytes land on disk.
   useEffect(() => {
     let anyDone = false;
     for (const key of Object.keys(progressMap)) {
@@ -208,14 +205,16 @@ export default function DownloadsScreen() {
     if (anyDone) refreshSizes();
   }, [progressMap, refreshSizes]);
 
-  const handleDownload = useCallback(
+  const handleRiwayaDownload = useCallback(
     async (riwaya: Riwaya) => {
       setBusyRiwaya(riwaya);
       try {
         await startRiwaya(riwaya);
-        setDownloaded((prev) =>
+        setDownloadedRiwaya((prev) =>
           prev.includes(riwaya) ? prev : [...prev, riwaya],
         );
+        // Switch the active riwaya so the user can immediately read.
+        setCurrentRiwaya(riwaya);
         notify(
           `تم تنزيل ${RIWAYA_ARABIC_LABEL[riwaya]} بنجاح`,
           `dl-riwaya-${riwaya}-done`,
@@ -232,20 +231,20 @@ export default function DownloadsScreen() {
         refreshSizes();
       }
     },
-    [startRiwaya, setDownloaded, notify, refreshSizes],
+    [startRiwaya, setDownloadedRiwaya, setCurrentRiwaya, notify, refreshSizes],
   );
 
-  const handleCancel = useCallback(() => {
+  const handleRiwayaCancel = useCallback(() => {
     cancelRiwaya();
     setBusyRiwaya(null);
     refreshSizes();
   }, [cancelRiwaya, refreshSizes]);
 
-  const handleDelete = useCallback(
+  const handleRiwayaDelete = useCallback(
     async (riwaya: Riwaya) => {
       try {
-        await deleteMushafRiwaya(riwaya);
-        setDownloaded((prev) => prev.filter((r) => r !== riwaya));
+        await deleteRiwaya(riwaya);
+        setDownloadedRiwaya((prev) => prev.filter((r) => r !== riwaya));
         notify(
           `تم حذف تنزيل ${RIWAYA_ARABIC_LABEL[riwaya]}`,
           `dl-riwaya-${riwaya}-del`,
@@ -257,7 +256,7 @@ export default function DownloadsScreen() {
         refreshSizes();
       }
     },
-    [setDownloaded, notify, refreshSizes],
+    [setDownloadedRiwaya, notify, refreshSizes],
   );
 
   const handleTafseerDownload = useCallback(
@@ -354,27 +353,26 @@ export default function DownloadsScreen() {
             </>
           ) : null}
           <ThemedText style={styles.summaryMeta}>
-            {downloadedTafseersList.length} تفسير · {downloaded.length} رواية
+            {downloadedTafseersList.length} تفسير ·{' '}
+            {downloadedRiwayaList.length} رواية
           </ThemedText>
         </ThemedView>
 
         <CollapsibleSection
           title="الروايات"
-          totalCount={RIWAYAS.length}
-          downloadedCount={downloaded.length}
+          totalCount={RIWAYAT_LIST.length}
+          downloadedCount={downloadedRiwayaList.length}
           expanded={riwayaSectionExpanded}
           onToggle={() => setRiwayaSectionExpanded((v) => !v)}
         >
           {sortByStatus(
-            rows.map((row) => {
-              const riwayaId = resourceKeyOf({
-                kind: 'mushaf',
-                riwaya: row.riwaya,
-              });
-              const progress = progressMap[riwayaId];
+            riwayaRows.map((row) => {
               const isInProgress =
-                busyRiwaya === row.riwaya && progress?.status === 'downloading';
-              const isDone = downloaded.includes(row.riwaya);
+                busyRiwaya === row.riwaya &&
+                progressMap[
+                  resourceKeyOf({ kind: 'riwaya', riwaya: row.riwaya })
+                ]?.status === 'downloading';
+              const isDone = downloadedRiwayaList.includes(row.riwaya);
               const status: RowStatus = isInProgress
                 ? 'downloading'
                 : isDone
@@ -382,43 +380,37 @@ export default function DownloadsScreen() {
                   : 'pending';
               return { id: row.riwaya, row, status, isDone, isInProgress };
             }),
-          ).map(({ id, row, status, isDone, isInProgress }) => {
-            const riwayaId = resourceKeyOf({ kind: 'mushaf', riwaya: id });
-            const progress = progressMap[riwayaId];
-            return (
-              <RiwayaCard
-                key={row.riwaya}
-                row={row}
-                isDone={isDone ?? false}
-                isDownloading={isInProgress ?? false}
-                progress={progress}
-                primaryColor={primaryColor}
-                dangerColor={dangerColor}
-                textColor={textColor}
-                iconColor={iconColor}
-                onDownload={() => handleDownload(row.riwaya)}
-                onCancel={handleCancel}
-                onDelete={() =>
-                  Alert.alert(
-                    `حذف ${RIWAYA_ARABIC_LABEL[row.riwaya]}`,
-                    `سيتم حذف ${row.pagesDownloaded} صفحة من ذاكرة الجهاز. هل تريد المتابعة؟`,
-                    [
-                      { text: 'إلغاء', style: 'cancel' },
-                      {
-                        text: 'حذف',
-                        style: 'destructive',
-                        onPress: () => handleDelete(row.riwaya),
-                      },
-                    ],
-                  )
-                }
-              />
-            );
-          })}
-
-          <ThemedText style={styles.footnote}>
-            تنزيل الرواية يجعل صفحاتها متاحة للقراءة دون اتصال بالإنترنت.
-          </ThemedText>
+          ).map(({ id, row, status, isDone, isInProgress }) => (
+            <RiwayaCard
+              key={id}
+              row={row}
+              isActive={currentRiwaya === id}
+              isDone={isDone ?? false}
+              isDownloading={isInProgress ?? false}
+              primaryColor={primaryColor}
+              dangerColor={dangerColor}
+              textColor={textColor}
+              iconColor={iconColor}
+              onDownload={() => handleRiwayaDownload(row.riwaya)}
+              onCancel={handleRiwayaCancel}
+              onDelete={() =>
+                Alert.alert(
+                  'حذف الرواية',
+                  `هل تريد حذف ${RIWAYA_ARABIC_LABEL[row.riwaya]}؟`,
+                  [
+                    { text: 'إلغاء', style: 'cancel' },
+                    {
+                      text: 'حذف',
+                      style: 'destructive',
+                      onPress: () => handleRiwayaDelete(row.riwaya),
+                    },
+                  ],
+                )
+              }
+              status={status}
+              anotherBusy={isBusy && !isInProgress}
+            />
+          ))}
         </CollapsibleSection>
 
         <CollapsibleSection
@@ -430,75 +422,72 @@ export default function DownloadsScreen() {
         >
           {sortByStatus(
             tafseerRows.map((row) => {
-              const tafseerId = resourceKeyOf({
-                kind: 'tafseer',
-                key: row.key,
-              });
-              const progress = progressMap[tafseerId];
               const isInProgress =
-                busyTafseer === row.key && progress?.status === 'downloading';
-              const isDone = row.cached;
+                busyTafseer === row.key &&
+                progressMap[`tafseer:${row.key}` as const]?.status ===
+                  'downloading';
+              const isDone = downloadedTafseersList.includes(row.key);
               const status: RowStatus = isInProgress
                 ? 'downloading'
                 : isDone
                   ? 'done'
                   : 'pending';
-              return { id: row.key, row, status };
+              return { id: row.key, row, status, isDone, isInProgress };
             }),
-          ).map(({ row, status }) => {
-            const tafseerId = resourceKeyOf({ kind: 'tafseer', key: row.key });
-            const progress = progressMap[tafseerId];
-            const isInProgress =
-              busyTafseer === row.key && progress?.status === 'downloading';
-            return (
-              <TafseerCard
-                key={row.key}
-                row={row}
-                isDownloading={isInProgress}
-                progress={progress}
-                primaryColor={primaryColor}
-                dangerColor={dangerColor}
-                textColor={textColor}
-                onDownload={() => handleTafseerDownload(row.key)}
-                onCancel={handleTafseerCancel}
-                onDelete={() =>
-                  Alert.alert(
-                    `حذف ${TAFSEER_ARABIC_LABEL[row.key]}`,
-                    `سيتم حذف ملف التفسير من ذاكرة الجهاز. هل تريد المتابعة؟`,
-                    [
-                      { text: 'إلغاء', style: 'cancel' },
-                      {
-                        text: 'حذف',
-                        style: 'destructive',
-                        onPress: () => handleTafseerDelete(row.key),
-                      },
-                    ],
-                  )
-                }
-              />
-            );
-          })}
-
-          <ThemedText style={styles.footnote}>
-            تنزيل التفسير يجعله متاحًا دون اتصال عند الضغط المطوّل على أي آية.
-          </ThemedText>
+          ).map(({ id, row, status, isDone, isInProgress }) => (
+            <TafseerCard
+              key={id}
+              row={row}
+              isDone={isDone ?? false}
+              isDownloading={isInProgress ?? false}
+              primaryColor={primaryColor}
+              dangerColor={dangerColor}
+              textColor={textColor}
+              iconColor={iconColor}
+              onDownload={() => handleTafseerDownload(row.key)}
+              onCancel={handleTafseerCancel}
+              onDelete={() =>
+                Alert.alert(
+                  'حذف التفسير',
+                  `هل تريد حذف ${TAFSEER_ARABIC_LABEL[row.key]}؟`,
+                  [
+                    { text: 'إلغاء', style: 'cancel' },
+                    {
+                      text: 'حذف',
+                      style: 'destructive',
+                      onPress: () => handleTafseerDelete(row.key),
+                    },
+                  ],
+                )
+              }
+              status={status}
+            />
+          ))}
         </CollapsibleSection>
       </ScrollView>
     </>
   );
 }
 
-interface RiwayaCardProps {
+function RiwayaCard({
+  row,
+  isActive,
+  isDone,
+  isDownloading,
+  primaryColor,
+  dangerColor,
+  textColor,
+  iconColor,
+  onDownload,
+  onCancel,
+  onDelete,
+  status,
+  anotherBusy,
+}: {
   row: RiwayaRow;
+  isActive: boolean;
   isDone: boolean;
   isDownloading: boolean;
-  progress:
-    | {
-        downloaded: number;
-        total: number;
-        status: string;
-      }
-    | undefined;
   primaryColor: string;
   dangerColor: string;
   textColor: string;
@@ -506,238 +495,201 @@ interface RiwayaCardProps {
   onDownload: () => void;
   onCancel: () => void;
   onDelete: () => void;
-}
-
-function RiwayaCard({
-  row,
-  isDone,
-  isDownloading,
-  progress,
-  primaryColor,
-  dangerColor,
-  textColor,
-  onDownload,
-  onCancel,
-  onDelete,
-}: RiwayaCardProps) {
-  const ratio =
-    progress && progress.total > 0
-      ? Math.min(1, progress.downloaded / progress.total)
-      : isDone
-        ? 1
-        : 0;
+  status: RowStatus;
+  anotherBusy: boolean;
+}) {
   return (
     <View
       style={[
         styles.card,
-        {
-          backgroundColor: 'rgba(255,255,255,0.04)',
-          borderColor: textColor + '22',
-        },
+        { backgroundColor: '#ffffff08', borderColor: textColor + '22' },
       ]}
     >
       <View style={styles.cardHeader}>
-        <ThemedText type="defaultSemiBold" style={styles.riwayaName}>
-          {RIWAYA_ARABIC_LABEL[row.riwaya]}
-        </ThemedText>
-        {isDone ? (
-          <ThemedText style={[styles.statusBadge, { color: primaryColor }]}>
-            ✓ جاهز
+        <View style={{ flex: 1 }}>
+          <View style={styles.riwayaHeaderRow}>
+            <ThemedText type="defaultSemiBold" style={styles.riwayaName}>
+              {RIWAYA_ARABIC_LABEL[row.riwaya]}
+            </ThemedText>
+            {isActive ? (
+              <View
+                style={[
+                  styles.activeBadge,
+                  { backgroundColor: primaryColor + '22' },
+                ]}
+              >
+                <ThemedText
+                  style={[styles.activeBadgeText, { color: primaryColor }]}
+                >
+                  الحالي
+                </ThemedText>
+              </View>
+            ) : null}
+          </View>
+          <ThemedText style={styles.cardMeta}>
+            {row.bytes > 0
+              ? formatBytes(row.bytes)
+              : `~ ${formatBytes(row.estimatedBytes)}`}
           </ThemedText>
-        ) : isDownloading ? (
-          <ThemedText style={[styles.statusBadge, { color: primaryColor }]}>
-            جارٍ التنزيل… {progress?.downloaded ?? 0}/
-            {progress?.total ?? row.pagesTotal}
-          </ThemedText>
-        ) : row.pagesDownloaded > 0 ? (
-          <ThemedText style={[styles.statusBadge, { color: textColor + '99' }]}>
-            {row.pagesDownloaded}/{row.pagesTotal}
-          </ThemedText>
-        ) : (
-          <ThemedText style={[styles.statusBadge, { color: textColor + '66' }]}>
-            غير منزل
-          </ThemedText>
-        )}
-      </View>
-
-      <ThemedText
-        style={[styles.cardMeta, row.bytes === 0 && { opacity: 0.7 }]}
-      >
-        {row.pagesTotal} صفحة ·{' '}
-        {row.bytes === 0
-          ? `≈ ${formatBytes(row.estimatedBytes)}`
-          : formatBytes(row.bytes)}
-      </ThemedText>
-
-      <View style={styles.progressBarTrack}>
-        <View
-          style={[
-            styles.progressBarFill,
-            {
-              width: `${ratio * 100}%`,
-              backgroundColor: isDone ? primaryColor : primaryColor + 'AA',
-            },
-          ]}
+        </View>
+        <Feather
+          name={status === 'done' ? 'check-circle' : 'circle'}
+          size={20}
+          color={status === 'done' ? primaryColor : iconColor}
         />
       </View>
 
       <View style={styles.cardActions}>
-        {isDownloading ? (
-          <ActionChip
-            iconName="x-circle"
-            iconColor={dangerColor}
-            label="إلغاء"
-            onPress={onCancel}
-          />
-        ) : isDone ? (
-          <ActionChip
-            iconName="trash-2"
-            iconColor={dangerColor}
-            label="حذف"
-            onPress={onDelete}
-          />
+        {!isDownloading ? (
+          <Pressable
+            disabled={anotherBusy}
+            onPress={isDone ? onDelete : onDownload}
+            style={[
+              styles.actionBtn,
+              {
+                backgroundColor: isDone
+                  ? dangerColor + '22'
+                  : anotherBusy
+                    ? iconColor + '33'
+                    : primaryColor,
+              },
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel={
+              isDone
+                ? `حذف ${RIWAYA_ARABIC_LABEL[row.riwaya]}`
+                : `تنزيل ${RIWAYA_ARABIC_LABEL[row.riwaya]}`
+            }
+          >
+            <Feather
+              name={isDone ? 'trash-2' : 'download'}
+              size={16}
+              color={isDone ? dangerColor : '#fff'}
+            />
+            <ThemedText
+              style={[
+                styles.actionLabel,
+                {
+                  color: isDone
+                    ? dangerColor
+                    : anotherBusy
+                      ? iconColor
+                      : '#fff',
+                },
+              ]}
+            >
+              {isDone ? 'حذف' : 'تنزيل'}
+            </ThemedText>
+          </Pressable>
         ) : (
-          <ActionChip
-            iconName="download"
-            iconColor={primaryColor}
-            label="تنزيل"
-            onPress={onDownload}
-            disabled={progress?.status === 'downloading'}
-          />
+          <Pressable
+            onPress={onCancel}
+            style={[styles.actionBtn, { backgroundColor: dangerColor }]}
+            accessibilityRole="button"
+            accessibilityLabel="إلغاء التنزيل"
+          >
+            <Feather name="x" size={16} color="#fff" />
+            <ThemedText style={[styles.actionLabel, { color: '#fff' }]}>
+              إلغاء
+            </ThemedText>
+          </Pressable>
         )}
       </View>
     </View>
   );
 }
 
-function ActionChip({
-  iconName,
-  iconColor,
-  label,
-  onPress,
-  disabled,
-}: {
-  iconName: React.ComponentProps<typeof Feather>['name'];
-  iconColor: string;
-  label: string;
-  onPress: () => void;
-  disabled?: boolean;
-}) {
-  return (
-    <Pressable
-      onPress={onPress}
-      disabled={disabled}
-      style={[styles.chip, disabled && { opacity: 0.4 }]}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-    >
-      <Feather name={iconName} size={18} color={iconColor} />
-      <ThemedText style={[styles.chipLabel, { color: iconColor }]}>
-        {label}
-      </ThemedText>
-    </Pressable>
-  );
-}
-
-interface TafseerCardProps {
-  row: TafseerRow;
-  isDownloading: boolean;
-  progress:
-    | {
-        downloaded: number;
-        total: number;
-        status: string;
-      }
-    | undefined;
-  primaryColor: string;
-  dangerColor: string;
-  textColor: string;
-  onDownload: () => void;
-  onCancel: () => void;
-  onDelete: () => void;
-}
-
 function TafseerCard({
   row,
+  isDone,
   isDownloading,
-  progress,
   primaryColor,
   dangerColor,
   textColor,
+  iconColor,
   onDownload,
   onCancel,
   onDelete,
-}: TafseerCardProps) {
-  const ratio = isDownloading
-    ? Math.max(0, Math.min(1, (progress?.downloaded ?? 0) / 1))
-    : row.cached
-      ? 1
-      : 0;
+  status,
+}: {
+  row: TafseerRow;
+  isDone: boolean;
+  isDownloading: boolean;
+  primaryColor: string;
+  dangerColor: string;
+  textColor: string;
+  iconColor: string;
+  onDownload: () => void;
+  onCancel: () => void;
+  onDelete: () => void;
+  status: RowStatus;
+}) {
   return (
     <View
       style={[
         styles.card,
-        {
-          backgroundColor: 'rgba(255,255,255,0.04)',
-          borderColor: textColor + '22',
-        },
+        { backgroundColor: '#ffffff08', borderColor: textColor + '22' },
       ]}
     >
       <View style={styles.cardHeader}>
-        <ThemedText type="defaultSemiBold" style={styles.riwayaName}>
-          {TAFSEER_ARABIC_LABEL[row.key]}
-        </ThemedText>
-        {row.cached ? (
-          <ThemedText style={[styles.statusBadge, { color: primaryColor }]}>
-            ✓ جاهز
+        <View style={{ flex: 1 }}>
+          <ThemedText type="defaultSemiBold">
+            {TAFSEER_ARABIC_LABEL[row.key]}
           </ThemedText>
-        ) : isDownloading ? (
-          <ThemedText style={[styles.statusBadge, { color: primaryColor }]}>
-            جارٍ التنزيل…
+          <ThemedText style={styles.cardMeta}>
+            {row.bytes > 0 ? formatBytes(row.bytes) : 'لم يتم التنزيل بعد'}
           </ThemedText>
-        ) : (
-          <ThemedText style={[styles.statusBadge, { color: textColor + '66' }]}>
-            غير منزل
-          </ThemedText>
-        )}
-      </View>
-
-      <ThemedText style={styles.cardMeta}>{formatBytes(row.bytes)}</ThemedText>
-
-      <View style={styles.progressBarTrack}>
-        <View
-          style={[
-            styles.progressBarFill,
-            {
-              width: `${ratio * 100}%`,
-              backgroundColor: row.cached ? primaryColor : primaryColor + 'AA',
-            },
-          ]}
+        </View>
+        <Feather
+          name={status === 'done' ? 'check-circle' : 'circle'}
+          size={20}
+          color={status === 'done' ? primaryColor : iconColor}
         />
       </View>
 
       <View style={styles.cardActions}>
-        {isDownloading ? (
-          <ActionChip
-            iconName="x-circle"
-            iconColor={dangerColor}
-            label="إلغاء"
-            onPress={onCancel}
-          />
-        ) : row.cached ? (
-          <ActionChip
-            iconName="trash-2"
-            iconColor={dangerColor}
-            label="حذف"
-            onPress={onDelete}
-          />
+        {!isDownloading ? (
+          <Pressable
+            onPress={isDone ? onDelete : onDownload}
+            style={[
+              styles.actionBtn,
+              {
+                backgroundColor: isDone ? dangerColor + '22' : primaryColor,
+              },
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel={
+              isDone
+                ? `حذف ${TAFSEER_ARABIC_LABEL[row.key]}`
+                : `تنزيل ${TAFSEER_ARABIC_LABEL[row.key]}`
+            }
+          >
+            <Feather
+              name={isDone ? 'trash-2' : 'download'}
+              size={16}
+              color={isDone ? dangerColor : '#fff'}
+            />
+            <ThemedText
+              style={[
+                styles.actionLabel,
+                { color: isDone ? dangerColor : '#fff' },
+              ]}
+            >
+              {isDone ? 'حذف' : 'تنزيل'}
+            </ThemedText>
+          </Pressable>
         ) : (
-          <ActionChip
-            iconName="download"
-            iconColor={primaryColor}
-            label="تنزيل"
-            onPress={onDownload}
-          />
+          <Pressable
+            onPress={onCancel}
+            style={[styles.actionBtn, { backgroundColor: dangerColor }]}
+            accessibilityRole="button"
+            accessibilityLabel="إلغاء التنزيل"
+          >
+            <Feather name="x" size={16} color="#fff" />
+            <ThemedText style={[styles.actionLabel, { color: '#fff' }]}>
+              إلغاء
+            </ThemedText>
+          </Pressable>
         )}
       </View>
     </View>
@@ -747,121 +699,101 @@ function TafseerCard({
 const styles = StyleSheet.create({
   scroll: {
     padding: 16,
-    paddingBottom: 80,
+    gap: 16,
   },
   summaryCard: {
-    borderWidth: 1,
-    borderRadius: 12,
     padding: 16,
-    marginBottom: 20,
-    alignItems: 'center',
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 6,
   },
   summaryBytes: {
     fontSize: 28,
-    marginTop: 8,
-    fontFamily: 'Tajawal_700Bold',
-    lineHeight: 32,
+    fontWeight: '700',
   },
   summaryMeta: {
     fontSize: 13,
-    opacity: 0.6,
-    marginTop: 4,
+    opacity: 0.7,
   },
   summaryBar: {
-    height: 5,
+    height: 6,
+    width: '100%',
+    backgroundColor: '#ffffff14',
     borderRadius: 3,
-    backgroundColor: 'rgba(127,127,127,0.18)',
-    marginTop: 6,
-    width: '60%',
     overflow: 'hidden',
+    marginTop: 6,
   },
   summaryBarFill: {
     height: '100%',
     borderRadius: 3,
   },
-  sectionTitle: {
-    marginBottom: 10,
-  },
   sectionHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 16,
-    marginBottom: 10,
-    paddingVertical: 4,
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+  },
+  sectionTitle: {
+    fontSize: 16,
   },
   sectionHeaderMeta: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
   },
   sectionCount: {
     fontSize: 13,
-    opacity: 0.6,
-    fontFamily: 'Tajawal_500Medium',
+    opacity: 0.7,
   },
   card: {
+    padding: 12,
+    borderRadius: 10,
     borderWidth: 1,
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 10,
+    marginTop: 8,
+    gap: 10,
   },
   cardHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  riwayaHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   riwayaName: {
-    fontSize: 18,
+    fontSize: 16,
   },
-  statusBadge: {
-    fontSize: 12,
-    fontFamily: 'Tajawal_700Bold',
+  activeBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  activeBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
   },
   cardMeta: {
     fontSize: 12,
-    opacity: 0.6,
-    marginTop: 4,
-  },
-  progressBarTrack: {
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: 'rgba(127,127,127,0.18)',
-    marginTop: 10,
-    overflow: 'hidden',
-  },
-  progressBarFill: {
-    height: '100%',
-    borderRadius: 3,
+    opacity: 0.7,
   },
   cardActions: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 12,
+    alignItems: 'center',
+    gap: 8,
   },
-  chip: {
+  actionBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingVertical: 6,
     paddingHorizontal: 12,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(127,127,127,0.25)',
+    paddingVertical: 8,
+    borderRadius: 8,
   },
-  chipLabel: {
-    fontSize: 14,
-    fontFamily: 'Tajawal_500Medium',
-  },
-  footnote: {
-    fontSize: 12,
-    opacity: 0.5,
-    marginTop: 16,
-    textAlign: 'center',
-  },
-  backButton: {
-    marginTop: 24,
-    alignSelf: 'center',
-    width: 200,
+  actionLabel: {
+    fontSize: 13,
+    fontWeight: '600',
   },
 });
