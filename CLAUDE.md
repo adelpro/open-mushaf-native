@@ -1,6 +1,7 @@
 # open-mushaf-native — Claude Code Rules
 
 ## Project
+
 Expo SDK 54 / React Native 0.81 / TypeScript 5.9. Quran reader app, ships to
 iOS (App Store), Android (Play Store), and Web (Firebase Hosting).
 
@@ -25,18 +26,18 @@ iOS (App Store), Android (Play Store), and Web (Firebase Hosting).
 
 ## Build / ship commands
 
-| Goal | Command |
-|---|---|
-| Dev server | `yarn start` |
-| Type check | `yarn type-check` |
-| Lint | `yarn lint` (eslint, `--max-warnings=0`) |
-| Format | `yarn format` |
-| Android preview build | `yarn android:build:preview` |
-| Android production build | `yarn android:build:production` |
-| iOS release build | `eas build -p ios --profile production` |
-| Submit to App Store | `eas submit -p ios --profile production --latest` |
-| Web preview deploy | `yarn deploy:preview` |
-| Web live deploy | `yarn deploy:live` |
+| Goal                     | Command                                           |
+| ------------------------ | ------------------------------------------------- |
+| Dev server               | `yarn start`                                      |
+| Type check               | `yarn type-check`                                 |
+| Lint                     | `yarn lint` (eslint, `--max-warnings=0`)          |
+| Format                   | `yarn format`                                     |
+| Android preview build    | `yarn android:build:preview`                      |
+| Android production build | `yarn android:build:production`                   |
+| iOS release build        | `eas build -p ios --profile production`           |
+| Submit to App Store      | `eas submit -p ios --profile production --latest` |
+| Web preview deploy       | `yarn deploy:preview`                             |
+| Web live deploy          | `yarn deploy:live`                                |
 
 ## EAS profiles (from `eas.json`)
 
