@@ -100,7 +100,7 @@ export default function BookmarksScreen() {
           style={styles.addButton}
         >
           <ThemedView style={styles.addButtonContent}>
-            <Feather name="plus" size={20} />
+            <Feather name="plus" size={20} color="white" />
             <ThemedText style={styles.addButtonText}>
               إضافة علامة (صفحة {currentPage})
             </ThemedText>
