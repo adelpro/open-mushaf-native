@@ -16,6 +16,7 @@ const ignores = [
   'google-services.json',
   '.firebase',
   '*-lock.json',
+  'expo-env.d.ts',
 ];
 
 export default defineConfig([
