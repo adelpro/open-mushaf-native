@@ -13,11 +13,14 @@
  *     usedDense,
  *     isModelReady,
  *     downloadProgress,
+ *     failureReason,  // typed cause for the banner
  *   }
  *
  * The hook owns the embedder lifecycle — lazy-loads on first AI-mode query,
  * caches across queries, and reports download progress via the returned
- * `downloadProgress` object.
+ * `downloadProgress` object. Failures are classified into a typed
+ * `failureReason` so the UI can surface a specific message instead of the
+ * generic "not ready" string.
  *
  * Morphology + word-map data are imported statically at module scope to match
  * the existing pattern in app/search.tsx (Metro bundles them once).
@@ -30,14 +33,16 @@ import type { MorphologyAya, QuranText, WordMap } from 'quran-search-engine';
 import morphologyDataRaw from '@/assets/search/quran-morphology.json';
 import wordMapJSON from '@/assets/search/word-map.json';
 import { useQuranMetadata } from '@/hooks/useQuranMetadata';
+import { logEvent } from '@/utils/aiSearch/debugLog';
 import {
-  getCachedModelPath,
+  clearCachedModel,
   loadEmbedderModel,
 } from '@/utils/aiSearch/loadEmbedderModel';
 import { runHybridSearch } from '@/utils/aiSearch/runHybridSearch';
 import type {
   DenseEmbedder,
   DownloadProgress,
+  FailureReason,
   HybridResponse,
   HybridResult,
   LayerAvailability,
@@ -52,6 +57,11 @@ export type UseHybridSearchState = {
   usedDense: boolean;
   isModelReady: boolean;
   downloadProgress: DownloadProgress | null;
+  /**
+   * Categorised reason the model is unavailable. Surfaces in the banner so
+   * the user sees a specific cause instead of a generic message.
+   */
+  failureReason: FailureReason;
 };
 
 // Module-level static data — Metro bundles these once and we never reload.
@@ -62,6 +72,34 @@ const WORD_MAP = new Map(Object.entries(wordMapJSON)) as WordMap;
 // the 140 MB ONNX model on every visit to /search.
 let EMBEDDER_REF: DenseEmbedder | null = null;
 let MODEL_READY_REF = false;
+
+/**
+ * Categorise an error message thrown from the AI-search pipeline into a
+ * `FailureReason` for the UI banner. Matches against the known error
+ * substrings emitted by `loadEmbedderModel.ts` and `embedderRuntime.ts`.
+ */
+function classifyError(message: string): FailureReason {
+  if (message.includes('Web AI search is not yet available')) {
+    return 'web-unsupported';
+  }
+  if (message.includes('tokenizer.json missing')) return 'tokenizer-missing';
+  if (message.startsWith('Failed to download')) return 'download-failed';
+  if (
+    /OPFS|quota|FileSystem|expo-file-system/i.test(message) &&
+    !message.includes('Failed to download')
+  ) {
+    return 'opfs-failed';
+  }
+  if (
+    message.includes('onnxruntime-react-native') ||
+    message.includes('@huggingface/transformers') ||
+    message.includes('Embedder runtime not initialized') ||
+    message.includes('Native AI search requires')
+  ) {
+    return 'runtime-init';
+  }
+  return 'unknown';
+}
 
 /**
  * Debounced hybrid search driven by the Quran metadata + (lazily) the
@@ -85,6 +123,7 @@ export function useHybridSearch({
     usedDense: false,
     isModelReady: MODEL_READY_REF,
     downloadProgress: null,
+    failureReason: null,
   });
 
   const debounceRef = useRef<number | null>(null);
@@ -92,7 +131,6 @@ export function useHybridSearch({
 
   const ensureModel = useCallback(async (): Promise<DenseEmbedder | null> => {
     if (EMBEDDER_REF) return EMBEDDER_REF;
-    if (!getCachedModelPath()) return null;
 
     try {
       const embedder = await loadEmbedderModel({
@@ -100,21 +138,28 @@ export function useHybridSearch({
           setState((s) => ({ ...s, downloadProgress: p }));
         },
       });
+      // Module-level cache intentionally survives unmounts — see top-of-file.
+      // eslint-disable-next-line react-compiler/react-compiler
       EMBEDDER_REF = embedder;
       MODEL_READY_REF = true;
       setState((s) => ({
         ...s,
         isModelReady: true,
         downloadProgress: null,
+        failureReason: null,
       }));
       return embedder;
     } catch (err) {
       MODEL_READY_REF = false;
+      const message = err instanceof Error ? err.message : String(err);
+      const reason = classifyError(message);
+      logEvent('error', 'ensureModel failed', { reason, message });
       setState((s) => ({
         ...s,
         isModelReady: false,
         downloadProgress: null,
-        error: err instanceof Error ? err.message : String(err),
+        error: message,
+        failureReason: reason,
       }));
       return null;
     }
@@ -162,15 +207,20 @@ export function useHybridSearch({
           usedDense: response.usedDense,
           isModelReady: MODEL_READY_REF,
           downloadProgress: null,
+          failureReason: response.denseFailure ? 'unknown' : null,
         }));
       } catch (err) {
         if (lastQueryRef.current !== query) return;
+        const message = err instanceof Error ? err.message : String(err);
+        const reason = classifyError(message);
+        logEvent('error', 'runHybridSearch failed', { reason, message });
         setState((s) => ({
           ...s,
           results: [],
           total: 0,
           isLoading: false,
-          error: err instanceof Error ? err.message : String(err),
+          error: message,
+          failureReason: reason,
         }));
       }
     }, debounceMs);
@@ -191,4 +241,17 @@ export function __resetHybridEmbedderForTests(): void {
   EMBEDDER_REF?.dispose();
   EMBEDDER_REF = null;
   MODEL_READY_REF = false;
+}
+
+/**
+ * Drop the cached model file, the tokenizer siblings, and the debug log so
+ * the next AI query starts from a clean slate. Wired to the "إعادة المحاولة"
+ * button in `app/search.tsx`.
+ */
+export async function retryHybridEmbedder(): Promise<void> {
+  logEvent('info', 'retryHybridEmbedder: user-initiated reset');
+  EMBEDDER_REF?.dispose();
+  EMBEDDER_REF = null;
+  MODEL_READY_REF = false;
+  clearCachedModel();
 }

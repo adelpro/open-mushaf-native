@@ -1,25 +1,32 @@
 /**
  * Manages the ONNX model lifecycle for query embedding.
  *
- * Uses the Apache-2.0 Arabic-Triplet-Matryoshka-V2 model. The model is
- * downloaded once from the CDN configured in
+ * Uses the Apache-2.0 Arabic-Triplet-Matryoshka-V2 model. On native the
+ * model + tokenizer files are downloaded once from the CDN configured in
  * `constants/aiSearch.ts → ATM_V2_MODEL_BASE_URL` and cached on disk via
  * expo-file-system. The path is persisted in MMKV so we skip the download
  * on subsequent app launches.
  *
+ * On web we skip the local download entirely — `@huggingface/transformers`
+ * re-fetches the model from the HF repo on its own and ignores the path
+ * argument. This avoids the Safari / OPFS hazards of expo-file-system v19.
+ *
  * After first use the model stays in the cache until the OS reclaims it or
- * the user clears it via Settings.
+ * the user clears it via Settings → "إعادة تعيين البحث الذكي".
  */
 
 import { Directory, File, Paths } from 'expo-file-system';
 import { MMKV } from 'react-native-mmkv';
 
 import {
+  AI_SEARCH_CDN_FILES,
   ATM_V2_MODEL_BASE_URL,
   ATM_V2_MODEL_FILENAME,
   ATM_V2_REPO_ID,
 } from '@/constants/aiSearch';
+import { isWeb } from '@/utils/isWeb';
 
+import { clearDebugLog, logEvent } from './debugLog';
 import type { DenseEmbedder, DownloadProgress } from './types';
 
 // Dedicated MMKV instance — keeps AI-search state isolated from user prefs.
@@ -34,10 +41,6 @@ function modelCacheDir(): Directory {
     dir.create({ intermediates: true });
   }
   return dir;
-}
-
-function modelFile(): File {
-  return new File(modelCacheDir(), ATM_V2_MODEL_FILENAME);
 }
 
 function readCachedPath(): string | null {
@@ -60,30 +63,33 @@ function fileExists(path: string): boolean {
   }
 }
 
-/**
- * Download the ONNX model to the cache directory with progress reporting.
- *
- * Uses fetch + a streaming body reader so the UI can show a progress bar
- * without buffering the entire 140 MB in memory.
- */
-async function downloadModel(
-  onProgress?: (p: DownloadProgress) => void,
-): Promise<string> {
-  const target = modelFile();
-  if (target.exists) {
-    target.delete();
+/** Does any of the required CDN files fail to exist on disk? */
+function isCacheIncomplete(): boolean {
+  const dir = modelCacheDir();
+  for (const name of AI_SEARCH_CDN_FILES) {
+    const f = new File(dir, name);
+    if (!f.exists) return true;
   }
+  return false;
+}
 
-  const url = `${ATM_V2_MODEL_BASE_URL.replace(/\/$/, '')}/${ATM_V2_MODEL_FILENAME}`;
+/**
+ * Stream-download a single file. Throws on non-OK responses.
+ *
+ * Caller is responsible for re-deleting any partial output files written
+ * during the attempt when handling the error.
+ */
+async function downloadOne(
+  url: string,
+  target: File,
+  onProgress?: (delta: number) => void,
+): Promise<void> {
   const res = await fetch(url);
   if (!res.ok || !res.body) {
     throw new Error(
-      `Failed to download model from ${url}: ${res.status} ${res.statusText}`,
+      `Failed to download from ${url}: ${res.status} ${res.statusText}`,
     );
   }
-
-  const totalHeader = res.headers.get('content-length');
-  const totalBytes = totalHeader ? Number(totalHeader) : 0;
 
   const reader = res.body.getReader();
   const chunks: Uint8Array[] = [];
@@ -95,9 +101,7 @@ async function downloadModel(
     if (value) {
       chunks.push(value);
       bytesDownloaded += value.byteLength;
-      if (onProgress) {
-        onProgress({ bytesDownloaded, totalBytes });
-      }
+      onProgress?.(value.byteLength);
     }
   }
 
@@ -107,10 +111,85 @@ async function downloadModel(
     merged.set(chunk, offset);
     offset += chunk.byteLength;
   }
-  target.create();
+  if (!target.exists) target.create();
   target.write(merged);
+}
 
-  return target.uri;
+/**
+ * Download every file in `AI_SEARCH_CDN_FILES` into the cache directory.
+ *
+ * Tracks per-file progress. On any per-file failure, deletes the partial
+ * files written during this attempt so a retry starts from a clean slate.
+ */
+async function downloadAllCdnFiles(
+  onProgress?: (p: DownloadProgress) => void,
+): Promise<string> {
+  const dir = modelCacheDir();
+  const baseUrl = ATM_V2_MODEL_BASE_URL.replace(/\/$/, '');
+  const fileCount = AI_SEARCH_CDN_FILES.length;
+
+  // Track which files were written during THIS attempt so we can clean up
+  // partial state on error.
+  const writtenThisAttempt: File[] = [];
+
+  // Emit a single reset event so the UI clears stale progress.
+  onProgress?.({ bytesDownloaded: 0, totalBytes: 0, fileIndex: 0, fileCount });
+
+  for (let fileIndex = 0; fileIndex < fileCount; fileIndex++) {
+    const name = AI_SEARCH_CDN_FILES[fileIndex];
+    const url = `${baseUrl}/${name}`;
+    const target = new File(dir, name);
+    if (target.exists) {
+      try {
+        target.delete();
+      } catch {
+        // best-effort
+      }
+    }
+
+    try {
+      logEvent('info', 'downloading CDN file', { fileIndex, fileCount, name });
+      await downloadOne(url, target, (delta) => {
+        onProgress?.({
+          bytesDownloaded: delta,
+          totalBytes: 0,
+          fileIndex,
+          fileCount,
+          fileName: name,
+        });
+      });
+      writtenThisAttempt.push(target);
+    } catch (err) {
+      // Best-effort cleanup of any files written during this attempt.
+      for (const f of writtenThisAttempt) {
+        try {
+          if (f.exists) f.delete();
+        } catch {
+          // ignore
+        }
+      }
+      logEvent('error', 'CDN download failed', {
+        fileIndex,
+        fileCount,
+        name,
+        message: err instanceof Error ? err.message : String(err),
+      });
+      throw err;
+    }
+  }
+
+  // Mark the download complete so the UI clears the spinner.
+  onProgress?.({
+    bytesDownloaded: 0,
+    totalBytes: 0,
+    fileIndex: fileCount,
+    fileCount,
+  });
+
+  // The model file's absolute URI is what `ensureSession` and
+  // `getCachedModelPath` need to find.
+  const modelFile = new File(dir, ATM_V2_MODEL_FILENAME);
+  return modelFile.uri;
 }
 
 /**
@@ -127,16 +206,40 @@ export async function loadEmbedderModel(
 ): Promise<DenseEmbedder> {
   const { onProgress, forceReload } = options;
 
+  logEvent('info', 'loadEmbedderModel:start', {
+    forceReload: !!forceReload,
+    isWeb,
+  });
+
+  // Web: skip the local download entirely. @huggingface/transformers fetches
+  // the model from the HF repo on its own and ignores `modelPath`. Saves
+  // ~135 MB of OPFS writes and sidesteps Safari OPFS hazards.
+  if (isWeb) {
+    logEvent('info', 'loadEmbedderModel:web short-circuit');
+    const runtime = await import('./embedderRuntime');
+    return runtime.createEmbedder(null, ATM_V2_REPO_ID);
+  }
+
   let modelPath: string | null = forceReload ? null : readCachedPath();
-  if (modelPath && !fileExists(modelPath)) {
+  if (modelPath && (!fileExists(modelPath) || isCacheIncomplete())) {
+    logEvent('warn', 'Cached model path stale — re-downloading', {
+      reason: !fileExists(modelPath) ? 'model-missing' : 'sibling-missing',
+    });
     clearCachedPath();
     modelPath = null;
   }
 
   if (!modelPath) {
-    if (onProgress) onProgress({ bytesDownloaded: 0, totalBytes: 0 });
-    modelPath = await downloadModel(onProgress);
-    writeCachedPath(modelPath);
+    try {
+      modelPath = await downloadAllCdnFiles(onProgress);
+      writeCachedPath(modelPath);
+      logEvent('info', 'model downloaded', { modelPath });
+    } catch (err) {
+      logEvent('error', 'model download failed', {
+        message: err instanceof Error ? err.message : String(err),
+      });
+      throw err;
+    }
   }
 
   // Dynamic-import so the ONNX runtime only loads when actually needed.
@@ -150,15 +253,47 @@ export function getCachedModelPath(): string | null {
   return path && fileExists(path) ? path : null;
 }
 
-/** Drop the cached model (used by Settings → "إخفاء البحث الذكي" → re-enable, or factory reset). */
+/** Drop the cached model (used by Settings → "إعادة تعيين البحث الذكي"). */
 export function clearCachedModel(): void {
-  const path = readCachedPath();
-  if (path && fileExists(path)) {
-    try {
-      new File(path).delete();
-    } catch {
-      // best-effort
+  // On web there is no local cache to clear — @huggingface/transformers
+  // manages its own IndexedDB store under the hood. Clearing the MMKV path
+  // key is enough to force a re-init.
+  if (isWeb) {
+    clearCachedPath();
+    clearDebugLog();
+    logEvent('info', 'cleared cached model + tokenizer (web short-circuit)');
+    return;
+  }
+  // Native: walk the cache directory. `modelCacheDir` may throw on platforms
+  // where expo-file-system's OPFS / cache backend is unavailable (e.g. some
+  // web bundles that also export native code paths). Treat that as a no-op.
+  let dir: Directory;
+  try {
+    dir = modelCacheDir();
+  } catch (err) {
+    logEvent('warn', 'modelCacheDir threw — skipping file delete', {
+      message: err instanceof Error ? err.message : String(err),
+    });
+    clearCachedPath();
+    clearDebugLog();
+    return;
+  }
+  for (const name of AI_SEARCH_CDN_FILES) {
+    const f = new File(dir, name);
+    if (f.exists) {
+      try {
+        f.delete();
+      } catch {
+        // best-effort
+      }
     }
   }
+  clearCachedPath();
+  clearDebugLog();
+  logEvent('info', 'cleared cached model + tokenizer');
+}
+
+/** Drop only the persisted path key without touching files on disk. */
+export function _resetCachedPathForTests(): void {
   clearCachedPath();
 }

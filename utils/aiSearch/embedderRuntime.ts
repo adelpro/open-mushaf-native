@@ -19,6 +19,7 @@
  * react-native-executorch (Software Mansion) which has first-class Expo support.
  */
 
+import { AI_SEARCH_CDN_FILES } from '@/constants/aiSearch';
 import { isWeb } from '@/utils/isWeb';
 
 import type { DenseEmbedder } from './types';
@@ -29,7 +30,11 @@ import type { DenseEmbedder } from './types';
 // ---------------------------------------------------------------------------
 
 interface RuntimeState {
-  embed(modelPath: string, text: string, dim: number): Promise<Float32Array>;
+  embed(
+    modelPath: string | null,
+    text: string,
+    dim: number,
+  ): Promise<Float32Array>;
   dispose(): void;
 }
 
@@ -43,9 +48,20 @@ async function createWebRuntime(repoId: string): Promise<RuntimeState> {
   let transformers: any;
   try {
     transformers = await import('@huggingface/transformers');
-  } catch {
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : String(err);
+    // The transformers package pulls in @huggingface/jinja, @huggingface/
+    // tokenizers, onnxruntime-web, and several multi-MB WASM modules. Metro
+    // routinely OOMs bundling it on web — see "Reached heap limit
+    // Allocation failed - JavaScript heap out of memory" when bundling
+    // transformers.web.js. Until we move to a lighter runtime or pre-bundle
+    // it, web AI search is effectively unavailable.
     throw new Error(
-      'Web AI search requires @huggingface/transformers. Run `yarn add @huggingface/transformers`.',
+      'Web AI search is not yet available. Underlying error: ' +
+        `${detail}. The @huggingface/transformers package is too large for ` +
+        'the current Metro web bundle (causes OOM during build). Use the ' +
+        'native app for AI search, or track the web-side fix in ' +
+        '/dev/ai-search.',
     );
   }
 
@@ -129,7 +145,11 @@ async function createNativeRuntime(): Promise<RuntimeState> {
     const { File } = await import('expo-file-system');
     const tokenizerFile = new File(modelDir, 'tokenizer.json');
     if (!tokenizerFile.exists) {
-      throw new Error(`tokenizer.json missing in ${modelDir}`);
+      throw new Error(
+        `tokenizer.json missing in ${modelDir}. ` +
+          `Re-open Smart Search to retry the download, or Settings → "إعادة تعيين البحث الذكي". ` +
+          `(expected files: ${AI_SEARCH_CDN_FILES.join(', ')})`,
+      );
     }
     const configFile = new File(modelDir, 'tokenizer_config.json');
 
@@ -146,7 +166,13 @@ async function createNativeRuntime(): Promise<RuntimeState> {
     void configFile;
   }
 
-  async function ensureSession(modelPath: string): Promise<any> {
+  async function ensureSession(modelPath: string | null): Promise<any> {
+    if (!modelPath) {
+      throw new Error(
+        'Native AI search requires a local model path. ' +
+          'Did the CDN download succeed? Try Settings → "إعادة تعيين البحث الذكي".',
+      );
+    }
     if (session && loadedModelPath === modelPath) return session;
     const modelDir = modelPath.replace(/\/[^/]+$/, '');
     await loadTokenizer(modelDir);
@@ -291,9 +317,15 @@ async function createNativeRuntime(): Promise<RuntimeState> {
  *                   and reads the tokenizer from the same directory).
  */
 export async function createEmbedder(
-  modelPath: string,
+  modelPath: string | null,
   repoId: string,
 ): Promise<DenseEmbedder> {
+  if (!isWeb && !modelPath) {
+    throw new Error(
+      'Native AI search requires a local model path. ' +
+        'Did the CDN download succeed? Try Settings → "إعادة تعيين البحث الذكي".',
+    );
+  }
   if (!runtime) {
     runtime = isWeb
       ? await createWebRuntime(repoId)

@@ -69,10 +69,37 @@ export type HybridResponse = {
   availability: LayerAvailability;
   /** True when the dense path contributed at least one ranking. */
   usedDense: boolean;
+  /** Optional reason the dense path was skipped — surfaced to the banner. */
+  denseFailure?: DensePathFailure;
 };
+
+/** Why the dense path produced no rankings. */
+export type DensePathFailure =
+  'no-embedder' | 'no-cache' | 'embed-error' | 'vector-load-error';
+
+/**
+ * Categorised reason the AI model failed to load or run.
+ *
+ * Surfaced to the search-screen banner so the user sees a specific cause
+ * instead of the generic "not ready" message.
+ */
+export type FailureReason =
+  | 'tokenizer-missing'
+  | 'download-failed'
+  | 'opfs-failed'
+  | 'runtime-init'
+  | 'web-unsupported'
+  | 'unknown'
+  | null;
 
 /** Snapshot of progress for the model download UI. */
 export type DownloadProgress = {
   bytesDownloaded: number;
   totalBytes: number;
+  /** 0-based index of the file currently downloading (multi-file CDN). */
+  fileIndex?: number;
+  /** Total number of files in the multi-file CDN bundle. */
+  fileCount?: number;
+  /** Name of the file currently downloading. */
+  fileName?: string;
 };

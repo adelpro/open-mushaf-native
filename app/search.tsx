@@ -1,5 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { useAtomValue } from 'jotai/react';
 
@@ -25,6 +31,7 @@ import {
   useQuranMetadata,
   useQuranSearch,
 } from '@/hooks';
+import { retryHybridEmbedder } from '@/hooks/useHybridSearch';
 import { searchMode as searchModeAtom } from '@/jotai/atoms';
 import { type QuranText, SearchOptions } from '@/types';
 
@@ -116,6 +123,7 @@ export default function Search() {
   const aiDownloadProgress =
     searchMode === 'ai' ? hybrid.downloadProgress : null;
   const aiError = searchMode === 'ai' ? hybrid.error : null;
+  const aiFailureReason = searchMode === 'ai' ? hybrid.failureReason : null;
   const aiUsedDense = searchMode === 'ai' ? hybrid.usedDense : false;
 
   useEffect(() => {
@@ -246,10 +254,34 @@ export default function Search() {
       query.trim() ? (
         <View style={[styles.banner, styles.bannerWarn]}>
           <ThemedText style={styles.bannerText}>
-            {aiError
-              ? `تعذّر تحميل نموذج الذكاء الاصطناعي: ${aiError}`
-              : 'البحث الدلالي غير جاهز بعد، يستخدم البحث التقليدي'}
+            {aiFailureReason === 'tokenizer-missing'
+              ? 'تعذّر تحميل النموذج: ملف tokenizer.json غير موجود في ذاكرة التطبيق. أعد فتح البحث الذكي للمحاولة مجدداً.'
+              : aiFailureReason === 'download-failed'
+                ? 'تعذّر تنزيل النموذج من الخادم. تحقق من الاتصال بالإنترنت ثم أعد المحاولة.'
+                : aiFailureReason === 'opfs-failed'
+                  ? 'تعذّر تهيئة التخزين المحلي في المتصفح. جرّب متصفّحاً آخر.'
+                  : aiFailureReason === 'web-unsupported'
+                    ? 'البحث الذكي غير متاح على إصدار الويب حالياً. يرجى استخدام التطبيق للحصول على البحث الذكي.'
+                    : aiFailureReason === 'runtime-init'
+                      ? 'تعذّر تهيئة نموذج الذكاء الاصطناعي على هذا الجهاز. سيتم استخدام البحث التقليدي.'
+                      : aiError
+                        ? `تعذّر تحميل نموذج الذكاء الاصطناعي: ${aiError}`
+                        : 'البحث الدلالي غير جاهز بعد، يستخدم البحث التقليدي.'}
           </ThemedText>
+          {aiFailureReason !== 'web-unsupported' ? (
+            <Pressable
+              style={styles.retryButton}
+              onPress={() => {
+                void retryHybridEmbedder();
+                setQuery((q) => `${q} `);
+                setInputText((t) => `${t} `);
+              }}
+              accessibilityRole="button"
+              accessibilityLabel="إعادة محاولة تحميل نموذج الذكاء الاصطناعي"
+            >
+              <ThemedText style={styles.retryText}>إعادة المحاولة</ThemedText>
+            </Pressable>
+          ) : null}
         </View>
       ) : null}
 
@@ -381,5 +413,20 @@ const styles = StyleSheet.create({
     color: '#004D40',
     fontSize: 13,
     textAlign: 'center',
+  },
+  retryButton: {
+    marginTop: 6,
+    alignSelf: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#FFB74D',
+    backgroundColor: '#FFFFFF',
+  },
+  retryText: {
+    color: '#E65100',
+    fontSize: 12,
+    fontWeight: '600',
   },
 });

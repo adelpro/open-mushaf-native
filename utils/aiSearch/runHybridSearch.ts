@@ -126,6 +126,10 @@ export async function runHybridSearch(
     runDensePath(query, embedder),
   ]);
 
+  // Carry forward the reason the dense path was skipped (if any) so the
+  // hook can surface it in the banner.
+  const denseFailure = denseResult.failure;
+
   const rankings = [keywordRankings];
   if (denseResult.available) rankings.push(denseResult.rankings);
 
@@ -176,6 +180,7 @@ export async function runHybridSearch(
     total: ranked.length,
     availability,
     usedDense: denseResult.available,
+    denseFailure,
   };
 }
 
