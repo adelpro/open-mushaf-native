@@ -38,6 +38,28 @@ iOS (App Store), Android (Play Store), and Web (Firebase Hosting).
 | Submit to App Store      | `eas submit -p ios --profile production --latest` |
 | Web preview deploy       | `yarn deploy:preview`                             |
 | Web live deploy          | `yarn deploy:live`                                |
+| Build AI vector index    | `yarn build:vectors`                              |
+| Build AI ONNX model      | `yarn build:model`                                |
+| Build + upload ONNX      | `yarn build:model:upload <user>/<repo>`           |
+| Build all AI assets      | `yarn build:ai`                                   |
+| Verify AI search code    | `yarn verify:ai-search`                           |
+
+## AI search build pipeline
+
+The `بالذكاء الاصطناعي` tab in `/search` uses two components:
+
+1. **Vector index** (`assets/ai-search/quran_vectors.bin` + meta JSON) — built
+   from the in-repo `quran.json` + `muyassar.json` via
+   `scripts/build_vectors.py` (Python `transformers` + `torch`). Pre-checks model
+   availability on HF before generating. Run with `yarn build:vectors`.
+   Outputs are committed to the repo.
+2. **ONNX model** — Hosted on HuggingFace Hub (`ATM_V2_MODEL_BASE_URL` in
+   `constants/aiSearch.ts`). Downloaded once on-device on first AI-search use.
+   To convert/export a new model to INT8 ONNX, run `yarn build:model`
+   (`python scripts/convert_onnx.py`), and upload via
+   `yarn build:model:upload <user>/<repo>`. If the model is already hosted on HF,
+   no local export is needed.
+
 
 ## EAS profiles (from `eas.json`)
 

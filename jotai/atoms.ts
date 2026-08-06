@@ -1,9 +1,14 @@
+import { atom } from 'jotai';
 import { observe } from 'jotai-effect';
 
 import { Reminder, TafseerTabs } from '@/types';
 import { Riwaya } from '@/types/riwaya';
 
 import { createAtomWithStorage } from './createAtomWithStorage';
+
+// ---------------------------------------------------------------------------
+// AI semantic search (Phase 4 of the AI search plan)
+// ---------------------------------------------------------------------------
 
 export const bottomMenuState = createAtomWithStorage<boolean>(
   'BottomMenuState',
@@ -188,3 +193,33 @@ export type Bookmark = {
 };
 
 export const bookmarks = createAtomWithStorage<Bookmark[]>('Bookmarks', []);
+
+/** User opt-out for the AI tab inside /search. When true, SearchModeToggle hides the AI option. */
+export const aiSearchHidden = createAtomWithStorage<boolean>(
+  'AiSearchHidden',
+  false,
+);
+
+/**
+ * The active search mode for the /search screen.
+ * Persisted so the user's last choice is restored on next visit.
+ */
+export const searchMode = createAtomWithStorage<'keyword' | 'ai'>(
+  'SearchMode',
+  'keyword',
+);
+
+/** Transient — model download / load state. Not persisted (recomputed each session). */
+export type AiModelStatus = 'idle' | 'downloading' | 'ready' | 'error';
+
+export const aiSearchModelStatus = atom<AiModelStatus>('idle');
+
+export type AiDownloadProgress = {
+  bytesDownloaded: number;
+  totalBytes: number;
+};
+
+export const aiSearchDownloadProgress = atom<AiDownloadProgress | null>(null);
+
+/** Last error from the AI pipeline (shown in a banner). Cleared on next successful query. */
+export const aiSearchLastError = atom<string | null>(null);

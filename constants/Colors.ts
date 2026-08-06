@@ -23,6 +23,8 @@ export const Colors = {
     directColor: '#FFD700',
     relatedColor: '#4FC3F7',
     fuzzyColor: '#FF8A65',
+    // AI-search semantic-match highlight (warm teal, distinct from keyword colors).
+    denseColor: '#26A69A',
   },
   dark: {
     text: '#EDEDED',
@@ -43,5 +45,7 @@ export const Colors = {
     directColor: '#FFA000',
     relatedColor: '#03A9F4',
     fuzzyColor: '#FF5722',
+    // AI-search semantic-match highlight (warm teal, distinct from keyword colors).
+    denseColor: '#4DB6AC',
   },
 };

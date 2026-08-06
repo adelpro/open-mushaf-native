@@ -48,7 +48,13 @@
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "clean:all": "rimraf node_modules .expo android ios",
     "fresh": "yarn clean:all && yarn install && yarn prebuild",
-    "docs:start": "cd docs && npx fumapress"
+    "docs:start": "cd docs && npx fumapress",
+    "build:vectors": "npx tsx scripts/build-vectors.ts",
+    "build:model": "python scripts/convert_onnx.py",
+    "build:model:upload": "npx tsx scripts/build-model.ts --upload",
+    "build:ai": "yarn build:vectors",
+    "build:ai:full": "yarn build:vectors && yarn build:model && yarn build:model:upload adelpro/atm-v2-int8-onnx",
+    "verify:ai-search": "yarn type-check && yarn lint && yarn test"
   },
   "jest": {
     "preset": "jest-expo"
@@ -66,6 +72,7 @@
     "@expo-google-fonts/tajawal": "^0.3.0",
     "@expo/vector-icons": "^15.0.3",
     "@gorhom/bottom-sheet": "^5.1.4",
+    "@huggingface/transformers": "^4.2.0",
     "@likashefqet/react-native-image-zoom": "^4.3.0",
     "@react-native-picker/picker": "2.11.1",
     "@react-native/assets-registry": "^0.75.4",
@@ -94,6 +101,7 @@
     "fuse.js": "^7.1.0",
     "jotai": "^2.12.4",
     "jotai-effect": "^2.0.2",
+    "onnxruntime-react-native": "^1.24.3",
     "quran-search-engine": "0.3.2",
     "react": "19.1.0",
     "react-compiler-runtime": "^19.0.0-beta-df7b47d-20241124",
@@ -120,6 +128,7 @@
     "@eslint/plugin-kit": "^0.6.0",
     "@expo/config-plugins": "^55.0.6",
     "@expo/image-utils": "^0.8.12",
+    "@huggingface/hub": "^2.14.6",
     "@types/jest": "^29.5.12",
     "@types/react": "~19.1.17",
     "@types/react-native-htmlview": "^0.16.5",
@@ -146,6 +155,7 @@
     "react-test-renderer": "18.2.0",
     "rimraf": "^6.0.0",
     "temp-dir": "^3.0.0",
+    "tsx": "^4.20.0",
     "typescript": "~5.9.3",
     "vitest": "^4.0.18"
   },

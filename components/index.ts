@@ -18,6 +18,7 @@ export * from './SearchAdvancedOptions';
 export * from './searchColorLegend';
 export * from './SearchEmptyState';
 export * from './SearchInput';
+export * from './SearchModeToggle';
 export * from './searchResultItem';
 export * from './SearchSkeleton';
 export * from './SearchSkeletonBar';

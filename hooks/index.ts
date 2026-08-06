@@ -2,6 +2,7 @@ export * from './useColors';
 export * from './useCurrentPage';
 export * from './useDailyTrackerReset';
 export * from './useDebounce';
+export * from './useHybridSearch';
 export * from './useImagePreloader';
 export * from './useImagesArray';
 export * from './useNotificationStyles';

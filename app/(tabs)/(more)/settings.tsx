@@ -29,6 +29,7 @@ import {
 } from '@/constants';
 import { useColors } from '@/hooks';
 import {
+  aiSearchHidden,
   flipSound,
   hizbNotification,
   mushafContrast,
@@ -54,6 +55,7 @@ export default function SettingsScreen() {
   );
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const [readingThemeValue, setReadingThemeValue] = useAtom(readingTheme);
+  const [aiSearchHiddenValue, setAiSearchHiddenValue] = useAtom(aiSearchHidden);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
   const toggleFlipSoundSwitch = () => {
@@ -62,6 +64,10 @@ export default function SettingsScreen() {
 
   const toggleTrackerSwitch = () => {
     setShowTrackerNotificationValue((previousState) => !previousState);
+  };
+
+  const toggleAiSearchHidden = () => {
+    setAiSearchHiddenValue((prev) => !prev);
   };
 
   const handleHizbNotificationValueChange = (value: number) => {
@@ -155,6 +161,45 @@ export default function SettingsScreen() {
           aria-label="إظهار تنبيه إتمام الحزب اليومي"
           accessibilityLabel="تنبيه إتمام الحزب اليومي"
           accessibilityState={{ checked: showTrackerNotificationValue }}
+        />
+      </Pressable>
+
+      {/* Hide the AI-search tab inside /search */}
+      <Pressable
+        style={[
+          styles.settingsSection,
+          { borderColor: textColor, backgroundColor: cardColor },
+        ]}
+        onPress={toggleAiSearchHidden}
+        accessibilityRole="button"
+        accessibilityLabel="إخفاء البحث الذكي"
+        accessibilityHint="اضغط لإخفاء أو إظهار علامة تبويب البحث الذكي في شاشة البحث"
+        accessibilityState={{ selected: aiSearchHiddenValue }}
+      >
+        <ThemedView style={styles.iconTextContainer}>
+          <Feather
+            name="zap-off"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.itemText, { backgroundColor: cardColor }]}
+          >
+            إخفاء البحث الذكي:
+          </ThemedText>
+        </ThemedView>
+        <Toggle
+          color={primaryColor}
+          size={40}
+          circleColor={primaryColor}
+          toggle={aiSearchHiddenValue}
+          setToggle={toggleAiSearchHidden}
+          aria-checked={aiSearchHiddenValue}
+          aria-label="إخفاء البحث الذكي"
+          accessibilityLabel="تبديل البحث الذكي"
+          accessibilityState={{ checked: aiSearchHiddenValue }}
         />
       </Pressable>
 
@@ -557,6 +602,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     margin: 2,
     marginBottom: 5,
+  },
+  columnContainer: {
+    flexDirection: 'column',
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  itemSubText: {
+    fontSize: 11,
+    lineHeight: 14,
+    marginTop: 2,
+    opacity: 0.7,
   },
   iconStyle: {
     paddingVertical: 8,

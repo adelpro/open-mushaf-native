@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
+
+import { useAtomValue } from 'jotai/react';
 
 import morphologyDataRaw from '@/assets/search/quran-morphology.json';
 import wordMapJSON from '@/assets/search/word-map.json';
@@ -8,6 +10,7 @@ import {
   SearchColorLegend,
   SearchEmptyState,
   SearchInput,
+  SearchModeToggle,
   SearchResultItem,
   SearchSkeleton,
   Seo,
@@ -18,10 +21,12 @@ import {
 import {
   useColors,
   useDebounce,
+  useHybridSearch,
   useQuranMetadata,
   useQuranSearch,
 } from '@/hooks';
-import { SearchOptions } from '@/types';
+import { searchMode as searchModeAtom } from '@/jotai/atoms';
+import { type QuranText, SearchOptions } from '@/types';
 
 const MORPH = morphologyDataRaw;
 const WORD_MAP = new Map(
@@ -30,6 +35,7 @@ const WORD_MAP = new Map(
 
 export default function Search() {
   const { quranData, isLoading, error } = useQuranMetadata();
+  const searchMode = useAtomValue(searchModeAtom);
   const { tintColor, primaryColor, secondaryColor, dangerColor } = useColors();
 
   const PAGE_SIZE = 50;
@@ -72,6 +78,46 @@ export default function Search() {
     limit: PAGE_SIZE,
   });
 
+  // AI path — only active when the user picked the AI tab.
+  const hybrid = useHybridSearch({ query });
+
+  // Project hybrid results into QuranText so the existing SearchResultItem renders.
+  const activeResults: QuranText[] = useMemo(() => {
+    if (searchMode === 'ai') {
+      const byGid = new Map<number, QuranText>();
+      if (quranData) {
+        for (const v of quranData) byGid.set(v.gid, v);
+      }
+      return hybrid.results.map((r) => {
+        const original = byGid.get(r.gid);
+        const isDense = r.sources.includes('dense');
+        const isKeyword = r.sources.includes('keyword');
+        const matchSource: 'keyword' | 'ai' | 'both' =
+          isDense && isKeyword ? 'both' : isDense ? 'ai' : 'keyword';
+        return {
+          gid: r.gid,
+          sura_id: r.sura_id,
+          aya_id: r.aya_id,
+          uthmani: r.text_uthmani,
+          standard: r.text_clean,
+          ...({
+            tafseerSnippet: r.tafseer_snippet,
+            matchSource,
+          } as any),
+          ...(original ?? {}),
+        } as QuranText;
+      });
+    }
+    return pageResults;
+  }, [searchMode, hybrid.results, pageResults, quranData]);
+
+  const totalCount = searchMode === 'ai' ? hybrid.total : counts.total || 0;
+  const isAiLoading = searchMode === 'ai' && hybrid.isLoading;
+  const aiDownloadProgress =
+    searchMode === 'ai' ? hybrid.downloadProgress : null;
+  const aiError = searchMode === 'ai' ? hybrid.error : null;
+  const aiUsedDense = searchMode === 'ai' ? hybrid.usedDense : false;
+
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
@@ -81,16 +127,16 @@ export default function Search() {
       return;
     }
 
-    if (!pageResults) return;
+    if (!activeResults) return;
 
     setResults((prev) => {
-      if (page === 1) return pageResults;
+      if (page === 1) return activeResults;
       const existingIds = new Set(prev.map((r) => r.gid));
-      const newItems = pageResults.filter((r) => !existingIds.has(r.gid));
+      const newItems = activeResults.filter((r) => !existingIds.has(r.gid));
       return [...prev, ...newItems];
     });
 
-    const more = pageResults.length === PAGE_SIZE;
+    const more = searchMode === 'keyword' && activeResults.length === PAGE_SIZE;
     setHasMore(more);
     setIsLoadingMore(false);
     setIsOptionChanging(false);
@@ -98,7 +144,7 @@ export default function Search() {
     if (page === 1 && listRef.current) {
       listRef.current.scrollToOffset({ offset: 0, animated: false });
     }
-  }, [pageResults, page, query]);
+  }, [activeResults, page, query, searchMode]);
 
   const toggleOption = (option: keyof SearchOptions) => {
     if (query.trim()) {
@@ -136,19 +182,21 @@ export default function Search() {
   const counterText =
     query.trim() === ''
       ? ''
-      : selectedLabels.length > 0
-        ? `عدد النتائج: ${counts.total} (${selectedLabels.join('، ')})`
-        : `عدد النتائج: ${counts.total} (نص)`;
+      : searchMode === 'ai'
+        ? `عدد النتائج: ${totalCount} (بحث ذكي${aiUsedDense ? ' - دلالي' : ''})`
+        : selectedLabels.length > 0
+          ? `عدد النتائج: ${counts.total} (${selectedLabels.join('، ')})`
+          : `عدد النتائج: ${counts.total} (نص)`;
 
-  const isBusy = isTyping || isOptionChanging;
+  const isBusy = isTyping || isOptionChanging || isAiLoading;
   const showNoResults =
     !isBusy &&
     !isLoading &&
     query.trim() !== '' &&
-    pageResults !== undefined &&
-    pageResults !== null &&
+    activeResults !== undefined &&
+    activeResults !== null &&
     results.length === 0 &&
-    pageResults.length === 0;
+    activeResults.length === 0;
 
   return (
     <ThemedView style={styles.container}>
@@ -177,6 +225,33 @@ export default function Search() {
           toggleOption={toggleOption}
         />
       )}
+
+      <SearchModeToggle tintColor={primaryColor} />
+
+      {searchMode === 'ai' && aiDownloadProgress ? (
+        <View style={styles.banner}>
+          <ThemedText style={styles.bannerText}>
+            {`جاري تنزيل نموذج الذكاء الاصطناعي… (${(
+              aiDownloadProgress.bytesDownloaded /
+              (1024 * 1024)
+            ).toFixed(1)} MB)`}
+          </ThemedText>
+        </View>
+      ) : null}
+
+      {searchMode === 'ai' &&
+      !isBusy &&
+      !hybrid.isModelReady &&
+      !aiDownloadProgress &&
+      query.trim() ? (
+        <View style={[styles.banner, styles.bannerWarn]}>
+          <ThemedText style={styles.bannerText}>
+            {aiError
+              ? `تعذّر تحميل نموذج الذكاء الاصطناعي: ${aiError}`
+              : 'البحث الدلالي غير جاهز بعد، يستخدم البحث التقليدي'}
+          </ThemedText>
+        </View>
+      ) : null}
 
       {query ? (
         <ThemedText style={styles.resultCount}>{counterText}</ThemedText>
@@ -223,15 +298,24 @@ export default function Search() {
           data={results}
           style={{ opacity: isBusy && results.length > 0 ? 0.5 : 1 }}
           keyExtractor={(item) => item.gid.toString()}
-          renderItem={({ item }) => (
-            <SearchResultItem
-              item={item}
-              onSelectAya={(selected: { aya: number; surah: number }) =>
-                setSelectedAya(selected)
-              }
-              disabled={isBusy && results.length > 0}
-            />
-          )}
+          renderItem={({ item }) => {
+            const aiProps = (item as any).tafseerSnippet
+              ? {
+                  matchSource: (item as any).matchSource ?? 'ai',
+                  tafseerSnippet: (item as any).tafseerSnippet,
+                }
+              : {};
+            return (
+              <SearchResultItem
+                item={item}
+                onSelectAya={(selected: { aya: number; surah: number }) =>
+                  setSelectedAya(selected)
+                }
+                disabled={isBusy && results.length > 0}
+                {...aiProps}
+              />
+            );
+          }}
           onEndReached={() => {
             if (!hasMore || isLoadingMore) return;
             setIsLoadingMore(true);
@@ -281,4 +365,21 @@ export default function Search() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
   resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14 },
+  banner: {
+    backgroundColor: '#E0F2F1',
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 8,
+    borderColor: '#26A69A',
+    borderWidth: 1,
+  },
+  bannerWarn: {
+    backgroundColor: '#FFF3E0',
+    borderColor: '#FFB74D',
+  },
+  bannerText: {
+    color: '#004D40',
+    fontSize: 13,
+    textAlign: 'center',
+  },
 });

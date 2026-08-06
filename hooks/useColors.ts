@@ -30,5 +30,6 @@ export const useColors = () => {
     directColor: theme.directColor,
     relatedColor: theme.relatedColor,
     fuzzyColor: theme.fuzzyColor,
+    denseColor: theme.denseColor,
   };
 };
