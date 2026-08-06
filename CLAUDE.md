@@ -41,24 +41,37 @@ iOS (App Store), Android (Play Store), and Web (Firebase Hosting).
 | Build AI vector index    | `yarn build:vectors`                              |
 | Build AI ONNX model      | `yarn build:model`                                |
 | Build + upload ONNX      | `yarn build:model:upload <user>/<repo>`           |
-| Build all AI assets      | `yarn build:ai`                                   |
+| Build web ONNX layout    | `yarn build:model:web`                            |
+| Build + upload web ONNX  | `yarn build:model:upload:web <user>/<repo>`       |
+| Build all AI assets      | `yarn build:ai:full`                              |
 | Verify AI search code    | `yarn verify:ai-search`                           |
 
 ## AI search build pipeline
 
-The `بالذكاء الاصطناعي` tab in `/search` uses two components:
+The `بالذكاء الاصطناعي` tab in `/search` uses two components on each platform:
 
 1. **Vector index** (`assets/ai-search/quran_vectors.bin` + meta JSON) — built
    from the in-repo `quran.json` + `muyassar.json` via
    `scripts/build_vectors.py` (Python `transformers` + `torch`). Pre-checks model
    availability on HF before generating. Run with `yarn build:vectors`.
    Outputs are committed to the repo.
-2. **ONNX model** — Hosted on HuggingFace Hub (`ATM_V2_MODEL_BASE_URL` in
-   `constants/aiSearch.ts`). Downloaded once on-device on first AI-search use.
-   To convert/export a new model to INT8 ONNX, run `yarn build:model`
-   (`python scripts/convert_onnx.py`), and upload via
-   `yarn build:model:upload <user>/<repo>`. If the model is already hosted on HF,
-   no local export is needed.
+2. **ONNX model** — Hosted on HuggingFace Hub. Two layouts, one per platform:
+   - **Native** — flat directory (`ATM_V2_MODEL_BASE_URL` in `constants/aiSearch.ts`).
+     Downloaded once on-device on first AI-search use via `expo-file-system`.
+     To convert/export a new model to INT8 ONNX, run `yarn build:model`
+     (`python scripts/convert_onnx.py`), and upload via
+     `yarn build:model:upload <user>/<repo>`. If the model is already hosted on HF,
+     no local export is needed.
+   - **Web** — transformers.js layout (`ATM_V2_WEB_REPO_ID` /
+     `AI_SEARCH_WEB_CDN_URL` in `constants/aiSearch.ts`). The `@huggingface/transformers`
+     runtime is loaded from a CDN at runtime via `public/ai/transformers-loader.js`,
+     so Metro never bundles it. The repo must be public (transformers.js fetches
+     unauthenticated). Build with `yarn build:model:web` (adds `--emit-web-layout`
+     to `convert_onnx.py`, which also fetches `config.json` from the base repo
+     and merges `1_Pooling/config.json` if present) and upload with
+     `yarn build:model:upload:web <user>/<repo>`. The web runtime uses
+     `dtype: 'q8'` → `onnx/model_quantized.onnx` and runs the WASM backend
+     single-threaded to avoid cross-origin isolation requirements.
 
 
 ## EAS profiles (from `eas.json`)

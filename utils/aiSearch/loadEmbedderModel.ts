@@ -23,6 +23,7 @@ import {
   ATM_V2_MODEL_BASE_URL,
   ATM_V2_MODEL_FILENAME,
   ATM_V2_REPO_ID,
+  ATM_V2_WEB_REPO_ID,
 } from '@/constants/aiSearch';
 import { isWeb } from '@/utils/isWeb';
 
@@ -217,7 +218,7 @@ export async function loadEmbedderModel(
   if (isWeb) {
     logEvent('info', 'loadEmbedderModel:web short-circuit');
     const runtime = await import('./embedderRuntime');
-    return runtime.createEmbedder(null, ATM_V2_REPO_ID);
+    return runtime.createEmbedder(null, ATM_V2_WEB_REPO_ID, onProgress);
   }
 
   let modelPath: string | null = forceReload ? null : readCachedPath();
@@ -256,9 +257,29 @@ export function getCachedModelPath(): string | null {
 /** Drop the cached model (used by Settings → "إعادة تعيين البحث الذكي"). */
 export function clearCachedModel(): void {
   // On web there is no local cache to clear — @huggingface/transformers
-  // manages its own IndexedDB store under the hood. Clearing the MMKV path
-  // key is enough to force a re-init.
+  // stores the model in Cache Storage under the key `transformers-cache`
+  // (see node_modules/@huggingface/transformers/src/env.js `cacheKey`).
+  // Clearing that entry, plus the MMKV path key, plus the loader's
+  // globalThis reference, forces the next attempt to re-download.
   if (isWeb) {
+    if (typeof globalThis !== 'undefined') {
+      const g = globalThis as unknown as {
+        __transformers?: unknown;
+        caches?: { delete: (key: string) => Promise<boolean> };
+      };
+      delete g.__transformers;
+      if (g.caches) {
+        void g.caches
+          .delete('transformers-cache')
+          .then((ok) => {
+            logEvent('info', 'web Cache Storage cleared', { ok });
+          })
+          .catch((err: unknown) => {
+            const msg = err instanceof Error ? err.message : String(err);
+            logEvent('warn', 'web Cache Storage clear failed', { msg });
+          });
+      }
+    }
     clearCachedPath();
     clearDebugLog();
     logEvent('info', 'cleared cached model + tokenizer (web short-circuit)');

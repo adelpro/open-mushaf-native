@@ -223,6 +223,47 @@ try {
     }),
   );
 
+  // AI search web pipeline:
+  //   - jsDelivr hosts @huggingface/transformers (1.1 MB ESM bundle) and is
+  //     fetched on every first AI-search use. StaleWhileRevalidate keeps
+  //     the response warm and refreshes in the background.
+  //   - huggingface.co hosts the model + tokenizer files (~135 MB total).
+  //     CacheFirst is appropriate: the model is content-addressed by
+  //     commit SHA in the resolve/main/ path, so the URL only changes when
+  //     we publish a new model version.
+  //
+  // transformers.js ALSO caches via Cache Storage when
+  // `env.useBrowserCache = true` (see embedderRuntime.web.ts). Both caches
+  // coexist under different cache names; the SW cache is the "warm path"
+  // and transformers.js's cache is the "cold path" fallback. We do NOT
+  // precache the model — `workbox-config.js`
+  // `maximumFileSizeToCacheInBytes` is intentionally left at 50 MB.
+  registerRoute(
+    ({ url }) => url.origin === 'https://cdn.jsdelivr.net',
+    new StaleWhileRevalidate({
+      cacheName: 'transformers-cdn',
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 30,
+          maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+        }),
+      ],
+    }),
+  );
+
+  registerRoute(
+    ({ url }) => url.origin === 'https://huggingface.co',
+    new CacheFirst({
+      cacheName: 'hf-model',
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 20,
+          maxAgeSeconds: 60 * 24 * 60 * 60, // 60 days
+        }),
+      ],
+    }),
+  );
+
   // Default strategy for scripts and styles
   registerRoute(
     ({ request }) =>

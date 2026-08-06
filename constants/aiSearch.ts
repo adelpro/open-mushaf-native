@@ -24,13 +24,45 @@ export const ATM_V2_MODEL_BASE_URL =
 export const ATM_V2_MODEL_FILENAME = 'model.int8.onnx';
 
 /**
- * HuggingFace repo id (used by the web runtime to load via
- * @huggingface/transformers). This is the official Apache-2.0 release;
- * no Xenova pre-quantized port exists for this model, so the runtime
- * downloads the safetensors and converts to ONNX in WASM on first use.
+ * HuggingFace repo id used by the **native** embedder's tokenizer download.
+ * The native runtime uses `ATM_V2_MODEL_BASE_URL` to fetch the flat file layout
+ * (one ONNX blob + tokenizer files in a flat directory). The on-device file
+ * path is what `utils/aiSearch/loadEmbedderModel.ts` returns.
  */
 export const ATM_V2_REPO_ID =
   'Omartificial-Intelligence-Space/Arabic-Triplet-Matryoshka-V2';
+
+/**
+ * HuggingFace repo id used by the **web** runtime via @huggingface/transformers.
+ * This repo is laid out for transformers.js:
+ *   config.json
+ *   tokenizer.json
+ *   tokenizer_config.json
+ *   special_tokens_map.json
+ *   onnx/model_quantized.onnx
+ *
+ * The `dtype: 'q8'` pipeline option resolves to `onnx/model_quantized.onnx`
+ * (`transformers.js` maps `q8` → `_quantized` suffix and looks in `onnx/`).
+ * transformers.js fetches over plain HTTPS with no auth, so the repo must be
+ * public.
+ */
+export const ATM_V2_WEB_REPO_ID = 'adelpro/atm-v2-web';
+
+/**
+ * URL of the runtime loader script that imports @huggingface/transformers
+ * from a CDN. Served from `public/ai/transformers-loader.js` (copied to
+ * `dist/ai/` by `yarn web:export`) so Metro never processes it.
+ */
+export const AI_SEARCH_LOADER_PATH = '/ai/transformers-loader.js';
+
+/**
+ * CDN URL the loader script imports. jsDelivr +esm serves a Rollup-bundled
+ * ESM build of `transformers.web.js` with `access-control-allow-origin: *`,
+ * which works from any origin. Override via `EXPO_PUBLIC_AI_SEARCH_WEB_CDN`.
+ */
+export const AI_SEARCH_WEB_CDN_URL =
+  process.env.EXPO_PUBLIC_AI_SEARCH_WEB_CDN ||
+  'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0/+esm';
 
 /** Tokenizer files downloaded alongside the model. */
 export const AI_SEARCH_CDN_FILES = [

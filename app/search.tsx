@@ -260,28 +260,33 @@ export default function Search() {
                 ? 'تعذّر تنزيل النموذج من الخادم. تحقق من الاتصال بالإنترنت ثم أعد المحاولة.'
                 : aiFailureReason === 'opfs-failed'
                   ? 'تعذّر تهيئة التخزين المحلي في المتصفح. جرّب متصفّحاً آخر.'
-                  : aiFailureReason === 'web-unsupported'
-                    ? 'البحث الذكي غير متاح على إصدار الويب حالياً. يرجى استخدام التطبيق للحصول على البحث الذكي.'
-                    : aiFailureReason === 'runtime-init'
-                      ? 'تعذّر تهيئة نموذج الذكاء الاصطناعي على هذا الجهاز. سيتم استخدام البحث التقليدي.'
-                      : aiError
-                        ? `تعذّر تحميل نموذج الذكاء الاصطناعي: ${aiError}`
-                        : 'البحث الدلالي غير جاهز بعد، يستخدم البحث التقليدي.'}
+                  : aiFailureReason === 'cdn-blocked'
+                    ? 'تعذّر الاتصال بمزود النموذج (jsDelivr). تحقق من الاتصال بالإنترنت أو من أنّ مزود الخدمة لا يحجب الشبكة، ثم أعد المحاولة.'
+                    : aiFailureReason === 'model-load'
+                      ? 'تعذّر تنزيل النموذج من Hugging Face (قد يكون الرابط محجوباً أو غير متاح). جرّب إعادة المحاولة.'
+                      : aiFailureReason === 'wasm-init'
+                        ? 'تعذّر تشغيل نموذج الذكاء الاصطناعي في المتصفح (WASM). جرّب متصفّحاً آخر أو استخدم التطبيق.'
+                        : aiFailureReason === 'runtime-init'
+                          ? 'تعذّر تهيئة نموذج الذكاء الاصطناعي على هذا الجهاز. سيتم استخدام البحث التقليدي.'
+                          : aiError
+                            ? `تعذّر تحميل نموذج الذكاء الاصطناعي: ${aiError}`
+                            : 'البحث الدلالي غير جاهز بعد، يستخدم البحث التقليدي.'}
           </ThemedText>
-          {aiFailureReason !== 'web-unsupported' ? (
-            <Pressable
-              style={styles.retryButton}
-              onPress={() => {
-                void retryHybridEmbedder();
-                setQuery((q) => `${q} `);
-                setInputText((t) => `${t} `);
-              }}
-              accessibilityRole="button"
-              accessibilityLabel="إعادة محاولة تحميل نموذج الذكاء الاصطناعي"
-            >
-              <ThemedText style={styles.retryText}>إعادة المحاولة</ThemedText>
-            </Pressable>
-          ) : null}
+          {/* All current failure reasons are retryable — the user can re-attempt
+              the CDN fetch, the model download, or the WASM init by tapping
+              إعادة المحاولة. */}
+          <Pressable
+            style={styles.retryButton}
+            onPress={() => {
+              void retryHybridEmbedder();
+              setQuery((q) => `${q} `);
+              setInputText((t) => `${t} `);
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="إعادة محاولة تحميل نموذج الذكاء الاصطناعي"
+          >
+            <ThemedText style={styles.retryText}>إعادة المحاولة</ThemedText>
+          </Pressable>
         </View>
       ) : null}
 

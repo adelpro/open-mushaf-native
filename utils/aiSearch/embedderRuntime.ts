@@ -1,18 +1,14 @@
 /**
  * ONNX runtime adapter for the AI semantic search subsystem.
  *
- * Single file with internal platform branching — avoids the Metro `.web.ts` /
- * `.native.ts` module-resolution dance and keeps the surface area small.
+ * The web path lives in `embedderRuntime.web.ts` (Metro resolves `.web.ts`
+ * over `.ts` on web). This file is the native entry point and is dead code
+ * when `isWeb` is true. Mirrored signatures keep the call site simple.
  *
- *   Web path:    dynamic-imports @huggingface/transformers (pure JS ONNX).
- *   Native path: dynamic-imports onnxruntime-react-native.
+ * Native path: dynamic-imports onnxruntime-react-native.
  *
- * Both expose `embed(text) → Float32Array` returning a L2-normalized vector
- * in the same space as the bundled int8 verse index.
- *
- * Required installs (the app code is safe to compile without them; runtime
+ * Required install (the app code is safe to compile without it; runtime
  * throws a clear error if missing):
- *   yarn add @huggingface/transformers           (web)
  *   yarn add onnxruntime-react-native            (native — may require prebuild)
  *
  * If onnxruntime-react-native proves brittle on Expo SDK 54, fall back to
@@ -22,7 +18,7 @@
 import { AI_SEARCH_CDN_FILES } from '@/constants/aiSearch';
 import { isWeb } from '@/utils/isWeb';
 
-import type { DenseEmbedder } from './types';
+import type { DenseEmbedder, DownloadProgress } from './types';
 
 // ---------------------------------------------------------------------------
 // Shared state — kept module-local so subsequent embed() calls reuse the
@@ -39,80 +35,6 @@ interface RuntimeState {
 }
 
 let runtime: RuntimeState | null = null;
-
-// ---------------------------------------------------------------------------
-// Web implementation (@huggingface/transformers)
-// ---------------------------------------------------------------------------
-
-async function createWebRuntime(repoId: string): Promise<RuntimeState> {
-  let transformers: any;
-  try {
-    transformers = await import('@huggingface/transformers');
-  } catch (err) {
-    const detail = err instanceof Error ? err.message : String(err);
-    // The transformers package pulls in @huggingface/jinja, @huggingface/
-    // tokenizers, onnxruntime-web, and several multi-MB WASM modules. Metro
-    // routinely OOMs bundling it on web — see "Reached heap limit
-    // Allocation failed - JavaScript heap out of memory" when bundling
-    // transformers.web.js. Until we move to a lighter runtime or pre-bundle
-    // it, web AI search is effectively unavailable.
-    throw new Error(
-      'Web AI search is not yet available. Underlying error: ' +
-        `${detail}. The @huggingface/transformers package is too large for ` +
-        'the current Metro web bundle (causes OOM during build). Use the ' +
-        'native app for AI search, or track the web-side fix in ' +
-        '/dev/ai-search.',
-    );
-  }
-
-  // Prefer WASM proxy off (faster cold start for large models).
-  if (transformers.env?.backends?.onnx?.wasm) {
-    transformers.env.backends.onnx.wasm.proxy = false;
-  }
-
-  let pipeline: any = null;
-
-  async function ensurePipeline(): Promise<any> {
-    if (pipeline) return pipeline;
-    pipeline = await transformers.pipeline('feature-extraction', repoId, {
-      quantized: true,
-    });
-    return pipeline;
-  }
-
-  return {
-    async embed(_modelPath, text, dim) {
-      const p = await ensurePipeline();
-      const out = await p(text, { pooling: 'none', normalize: false });
-      const data: Float32Array = out.data;
-      const seqLen: number = out.dims[out.dims.length - 2];
-      const outDim: number = out.dims[out.dims.length - 1];
-      const actualDim = outDim ?? dim;
-
-      // Mean-pool across the sequence dimension.
-      const pooled = new Float32Array(actualDim);
-      for (let i = 0; i < seqLen; i++) {
-        const offset = i * actualDim;
-        for (let j = 0; j < actualDim; j++) {
-          pooled[j] += data[offset + j];
-        }
-      }
-      const inv = 1 / seqLen;
-      for (let j = 0; j < actualDim; j++) pooled[j] *= inv;
-
-      // L2-normalize.
-      let norm = 0;
-      for (let j = 0; j < actualDim; j++) norm += pooled[j] * pooled[j];
-      norm = Math.sqrt(norm) || 1;
-      for (let j = 0; j < actualDim; j++) pooled[j] /= norm;
-
-      return pooled;
-    },
-    dispose() {
-      pipeline = null;
-    },
-  };
-}
 
 // ---------------------------------------------------------------------------
 // Native implementation (onnxruntime-react-native)
@@ -311,14 +233,24 @@ async function createNativeRuntime(): Promise<RuntimeState> {
 /**
  * Construct an embedder bound to a specific ONNX model file.
  *
+ * This file is the **native** entry point. On web, Metro selects
+ * `embedderRuntime.web.ts` instead, which owns the CDN loader and the
+ * @huggingface/transformers pipeline factory. The signature is
+ * mirrored there so the call site (`loadEmbedderModel.ts`) works
+ * unchanged across platforms.
+ *
  * @param modelPath  Filesystem path to the .onnx file (from loadEmbedderModel).
- * @param repoId     HuggingFace repo id (used by the web runtime to load via
- *                   @huggingface/transformers; the native runtime ignores it
- *                   and reads the tokenizer from the same directory).
+ *                   Ignored on web (transformers.js fetches the model).
+ * @param repoId     HuggingFace repo id. Native reads the tokenizer from
+ *                   the same directory; web passes it to transformers.js.
+ * @param onProgress Optional download-progress callback. Forwarded to the
+ *                   web runtime; ignored on native (which already streams
+ *                   its own download progress through loadEmbedderModel).
  */
 export async function createEmbedder(
   modelPath: string | null,
-  repoId: string,
+  _repoId: string,
+  _onProgress?: (p: DownloadProgress) => void,
 ): Promise<DenseEmbedder> {
   if (!isWeb && !modelPath) {
     throw new Error(
@@ -327,9 +259,7 @@ export async function createEmbedder(
     );
   }
   if (!runtime) {
-    runtime = isWeb
-      ? await createWebRuntime(repoId)
-      : await createNativeRuntime();
+    runtime = await createNativeRuntime();
   }
 
   return {

@@ -82,13 +82,30 @@ export type DensePathFailure =
  *
  * Surfaced to the search-screen banner so the user sees a specific cause
  * instead of the generic "not ready" message.
+ *
+ * Web-specific:
+ *   - 'cdn-blocked': the jsDelivr loader script or @huggingface/transformers
+ *      fetch failed (network/CORS/ad-blocker).
+ *   - 'model-load': the model files failed to download from the HF repo
+ *      (404, partial download, config.json missing, etc.).
+ *   - 'wasm-init': the ONNX WASM runtime aborted during pipeline construction
+ *      or first inference (out-of-memory, unsupported browser, etc.).
+ *
+ * Cross-platform:
+ *   - 'tokenizer-missing': native flat-file cache is missing tokenizer.json.
+ *   - 'download-failed': native CDN download returned non-OK.
+ *   - 'opfs-failed': native OPFS / expo-file-system threw on read or write.
+ *   - 'runtime-init': the native ONNX runtime adapter failed to load.
+ *   - 'unknown': fallback — message did not match any known pattern.
  */
 export type FailureReason =
   | 'tokenizer-missing'
   | 'download-failed'
   | 'opfs-failed'
   | 'runtime-init'
-  | 'web-unsupported'
+  | 'cdn-blocked'
+  | 'model-load'
+  | 'wasm-init'
   | 'unknown'
   | null;
 

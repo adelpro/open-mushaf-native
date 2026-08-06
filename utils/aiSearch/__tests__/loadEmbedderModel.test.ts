@@ -74,6 +74,32 @@ describe('loadEmbedderModel — web short-circuit', () => {
     expect(typeof embedder.embed).toBe('function');
     expect(fetchCalls).toEqual([]);
   });
+
+  it('forwards onProgress and the web repo id on web', async () => {
+    webMode = true;
+    // Vitest does not apply Metro's `.web.ts` resolution, so
+    // `loadEmbedderModel` resolves `await import('./embedderRuntime')` to
+    // `embedderRuntime.ts` (the native entry). We stub its `createEmbedder`
+    // export so we can assert the args without running the real native
+    // runtime. The native branch is identical in shape.
+    const embedderSpy = vi.fn(async () => ({
+      embed: () => Promise.resolve(new Float32Array(768)),
+      dispose: () => {},
+    }));
+    vi.doMock('../embedderRuntime', () => ({
+      createEmbedder: embedderSpy,
+    }));
+    const { loadEmbedderModel } = await import('../loadEmbedderModel');
+    const onProgress = vi.fn();
+    await loadEmbedderModel({ onProgress });
+    expect(embedderSpy).toHaveBeenCalledTimes(1);
+    expect(embedderSpy).toHaveBeenCalledWith(
+      null,
+      'adelpro/atm-v2-web',
+      onProgress,
+    );
+    vi.doUnmock('../embedderRuntime');
+  });
 });
 
 describe('loadEmbedderModel — native multi-file download', () => {

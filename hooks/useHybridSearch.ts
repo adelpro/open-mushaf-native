@@ -77,11 +77,40 @@ let MODEL_READY_REF = false;
  * Categorise an error message thrown from the AI-search pipeline into a
  * `FailureReason` for the UI banner. Matches against the known error
  * substrings emitted by `loadEmbedderModel.ts` and `embedderRuntime.ts`.
+ *
+ * Order matters — 'cdn-blocked' and 'model-load' both come from
+ * `embedderRuntime.web.ts` and share substrings with cross-platform errors,
+ * so we check web-specific patterns first when the message looks web-shaped.
  */
 function classifyError(message: string): FailureReason {
-  if (message.includes('Web AI search is not yet available')) {
-    return 'web-unsupported';
+  // Web CDN fetch failures. The loader script prepends `cdn-blocked:`
+  // (see utils/aiSearch/embedderRuntime.web.ts → loadTransformers).
+  if (
+    /^cdn-blocked:/.test(message) ||
+    /jsdelivr|NetworkError|CORS/i.test(message)
+  ) {
+    return 'cdn-blocked';
   }
+  // Web model fetch failures (HF repo 404, missing config.json, etc.).
+  // The embed() wrapper also tags these as `model-load: …`.
+  // transformers.js itself throws "Unauthorized access to file: …" with the
+  // failing URL when the HF repo is missing or private — most reliable
+  // signal we have on the first attempt, before our wrappers get a chance
+  // to retag.
+  if (
+    /^model-load:/.test(message) ||
+    /Unauthorized access to file|model_quantized|config\.json|HTTP 4\d\d/i.test(
+      message,
+    )
+  ) {
+    return 'model-load';
+  }
+  // Web WASM init / runtime aborts.
+  if (/^wasm-init:/.test(message) || /wasm|WebAssembly|abort/i.test(message)) {
+    return 'wasm-init';
+  }
+
+  // Cross-platform / native.
   if (message.includes('tokenizer.json missing')) return 'tokenizer-missing';
   if (message.startsWith('Failed to download')) return 'download-failed';
   if (

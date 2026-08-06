@@ -18,7 +18,10 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import { ThemedButton, ThemedText, ThemedView } from '@/components';
 import {
   AI_SEARCH_CDN_FILES,
+  AI_SEARCH_LOADER_PATH,
+  AI_SEARCH_WEB_CDN_URL,
   ATM_V2_MODEL_BASE_URL,
+  ATM_V2_WEB_REPO_ID,
 } from '@/constants/aiSearch';
 import { useColors } from '@/hooks';
 import {
@@ -69,11 +72,11 @@ export default function AiSearchDiagnostics() {
           { backgroundColor: cardColor, borderColor: textColor },
         ]}
       >
-        <ThemedText type="defaultSemiBold">CDN base URL</ThemedText>
+        <ThemedText type="defaultSemiBold">CDN base URL (native)</ThemedText>
         <ThemedText style={styles.mono}>{ATM_V2_MODEL_BASE_URL}</ThemedText>
 
         <ThemedText type="defaultSemiBold" style={styles.spacerTop}>
-          Files downloaded
+          Files downloaded (native)
         </ThemedText>
         <ThemedText style={styles.mono}>
           {AI_SEARCH_CDN_FILES.join(', ')}
@@ -83,6 +86,21 @@ export default function AiSearchDiagnostics() {
           Cached model path
         </ThemedText>
         <ThemedText style={styles.mono}>{cachePath ?? '(none)'}</ThemedText>
+
+        <ThemedText type="defaultSemiBold" style={styles.spacerTop}>
+          Web HF repo (transformers.js)
+        </ThemedText>
+        <ThemedText style={styles.mono}>{ATM_V2_WEB_REPO_ID}</ThemedText>
+
+        <ThemedText type="defaultSemiBold" style={styles.spacerTop}>
+          Web runtime CDN URL
+        </ThemedText>
+        <ThemedText style={styles.mono}>{AI_SEARCH_WEB_CDN_URL}</ThemedText>
+
+        <ThemedText type="defaultSemiBold" style={styles.spacerTop}>
+          Web loader script
+        </ThemedText>
+        <ThemedText style={styles.mono}>{AI_SEARCH_LOADER_PATH}</ThemedText>
       </ThemedView>
 
       <View style={styles.actionsRow}>
