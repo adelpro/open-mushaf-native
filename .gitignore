@@ -43,3 +43,6 @@ firebase-debug.log
 .github\copilot-instructions.md
 coverage/
 *.tsbuildinfo
+
+# AI-search ONNX model — hosted on HuggingFace (adelpro/atm-v2-int8-onnx, adelpro/atm-v2-web)
+assets/ai-search/atm-v2-onnx/
