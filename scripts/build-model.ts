@@ -9,6 +9,7 @@
  *       tokenizer.json
  *       tokenizer_config.json
  *       special_tokens_map.json
+ *       README.md           (model card from scripts/model-cards/)
  *     Used by the React Native runtime (expo-file-system + onnxruntime-react-native).
  *
  *   --target=web <user>/<repo>      (e.g. adelpro/atm-v2-web)
@@ -18,6 +19,7 @@
  *       tokenizer.json
  *       tokenizer_config.json
  *       special_tokens_map.json
+ *       README.md           (model card from scripts/model-cards/)
  *     Used by the web runtime (@huggingface/transformers via CDN).
  *
  * Source files come from `scripts/convert_onnx.py`:
@@ -69,6 +71,14 @@ const WEB_OUT_DIR = join(NATIVE_OUT_DIR, 'web');
 
 type Target = 'native' | 'web';
 
+const NATIVE_CARD = join(
+  REPO_ROOT,
+  'scripts',
+  'model-cards',
+  'atm-v2-int8-onnx.md',
+);
+const WEB_CARD = join(REPO_ROOT, 'scripts', 'model-cards', 'atm-v2-web.md');
+
 /** Files in the native flat layout, relative to the repo root. */
 const NATIVE_TARGETS: { dest: string; localPath: string }[] = [
   {
@@ -86,6 +96,10 @@ const NATIVE_TARGETS: { dest: string; localPath: string }[] = [
   {
     dest: 'special_tokens_map.json',
     localPath: join(NATIVE_OUT_DIR, 'special_tokens_map.json'),
+  },
+  {
+    dest: 'README.md',
+    localPath: NATIVE_CARD,
   },
 ];
 
@@ -111,6 +125,7 @@ const WEB_TARGETS: { dest: string; localPath: string }[] = [
     dest: 'special_tokens_map.json',
     localPath: join(WEB_OUT_DIR, 'special_tokens_map.json'),
   },
+  { dest: 'README.md', localPath: WEB_CARD },
 ];
 
 function parseArgs(): {

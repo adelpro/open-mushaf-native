@@ -100,7 +100,7 @@ def main() -> int:
         aya = v["aya_id"]
         t_text = tafseer_map.get(f"{sura}:{aya}", "")
         clean_text = v.get("standard", "")
-        passage = f"passage: {clean_text} | تفسير: {t_text}"
+        passage = f"{clean_text} | تفسير: {t_text}"
         passages.append(passage)
 
         meta.append({

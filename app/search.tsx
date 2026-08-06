@@ -16,7 +16,7 @@ import {
   SearchColorLegend,
   SearchEmptyState,
   SearchInput,
-  SearchModeToggle,
+  SearchPrecisionSlider,
   SearchResultItem,
   SearchSkeleton,
   Seo,
@@ -234,7 +234,7 @@ export default function Search() {
         />
       )}
 
-      <SearchModeToggle tintColor={primaryColor} />
+      {searchMode === 'ai' && <SearchPrecisionSlider />}
 
       {searchMode === 'ai' && aiDownloadProgress ? (
         <View style={styles.banner}>

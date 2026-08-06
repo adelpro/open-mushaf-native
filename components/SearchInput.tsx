@@ -2,6 +2,9 @@ import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { Feather, Ionicons } from '@expo/vector-icons';
+import { useAtom, useAtomValue } from 'jotai/react';
+
+import { aiSearchHidden, searchMode } from '@/jotai/atoms';
 
 import { ThemedTextInput } from './ThemedTextInput';
 import { ThemedView } from './ThemedView';
@@ -27,8 +30,9 @@ interface SearchInputProps {
 }
 
 /**
- * A combined search input text field bundling a loading indicator and options toggle
- * tailored for Arabic linguistic datasets.
+ * A combined search input text field bundling a loading indicator, the
+ * keyword ↔ AI mode switch, and an options toggle — tailored for Arabic
+ * linguistic datasets.
  *
  * @param props - Component dependencies and hooks passing.
  * @returns A cohesive `<TextInput>` based input bar element.
@@ -43,6 +47,10 @@ export function SearchInput({
   primaryColor,
   secondaryColor,
 }: SearchInputProps) {
+  const hidden = useAtomValue(aiSearchHidden);
+  const [mode, setMode] = useAtom(searchMode);
+  const aiActive = mode === 'ai';
+
   return (
     <ThemedView style={styles.searchContainer}>
       <ThemedTextInput
@@ -67,6 +75,24 @@ export function SearchInput({
           style={styles.icon}
         />
       )}
+      {!hidden ? (
+        <Pressable
+          onPress={() => setMode(aiActive ? 'keyword' : 'ai')}
+          accessibilityRole="button"
+          accessibilityLabel={
+            aiActive ? 'التبديل إلى البحث النصي' : 'التبديل إلى البحث الذكي'
+          }
+          accessibilityState={{ selected: aiActive }}
+          hitSlop={4}
+        >
+          <Ionicons
+            name={aiActive ? 'sparkles' : 'sparkles-outline'}
+            size={20}
+            color={aiActive ? primaryColor : '#777'}
+            style={styles.icon}
+          />
+        </Pressable>
+      ) : null}
       <Pressable
         onPress={() => setShowOptions(!showOptions)}
         accessibilityRole="button"

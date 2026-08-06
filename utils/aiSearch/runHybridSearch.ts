@@ -90,6 +90,8 @@ export type HybridSearchInput = {
   morphologyData: MorphologyAya[];
   wordMap: WordMap;
   embedder: DenseEmbedder | null;
+  /** Dense-search precision 0..1 — controls the cosine floor + top percentile. */
+  precision?: number;
 };
 
 /**
@@ -108,7 +110,8 @@ export type HybridSearchInput = {
 export async function runHybridSearch(
   input: HybridSearchInput,
 ): Promise<HybridResponse> {
-  const { query, quranData, morphologyData, wordMap, embedder } = input;
+  const { query, quranData, morphologyData, wordMap, embedder, precision } =
+    input;
 
   if (!query.trim()) {
     return {
@@ -123,7 +126,7 @@ export async function runHybridSearch(
     Promise.resolve(
       runKeywordPath({ query, quranData, morphologyData, wordMap }),
     ),
-    runDensePath(query, embedder),
+    runDensePath(query, embedder, precision),
   ]);
 
   // Carry forward the reason the dense path was skipped (if any) so the

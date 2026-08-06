@@ -194,7 +194,7 @@ export type Bookmark = {
 
 export const bookmarks = createAtomWithStorage<Bookmark[]>('Bookmarks', []);
 
-/** User opt-out for the AI tab inside /search. When true, SearchModeToggle hides the AI option. */
+/** User opt-out for the AI tab inside /search. When true, the AI mode pill hides in SearchInput. */
 export const aiSearchHidden = createAtomWithStorage<boolean>(
   'AiSearchHidden',
   false,
@@ -207,6 +207,16 @@ export const aiSearchHidden = createAtomWithStorage<boolean>(
 export const searchMode = createAtomWithStorage<'keyword' | 'ai'>(
   'SearchMode',
   'keyword',
+);
+
+/**
+ * AI search precision (0..1). Maps to the dense path's cosine floor and
+ * top-percentile so users can trade recall for strictness per query.
+ * Persisted so the user's last choice is restored on next visit.
+ */
+export const aiSearchPrecision = createAtomWithStorage<number>(
+  'AiSearchPrecision',
+  0.5,
 );
 
 /** Transient — model download / load state. Not persisted (recomputed each session). */

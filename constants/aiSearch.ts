@@ -75,18 +75,27 @@ export const AI_SEARCH_CDN_FILES = [
 /** Embedding dimension. Must match the build script (768 = full Matryoshka dim). */
 export const EMBEDDING_DIM = 768;
 
-/** Number of top dense results to keep before RRF. Larger = better recall, slower. */
+/** Hard cap on dense results fed into RRF. Never exceeded. */
 export const DENSE_TOP_K = 200;
+
+/**
+ * Fraction of the corpus the dense path keeps (percentile top-K). With 6,236
+ * verses, 2% ≈ 125 results. Chosen over an absolute cosine floor because the
+ * model scores short Arabic name queries around 0.25-0.41 — an absolute
+ * floor like 0.45 silently drops every match.
+ */
+export const DENSE_TOP_PERCENTILE = 0.02;
 
 /** Constant for RRF score: score(d) = Σ 1 / (k + rank). 60 is the standard value. */
 export const RRF_K = 60;
 
 /**
- * Cosine similarity floor. Results below this are discarded to suppress noise.
- * For L2-normalized vectors the score is in [-1, 1]; 0.45 catches the
- * meaningful matches without flooding the UI with weak signals.
+ * Noise floor. Scores below this are discarded to suppress random similarity
+ * for unrelated queries. For 768-dim L2-normalized vectors, random cosine
+ * similarity clusters near 0 with σ ≈ 1/√768 ≈ 0.036, so 0.12 is ~3σ above
+ * noise while real matches (≥ ~0.25) are always kept.
  */
-export const MIN_COSINE_SCORE = 0.45;
+export const MIN_COSINE_SCORE = 0.12;
 
 /** Number of verses the dense path considers before applying MIN_COSINE_SCORE. */
 export const DENSE_CANDIDATE_POOL = 600;

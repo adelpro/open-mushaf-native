@@ -28,11 +28,13 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useAtomValue } from 'jotai/react';
 import type { MorphologyAya, QuranText, WordMap } from 'quran-search-engine';
 
 import morphologyDataRaw from '@/assets/search/quran-morphology.json';
 import wordMapJSON from '@/assets/search/word-map.json';
 import { useQuranMetadata } from '@/hooks/useQuranMetadata';
+import { aiSearchPrecision } from '@/jotai/atoms';
 import { logEvent } from '@/utils/aiSearch/debugLog';
 import {
   clearCachedModel,
@@ -142,6 +144,7 @@ export function useHybridSearch({
   debounceMs?: number;
 }): UseHybridSearchState {
   const { quranData, isLoading: metadataLoading } = useQuranMetadata();
+  const precision = useAtomValue(aiSearchPrecision);
 
   const [state, setState] = useState<UseHybridSearchState>({
     results: [],
@@ -224,6 +227,7 @@ export function useHybridSearch({
           morphologyData: MORPHOLOGY,
           wordMap: WORD_MAP,
           embedder,
+          precision,
         });
         if (lastQueryRef.current !== query) return;
         setState((s) => ({
@@ -260,7 +264,7 @@ export function useHybridSearch({
         debounceRef.current = null;
       }
     };
-  }, [query, debounceMs, metadataLoading, quranData, ensureModel]);
+  }, [query, debounceMs, metadataLoading, quranData, ensureModel, precision]);
 
   return state;
 }
