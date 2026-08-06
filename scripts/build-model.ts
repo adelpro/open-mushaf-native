@@ -113,30 +113,54 @@ const WEB_TARGETS: { dest: string; localPath: string }[] = [
   },
 ];
 
-function parseArgs(): { target: Target; repo?: string } {
+function parseArgs(): {
+  target: Target;
+  repo?: string;
+  prune: boolean;
+} {
   const args = process.argv.slice(2);
-  const targetIdx = args.indexOf('--target');
-  const targetArg = targetIdx >= 0 ? args[targetIdx + 1] : undefined;
-  const target: Target = targetArg === 'web' ? 'web' : 'native';
-  // Repo id is the first non-flag positional.
-  const repo = args.find(
-    (a, i) => !a.startsWith('--') && i !== args.indexOf('--target') + 1,
-  );
-  return { target, repo };
+  const prune = args.includes('--prune');
+
+  // Accept both `--target web` and `--target=web` (npm/yarn pass flags to
+  // scripts in either shape depending on the caller). The previous version
+  // only handled the spaced form, which silently fell through to `native`
+  // when called via `yarn build:model:upload:web`.
+  let target: Target = 'native';
+  for (let i = 0; i < args.length; i++) {
+    const a = args[i];
+    if (a === '--target') {
+      const v = args[i + 1];
+      if (v === 'web' || v === 'native') target = v;
+      i++;
+    } else if (a.startsWith('--target=')) {
+      const v = a.slice('--target='.length);
+      if (v === 'web' || v === 'native') target = v;
+    }
+  }
+
+  // Repo id is the first positional that's not a flag and not the target
+  // value (when --target was given without =).
+  const flagIndices = new Set<number>();
+  if (args.includes('--target')) flagIndices.add(args.indexOf('--target') + 1);
+  const repo = args.find((a, i) => !a.startsWith('--') && !flagIndices.has(i));
+  return { target, repo, prune };
 }
 
 async function uploadToHub(
   repo: string,
   targets: { dest: string; localPath: string }[],
+  options: { prune: boolean } = { prune: false },
 ): Promise<void> {
   console.log(
     `Uploading ${targets.length} files to ${repo} via @huggingface/hub…`,
   );
   let createRepo: any;
   let uploadFile: any;
+  let deleteFiles: any;
   try {
     // @ts-ignore — @huggingface/hub is an optional dev dep
-    ({ createRepo, uploadFile } = await import('@huggingface/hub'));
+    ({ createRepo, uploadFile, deleteFiles } =
+      await import('@huggingface/hub'));
   } catch {
     throw new Error(
       'Upload needs @huggingface/hub. Run: yarn add -D @huggingface/hub\n' +
@@ -161,6 +185,35 @@ async function uploadToHub(
     // 409 = already exists, that's fine
     if (err?.statusCode !== 409) throw err;
   }
+
+  // --prune: delete any files already at the destination that are NOT in
+  // the current target list. This makes re-runs idempotent and lets us
+  // recover from the previous "uploaded native layout to web repo" mistake
+  // without manually editing the HF UI.
+  if (options.prune && deleteFiles) {
+    const want = new Set(targets.map((t) => t.dest));
+    const repoInfo = await fetch(`https://huggingface.co/api/models/${repo}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }).then((r) => r.json());
+    const existing: string[] = (repoInfo.siblings ?? []).map(
+      (s: any) => s.rfilename,
+    );
+    const toDelete = existing.filter(
+      (f) => !want.has(f) && f !== '.gitattributes',
+    );
+    if (toDelete.length) {
+      console.log(`  ⌫ pruning ${toDelete.length} stale file(s):`);
+      for (const f of toDelete) console.log(`     - ${f}`);
+      await deleteFiles({
+        repo,
+        credentials,
+        paths: toDelete,
+      });
+    } else {
+      console.log('  ✓ nothing to prune');
+    }
+  }
+
   for (const f of targets) {
     console.log(`  ↑ ${f.dest}`);
     await uploadFile({
@@ -176,11 +229,11 @@ async function uploadToHub(
 }
 
 async function main(): Promise<void> {
-  const { target, repo } = parseArgs();
+  const { target, repo, prune } = parseArgs();
 
   if (!repo) {
     console.log(
-      'Usage: yarn build:model:upload --target=<native|web> <user>/<repo>\n' +
+      'Usage: yarn build:model:upload --target=<native|web> [--prune] <user>/<repo>\n' +
         '\n' +
         'Native layout (default):\n' +
         '  yarn build:model:upload adelpro/atm-v2-int8-onnx\n' +
@@ -189,8 +242,12 @@ async function main(): Promise<void> {
         'Web layout (transformers.js):\n' +
         '  yarn build:model:upload --target=web adelpro/atm-v2-web\n' +
         '\n' +
-        'Run `yarn build:model --emit-web-layout` first to produce the web\n' +
-        'files under assets/ai-search/atm-v2-onnx/web/.',
+        '--prune deletes any existing files in the repo that are NOT in\n' +
+        'the target list (keeps .gitattributes). Useful after fixing a\n' +
+        'mistaken upload — e.g. switching a repo from native to web.\n' +
+        '\n' +
+        'Run `yarn prepare:web-layout` first to produce the web files\n' +
+        'under assets/ai-search/atm-v2-onnx/web/.',
     );
     return;
   }
@@ -199,14 +256,14 @@ async function main(): Promise<void> {
   for (const f of targets) {
     if (!existsSync(f.localPath)) {
       throw new Error(
-        `Missing ${f.localPath}. Run 'yarn build:model${
-          target === 'web' ? ' --emit-web-layout' : ''
+        `Missing ${f.localPath}. Run 'yarn prepare:web-layout${
+          target === 'web' ? '' : ''
         }' first.`,
       );
     }
   }
 
-  await uploadToHub(repo, targets);
+  await uploadToHub(repo, targets, { prune });
 }
 
 main().catch((err) => {

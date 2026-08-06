@@ -28,8 +28,9 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Load .env from the repo root so HF_TOKEN is available (used only for
-// auth'd hf_hub_download calls; not required for a public repo).
+// Load .env from the repo root so HF_TOKEN is available for the optional
+// Authorization header on the fetch below (HF accepts anonymous fetches
+// from public repos, so the token is not required).
 function loadDotEnv(): void {
   const envPath = join(
     resolve(dirname(fileURLToPath(import.meta.url)), '..'),
@@ -61,30 +62,10 @@ const WEB_ONNX_DIR = join(WEB_DIR, 'onnx');
 const BASE_REPO =
   'Omartificial-Intelligence-Space/Arabic-Triplet-Matryoshka-V2';
 
-interface HfFile {
-  path: string;
-  size: number;
-}
-
 async function hfDownload(repoId: string, filename: string): Promise<Buffer> {
-  const { hfApi, hfHubDownload } = await import(
-    '@huggingface/hub' as string
-  ).catch(() => {
-    throw new Error(
-      'Download needs @huggingface/hub. Run: yarn add -D @huggingface/hub',
-    );
-  });
-  // Prefer hfHubDownload (uses @huggingface/hub's resolver). Falls back to
-  // hfApi.listRepoFiles + raw fetch if the typed helper is not exported.
-  if (typeof hfHubDownload === 'function') {
-    const blob = await hfHubDownload({
-      repo: repoId,
-      filename,
-    });
-    return Buffer.from(await blob.arrayBuffer());
-  }
-  // Fallback: raw fetch with redirect following. Works without auth for
-  // public repos.
+  // Public repos do not require a token — HF resolves /<repo>/resolve/main/
+  // anonymously. We use plain fetch (Node 18+) instead of pulling in
+  // @huggingface/hub, which is only useful for the upload side.
   const url = `https://huggingface.co/${repoId}/resolve/main/${filename}`;
   const headers: Record<string, string> = {};
   if (process.env.HF_TOKEN) {
@@ -94,8 +75,7 @@ async function hfDownload(repoId: string, filename: string): Promise<Buffer> {
   if (!res.ok) {
     throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`);
   }
-  const ab = await res.arrayBuffer();
-  return Buffer.from(ab);
+  return Buffer.from(await res.arrayBuffer());
 }
 
 async function main(): Promise<void> {

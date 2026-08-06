@@ -54,8 +54,9 @@
     "build:model:web": "python scripts/convert_onnx.py --emit-web-layout",
     "build:model:upload": "npx tsx scripts/build-model.ts --target=native",
     "build:model:upload:web": "npx tsx scripts/build-model.ts --target=web",
+    "prepare:web-layout": "npx tsx scripts/prepare-web-layout.ts",
     "build:ai": "yarn build:vectors",
-    "build:ai:full": "yarn build:vectors && yarn build:model && yarn build:model:upload adelpro/atm-v2-int8-onnx && yarn build:model:web && yarn build:model:upload:web adelpro/atm-v2-web",
+    "build:ai:full": "yarn build:vectors && yarn build:model && yarn build:model:upload adelpro/atm-v2-int8-onnx && yarn prepare:web-layout && yarn build:model:upload:web adelpro/atm-v2-web",
     "verify:ai-search": "yarn type-check && yarn lint && yarn test"
   },
   "jest": {
