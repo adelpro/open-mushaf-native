@@ -32,7 +32,7 @@ import {
   useQuranSearch,
 } from '@/hooks';
 import { retryHybridEmbedder } from '@/hooks/useHybridSearch';
-import { searchMode as searchModeAtom } from '@/jotai/atoms';
+import { aiSearchHidden, searchMode as searchModeAtom } from '@/jotai/atoms';
 import { type QuranText, SearchOptions } from '@/types';
 
 const MORPH = morphologyDataRaw;
@@ -43,6 +43,8 @@ const WORD_MAP = new Map(
 export default function Search() {
   const { quranData, isLoading, error } = useQuranMetadata();
   const searchMode = useAtomValue(searchModeAtom);
+  const aiSearchHiddenValue = useAtomValue(aiSearchHidden);
+  const aiMode = searchMode === 'ai' && !aiSearchHiddenValue;
   const { tintColor, primaryColor, secondaryColor, dangerColor } = useColors();
 
   const PAGE_SIZE = 50;
@@ -90,7 +92,7 @@ export default function Search() {
 
   // Project hybrid results into QuranText so the existing SearchResultItem renders.
   const activeResults: QuranText[] = useMemo(() => {
-    if (searchMode === 'ai') {
+    if (aiMode) {
       const byGid = new Map<number, QuranText>();
       if (quranData) {
         for (const v of quranData) byGid.set(v.gid, v);
@@ -116,15 +118,14 @@ export default function Search() {
       });
     }
     return pageResults;
-  }, [searchMode, hybrid.results, pageResults, quranData]);
+  }, [aiMode, hybrid.results, pageResults, quranData]);
 
-  const totalCount = searchMode === 'ai' ? hybrid.total : counts.total || 0;
-  const isAiLoading = searchMode === 'ai' && hybrid.isLoading;
-  const aiDownloadProgress =
-    searchMode === 'ai' ? hybrid.downloadProgress : null;
-  const aiError = searchMode === 'ai' ? hybrid.error : null;
-  const aiFailureReason = searchMode === 'ai' ? hybrid.failureReason : null;
-  const aiUsedDense = searchMode === 'ai' ? hybrid.usedDense : false;
+  const totalCount = aiMode ? hybrid.total : counts.total || 0;
+  const isAiLoading = aiMode && hybrid.isLoading;
+  const aiDownloadProgress = aiMode ? hybrid.downloadProgress : null;
+  const aiError = aiMode ? hybrid.error : null;
+  const aiFailureReason = aiMode ? hybrid.failureReason : null;
+  const aiUsedDense = aiMode ? hybrid.usedDense : false;
 
   useEffect(() => {
     if (!query.trim()) {
@@ -144,7 +145,7 @@ export default function Search() {
       return [...prev, ...newItems];
     });
 
-    const more = searchMode === 'keyword' && activeResults.length === PAGE_SIZE;
+    const more = !aiMode && activeResults.length === PAGE_SIZE;
     setHasMore(more);
     setIsLoadingMore(false);
     setIsOptionChanging(false);
@@ -152,7 +153,7 @@ export default function Search() {
     if (page === 1 && listRef.current) {
       listRef.current.scrollToOffset({ offset: 0, animated: false });
     }
-  }, [activeResults, page, query, searchMode]);
+  }, [activeResults, page, query, aiMode]);
 
   const toggleOption = (option: keyof SearchOptions) => {
     if (query.trim()) {
@@ -190,7 +191,7 @@ export default function Search() {
   const counterText =
     query.trim() === ''
       ? ''
-      : searchMode === 'ai'
+      : aiMode
         ? `عدد النتائج: ${totalCount} (بحث ذكي${aiUsedDense ? ' - دلالي' : ''})`
         : selectedLabels.length > 0
           ? `عدد النتائج: ${counts.total} (${selectedLabels.join('، ')})`
@@ -234,9 +235,9 @@ export default function Search() {
         />
       )}
 
-      {searchMode === 'ai' && <SearchPrecisionSlider />}
+      {aiMode && <SearchPrecisionSlider />}
 
-      {searchMode === 'ai' && aiDownloadProgress ? (
+      {aiMode && aiDownloadProgress ? (
         <View style={styles.banner}>
           <ThemedText style={styles.bannerText}>
             {`جاري تنزيل نموذج الذكاء الاصطناعي… (${(
@@ -247,7 +248,7 @@ export default function Search() {
         </View>
       ) : null}
 
-      {searchMode === 'ai' &&
+      {aiMode &&
       !isBusy &&
       !hybrid.isModelReady &&
       !aiDownloadProgress &&
