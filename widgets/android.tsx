@@ -118,13 +118,12 @@ export default function AndroidWidget({
 }: WidgetProps) {
   const theme = colorScheme === 'dark' ? Colors.dark : Colors.light;
   const primaryColor = theme.primary as HexColor;
-  const bgColor = theme.card as HexColor;
-  const textColor = theme.text as HexColor;
-  const subtextColor = theme.icon as HexColor;
+  const secondaryColor = theme.secondary as HexColor;
+  const bgColor = theme.ivory as HexColor;
 
   const trackColor = withHexAlpha(
-    theme.text as HexColor,
-    colorScheme === 'dark' ? '33' : '24',
+    secondaryColor,
+    colorScheme === 'dark' ? '55' : '66',
   );
 
   const safeGoal = Math.max(1, Number.isFinite(dailyGoal) ? dailyGoal : 1);
@@ -160,10 +159,14 @@ export default function AndroidWidget({
         width: 'match_parent',
         flexDirection: 'column',
         backgroundColor: bgColor,
+        borderRadius: 32,
+        borderWidth: 2,
+        borderColor: secondaryColor,
         alignItems: 'center',
         paddingHorizontal: 12,
         paddingVertical: 8,
         justifyContent: 'center',
+        overflow: 'hidden',
       }}
       clickAction="OPEN_APP"
     >
@@ -182,14 +185,14 @@ export default function AndroidWidget({
           style={{
             fontSize: 16,
             fontWeight: '700',
-            color: textColor,
+            color: primaryColor,
           }}
         />
         <IconWidget
           font="open_mushaf_icons"
           size={16}
           icon={'\uF000'}
-          style={{ marginHorizontal: 4 }}
+          style={{ marginHorizontal: 4, color: secondaryColor }}
         />
       </FlexWidget>
 
@@ -203,7 +206,7 @@ export default function AndroidWidget({
           flex: 1,
         }}
       >
-        {/* Progress ring — sized to SVG, not oversized 120 cell */}
+        {/* Progress ring */}
         <FlexWidget
           style={{
             width: RING_SIZE,
@@ -223,7 +226,7 @@ export default function AndroidWidget({
           font="open_mushaf_icons"
           size={48}
           icon={surahToIconChar(currentSurahNumber)}
-          style={{ marginHorizontal: 4 }}
+          style={{ marginHorizontal: 4, color: primaryColor }}
         />
 
         {/* Page / hizb / wird */}
@@ -246,14 +249,14 @@ export default function AndroidWidget({
               text={`الصفحة: ${safePage}`}
               style={{
                 fontSize: 13,
-                color: subtextColor,
+                color: primaryColor,
               }}
             />
             <IconWidget
               font="open_mushaf_icons"
               size={14}
               icon={'\uF002'}
-              style={{ marginHorizontal: 4 }}
+              style={{ marginHorizontal: 4, color: secondaryColor }}
             />
           </FlexWidget>
 
@@ -268,14 +271,14 @@ export default function AndroidWidget({
               text={`الحزب: ${safeHizb}`}
               style={{
                 fontSize: 13,
-                color: subtextColor,
+                color: primaryColor,
               }}
             />
             <IconWidget
               font="open_mushaf_icons"
               size={14}
               icon={'\uF3A5'}
-              style={{ marginHorizontal: 4 }}
+              style={{ marginHorizontal: 4, color: secondaryColor }}
             />
           </FlexWidget>
 
@@ -290,14 +293,14 @@ export default function AndroidWidget({
               text={`الورد: ${compactWird}`}
               style={{
                 fontSize: 13,
-                color: subtextColor,
+                color: primaryColor,
               }}
             />
             <IconWidget
               font="open_mushaf_icons"
               size={14}
               icon={'\uF259'}
-              style={{ marginHorizontal: 4 }}
+              style={{ marginHorizontal: 4, color: secondaryColor }}
             />
           </FlexWidget>
         </FlexWidget>
