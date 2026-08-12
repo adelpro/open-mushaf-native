@@ -94,7 +94,7 @@ export const useUpdateAndroidWidget = () => {
 
   useEffect(() => {
     if (Platform.OS === 'android') {
-      updateAndroidWidget();
+      void updateAndroidWidget();
     }
   }, [colorScheme, updateAndroidWidget]);
 
