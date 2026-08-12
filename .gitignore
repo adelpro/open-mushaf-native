@@ -1,5 +1,6 @@
 node_modules/
 .expo/
+.yarn/
 .firebase/
 dist/
 npm-debug.*
