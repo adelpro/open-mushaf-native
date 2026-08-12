@@ -140,6 +140,12 @@ export default function AndroidWidget({
     Number.isFinite(currentHizbNumber) ? currentHizbNumber : 1,
   );
 
+  // TODO: currentSurahNumber can arrive unvalidated from widget task data;
+  // clamp to integer in 1..114 before feeding surahToIconChar.
+  const safeSurah = Math.floor(
+    clamp(Number.isFinite(currentSurahNumber) ? currentSurahNumber : 1, 1, 114),
+  );
+
   const compactWird = `${safeCompleted}/${safeGoal}`;
 
   const svgString = buildRingSvg({
@@ -225,7 +231,7 @@ export default function AndroidWidget({
         <IconWidget
           font="open_mushaf_icons"
           size={48}
-          icon={surahToIconChar(currentSurahNumber)}
+          icon={surahToIconChar(safeSurah)}
           style={{ marginHorizontal: 4, color: primaryColor }}
         />
 
