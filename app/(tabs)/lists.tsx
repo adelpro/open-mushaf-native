@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { ChapterList, Seo, SurahList, ThemedView, TopTabs } from '@/components';
 import { ListTabs } from '@/types';
@@ -14,10 +14,10 @@ export default function ListsScreen() {
         description="قائمة السور والأجزاء - المصحف المفتوح"
       />
       <TopTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-      <ScrollView>
+      <ThemedView style={styles.listContainer}>
         {activeTab === 'juzs' && <ChapterList />}
         {activeTab === 'surahs' && <SurahList />}
-      </ScrollView>
+      </ThemedView>
     </ThemedView>
   );
 }
@@ -25,5 +25,10 @@ export default function ListsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  listContainer: {
+    flex: 1,
+    paddingTop: 5,
+    paddingBottom: 10,
   },
 });

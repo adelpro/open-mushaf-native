@@ -1,8 +1,13 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 
-import { useColors, useQuranMetadata } from '@/hooks';
+import { FlashList } from '@shopify/flash-list';
 
+import { LIST_HORIZONTAL_SPACE } from '@/constants';
+import { useColors, useQuranMetadata } from '@/hooks';
+import { Surah } from '@/types';
+
+import { ListItemSeparator } from './ListItemSeparator';
 import { SurahCard } from './SurahCard';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -33,27 +38,26 @@ export function SurahList() {
     );
   }
 
+  const extractKey = (item: Surah) => {
+    return item.number.toString();
+  };
+
+  const renderItem = ({ item }: { item: Surah }) => {
+    return <SurahCard surah={item} />;
+  };
+
   return (
-    <ThemedView style={styles.container}>
-      {surahData.map((surah) => (
-        <SurahCard key={surah.number} surah={surah} />
-      ))}
-    </ThemedView>
+    <FlashList
+      contentContainerStyle={styles.contentContainer}
+      keyExtractor={extractKey}
+      data={surahData}
+      renderItem={renderItem}
+      ItemSeparatorComponent={ListItemSeparator}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignSelf: 'center',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    padding: 5,
-    width: '100%',
-    height: '100%',
-    rowGap: 10,
-    paddingHorizontal: 10,
-  },
   loadingContainer: {
     flex: 1,
     width: '100%',
@@ -67,5 +71,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+  },
+  contentContainer: {
+    paddingHorizontal: LIST_HORIZONTAL_SPACE,
   },
 });
