@@ -1,4 +1,5 @@
 import React from 'react';
+import { Appearance } from 'react-native';
 
 import { getDefaultStore } from 'jotai';
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
@@ -88,12 +89,15 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     console.error('Error parsing widget data', e);
   }
 
+  const colorScheme = Appearance.getColorScheme() ?? 'light';
+
   const widgetProps = {
     dailyGoal,
     dailyCompleted,
     currentPage,
     currentSurahNumber,
     currentHizbNumber,
+    colorScheme,
   };
 
   switch (props.widgetAction) {

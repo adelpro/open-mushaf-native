@@ -69,6 +69,8 @@ function buildRingSvg(params: {
   } = params;
 
   const center = size / 2;
+  // Android SVG text uses the baseline at y; offset slightly for visual centering.
+  const labelY = center + 5;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
@@ -95,10 +97,8 @@ function buildRingSvg(params: {
       />
       <text
         x="${center}"
-        y="${center}"
+        y="${labelY}"
         text-anchor="middle"
-        dominant-baseline="middle"
-        direction="rtl"
         fill="${progressColor}"
         font-size="16"
         font-weight="700"
@@ -117,7 +117,10 @@ export default function AndroidWidget({
   colorScheme = 'light',
 }: WidgetProps) {
   const theme = colorScheme === 'dark' ? Colors.dark : Colors.light;
-  const primaryColor = theme.primary as HexColor;
+  // Dark green primary has poor contrast on dark ivory; use primaryLight in dark mode.
+  const primaryColor = (
+    colorScheme === 'dark' ? theme.primaryLight : theme.primary
+  ) as HexColor;
   const secondaryColor = theme.secondary as HexColor;
   const bgColor = theme.ivory as HexColor;
 
@@ -155,7 +158,7 @@ export default function AndroidWidget({
     progress,
     trackColor,
     progressColor: primaryColor,
-    label: `٪${Math.round(progress)}`,
+    label: `${Math.round(progress)}٪`,
   });
 
   return (
