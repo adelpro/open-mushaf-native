@@ -1,5 +1,7 @@
 export * from './Colors';
 
+export * from './appColorScheme';
+
 export * from './imagesMapWarsh';
 
 export * from './imagesMapHafs';

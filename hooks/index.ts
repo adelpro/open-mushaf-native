@@ -1,3 +1,4 @@
+export * from './useAppColorScheme';
 export * from './useColors';
 export * from './useCurrentPage';
 export * from './useDailyTrackerReset';

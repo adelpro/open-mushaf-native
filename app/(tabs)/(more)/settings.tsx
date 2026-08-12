@@ -2,9 +2,9 @@ import { useState } from 'react';
 import {
   Linking,
   Modal,
-  Pressable,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native';
 
 import { Entypo, Feather } from '@expo/vector-icons';
@@ -18,17 +18,23 @@ import {
   SegmentedControl,
   SegmentedControlWithDisabled,
   Seo,
+  SettingsCard,
+  SettingsRow,
+  SettingsSection,
   ThemedButton,
   ThemedText,
   ThemedView,
 } from '@/components';
 import {
+  APP_COLOR_SCHEME_KEYS,
+  APP_COLOR_SCHEME_LABELS,
   READING_THEME_KEYS,
   READING_THEME_LABELS,
   riwayaOptions,
 } from '@/constants';
-import { useColors } from '@/hooks';
+import { useAppColorScheme, useColors } from '@/hooks';
 import {
+  appColorScheme,
   flipSound,
   hizbNotification,
   mushafContrast,
@@ -47,13 +53,23 @@ export default function SettingsScreen() {
   const notificationOptions = ['تعطيل', 'حزب', 'جزء'];
   const [HizbNotificationValue, setHizbNotificationValue] =
     useAtom(hizbNotification);
-  const { textColor, primaryColor, cardColor, iconColor } = useColors();
+  const {
+    primaryColor,
+    primaryLightColor,
+    cardColor,
+    iconColor,
+    backgroundColor,
+  } = useColors();
+  const colorScheme = useAppColorScheme();
+  const segmentTextColor =
+    colorScheme === 'dark' ? primaryLightColor : primaryColor;
   const [mushafContrastValue, setMushafContrastValue] = useAtom(mushafContrast);
   const [panGestureSensitivityValue, setPanGestureSensitivityValue] = useAtom(
     panGestureSensitivity,
   );
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const [readingThemeValue, setReadingThemeValue] = useAtom(readingTheme);
+  const [appColorSchemeValue, setAppColorSchemeValue] = useAtom(appColorScheme);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
   const toggleFlipSoundSwitch = () => {
@@ -74,280 +90,185 @@ export default function SettingsScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      style={{ backgroundColor }}
+      contentContainerStyle={styles.container}
+    >
       <Seo
         title="المصحف المفتوح - الإعدادات"
         description="إعدادات التطبيق - تخصيص المظهر والإشعارات والرواية"
       />
-      <Pressable
-        style={[
-          styles.settingsSection,
-          { borderColor: textColor, backgroundColor: cardColor },
-        ]}
-        onPress={toggleFlipSoundSwitch}
-        accessibilityRole="button"
-        accessibilityLabel="تفعيل صوت قلب الصفحة"
-        accessibilityHint="اضغط لتفعيل أو تعطيل صوت قلب الصفحة"
-        accessibilityState={{ selected: isFlipSoundEnabled }}
-      >
-        <ThemedView style={styles.iconTextContainer}>
-          <Feather
-            name="volume-2"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
-          />
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.itemText, { backgroundColor: cardColor }]}
-          >
-            صوت قلب الصفحة:
-          </ThemedText>
-        </ThemedView>
-        <Toggle
-          color={primaryColor}
-          size={40}
-          circleColor={primaryColor}
-          toggle={isFlipSoundEnabled}
-          setToggle={toggleFlipSoundSwitch}
-          aria-checked={isFlipSoundEnabled}
-          aria-label="صوت قلب الصفحة"
-          accessibilityLabel="تبديل صوت قلب الصفحة"
-          accessibilityState={{ checked: isFlipSoundEnabled }}
-        />
-      </Pressable>
 
-      {/* New Toggle for showDailyHizbCompletedBorder */}
-      <Pressable
-        style={[
-          styles.settingsSection,
-          { borderColor: textColor, backgroundColor: cardColor },
-        ]}
-        onPress={toggleTrackerSwitch}
-        accessibilityRole="button"
-        accessibilityLabel="تفعيل تنبيه إتمام الورد اليومي"
-        accessibilityHint="اضغط لتفعيل أو تعطيل تنبه إتمام الورد اليومي"
-        accessibilityState={{
-          selected: showTrackerNotificationValue,
-        }}
-      >
-        <ThemedView style={styles.iconTextContainer}>
-          <Feather
-            name="bell"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
-          />
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.itemText, { backgroundColor: cardColor }]}
-          >
-            تنبيه الورد اليومي:
-          </ThemedText>
-        </ThemedView>
-        <Toggle
-          color={primaryColor}
-          size={40}
-          circleColor={primaryColor}
-          toggle={showTrackerNotificationValue}
-          setToggle={toggleTrackerSwitch}
-          aria-checked={showTrackerNotificationValue}
-          aria-label="إظهار تنبيه إتمام الحزب اليومي"
-          accessibilityLabel="تنبيه إتمام الحزب اليومي"
-          accessibilityState={{ checked: showTrackerNotificationValue }}
-        />
-      </Pressable>
-
-      <ThemedView
-        style={[
-          styles.settingsSection,
-          styles.columnSection,
-          { backgroundColor: cardColor },
-        ]}
-      >
-        <ThemedView
-          style={[
-            styles.rowContainer,
-            styles.iconTextContainer,
-            { backgroundColor: cardColor },
-          ]}
-        >
-          <Entypo
-            name="light-up"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
-          />
-          <ThemedText type="defaultSemiBold" style={styles.itemText}>
-            {` سطوع الوضع الليلي: (${Number(mushafContrastValue * 100).toFixed(0)}%)`}
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedView
-          style={[styles.sliderContainer, { backgroundColor: cardColor }]}
-        >
-          <AwesomeSlider
-            value={mushafContrastValue}
-            onValueChange={setMushafContrastValue}
-            primaryColor={primaryColor}
-          />
-        </ThemedView>
-      </ThemedView>
-
-      <ThemedView
-        style={[
-          styles.settingsSection,
-          styles.columnSection,
-          { backgroundColor: cardColor },
-        ]}
-      >
-        <ThemedView
-          style={[
-            styles.rowContainer,
-            styles.iconTextContainer,
-            { backgroundColor: cardColor },
-          ]}
-        >
-          <Feather
-            name="sliders"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
-          />
-          <ThemedText type="defaultSemiBold" style={styles.itemText}>
-            {` حساسية السحب: (${Number(panGestureSensitivityValue).toFixed(1)}x)`}
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedView
-          style={[styles.sliderContainer, { backgroundColor: cardColor }]}
-        >
-          <AwesomeSlider
-            value={panGestureSensitivityValue}
-            minimumValue={0.5}
-            maximumValue={2.0}
-            onValueChange={setPanGestureSensitivityValue}
-            primaryColor={primaryColor}
-          />
-        </ThemedView>
-      </ThemedView>
-
-      <ThemedView
-        style={[
-          styles.settingsSection,
-          styles.columnSection,
-          { backgroundColor: cardColor },
-        ]}
-      >
-        <ThemedView
-          style={[styles.fullWidthContainer, styles.iconTextContainer]}
-        >
-          <Feather
-            name="bell"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
-          />
-          <ThemedText type="defaultSemiBold" style={[styles.itemText]}>
-            تفعيل التنبيهات:
-          </ThemedText>
-        </ThemedView>
-        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
-          <SegmentedControlWithDisabled
-            options={notificationOptions}
-            initialSelectedIndex={HizbNotificationValue}
-            activeColor={primaryColor}
-            textColor={primaryColor}
-            disabledTextColor={primaryColor}
-            onSelectionChange={(index: number) =>
-              handleHizbNotificationValueChange(index)
+      <SettingsSection title="عام" icon="sliders">
+        <SettingsCard>
+          <SettingsRow
+            title="صوت قلب الصفحة"
+            description="تشغيل صوت قلب الصفحات"
+            icon={<Feather name="volume-2" size={22} color={iconColor} />}
+            onPress={toggleFlipSoundSwitch}
+            accessibilityRole="button"
+            accessibilityLabel="تفعيل صوت قلب الصفحة"
+            accessibilityHint="اضغط لتفعيل أو تعطيل صوت قلب الصفحة"
+            accessibilityState={{ selected: isFlipSoundEnabled }}
+            trailing={
+              <Toggle
+                color={primaryColor}
+                size={40}
+                circleColor={primaryColor}
+                toggle={isFlipSoundEnabled}
+                setToggle={toggleFlipSoundSwitch}
+                aria-checked={isFlipSoundEnabled}
+                aria-label="صوت قلب الصفحة"
+                accessibilityLabel="تبديل صوت قلب الصفحة"
+                accessibilityState={{ checked: isFlipSoundEnabled }}
+              />
             }
           />
-        </Pressable>
-      </ThemedView>
 
-      <ThemedView
-        style={[
-          styles.settingsSection,
-          styles.columnSection,
-          { backgroundColor: cardColor },
-        ]}
-      >
-        <ThemedView
-          style={[
-            styles.fullWidthContainer,
-            styles.iconTextContainer,
-            { backgroundColor: cardColor },
-          ]}
-        >
-          <Feather
-            name="eye"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
-          />
-          <ThemedText type="defaultSemiBold" style={styles.itemText}>
-            سمة القراءة:
-          </ThemedText>
-        </ThemedView>
-        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
-          <SegmentedControl
-            options={READING_THEME_LABELS}
-            initialSelectedIndex={READING_THEME_KEYS.indexOf(readingThemeValue)}
-            activeColor={primaryColor}
-            textColor={primaryColor}
-            onSelectionChange={(index: number) => {
-              setReadingThemeValue(READING_THEME_KEYS[index]);
+          <SettingsRow
+            title="تنبيه الورد اليومي"
+            description="تنبيه عند إتمام الورد المحدد"
+            icon={<Feather name="bell" size={22} color={iconColor} />}
+            onPress={toggleTrackerSwitch}
+            accessibilityRole="button"
+            accessibilityLabel="تفعيل تنبيه إتمام الورد اليومي"
+            accessibilityHint="اضغط لتفعيل أو تعطيل تنبه إتمام الورد اليومي"
+            accessibilityState={{
+              selected: showTrackerNotificationValue,
             }}
+            trailing={
+              <Toggle
+                color={primaryColor}
+                size={40}
+                circleColor={primaryColor}
+                toggle={showTrackerNotificationValue}
+                setToggle={toggleTrackerSwitch}
+                aria-checked={showTrackerNotificationValue}
+                aria-label="إظهار تنبيه إتمام الحزب اليومي"
+                accessibilityLabel="تنبيه إتمام الحزب اليومي"
+                accessibilityState={{ checked: showTrackerNotificationValue }}
+              />
+            }
           />
-        </Pressable>
-      </ThemedView>
 
-      <ThemedView
-        style={[
-          styles.settingsSection,
-          styles.columnSection,
-          { backgroundColor: cardColor },
-        ]}
-      >
-        <ThemedView
-          style={[
-            styles.fullWidthContainer,
-            styles.iconTextContainer,
-            { backgroundColor: cardColor },
-          ]}
-        >
-          <Feather
-            name="book-open"
-            size={24}
-            color={iconColor}
-            style={styles.iconStyle}
-          />
-          <ThemedText type="defaultSemiBold" style={styles.itemText}>
-            إختيار الرواية :
-          </ThemedText>
-        </ThemedView>
-        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
-          <SegmentedControl
-            options={riwayaOptions}
-            initialSelectedIndex={RiwayaByIndice(mushafRiwayaValue)}
-            activeColor={primaryColor}
-            textColor={primaryColor}
-            onSelectionChange={(index: number) => {
-              const selectedRiwaya = RiwayaByValue(index);
-              setMushafRiwayaValue(selectedRiwaya);
-            }}
-          />
-        </Pressable>
-      </ThemedView>
+          <SettingsRow
+            title={`سطوع الوضع الليلي (${Number(mushafContrastValue * 100).toFixed(0)}%)`}
+            icon={<Entypo name="light-up" size={22} color={iconColor} />}
+          >
+            <AwesomeSlider
+              value={mushafContrastValue}
+              onValueChange={setMushafContrastValue}
+              primaryColor={primaryColor}
+            />
+          </SettingsRow>
+
+          <SettingsRow
+            title={`حساسية السحب (${Number(panGestureSensitivityValue).toFixed(1)}x)`}
+            icon={<Feather name="sliders" size={22} color={iconColor} />}
+          >
+            <AwesomeSlider
+              value={panGestureSensitivityValue}
+              minimumValue={0.5}
+              maximumValue={2.0}
+              onValueChange={setPanGestureSensitivityValue}
+              primaryColor={primaryColor}
+            />
+          </SettingsRow>
+
+          <SettingsRow
+            title="وضع التطبيق"
+            description="اختر مظهر التطبيق العام"
+            icon={<Feather name="sun" size={22} color={iconColor} />}
+            accessibilityRole="radiogroup"
+            accessibilityLabel="وضع التطبيق"
+          >
+            <SegmentedControl
+              options={APP_COLOR_SCHEME_LABELS}
+              initialSelectedIndex={APP_COLOR_SCHEME_KEYS.indexOf(
+                appColorSchemeValue,
+              )}
+              activeColor={primaryColor}
+              textColor={segmentTextColor}
+              onSelectionChange={(index: number) => {
+                setAppColorSchemeValue(APP_COLOR_SCHEME_KEYS[index]);
+              }}
+            />
+          </SettingsRow>
+        </SettingsCard>
+      </SettingsSection>
+
+      <SettingsSection title="التنبيهات" icon="bell">
+        <SettingsCard>
+          <SettingsRow
+            title="تفعيل التنبيهات"
+            description="اختر نوع التنبيه الذي تفضله"
+            icon={<Feather name="bell" size={22} color={iconColor} />}
+            accessibilityRole="radiogroup"
+            accessibilityLabel="تفعيل التنبيهات"
+          >
+            <SegmentedControlWithDisabled
+              options={notificationOptions}
+              initialSelectedIndex={HizbNotificationValue}
+              activeColor={primaryColor}
+              textColor={segmentTextColor}
+              disabledTextColor={segmentTextColor}
+              onSelectionChange={(index: number) =>
+                handleHizbNotificationValueChange(index)
+              }
+            />
+          </SettingsRow>
+        </SettingsCard>
+      </SettingsSection>
+
+      <SettingsSection title="سمة القراءة" icon="eye">
+        <SettingsCard>
+          <SettingsRow
+            title="سمة القراءة"
+            description="اختر مظهر صفحات المصحف"
+            icon={<Feather name="eye" size={22} color={iconColor} />}
+            accessibilityRole="radiogroup"
+            accessibilityLabel="سمة القراءة"
+          >
+            <SegmentedControl
+              options={READING_THEME_LABELS}
+              initialSelectedIndex={READING_THEME_KEYS.indexOf(
+                readingThemeValue,
+              )}
+              activeColor={primaryColor}
+              textColor={segmentTextColor}
+              onSelectionChange={(index: number) => {
+                setReadingThemeValue(READING_THEME_KEYS[index]);
+              }}
+            />
+          </SettingsRow>
+        </SettingsCard>
+      </SettingsSection>
+
+      <SettingsSection title="إختيار الرواية" icon="book-open">
+        <SettingsCard>
+          <SettingsRow
+            title="الرواية"
+            description="اختر الرواية التي تريد القراءة بها"
+            icon={<Feather name="book-open" size={22} color={iconColor} />}
+            accessibilityRole="radiogroup"
+            accessibilityLabel="إختيار الرواية"
+          >
+            <SegmentedControl
+              options={riwayaOptions}
+              initialSelectedIndex={RiwayaByIndice(mushafRiwayaValue)}
+              activeColor={primaryColor}
+              textColor={segmentTextColor}
+              onSelectionChange={(index: number) => {
+                const selectedRiwaya = RiwayaByValue(index);
+                setMushafRiwayaValue(selectedRiwaya);
+              }}
+            />
+          </SettingsRow>
+        </SettingsCard>
+      </SettingsSection>
+
       {!isWeb && (
-        <ThemedView
-          style={[
-            styles.settingsSection,
-            styles.columnSection,
-            { backgroundColor: cardColor },
-          ]}
-        >
+        <View style={styles.storeReviewWrap}>
           <ThemedButton
             role="button"
             variant="outlined-primary"
@@ -357,31 +278,31 @@ export default function SettingsScreen() {
                 await Linking.openURL(url);
               }
             }}
+            style={styles.fullWidthButton}
           >
             ⭐ تقييم التطبيق على المتجر
           </ThemedButton>
-        </ThemedView>
+        </View>
       )}
 
-      <ThemedView
-        style={[
-          styles.settingsSection,
-          styles.columnSection,
-          { backgroundColor: cardColor },
-        ]}
-      >
+      <View style={styles.resetWrap}>
         <ThemedButton
           role="button"
           variant="danger"
           onPress={() => {
             setConfirmModalVisible(true);
           }}
+          style={styles.fullWidthButton}
+          accessibilityLabel="إعادة ضبط التطبيق"
+          accessibilityHint="يعيد جميع الإعدادات إلى الوضع الافتراضي بعد التأكيد"
         >
           إعادة ضبط التطبيق
         </ThemedButton>
-      </ThemedView>
+        <ThemedText style={[styles.resetHint, { color: iconColor }]}>
+          إعادة جميع الإعدادات إلى الوضع الافتراضي
+        </ThemedText>
+      </View>
 
-      {/* Confirmation Modal */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -451,53 +372,35 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
-    margin: 2,
-    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 28,
+    alignItems: 'stretch',
     justifyContent: 'flex-start',
     alignSelf: 'center',
     width: '100%',
     maxWidth: 640,
   },
-  settingsSection: {
+  storeReviewWrap: {
     width: '100%',
-    marginBottom: 15,
-    padding: 12,
-    borderRadius: 8,
-    elevation: 3,
-    flexDirection: 'row',
+    marginBottom: 16,
     alignItems: 'center',
-    justifyContent: 'space-between',
   },
-  columnSection: {
-    flexDirection: 'column',
-  },
-  rowContainer: {
+  resetWrap: {
+    width: '100%',
     alignItems: 'center',
-    gap: 1,
-    flexDirection: 'row',
-    width: '100%',
+    gap: 8,
+    marginTop: 4,
   },
-  fullWidthContainer: {
-    alignItems: 'center',
+  fullWidthButton: {
     width: '100%',
-    flex: 1,
-    justifyContent: 'flex-start',
+    maxWidth: '100%',
   },
-  fullWidth: {
-    width: '100%',
-  },
-  itemText: {
-    fontSize: 20,
-    fontFamily: 'Tajawal_700Bold',
-    paddingVertical: 8,
-    paddingHorizontal: 5,
-    // textAlignVertical: 'center',
-    alignItems: 'baseline',
-  },
-  sliderContainer: {
-    width: '100%',
-    position: 'relative',
+  resetHint: {
+    fontSize: 13,
+    lineHeight: 20,
+    textAlign: 'center',
+    fontFamily: 'Tajawal_400Regular',
   },
   modalOverlay: {
     flex: 1,
@@ -550,15 +453,5 @@ const styles = StyleSheet.create({
   modalButton: {
     width: '40%',
     maxWidth: 100,
-  },
-  iconTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    margin: 2,
-    marginBottom: 5,
-  },
-  iconStyle: {
-    paddingVertical: 8,
   },
 });

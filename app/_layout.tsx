@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { I18nManager, Platform, useColorScheme } from 'react-native';
+import { I18nManager, Platform } from 'react-native';
 
 import {
   Amiri_400Regular,
@@ -26,7 +26,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ErrorBoundary, Notification, Seo } from '@/components';
 import { NotificationProvider } from '@/Context/NotificationProvider';
-import { useDailyTrackerReset } from '@/hooks';
+import { useAppColorScheme, useDailyTrackerReset } from '@/hooks';
 import { isRTL } from '@/utils';
 import { setupNotificationChannel } from '@/utils/notifications';
 
@@ -37,7 +37,7 @@ SplashScreen.preventAutoHideAsync();
 SplashScreen.setOptions({ fade: true, duration: 1000 });
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const colorScheme = useAppColorScheme();
 
   // Handle daily tracker reset on date change
   useDailyTrackerReset();

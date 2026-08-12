@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
+import { useColors } from '@/hooks';
 import { SegmentedControlProps } from '@/types';
 
 import { ThemedText } from './ThemedText';
@@ -28,6 +29,7 @@ export function SegmentedControlWithDisabled({
   const [selectedIndex, setSelectedIndex] = useState(
     initialSelectedIndex !== undefined ? initialSelectedIndex : -1,
   );
+  const { ivoryColor } = useColors();
 
   // Sync internal state when the prop changes (e.g. async storage hydration
   // or external mutation of the underlying atom after mount).
@@ -43,7 +45,7 @@ export function SegmentedControlWithDisabled({
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[styles.container, { backgroundColor: ivoryColor }]}>
       {options.map((option, index) => {
         const isDisabled = disabledIndices.includes(index);
         return (
@@ -75,6 +77,7 @@ export function SegmentedControlWithDisabled({
                       : textColor,
                 },
               ]}
+              numberOfLines={2}
             >
               {option}
             </ThemedText>
@@ -88,19 +91,20 @@ export function SegmentedControlWithDisabled({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#F8F8F8',
     borderRadius: 8,
     overflow: 'hidden',
   },
   option: {
     flex: 1,
     paddingVertical: 8,
-    height: 50,
+    paddingHorizontal: 4,
+    minHeight: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },
   optionText: {
-    fontSize: 16,
+    fontSize: 14,
+    fontFamily: 'Tajawal_500Medium',
     fontWeight: '400',
     textAlign: 'center',
   },

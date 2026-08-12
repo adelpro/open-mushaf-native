@@ -5,6 +5,15 @@
 Expo SDK 54 / React Native 0.81 / TypeScript 5.9. Quran reader app, ships to
 iOS (App Store), Android (Play Store), and Web (Firebase Hosting).
 
+## System design (required reading)
+
+Before making architectural, widget, theming, state, or platform changes, read
+**[`SYSTEM_DESIGN.md`](./SYSTEM_DESIGN.md)** at the repo root. It is the source of
+truth for how the app is structured today (architecture, Jotai/MMKV, Android
+widget light/dark design, RTL/theming, web/PWA, CI, known gotchas). Prefer it
+over guessing from partial file reads; update it when you change system-level
+behavior.
+
 ## Hard rules
 
 - **Package manager:** Yarn 1.22 (`yarn install`, `yarn add`). Never `npm`.

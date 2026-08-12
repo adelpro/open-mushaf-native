@@ -21,7 +21,7 @@ export default function MoreLayout() {
       />
       <Stack.Screen
         name="settings"
-        options={{ headerShown: true, title: 'الاعدادات' }}
+        options={{ headerShown: true, title: 'الإعدادات' }}
       />
       <Stack.Screen
         name="contact"

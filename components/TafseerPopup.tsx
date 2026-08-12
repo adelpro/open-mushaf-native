@@ -1,5 +1,5 @@
 import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, StyleSheet, useColorScheme } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 
 import BottomSheet, {
   BottomSheetBackdrop,
@@ -12,6 +12,7 @@ import {
 } from 'react-native-reanimated';
 
 import { Colors } from '@/constants/Colors';
+import { useAppColorScheme } from '@/hooks';
 
 import { Tafseer } from './Tafseer';
 import { ThemedView } from './ThemedView';
@@ -37,7 +38,7 @@ type Props = {
  * @returns The bottom-anchored animated drawer.
  */
 export function TafseerPopup({ show, setShow, aya, surah }: Props) {
-  const colorScheme = useColorScheme();
+  const colorScheme = useAppColorScheme();
   const tintColor = Colors[colorScheme ?? 'light'].tint;
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
   const bottomSheetRef = useRef<BottomSheet>(null);

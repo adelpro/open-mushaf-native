@@ -1,7 +1,10 @@
+import { getDefaultStore } from 'jotai';
 import { observe } from 'jotai-effect';
 
+import { type AppColorScheme } from '@/constants/appColorScheme';
 import { Reminder, TafseerTabs } from '@/types';
 import { Riwaya } from '@/types/riwaya';
+import { applyAppColorScheme } from '@/utils/applyAppColorScheme';
 
 import { createAtomWithStorage } from './createAtomWithStorage';
 
@@ -54,6 +57,22 @@ export const panGestureSensitivity = createAtomWithStorage<number>(
   'PanGestureSensitivity',
   1.0,
 );
+
+// App appearance: 'system' preserves the historical default (follow OS).
+export const appColorScheme = createAtomWithStorage<AppColorScheme>(
+  'AppColorScheme',
+  'system',
+);
+
+try {
+  applyAppColorScheme(getDefaultStore().get(appColorScheme));
+} catch {
+  // Storage is unavailable during web static rendering.
+}
+
+observe((get) => {
+  applyAppColorScheme(get(appColorScheme));
+});
 
 // Type declarations
 type DailyTrackerProgress = {

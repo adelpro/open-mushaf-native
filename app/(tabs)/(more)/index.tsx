@@ -5,12 +5,11 @@ import {
   ScrollView,
   Share,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -23,171 +22,173 @@ import PageSVG from '@/assets/svgs/page.svg';
 import SettingsSVG from '@/assets/svgs/settings.svg';
 import ShareSVG from '@/assets/svgs/share.svg';
 import WelcomeSVG from '@/assets/svgs/welcome.svg';
-import { ThemedButton, ThemedText, ThemedView } from '@/components';
+import {
+  SettingsCard,
+  SettingsRow,
+  SettingsSection,
+  ThemedButton,
+  ThemedText,
+  ThemedView,
+} from '@/components';
 import { useColors, useOrientation } from '@/hooks';
 import { isWeb } from '@/utils/isWeb';
 
 export default function MoreScreen() {
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const { cardColor, iconColor, textColor } = useColors(); // Added textColor for modal message
+  const { cardColor, iconColor, textColor, backgroundColor } = useColors();
   const { isLandscape } = useOrientation();
   const insets = useSafeAreaInsets();
 
   const handleShare = async () => {
-    let shareUrl = 'https://www.quran.us.kg'; // Default/Web URL
+    let shareUrl = 'https://www.quran.us.kg';
 
     if (Platform.OS === 'android') {
       shareUrl =
         'https://play.google.com/store/apps/details?id=com.adelpro.openmushafnative';
     }
-    // No specific iOS URL for now, it will use the default shareUrl.
 
     try {
       await Share.share({
         message:
           'شارك هذا التطبيق القرآني مع الآخرين | Open Mushaf Native\n' +
           shareUrl,
-        url: shareUrl, // URL is included for platforms that support it well
-        title: 'Open Mushaf Native', // Optional, mainly for Android
+        url: shareUrl,
+        title: 'Open Mushaf Native',
       });
-      // console.log('Share successful or dismissed'); // You can uncomment this if needed
-    } catch (error: any) {
-      setErrorMessage(error.message || 'An unexpected error occurred.');
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'An unexpected error occurred.';
+      setErrorMessage(message);
       setErrorModalVisible(true);
     }
   };
 
+  const iconStyle = { color: iconColor };
+
   return (
-    <ScrollView contentContainerStyle={styles.contentContainerStyle}>
-      <ThemedView
-        style={[
-          styles.container,
-          {
-            paddingTop: isLandscape ? 30 : insets.top,
-            paddingBottom: isLandscape ? 30 : 0,
-          },
-        ]}
-      >
-        {!isWeb && (
-          <ThemedButton
-            onPress={() => {
-              router.push('/reminders');
-            }}
-            variant="primary"
-            style={styles.button}
-          >
-            <View style={styles.buttonContent}>
-              <MaterialCommunityIcons
-                name="bell-outline"
-                size={24}
-                color="white"
+    <ScrollView
+      style={{ backgroundColor }}
+      contentContainerStyle={[
+        styles.contentContainerStyle,
+        {
+          paddingTop: isLandscape ? 24 : Math.max(insets.top, 16) + 8,
+          paddingBottom: 32,
+        },
+      ]}
+    >
+      <ThemedView style={styles.container}>
+        <View style={styles.pageHeader}>
+          <ThemedText type="title" style={styles.pageTitle}>
+            المزيد
+          </ThemedText>
+          <ThemedText style={[styles.pageSubtitle, { color: iconColor }]}>
+            إدارة تفضيلاتك وخيارات التطبيق
+          </ThemedText>
+        </View>
+
+        <SettingsSection title="المحتوى" icon="book-open">
+          <SettingsCard>
+            <SettingsRow
+              wrapIcon
+              showChevron
+              title="الإعدادات"
+              description="تخصيص تجربة القراءة والمظهر والتنبيهات"
+              icon={<SettingsSVG width={22} height={22} style={iconStyle} />}
+              onPress={() => router.push('/settings')}
+            />
+            <SettingsRow
+              wrapIcon
+              showChevron
+              title="العلامات المرجعية"
+              description="عرض وإدارة العلامات المرجعية المحفوظة"
+              icon={<BookmarkSVG width={22} height={22} style={iconStyle} />}
+              onPress={() => router.push('/bookmarks')}
+            />
+            {!isWeb ? (
+              <SettingsRow
+                wrapIcon
+                showChevron
+                title="التذكيرات"
+                description="جدولة تذكيرات القراءة اليومية"
+                icon={<Feather name="bell" size={22} color={iconColor} />}
+                onPress={() => router.push('/reminders')}
               />
-              <Text style={styles.buttonText}>التذكيرات</Text>
-            </View>
-          </ThemedButton>
-        )}
-        <ThemedButton
-          onPress={() => {
-            router.push('/settings');
-          }}
-          variant="primary"
-          style={styles.button}
-        >
-          <View style={styles.buttonContent}>
-            <SettingsSVG width={24} height={24} style={styles.svg} />
-            <Text style={styles.buttonText}>الإعدادات</Text>
-          </View>
-        </ThemedButton>
-        <ThemedButton
-          onPress={() => {
-            router.push('/bookmarks');
-          }}
-          variant="primary"
-          style={styles.button}
-        >
-          <View style={styles.buttonContent}>
-            <BookmarkSVG width={24} height={24} style={styles.svg} />
-            <Text style={styles.buttonText}>العلامات المرجعية</Text>
-          </View>
-        </ThemedButton>
-        <ThemedButton
-          onPress={() => {
-            router.push('/privacy');
-          }}
-          variant="primary"
-          style={styles.button}
-        >
-          <View style={styles.buttonContent}>
-            <PageSVG width={24} height={24} style={styles.svg} />
-            <Text style={styles.buttonText}>سياسة الخصوصية</Text>
-          </View>
-        </ThemedButton>
-        <ThemedButton
-          onPress={() => {
-            router.push('/contact');
-          }}
-          variant="primary"
-          style={styles.button}
-        >
-          <View style={styles.buttonContent}>
-            <MailSVG width={24} height={24} style={styles.svg} />
-            <Text style={styles.buttonText}>تواصل معنا</Text>
-          </View>
-        </ThemedButton>
+            ) : null}
+          </SettingsCard>
+        </SettingsSection>
 
-        <ThemedButton
-          variant="primary"
-          onPress={() => {
-            router.push('/tutorial');
-          }}
-          style={styles.button}
-        >
-          <View style={styles.buttonContent}>
-            <WelcomeSVG width={24} height={24} style={styles.svg} />
-            <Text style={styles.buttonText}>جولة تعليمة</Text>
-          </View>
-        </ThemedButton>
-        <ThemedButton
-          onPress={async () => {
-            const url = 'https://docs.quran.us.kg';
-            const supported = await Linking.canOpenURL(url);
-            if (supported) {
-              await Linking.openURL(url);
-            }
-          }}
-          variant="primary"
-          style={styles.button}
-        >
-          <View style={styles.buttonContent}>
-            <HelpSVG width={24} height={24} style={styles.svg} />
-            <Text style={styles.buttonText}>المساعدة</Text>
-          </View>
-        </ThemedButton>
-        <ThemedButton
-          onPress={() => {
-            router.push('/about');
-          }}
-          variant="primary"
-          style={styles.button}
-        >
-          <View style={styles.buttonContent}>
-            <InfoSVG width={24} height={24} style={styles.svg} />
-            <Text style={styles.buttonText}>حول التطبيق</Text>
-          </View>
-        </ThemedButton>
-        <ThemedButton
-          onPress={handleShare}
-          variant="primary"
-          style={styles.button}
-        >
-          <View style={styles.buttonContent}>
-            <ShareSVG width={24} height={24} style={styles.svg} />
-            <Text style={styles.buttonText}>شارك التطبيق</Text>
-          </View>
-        </ThemedButton>
+        <SettingsSection title="الدعم والمساعدة" icon="help-circle">
+          <SettingsCard>
+            <SettingsRow
+              wrapIcon
+              showChevron
+              title="جولة تعليمية"
+              description="تعرف على ميزات التطبيق خطوة بخطوة"
+              icon={<WelcomeSVG width={22} height={22} style={iconStyle} />}
+              onPress={() => router.push('/tutorial')}
+            />
+            <SettingsRow
+              wrapIcon
+              showChevron
+              title="المساعدة"
+              description="الأسئلة الشائعة والمساعدة والدعم"
+              icon={<HelpSVG width={22} height={22} style={iconStyle} />}
+              onPress={async () => {
+                const url = 'https://docs.quran.us.kg';
+                const supported = await Linking.canOpenURL(url);
+                if (supported) {
+                  await Linking.openURL(url);
+                }
+              }}
+            />
+          </SettingsCard>
+        </SettingsSection>
 
-        {/* Error Modal */}
+        <SettingsSection title="تواصل معنا" icon="mail">
+          <SettingsCard>
+            <SettingsRow
+              wrapIcon
+              showChevron
+              title="تواصل معنا"
+              description="راسلنا واقتراحاتك تهمنا"
+              icon={<MailSVG width={22} height={22} style={iconStyle} />}
+              onPress={() => router.push('/contact')}
+            />
+          </SettingsCard>
+        </SettingsSection>
+
+        <SettingsSection title="حول التطبيق" icon="info">
+          <SettingsCard>
+            <SettingsRow
+              wrapIcon
+              showChevron
+              title="سياسة الخصوصية"
+              description="قراءة سياسة الخصوصية للتطبيق"
+              icon={<PageSVG width={22} height={22} style={iconStyle} />}
+              onPress={() => router.push('/privacy')}
+            />
+            <SettingsRow
+              wrapIcon
+              showChevron
+              title="حول التطبيق"
+              description="معلومات الإصدار والمطور"
+              icon={<InfoSVG width={22} height={22} style={iconStyle} />}
+              onPress={() => router.push('/about')}
+            />
+            <SettingsRow
+              wrapIcon
+              showChevron
+              title="شارك التطبيق"
+              description="شارك التطبيق مع أصدقائك"
+              icon={<ShareSVG width={22} height={22} style={iconStyle} />}
+              onPress={handleShare}
+            />
+          </SettingsCard>
+        </SettingsSection>
+
         <Modal
           animationType="fade"
           transparent={true}
@@ -207,7 +208,7 @@ export default function MoreScreen() {
           >
             <ThemedView
               style={[styles.modalContent, { backgroundColor: cardColor }]}
-              onStartShouldSetResponder={() => true} // Prevents touch from passing through
+              onStartShouldSetResponder={() => true}
             >
               <ThemedView
                 style={[styles.modalHeader, { borderBottomColor: textColor }]}
@@ -253,37 +254,32 @@ export default function MoreScreen() {
 const styles = StyleSheet.create({
   contentContainerStyle: {
     flexGrow: 1,
+    paddingHorizontal: 16,
   },
   container: {
     flex: 1,
-    gap: 20,
-    justifyContent: 'center',
+    width: '100%',
+    maxWidth: 640,
+    alignSelf: 'center',
+    backgroundColor: 'transparent',
+  },
+  pageHeader: {
+    marginBottom: 24,
+    gap: 6,
     alignItems: 'center',
   },
-  button: {
-    height: 50,
+  pageTitle: {
+    fontSize: 28,
+    lineHeight: 40,
+    fontFamily: 'Tajawal_700Bold',
+    textAlign: 'center',
   },
-  buttonContent: {
-    flexDirection: 'row',
-    width: 300,
-    height: 50,
-    alignItems: 'center',
-  },
-  buttonText: {
-    marginStart: 5,
-    marginEnd: 5,
-    color: 'white',
-    fontSize: 24,
-    lineHeight: 26,
-    paddingHorizontal: 5,
+  pageSubtitle: {
+    fontSize: 14,
+    lineHeight: 22,
     fontFamily: 'Tajawal_400Regular',
-    textAlignVertical: 'center',
+    textAlign: 'center',
   },
-  svg: {
-    color: 'white',
-  },
-
-  // Modal Styles (adapted from settings.tsx)
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -307,7 +303,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    // borderBottomColor will be set by theme
     minHeight: 40,
   },
   modalTitle: {
@@ -328,12 +323,12 @@ const styles = StyleSheet.create({
   },
   modalActions: {
     flexDirection: 'row',
-    justifyContent: 'center', // Center the single button
+    justifyContent: 'center',
     backgroundColor: 'transparent',
     width: '100%',
   },
   modalButton: {
-    width: '40%', // Adjust as needed for a single button
-    maxWidth: 120, // Adjust as needed
+    width: '40%',
+    maxWidth: 120,
   },
 });

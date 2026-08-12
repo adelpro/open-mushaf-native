@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-} from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 import {
   PrivacyContentArabic,
@@ -14,11 +9,12 @@ import {
   ThemedView,
 } from '@/components';
 import { Colors } from '@/constants/Colors';
+import { useAppColorScheme } from '@/hooks';
 import { isRTL } from '@/utils';
 
 export default function PrivacyScreen() {
   const [selectedTab, setSelectedTab] = useState('arabic'); // Default to Arabic
-  const colorScheme = useColorScheme();
+  const colorScheme = useAppColorScheme();
   const currentColor = Colors[colorScheme ?? 'light'].tint;
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
 

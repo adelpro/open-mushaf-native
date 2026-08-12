@@ -1,16 +1,16 @@
-import { useColorScheme } from 'react-native';
-
 import { Colors } from '@/constants';
+
+import { useAppColorScheme } from './useAppColorScheme';
 
 /**
  * Hook to retrieve the current application theme colors.
- * Automatically adapts to the system's light or dark mode setting.
+ * Follows the persisted app appearance preference (dark / light / system).
  *
  * @returns An object containing all theme color values (e.g., background, primary, text).
  */
 export const useColors = () => {
-  const colorScheme = useColorScheme();
-  const theme = Colors[colorScheme ?? 'light'];
+  const colorScheme = useAppColorScheme();
+  const theme = Colors[colorScheme];
 
   return {
     backgroundColor: theme.background,

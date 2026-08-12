@@ -1,10 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Platform,
-  StyleSheet,
-  useColorScheme,
-} from 'react-native';
+import { ActivityIndicator, Platform, StyleSheet } from 'react-native';
 
 import { useAudioPlayer } from 'expo-audio';
 import { Image } from 'expo-image';
@@ -26,6 +21,7 @@ import {
 import { PAN_GESTURE_CONFIG } from '@/constants';
 import { READING_THEMES } from '@/constants/readingThemes';
 import {
+  useAppColorScheme,
   useColors,
   useCurrentPage,
   useImagePreloader,
@@ -98,7 +94,7 @@ export function MushafPage() {
   const { defaultNumberOfPages } = specsData;
   const { notify } = useNotification();
 
-  const colorScheme = useColorScheme();
+  const colorScheme = useAppColorScheme();
   const { tintColor, ivoryColor } = useColors();
   const router = useRouter();
 

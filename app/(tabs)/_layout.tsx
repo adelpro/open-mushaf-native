@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, useColorScheme } from 'react-native';
+import { Platform } from 'react-native';
 
 import {
   Feather,
@@ -11,10 +11,11 @@ import { useAtomValue } from 'jotai/react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Colors } from '@/constants/Colors';
+import { useAppColorScheme } from '@/hooks';
 import { bottomMenuState } from '@/jotai/atoms';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const colorScheme = useAppColorScheme();
   const menuStateValue = useAtomValue<boolean>(bottomMenuState);
   const insets = useSafeAreaInsets();
   return (

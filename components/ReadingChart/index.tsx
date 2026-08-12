@@ -10,7 +10,6 @@ import {
   Pressable,
   ScrollView,
   TouchableOpacity,
-  useColorScheme,
   useWindowDimensions,
   View,
 } from 'react-native';
@@ -27,7 +26,13 @@ import {
   GRID_RATIOS,
   TOOLTIP_HEADROOM,
 } from '@/constants/readingChart';
-import { ChartMetric, GroupBy, useColors, useReadingChartData } from '@/hooks';
+import {
+  ChartMetric,
+  GroupBy,
+  useAppColorScheme,
+  useColors,
+  useReadingChartData,
+} from '@/hooks';
 import { formatLabel, getPosStyle, shouldShowLabel } from '@/utils';
 
 import { SegmentedControl } from '../SegmentControl';
@@ -44,7 +49,7 @@ import { styles } from './styles';
  */
 export function ReadingChart() {
   const { primaryColor, textColor, cardColor } = useColors();
-  const colorScheme = useColorScheme();
+  const colorScheme = useAppColorScheme();
   // The selected-metric label sits on the brand-color fill, so we need the
   // opposite-theme text color for contrast (avoids the white-on-white trap in
   // light themes and dark-on-dark in dark themes).
