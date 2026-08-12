@@ -1,9 +1,14 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 
+import { FlashList } from '@shopify/flash-list';
+
+import { LIST_HORIZONTAL_SPACE } from '@/constants';
 import { useColors, useQuranMetadata } from '@/hooks';
+import { Chapter } from '@/types';
 
 import { ChapterCard } from './ChapterCard';
+import { ListItemSeparator } from './ListItemSeparator';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
@@ -34,26 +39,25 @@ export function ChapterList() {
     );
   }
 
+  const extractKey = (item: Chapter) => {
+    return item.number.toString();
+  };
+
+  const renderItem = ({ item }: { item: Chapter }) => {
+    return <ChapterCard chapter={item} />;
+  };
+
   return (
-    <ThemedView style={styles.container}>
-      {chapterData.map((chapter) => (
-        <ChapterCard key={chapter.number} chapter={chapter} />
-      ))}
-    </ThemedView>
+    <FlashList
+      contentContainerStyle={styles.contentContainer}
+      keyExtractor={extractKey}
+      data={chapterData}
+      renderItem={renderItem}
+      ItemSeparatorComponent={ListItemSeparator}
+    />
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    alignSelf: 'center',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    padding: 5,
-    width: '100%',
-    height: '100%',
-    rowGap: 10,
-    paddingHorizontal: 10,
-  },
   loadingContainer: {
     flex: 1,
     width: '100%',
@@ -67,5 +71,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+  },
+  contentContainer: {
+    paddingHorizontal: LIST_HORIZONTAL_SPACE,
   },
 });

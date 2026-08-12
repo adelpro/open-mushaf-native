@@ -1,0 +1,1 @@
+export const LIST_HORIZONTAL_SPACE = 10;
