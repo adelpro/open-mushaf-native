@@ -30,13 +30,22 @@ import {
   ThemedText,
   ThemedView,
 } from '@/components';
-import { useColors, useOrientation } from '@/hooks';
+import { useAppColorScheme, useColors, useOrientation } from '@/hooks';
 import { isWeb } from '@/utils/isWeb';
 
 export default function MoreScreen() {
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const { cardColor, iconColor, textColor, backgroundColor } = useColors();
+  const {
+    cardColor,
+    iconColor,
+    textColor,
+    backgroundColor,
+    primaryColor,
+    primaryLightColor,
+  } = useColors();
+  const colorScheme = useAppColorScheme();
+  const accentColor = colorScheme === 'dark' ? primaryLightColor : primaryColor;
   const { isLandscape } = useOrientation();
   const insets = useSafeAreaInsets();
 
@@ -66,7 +75,7 @@ export default function MoreScreen() {
     }
   };
 
-  const iconStyle = { color: iconColor };
+  const iconStyle = { color: accentColor };
 
   return (
     <ScrollView
@@ -113,7 +122,7 @@ export default function MoreScreen() {
                 showChevron
                 title="التذكيرات"
                 description="جدولة تذكيرات القراءة اليومية"
-                icon={<Feather name="bell" size={22} color={iconColor} />}
+                icon={<Feather name="bell" size={22} color={accentColor} />}
                 onPress={() => router.push('/reminders')}
               />
             ) : null}

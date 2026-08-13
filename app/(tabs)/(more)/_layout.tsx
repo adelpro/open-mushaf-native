@@ -1,11 +1,15 @@
 import { Stack } from 'expo-router';
 
+import { RtlHeaderBackButton } from '@/components';
+
 export default function MoreLayout() {
   return (
     <Stack
       initialRouteName="index"
       screenOptions={{
         headerShown: false,
+        headerBackVisible: false,
+        headerLeft: (props) => <RtlHeaderBackButton {...props} />,
         headerTitleStyle: {
           fontFamily: 'Tajawal_400Regular',
         },

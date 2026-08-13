@@ -104,7 +104,9 @@ export default function SettingsScreen() {
           <SettingsRow
             title="صوت قلب الصفحة"
             description="تشغيل صوت قلب الصفحات"
-            icon={<Feather name="volume-2" size={22} color={iconColor} />}
+            icon={
+              <Feather name="volume-2" size={22} color={segmentTextColor} />
+            }
             onPress={toggleFlipSoundSwitch}
             accessibilityRole="button"
             accessibilityLabel="تفعيل صوت قلب الصفحة"
@@ -128,7 +130,7 @@ export default function SettingsScreen() {
           <SettingsRow
             title="تنبيه الورد اليومي"
             description="تنبيه عند إتمام الورد المحدد"
-            icon={<Feather name="bell" size={22} color={iconColor} />}
+            icon={<Feather name="bell" size={22} color={segmentTextColor} />}
             onPress={toggleTrackerSwitch}
             accessibilityRole="button"
             accessibilityLabel="تفعيل تنبيه إتمام الورد اليومي"
@@ -153,7 +155,7 @@ export default function SettingsScreen() {
 
           <SettingsRow
             title={`سطوع الوضع الليلي (${Number(mushafContrastValue * 100).toFixed(0)}%)`}
-            icon={<Entypo name="light-up" size={22} color={iconColor} />}
+            icon={<Entypo name="light-up" size={22} color={segmentTextColor} />}
           >
             <AwesomeSlider
               value={mushafContrastValue}
@@ -164,7 +166,7 @@ export default function SettingsScreen() {
 
           <SettingsRow
             title={`حساسية السحب (${Number(panGestureSensitivityValue).toFixed(1)}x)`}
-            icon={<Feather name="sliders" size={22} color={iconColor} />}
+            icon={<Feather name="sliders" size={22} color={segmentTextColor} />}
           >
             <AwesomeSlider
               value={panGestureSensitivityValue}
@@ -178,7 +180,7 @@ export default function SettingsScreen() {
           <SettingsRow
             title="وضع التطبيق"
             description="اختر مظهر التطبيق العام"
-            icon={<Feather name="sun" size={22} color={iconColor} />}
+            icon={<Feather name="sun" size={22} color={segmentTextColor} />}
             accessibilityRole="radiogroup"
             accessibilityLabel="وضع التطبيق"
           >
@@ -202,7 +204,7 @@ export default function SettingsScreen() {
           <SettingsRow
             title="تفعيل التنبيهات"
             description="اختر نوع التنبيه الذي تفضله"
-            icon={<Feather name="bell" size={22} color={iconColor} />}
+            icon={<Feather name="bell" size={22} color={segmentTextColor} />}
             accessibilityRole="radiogroup"
             accessibilityLabel="تفعيل التنبيهات"
           >
@@ -225,7 +227,7 @@ export default function SettingsScreen() {
           <SettingsRow
             title="سمة القراءة"
             description="اختر مظهر صفحات المصحف"
-            icon={<Feather name="eye" size={22} color={iconColor} />}
+            icon={<Feather name="eye" size={22} color={segmentTextColor} />}
             accessibilityRole="radiogroup"
             accessibilityLabel="سمة القراءة"
           >
@@ -249,7 +251,9 @@ export default function SettingsScreen() {
           <SettingsRow
             title="الرواية"
             description="اختر الرواية التي تريد القراءة بها"
-            icon={<Feather name="book-open" size={22} color={iconColor} />}
+            icon={
+              <Feather name="book-open" size={22} color={segmentTextColor} />
+            }
             accessibilityRole="radiogroup"
             accessibilityLabel="إختيار الرواية"
           >

@@ -1,6 +1,9 @@
 /**
  * Single settings / More-screen row: icon, title, optional description,
  * trailing control, and optional stacked children (slider or segmented control).
+ * Layout is icon | label | trailing so descriptions sit under the title.
+ * Forward chevrons are forced left-pointing (RTL) inside an LTR wrapper
+ * so I18nManager / CSS direction cannot flip them.
  * Used by the More screen and the Settings screen.
  */
 
@@ -15,8 +18,7 @@ import {
 
 import { Feather } from '@expo/vector-icons';
 
-import { useColors } from '@/hooks';
-import { isRTL } from '@/utils';
+import { useAppColorScheme, useColors } from '@/hooks';
 
 import { ThemedText } from './ThemedText';
 
@@ -52,10 +54,12 @@ export function SettingsRow({
   accessibilityRole,
   accessibilityState,
 }: SettingsRowProps) {
-  const { iconColor, ivoryColor } = useColors();
+  const { iconColor, primaryColor, primaryLightColor } = useColors();
+  const colorScheme = useAppColorScheme();
+  const accentColor = colorScheme === 'dark' ? primaryLightColor : primaryColor;
 
   const renderedIcon = wrapIcon ? (
-    <View style={[styles.iconWrap, { backgroundColor: ivoryColor }]}>
+    <View style={[styles.iconWrap, { backgroundColor: `${accentColor}22` }]}>
       {icon}
     </View>
   ) : (
@@ -65,23 +69,13 @@ export function SettingsRow({
   const content = (
     <View style={styles.container}>
       <View style={styles.mainRow}>
+        {renderedIcon}
         <View style={styles.labelBlock}>
-          <View style={styles.titleRow}>
-            {renderedIcon}
-            <ThemedText type="defaultSemiBold" style={styles.title}>
-              {title}
-            </ThemedText>
-          </View>
+          <ThemedText type="defaultSemiBold" style={styles.title}>
+            {title}
+          </ThemedText>
           {description ? (
-            <ThemedText
-              style={[
-                styles.description,
-                {
-                  color: iconColor,
-                  paddingStart: wrapIcon ? 50 : 34,
-                },
-              ]}
-            >
+            <ThemedText style={[styles.description, { color: iconColor }]}>
               {description}
             </ThemedText>
           ) : null}
@@ -89,13 +83,15 @@ export function SettingsRow({
         <View style={styles.trailing}>
           {trailing}
           {showChevron ? (
-            <Feather
-              name={isRTL ? 'chevron-left' : 'chevron-right'}
-              size={20}
-              color={iconColor}
-              accessibilityElementsHidden
-              importantForAccessibility="no"
-            />
+            <View style={styles.chevron}>
+              <Feather
+                name="chevron-left"
+                size={20}
+                color={iconColor}
+                accessibilityElementsHidden
+                importantForAccessibility="no"
+              />
+            </View>
           ) : null}
         </View>
       </View>
@@ -149,11 +145,6 @@ const styles = StyleSheet.create({
     minWidth: 0,
     gap: 4,
   },
-  titleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
   iconWrap: {
     width: 40,
     height: 40,
@@ -177,6 +168,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     flexShrink: 0,
+  },
+  chevron: {
+    direction: 'ltr',
   },
   children: {
     width: '100%',

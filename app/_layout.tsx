@@ -24,7 +24,13 @@ import { HelmetProvider } from 'react-helmet-async';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { ErrorBoundary, Notification, Seo } from '@/components';
+import {
+  AppColorSchemeSync,
+  ErrorBoundary,
+  Notification,
+  RtlHeaderBackButton,
+  Seo,
+} from '@/components';
 import { NotificationProvider } from '@/Context/NotificationProvider';
 import { useAppColorScheme, useDailyTrackerReset } from '@/hooks';
 import { isRTL } from '@/utils';
@@ -100,6 +106,7 @@ export default function RootLayout() {
 
   return (
     <ErrorBoundary>
+      <AppColorSchemeSync />
       <NotificationProvider>
         <HelmetProvider>
           <Seo />
@@ -113,13 +120,15 @@ export default function RootLayout() {
             }}
           >
             <SafeAreaProvider>
-              <StatusBar style="auto" />
+              <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
               <ThemeProvider
                 value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
               >
                 <Stack
                   screenOptions={{
                     headerTitleStyle: { fontFamily: 'Tajawal_700Bold' },
+                    headerBackVisible: false,
+                    headerLeft: (props) => <RtlHeaderBackButton {...props} />,
                     contentStyle: {
                       maxWidth: 640,
                       alignSelf: 'center',

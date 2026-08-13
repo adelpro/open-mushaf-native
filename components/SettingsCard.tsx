@@ -1,6 +1,7 @@
 /**
  * Rounded card that groups related settings or More-screen destinations.
- * Inserts hairline dividers between children. Used by More and Settings screens.
+ * Inserts hairline dividers between children. Overflow stays visible so
+ * toggles are not clipped. Used by More and Settings screens.
  */
 
 import React from 'react';
@@ -45,7 +46,6 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 16,
     borderWidth: StyleSheet.hairlineWidth,
-    overflow: 'hidden',
   },
   divider: {
     height: StyleSheet.hairlineWidth,

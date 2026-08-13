@@ -1,6 +1,7 @@
 /**
  * Applies the persisted app appearance preference to the native Appearance API
- * and, on web, to the document `color-scheme` style.
+ * and, on web, to the document `color-scheme` style and `html.light` / `html.dark`
+ * classes (react-native-web has no Appearance.setColorScheme).
  * Used by jotai/atoms.ts on hydrate and whenever the preference changes.
  */
 
@@ -27,7 +28,11 @@ export function applyAppColorScheme(preference: AppColorScheme): void {
   }
 
   if (Platform.OS === 'web' && typeof document !== 'undefined') {
-    document.documentElement.style.colorScheme =
-      preference === 'system' ? 'normal' : preference;
+    const root = document.documentElement;
+    root.style.colorScheme = preference === 'system' ? 'normal' : preference;
+    root.classList.remove('light', 'dark');
+    if (preference === 'light' || preference === 'dark') {
+      root.classList.add(preference);
+    }
   }
 }

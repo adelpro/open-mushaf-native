@@ -1,4 +1,5 @@
 export * from './AwesomeSlider';
+export * from './AppColorSchemeSync';
 export * from './ChangeLogs';
 export * from './ChapterCard';
 export * from './ChapterList';
@@ -14,6 +15,7 @@ export * from './PrivacyContentArabic';
 export * from './PrivacyContentEnglish';
 export * from './ReadingChart';
 export * from './ReadingPositionBanner';
+export * from './RtlHeaderBackButton';
 export * from './SearchAdvancedOptions';
 export * from './searchColorLegend';
 export * from './SearchEmptyState';
