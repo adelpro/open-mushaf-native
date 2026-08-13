@@ -1,3 +1,9 @@
+/**
+ * Android home-screen widget UI (react-native-android-widget).
+ * Renders mushaf progress: title, progress ring, surah glyph, page/hizb/wird.
+ * Used by widgets/widget-task-handler.tsx and hooks/useUpdateAndroidWidget.tsx.
+ * Layout should stay in sync with app/widget-preview.tsx.
+ */
 'use no memo';
 import React from 'react';
 
@@ -10,6 +16,10 @@ import {
 import type { HexColor } from 'react-native-android-widget';
 
 import { Colors } from '../constants/Colors';
+
+const RING_SIZE = 72;
+const RING_RADIUS = 28;
+const RING_STROKE = 5;
 
 export type WidgetProps = {
   dailyGoal?: number;
@@ -40,6 +50,7 @@ function withHexAlpha(hex: HexColor, alphaHex: string): HexColor {
 }
 
 function buildRingSvg(params: {
+  size: number;
   radius: number;
   strokeWidth: number;
   progress: number;
@@ -47,25 +58,35 @@ function buildRingSvg(params: {
   progressColor: string;
   label: string;
 }): string {
-  const { radius, strokeWidth, progress, trackColor, progressColor, label } =
-    params;
+  const {
+    size,
+    radius,
+    strokeWidth,
+    progress,
+    trackColor,
+    progressColor,
+    label,
+  } = params;
 
+  const center = size / 2;
+  // Android SVG text uses the baseline at y; offset slightly for visual centering.
+  const labelY = center + 5;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return `
-    <svg width="72" height="72" viewBox="0 0 72 72">
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
       <circle
-        cx="36"
-        cy="36"
+        cx="${center}"
+        cy="${center}"
         r="${radius}"
         stroke="${trackColor}"
         stroke-width="${strokeWidth}"
         fill="none"
       />
       <circle
-        cx="36"
-        cy="36"
+        cx="${center}"
+        cy="${center}"
         r="${radius}"
         stroke="${progressColor}"
         stroke-width="${strokeWidth}"
@@ -75,13 +96,11 @@ function buildRingSvg(params: {
         fill="none"
       />
       <text
-        x="36"
-        y="40"
+        x="${center}"
+        y="${labelY}"
         text-anchor="middle"
-        dominant-baseline="middle"
-        direction="rtl"
         fill="${progressColor}"
-        font-size="18"
+        font-size="16"
         font-weight="700"
         font-family="sans-serif"
       >${label}</text>
@@ -98,14 +117,16 @@ export default function AndroidWidget({
   colorScheme = 'light',
 }: WidgetProps) {
   const theme = colorScheme === 'dark' ? Colors.dark : Colors.light;
-  const primaryColor = theme.primary as HexColor;
-  const bgColor = theme.card as HexColor;
-  const textColor = theme.text as HexColor;
-  const subtextColor = theme.icon as HexColor;
+  // Dark green primary has poor contrast on dark ivory; use primaryLight in dark mode.
+  const primaryColor = (
+    colorScheme === 'dark' ? theme.primaryLight : theme.primary
+  ) as HexColor;
+  const secondaryColor = theme.secondary as HexColor;
+  const bgColor = theme.ivory as HexColor;
 
   const trackColor = withHexAlpha(
-    theme.text as HexColor,
-    colorScheme === 'dark' ? '33' : '24',
+    secondaryColor,
+    colorScheme === 'dark' ? '55' : '66',
   );
 
   const safeGoal = Math.max(1, Number.isFinite(dailyGoal) ? dailyGoal : 1);
@@ -122,15 +143,22 @@ export default function AndroidWidget({
     Number.isFinite(currentHizbNumber) ? currentHizbNumber : 1,
   );
 
+  // TODO: currentSurahNumber can arrive unvalidated from widget task data;
+  // clamp to integer in 1..114 before feeding surahToIconChar.
+  const safeSurah = Math.floor(
+    clamp(Number.isFinite(currentSurahNumber) ? currentSurahNumber : 1, 1, 114),
+  );
+
   const compactWird = `${safeCompleted}/${safeGoal}`;
 
   const svgString = buildRingSvg({
-    radius: 28,
-    strokeWidth: 5,
+    size: RING_SIZE,
+    radius: RING_RADIUS,
+    strokeWidth: RING_STROKE,
     progress,
     trackColor,
     progressColor: primaryColor,
-    label: `٪${Math.round(progress)}`,
+    label: `${Math.round(progress)}٪`,
   });
 
   return (
@@ -140,18 +168,23 @@ export default function AndroidWidget({
         width: 'match_parent',
         flexDirection: 'column',
         backgroundColor: bgColor,
+        borderRadius: 32,
+        borderWidth: 2,
+        borderColor: secondaryColor,
         alignItems: 'center',
-        paddingHorizontal: 5,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
         justifyContent: 'center',
+        overflow: 'hidden',
       }}
       clickAction="OPEN_APP"
     >
-      {/* Header Row*/}
+      {/* Header */}
       <FlexWidget
         style={{
           flexDirection: 'row',
-          marginBottom: 4,
-          justifyContent: 'flex-end',
+          marginBottom: 2,
+          justifyContent: 'center',
           alignItems: 'center',
           width: 'match_parent',
         }}
@@ -159,16 +192,16 @@ export default function AndroidWidget({
         <TextWidget
           text="المصحف المفتوح"
           style={{
-            fontSize: 22,
+            fontSize: 16,
             fontWeight: '700',
-            color: textColor,
+            color: primaryColor,
           }}
         />
         <IconWidget
           font="open_mushaf_icons"
-          size={22}
+          size={16}
           icon={'\uF000'}
-          style={{ marginHorizontal: 6 }}
+          style={{ marginHorizontal: 4, color: secondaryColor }}
         />
       </FlexWidget>
 
@@ -179,40 +212,39 @@ export default function AndroidWidget({
           alignItems: 'center',
           justifyContent: 'space-between',
           width: 'match_parent',
+          flex: 1,
         }}
       >
         {/* Progress ring */}
         <FlexWidget
           style={{
+            width: RING_SIZE,
+            height: RING_SIZE,
             alignItems: 'center',
             justifyContent: 'center',
-            margin: 5,
           }}
         >
-          <FlexWidget
-            style={{
-              width: 120,
-              height: 120,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <SvgWidget style={{ height: 120, width: 120 }} svg={svgString} />
-          </FlexWidget>
+          <SvgWidget
+            style={{ height: RING_SIZE, width: RING_SIZE }}
+            svg={svgString}
+          />
         </FlexWidget>
 
-        {/* Surah Name */}
+        {/* Surah glyph */}
         <IconWidget
           font="open_mushaf_icons"
-          size={60}
-          icon={surahToIconChar(currentSurahNumber)}
-          style={{ marginHorizontal: 6 }}
+          size={48}
+          icon={surahToIconChar(safeSurah)}
+          style={{ marginHorizontal: 4, color: primaryColor }}
         />
 
-        {/* Content */}
+        {/* Page / hizb / wird */}
         <FlexWidget
           style={{
+            flex: 1,
             flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'flex-end',
           }}
         >
           <FlexWidget
@@ -220,21 +252,20 @@ export default function AndroidWidget({
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'flex-end',
-              width: 'match_parent',
             }}
           >
             <TextWidget
               text={`الصفحة: ${safePage}`}
               style={{
-                fontSize: 18,
-                color: subtextColor,
+                fontSize: 13,
+                color: primaryColor,
               }}
             />
             <IconWidget
               font="open_mushaf_icons"
-              size={18}
+              size={14}
               icon={'\uF002'}
-              style={{ marginHorizontal: 6 }}
+              style={{ marginHorizontal: 4, color: secondaryColor }}
             />
           </FlexWidget>
 
@@ -243,21 +274,20 @@ export default function AndroidWidget({
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'flex-end',
-              width: 'match_parent',
             }}
           >
             <TextWidget
               text={`الحزب: ${safeHizb}`}
               style={{
-                fontSize: 18,
-                color: subtextColor,
+                fontSize: 13,
+                color: primaryColor,
               }}
             />
             <IconWidget
               font="open_mushaf_icons"
-              size={18}
+              size={14}
               icon={'\uF3A5'}
-              style={{ marginHorizontal: 6 }}
+              style={{ marginHorizontal: 4, color: secondaryColor }}
             />
           </FlexWidget>
 
@@ -266,21 +296,20 @@ export default function AndroidWidget({
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'flex-end',
-              width: 'match_parent',
             }}
           >
             <TextWidget
               text={`الورد: ${compactWird}`}
               style={{
-                fontSize: 18,
-                color: subtextColor,
+                fontSize: 13,
+                color: primaryColor,
               }}
             />
             <IconWidget
               font="open_mushaf_icons"
-              size={18}
+              size={14}
               icon={'\uF259'}
-              style={{ marginHorizontal: 6 }}
+              style={{ marginHorizontal: 4, color: secondaryColor }}
             />
           </FlexWidget>
         </FlexWidget>

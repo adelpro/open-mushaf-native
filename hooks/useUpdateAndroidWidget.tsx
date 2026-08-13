@@ -1,3 +1,6 @@
+import { useCallback, useEffect } from 'react';
+import { Platform, useColorScheme } from 'react-native';
+
 import { getDefaultStore } from 'jotai';
 import { useAtomValue } from 'jotai/react';
 import { requestWidgetUpdate } from 'react-native-android-widget';
@@ -28,8 +31,9 @@ import AndroidWidget from '@/widgets/android';
 export const useUpdateAndroidWidget = () => {
   const savedPage = useAtomValue(currentSavedPage);
   const riwaya = useAtomValue(mushafRiwaya) || 'warsh';
+  const colorScheme = useColorScheme() ?? 'light';
 
-  const updateAndroidWidget = async () => {
+  const updateAndroidWidget = useCallback(async () => {
     try {
       const store = getDefaultStore();
       const dailyGoal = store.get(dailyTrackerGoal);
@@ -78,6 +82,7 @@ export const useUpdateAndroidWidget = () => {
             currentPage={currentPage}
             currentSurahNumber={currentSurahNumber}
             currentHizbNumber={currentHizbNumber}
+            colorScheme={colorScheme}
           />
         ),
         widgetNotFound: () => console.log('Widget not on home screen'),
@@ -85,7 +90,13 @@ export const useUpdateAndroidWidget = () => {
     } catch (err) {
       console.error('Failed to update widget', err);
     }
-  };
+  }, [colorScheme, riwaya, savedPage]);
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      void updateAndroidWidget();
+    }
+  }, [colorScheme, updateAndroidWidget]);
 
   return { updateAndroidWidget };
 };
