@@ -23,11 +23,11 @@ type SettingsSectionProps = {
 /**
  * Renders a labeled settings group with consistent RTL spacing.
  */
-export function SettingsSection({
+export const SettingsSection = ({
   title,
   icon,
   children,
-}: SettingsSectionProps) {
+}: SettingsSectionProps) => {
   const { primaryColor, primaryLightColor } = useColors();
   const colorScheme = useAppColorScheme();
   const accentColor = colorScheme === 'dark' ? primaryLightColor : primaryColor;
@@ -54,7 +54,7 @@ export function SettingsSection({
       {children}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   section: {

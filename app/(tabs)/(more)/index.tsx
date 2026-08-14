@@ -33,7 +33,11 @@ import {
 import { useAppColorScheme, useColors, useOrientation } from '@/hooks';
 import { isWeb } from '@/utils/isWeb';
 
-export default function MoreScreen() {
+/**
+ * More tab landing screen: navigation hub to settings, bookmarks, reminders,
+ * tutorial/help, contact, privacy, about, and share.
+ */
+const MoreScreen = () => {
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const {
@@ -75,6 +79,28 @@ export default function MoreScreen() {
     }
   };
 
+  const handleOpenSettings = () => router.push('/settings');
+
+  const handleOpenBookmarks = () => router.push('/bookmarks');
+
+  const handleOpenReminders = () => router.push('/reminders');
+
+  const handleOpenTutorial = () => router.push('/tutorial');
+
+  const handleOpenHelp = async () => {
+    const url = 'https://docs.quran.us.kg';
+    const supported = await Linking.canOpenURL(url);
+    if (supported) {
+      await Linking.openURL(url);
+    }
+  };
+
+  const handleOpenContact = () => router.push('/contact');
+
+  const handleOpenPrivacy = () => router.push('/privacy');
+
+  const handleOpenAbout = () => router.push('/about');
+
   const iconStyle = { color: accentColor };
 
   return (
@@ -106,7 +132,7 @@ export default function MoreScreen() {
               title="الإعدادات"
               description="تخصيص تجربة القراءة والمظهر والتنبيهات"
               icon={<SettingsSVG width={22} height={22} style={iconStyle} />}
-              onPress={() => router.push('/settings')}
+              onPress={handleOpenSettings}
             />
             <SettingsRow
               wrapIcon
@@ -114,7 +140,7 @@ export default function MoreScreen() {
               title="العلامات المرجعية"
               description="عرض وإدارة العلامات المرجعية المحفوظة"
               icon={<BookmarkSVG width={22} height={22} style={iconStyle} />}
-              onPress={() => router.push('/bookmarks')}
+              onPress={handleOpenBookmarks}
             />
             {!isWeb ? (
               <SettingsRow
@@ -123,7 +149,7 @@ export default function MoreScreen() {
                 title="التذكيرات"
                 description="جدولة تذكيرات القراءة اليومية"
                 icon={<Feather name="bell" size={22} color={accentColor} />}
-                onPress={() => router.push('/reminders')}
+                onPress={handleOpenReminders}
               />
             ) : null}
           </SettingsCard>
@@ -137,7 +163,7 @@ export default function MoreScreen() {
               title="جولة تعليمية"
               description="تعرف على ميزات التطبيق خطوة بخطوة"
               icon={<WelcomeSVG width={22} height={22} style={iconStyle} />}
-              onPress={() => router.push('/tutorial')}
+              onPress={handleOpenTutorial}
             />
             <SettingsRow
               wrapIcon
@@ -145,13 +171,7 @@ export default function MoreScreen() {
               title="المساعدة"
               description="الأسئلة الشائعة والمساعدة والدعم"
               icon={<HelpSVG width={22} height={22} style={iconStyle} />}
-              onPress={async () => {
-                const url = 'https://docs.quran.us.kg';
-                const supported = await Linking.canOpenURL(url);
-                if (supported) {
-                  await Linking.openURL(url);
-                }
-              }}
+              onPress={handleOpenHelp}
             />
           </SettingsCard>
         </SettingsSection>
@@ -164,7 +184,7 @@ export default function MoreScreen() {
               title="تواصل معنا"
               description="راسلنا واقتراحاتك تهمنا"
               icon={<MailSVG width={22} height={22} style={iconStyle} />}
-              onPress={() => router.push('/contact')}
+              onPress={handleOpenContact}
             />
           </SettingsCard>
         </SettingsSection>
@@ -177,7 +197,7 @@ export default function MoreScreen() {
               title="سياسة الخصوصية"
               description="قراءة سياسة الخصوصية للتطبيق"
               icon={<PageSVG width={22} height={22} style={iconStyle} />}
-              onPress={() => router.push('/privacy')}
+              onPress={handleOpenPrivacy}
             />
             <SettingsRow
               wrapIcon
@@ -185,7 +205,7 @@ export default function MoreScreen() {
               title="حول التطبيق"
               description="معلومات الإصدار والمطور"
               icon={<InfoSVG width={22} height={22} style={iconStyle} />}
-              onPress={() => router.push('/about')}
+              onPress={handleOpenAbout}
             />
             <SettingsRow
               wrapIcon
@@ -258,7 +278,9 @@ export default function MoreScreen() {
       </ThemedView>
     </ScrollView>
   );
-}
+};
+
+export default MoreScreen;
 
 const styles = StyleSheet.create({
   contentContainerStyle: {

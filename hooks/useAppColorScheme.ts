@@ -15,9 +15,9 @@ import { appColorScheme } from '@/jotai/atoms';
  * Returns the color scheme the UI should render.
  * Honors an explicit dark/light preference and follows the system when set to automatic.
  */
-export function useAppColorScheme(): 'light' | 'dark' {
+export const useAppColorScheme = (): 'light' | 'dark' => {
   const systemScheme = useColorScheme();
   const preference = useAtomValue(appColorScheme);
 
   return resolveAppColorScheme(preference, systemScheme);
-}
+};

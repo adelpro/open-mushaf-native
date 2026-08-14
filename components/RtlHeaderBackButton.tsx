@@ -20,10 +20,10 @@ type RtlHeaderBackButtonProps = {
 /**
  * Replaces the default LTR back arrow on stack screens.
  */
-export function RtlHeaderBackButton({
+export const RtlHeaderBackButton = ({
   tintColor,
   canGoBack,
-}: RtlHeaderBackButtonProps) {
+}: RtlHeaderBackButtonProps) => {
   const router = useRouter();
   const { textColor } = useColors();
 
@@ -31,9 +31,11 @@ export function RtlHeaderBackButton({
     return null;
   }
 
+  const handleBack = () => router.back();
+
   return (
     <Pressable
-      onPress={() => router.back()}
+      onPress={handleBack}
       accessibilityRole="button"
       accessibilityLabel="رجوع"
       hitSlop={12}
@@ -48,7 +50,7 @@ export function RtlHeaderBackButton({
       </View>
     </Pressable>
   );
-}
+};
 
 const styles = StyleSheet.create({
   button: {

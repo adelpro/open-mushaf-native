@@ -2,7 +2,11 @@ import { Stack } from 'expo-router';
 
 import { RtlHeaderBackButton } from '@/components';
 
-export default function MoreLayout() {
+/**
+ * Nested stack for the More tab: index (hub), settings, contact, about,
+ * privacy, reminders. Uses the RTL-flipped back button in the header.
+ */
+const MoreLayout = () => {
   return (
     <Stack
       initialRouteName="index"
@@ -41,4 +45,6 @@ export default function MoreLayout() {
       />
     </Stack>
   );
-}
+};
+
+export default MoreLayout;

@@ -19,23 +19,23 @@ export const APP_COLOR_SCHEME_LABELS = ['داكن', 'فاتح', 'تلقائي (�
  * Maps a stored appearance preference to the value expected by
  * `Appearance.setColorScheme`. `null` means follow the system setting.
  */
-export function colorSchemeFromPreference(
+export const colorSchemeFromPreference = (
   preference: AppColorScheme,
-): 'light' | 'dark' | null {
+): 'light' | 'dark' | null => {
   return preference === 'system' ? null : preference;
-}
+};
 
 /**
  * Resolves the effective light/dark scheme from a stored preference and the
  * current system color scheme.
  */
-export function resolveAppColorScheme(
+export const resolveAppColorScheme = (
   preference: AppColorScheme,
   systemScheme: 'light' | 'dark' | null | undefined,
-): 'light' | 'dark' {
+): 'light' | 'dark' => {
   if (preference === 'light' || preference === 'dark') {
     return preference;
   }
 
   return systemScheme === 'dark' ? 'dark' : 'light';
-}
+};

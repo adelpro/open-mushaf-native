@@ -40,7 +40,7 @@ type SettingsRowProps = {
 /**
  * RTL-first settings row with a comfortable touch target.
  */
-export function SettingsRow({
+export const SettingsRow = ({
   icon,
   title,
   description,
@@ -53,7 +53,7 @@ export function SettingsRow({
   accessibilityHint,
   accessibilityRole,
   accessibilityState,
-}: SettingsRowProps) {
+}: SettingsRowProps) => {
   const { iconColor, primaryColor, primaryLightColor } = useColors();
   const colorScheme = useAppColorScheme();
   const accentColor = colorScheme === 'dark' ? primaryLightColor : primaryColor;
@@ -124,7 +124,7 @@ export function SettingsRow({
       {content}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

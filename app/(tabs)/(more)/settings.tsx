@@ -246,7 +246,7 @@ export default function SettingsScreen() {
         </SettingsCard>
       </SettingsSection>
 
-      <SettingsSection title="إختيار الرواية" icon="book-open">
+      <SettingsSection title="اختيار الرواية" icon="book-open">
         <SettingsCard>
           <SettingsRow
             title="الرواية"
@@ -255,7 +255,7 @@ export default function SettingsScreen() {
               <Feather name="book-open" size={22} color={segmentTextColor} />
             }
             accessibilityRole="radiogroup"
-            accessibilityLabel="إختيار الرواية"
+            accessibilityLabel="اختيار الرواية"
           >
             <SegmentedControl
               options={riwayaOptions}

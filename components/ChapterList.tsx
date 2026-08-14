@@ -12,6 +12,12 @@ import { ListItemSeparator } from './ListItemSeparator';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+const extractChapterKey = (item: Chapter) => item.number.toString();
+
+const renderChapterItem = ({ item }: { item: Chapter }) => (
+  <ChapterCard chapter={item} />
+);
+
 /**
  * A list component that fetches chapter metadata using the `useQuranMetadata` hook
  * and renders a sequence of `ChapterCard`s.
@@ -39,20 +45,12 @@ export function ChapterList() {
     );
   }
 
-  const extractKey = (item: Chapter) => {
-    return item.number.toString();
-  };
-
-  const renderItem = ({ item }: { item: Chapter }) => {
-    return <ChapterCard chapter={item} />;
-  };
-
   return (
     <FlashList
       contentContainerStyle={styles.contentContainer}
-      keyExtractor={extractKey}
+      keyExtractor={extractChapterKey}
       data={chapterData}
-      renderItem={renderItem}
+      renderItem={renderChapterItem}
       ItemSeparatorComponent={ListItemSeparator}
     />
   );

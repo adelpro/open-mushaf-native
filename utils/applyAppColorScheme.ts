@@ -16,7 +16,7 @@ import {
  * Pushes the user's appearance preference into the platform color-scheme APIs.
  * Safe to call during SSR: missing APIs and storage errors are ignored.
  */
-export function applyAppColorScheme(preference: AppColorScheme): void {
+export const applyAppColorScheme = (preference: AppColorScheme): void => {
   const scheme = colorSchemeFromPreference(preference);
 
   if (typeof Appearance.setColorScheme === 'function') {
@@ -35,4 +35,4 @@ export function applyAppColorScheme(preference: AppColorScheme): void {
       root.classList.add(preference);
     }
   }
-}
+};

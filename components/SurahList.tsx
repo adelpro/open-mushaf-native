@@ -12,6 +12,12 @@ import { SurahCard } from './SurahCard';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
+const extractSurahKey = (item: Surah) => item.number.toString();
+
+const renderSurahItem = ({ item }: { item: Surah }) => (
+  <SurahCard surah={item} />
+);
+
 /**
  * Fetch and display all 114 Surahs within sequentially rendered `SurahCard` instances.
  * Internally handles application suspense/loading fallback behaviors during metadata fetch.
@@ -38,20 +44,12 @@ export function SurahList() {
     );
   }
 
-  const extractKey = (item: Surah) => {
-    return item.number.toString();
-  };
-
-  const renderItem = ({ item }: { item: Surah }) => {
-    return <SurahCard surah={item} />;
-  };
-
   return (
     <FlashList
       contentContainerStyle={styles.contentContainer}
-      keyExtractor={extractKey}
+      keyExtractor={extractSurahKey}
       data={surahData}
-      renderItem={renderItem}
+      renderItem={renderSurahItem}
       ItemSeparatorComponent={ListItemSeparator}
     />
   );

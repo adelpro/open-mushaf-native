@@ -118,7 +118,7 @@ flowchart TB
 
 ## 4. Directory Layout
 
-```
+```text
 app/                     Expo Router routes (entry: index.ts)
   _layout.tsx            Root layout: fonts, RTL, providers, splash, notification channel
   (tabs)/                Main tabs (index = mushaf reader, lists, (more)/)
@@ -152,7 +152,7 @@ settings, daily tracker progress + `readingHistory`, and top/bottom menu states.
 
 **Persistence flow** (`jotai/createAtomWithStorage.ts`):
 
-```
+```text
 atomWithStorage(key, initial, createStorage(), { getOnInit: true })
         │
         ▼
@@ -271,7 +271,7 @@ Colors come from `constants/Colors.ts` — **not** flat black/white:
 
 **Layout** (compact card, ~300×150 mental model; sizes fit inside OS widget bounds):
 
-```
+```text
 ┌─────────────────────────────────────────┐  ← ivory bg, secondary border, r=32
 │           المصحف المفتوح  📖            │  ← primary title + secondary logo
 │  (○٪)     الفاتحة     الصفحة / الحزب / الورد │
@@ -303,9 +303,12 @@ Colors come from `constants/Colors.ts` — **not** flat black/white:
 
 ### 8.5 Contact form
 
-- No backend: the contact screen POSTs to a Telegram bot via
-  `EXPO_PUBLIC_BOT_TOKEN` / `EXPO_PUBLIC_CHAT_ID` env vars. Rate-limited by
-  `utils/rateLimiter.ts` + `constants/ratelimitConfig.ts`.
+- The contact screen POSTs the form payload to a server-side endpoint
+  (`EXPO_PUBLIC_CONTACT_API_URL`). The Telegram bot token and chat id live
+  exclusively on the server, which forwards the message; they never appear in
+  the client bundle. Client-side rate limiting (`utils/rateLimiter.ts` +
+  `constants/ratelimitConfig.ts`) is a UX guard only — the endpoint must
+  enforce its own server-side limits.
 
 ---
 
@@ -336,7 +339,7 @@ Colors come from `constants/Colors.ts` — **not** flat black/white:
 
 ## 10. Web (PWA) Pipeline
 
-```
+```shell
 expo export -p web --clear            (static render to dist/)
   → workbox injectManifest            (Service Worker, precache assets)
   → firebase deploy --only hosting    (Firebase Hosting; custom domain quran.us.kg)
@@ -386,9 +389,11 @@ web-affecting changes: `yarn web:export`.
 ## 13. Security & Privacy Notes
 
 - No personal data ever leaves the device except the contact form (user-initiated,
-  Telegram) and analytics-free (no Firebase Analytics in repo).
-- Secrets live in environment variables only (`.env`, EAS): `EXPO_PUBLIC_BOT_TOKEN`,
-  `EXPO_PUBLIC_CHAT_ID`. Never commit `.env`.
+  via a server-side endpoint that forwards to Telegram) and analytics-free
+  (no Firebase Analytics in repo).
+- The Telegram bot token / chat id for the contact form live exclusively
+  server-side; the client only knows the public contact endpoint
+  (`EXPO_PUBLIC_CONTACT_API_URL`). Never commit `.env`.
 - `expo-secure-store` is available for sensitive values (installed, minimal use).
 - App Store encryption declaration set in `app.json` (`ITSAppUsesNonExemptEncryption: false`).
 

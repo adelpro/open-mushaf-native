@@ -15,8 +15,15 @@ import { ThemedView } from './ThemedView';
 import { useNotification } from '../Context/NotificationProvider';
 
 /**
+ * Server-side contact endpoint. The Telegram bot token / chat id live only on the
+ * server (see SYSTEM_DESIGN.md §8.5); the client sends the form payload here.
+ */
+const CONTACT_API_URL = process.env.EXPO_PUBLIC_CONTACT_API_URL ?? '';
+
+/**
  * A comprehensive contact form view component featuring inline field validation,
- * local rate limiting via `checkRateLimit`, and Telegram API submission masking.
+ * local rate limiting via `checkRateLimit`, and submission through a server-side
+ * endpoint (the Telegram bot token/chat id live only on the server).
  * Includes user notification triggers upon success or explicit validation failures.
  *
  * @returns A fully functional, styled user input form view.
@@ -71,7 +78,9 @@ export function ContactForm() {
   };
 
   /**
-   * Enforce client-side rate limiting before sending to Telegram.
+   * Enforce client-side rate limiting before submitting the form.
+   * This is a UX guard only; it does not protect the contact endpoint, which
+   * must enforce its own server-side limits since it holds the Telegram credentials.
    * Throws RateLimitError if the limit is exceeded, which is caught
    * in handleSubmit and surfaced to the user via notify().
    */
@@ -86,18 +95,18 @@ export function ContactForm() {
     }
   };
 
-  const sendToTelegram = async (text: string) => {
-    const url = `https://api.telegram.org/bot${process.env.EXPO_PUBLIC_BOT_TOKEN}/sendMessage`;
-    const response = await fetch(url, {
+  const submitMessage = async (payload: {
+    name: string;
+    email: string;
+    message: string;
+  }) => {
+    const response = await fetch(CONTACT_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: process.env.EXPO_PUBLIC_CHAT_ID,
-        text,
-      }),
+      body: JSON.stringify(payload),
     });
 
-    // Telegram itself is rate-limiting us — surface a friendly error
+    // The server is rate-limiting us — surface a friendly error
     if (response.status === 429) {
       const data = await response.json().catch(() => ({}));
       const retryAfterMs = (data?.parameters?.retry_after ?? 60) * 1000;
@@ -105,7 +114,7 @@ export function ContactForm() {
     }
 
     if (!response.ok) {
-      throw new Error(`Telegram API error: ${response.status}`);
+      throw new Error(`Contact API error: ${response.status}`);
     }
 
     return response.json();
@@ -131,14 +140,11 @@ export function ContactForm() {
 
     setIsLoading(true);
     try {
-      const messageText = `
-        Mushaf - warsh - Form Submission:
-        Name: ${formData.name}
-        Email: ${formData.email}
-        Message: ${formData.message}
-      `;
-
-      await sendToTelegram(messageText);
+      await submitMessage({
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+      });
       setFormData({ name: '', email: '', message: '' });
       notify('تم الإرسال بنجاح!', 'form_success', 'success');
     } catch (error) {

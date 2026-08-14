@@ -1,5 +1,8 @@
 import { View } from 'react-native';
 
-export function ListItemSeparator() {
+/**
+ * Renders vertical spacing between adjacent list items.
+ */
+export const ListItemSeparator = () => {
   return <View style={{ height: 10 }} />;
-}
+};
