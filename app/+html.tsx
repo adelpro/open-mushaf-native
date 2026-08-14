@@ -120,11 +120,8 @@ export default function Root({ children }: PropsWithChildren) {
           However, body scrolling is often nice to have for mobile web. If you want to enable it, remove this line.
         */}
         <ScrollViewStyleReset />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: applyStoredColorScheme,
-          }}
-        />
+        {/* Apply the stored color scheme before first paint to avoid a theme flash. */}
+        <script src="/apply-color-scheme.js" />
         {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
         <style dangerouslySetInnerHTML={{ __html: responsiveBackground }} />
         {/* Add any additional <head> elements that you want globally available on web... */}
@@ -198,20 +195,6 @@ export default function Root({ children }: PropsWithChildren) {
     </html>
   );
 }
-
-const applyStoredColorScheme = `
-(function () {
-  try {
-    var raw = localStorage.getItem('AppColorScheme');
-    if (!raw) return;
-    var preference = JSON.parse(raw);
-    if (preference === 'dark' || preference === 'light') {
-      document.documentElement.classList.add(preference);
-      document.documentElement.style.colorScheme = preference;
-    }
-  } catch (e) {}
-})();
-`;
 
 const responsiveBackground = `
 body {

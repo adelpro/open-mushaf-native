@@ -16,6 +16,14 @@ export const APP_COLOR_SCHEME_KEYS: AppColorScheme[] = [
 export const APP_COLOR_SCHEME_LABELS = ['داكن', 'فاتح', 'تلقائي (النظام)'];
 
 /**
+ * Resolves the scheme at a given selector index (0 = dark, 1 = light,
+ * 2 = system), defaulting to the system scheme for out-of-range indices.
+ */
+export const appColorSchemeAt = (index: number): AppColorScheme => {
+  return APP_COLOR_SCHEME_KEYS[index] ?? 'system';
+};
+
+/**
  * Maps a stored appearance preference to the value expected by
  * `Appearance.setColorScheme`. `null` means follow the system setting.
  */

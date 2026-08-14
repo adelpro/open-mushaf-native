@@ -28,6 +28,7 @@ import {
 import {
   APP_COLOR_SCHEME_KEYS,
   APP_COLOR_SCHEME_LABELS,
+  appColorSchemeAt,
   READING_THEME_KEYS,
   READING_THEME_LABELS,
   riwayaOptions,
@@ -196,11 +197,7 @@ export default function SettingsScreen() {
               activeColor={primaryColor}
               textColor={segmentTextColor}
               onSelectionChange={(index: number) => {
-                if (index < 0 || index >= APP_COLOR_SCHEME_KEYS.length) {
-                  return;
-                }
-                const scheme = APP_COLOR_SCHEME_KEYS[index];
-                setAppColorSchemeValue(scheme);
+                setAppColorSchemeValue(appColorSchemeAt(index));
               }}
             />
           </SettingsRow>
