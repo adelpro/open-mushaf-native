@@ -42,13 +42,89 @@ interface SettingsRowProps {
   description?: string;
   trailing?: React.ReactNode;
   children?: React.ReactNode;
-  onPress?: () => void;
+  onPress?: () => void | Promise<void>;
   options?: SettingsRowOptions;
   accessibility?: SettingsRowAccessibility;
 }
 
 /**
- * Renders the row body: icon | label | trailing, plus optional stacked children.
+ * Renders the row icon, optionally inside a tinted rounded square.
+ */
+const SettingsRowIcon = ({
+  icon,
+  wrapIcon,
+}: {
+  icon: React.ReactNode;
+  wrapIcon: boolean;
+}) => {
+  const { primaryColor, primaryLightColor } = useColors();
+  const colorScheme = useAppColorScheme();
+  const accentColor = colorScheme === 'dark' ? primaryLightColor : primaryColor;
+
+  if (!wrapIcon) {
+    return icon;
+  }
+
+  return (
+    <View style={[styles.iconWrap, { backgroundColor: `${accentColor}22` }]}>
+      {icon}
+    </View>
+  );
+};
+
+/**
+ * Renders the row main line: icon | title/description | trailing controls.
+ */
+const SettingsRowMain = ({
+  icon,
+  title,
+  description,
+  trailing,
+  showChevron,
+  wrapIcon,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description?: string;
+  trailing?: React.ReactNode;
+  showChevron: boolean;
+  wrapIcon: boolean;
+}) => {
+  const { iconColor } = useColors();
+
+  return (
+    <View style={styles.mainRow}>
+      <SettingsRowIcon icon={icon} wrapIcon={wrapIcon} />
+      <View style={styles.labelBlock}>
+        <ThemedText type="defaultSemiBold" style={styles.title}>
+          {title}
+        </ThemedText>
+        {description ? (
+          <ThemedText style={[styles.description, { color: iconColor }]}>
+            {description}
+          </ThemedText>
+        ) : null}
+      </View>
+      <View style={styles.trailing}>
+        {trailing}
+        {showChevron ? (
+          <View style={styles.chevron}>
+            <Feather
+              name="chevron-left"
+              size={20}
+              color={iconColor}
+              accessibilityElementsHidden
+              importantForAccessibility="no"
+            />
+          </View>
+        ) : null}
+      </View>
+    </View>
+  );
+};
+
+/**
+ * Renders the row body: main line plus optional stacked children.
  */
 const SettingsRowContent = ({
   icon,
@@ -65,48 +141,18 @@ const SettingsRowContent = ({
   children?: React.ReactNode;
   options: SettingsRowOptions;
 }) => {
-  const { iconColor, primaryColor, primaryLightColor } = useColors();
-  const colorScheme = useAppColorScheme();
-  const accentColor = colorScheme === 'dark' ? primaryLightColor : primaryColor;
   const { showChevron = false, wrapIcon = false } = options;
-
-  const renderedIcon = wrapIcon ? (
-    <View style={[styles.iconWrap, { backgroundColor: `${accentColor}22` }]}>
-      {icon}
-    </View>
-  ) : (
-    icon
-  );
 
   return (
     <View style={styles.container}>
-      <View style={styles.mainRow}>
-        {renderedIcon}
-        <View style={styles.labelBlock}>
-          <ThemedText type="defaultSemiBold" style={styles.title}>
-            {title}
-          </ThemedText>
-          {description ? (
-            <ThemedText style={[styles.description, { color: iconColor }]}>
-              {description}
-            </ThemedText>
-          ) : null}
-        </View>
-        <View style={styles.trailing}>
-          {trailing}
-          {showChevron ? (
-            <View style={styles.chevron}>
-              <Feather
-                name="chevron-left"
-                size={20}
-                color={iconColor}
-                accessibilityElementsHidden
-                importantForAccessibility="no"
-              />
-            </View>
-          ) : null}
-        </View>
-      </View>
+      <SettingsRowMain
+        icon={icon}
+        title={title}
+        description={description}
+        trailing={trailing}
+        showChevron={showChevron}
+        wrapIcon={wrapIcon}
+      />
       {children ? <View style={styles.children}>{children}</View> : null}
     </View>
   );
@@ -122,9 +168,10 @@ export const SettingsRow = ({
   trailing,
   children,
   onPress,
-  options = {},
-  accessibility,
+  ...rest
 }: SettingsRowProps) => {
+  const { options = {}, accessibility } = rest;
+
   const content = (
     <SettingsRowContent
       icon={icon}
@@ -137,14 +184,18 @@ export const SettingsRow = ({
     </SettingsRowContent>
   );
 
+  const rowAccessibility = {
+    accessibilityLabel: accessibility?.label ?? title,
+    accessibilityHint: accessibility?.hint,
+    accessibilityState: accessibility?.state,
+  };
+
   if (onPress) {
     return (
       <Pressable
         onPress={onPress}
         accessibilityRole={accessibility?.role ?? 'button'}
-        accessibilityLabel={accessibility?.label ?? title}
-        accessibilityHint={accessibility?.hint}
-        accessibilityState={accessibility?.state}
+        {...rowAccessibility}
         style={({ pressed }) => [pressed && styles.pressed]}
       >
         {content}
@@ -153,12 +204,7 @@ export const SettingsRow = ({
   }
 
   return (
-    <View
-      accessibilityRole={accessibility?.role}
-      accessibilityLabel={accessibility?.label ?? title}
-      accessibilityHint={accessibility?.hint}
-      accessibilityState={accessibility?.state}
-    >
+    <View accessibilityRole={accessibility?.role} {...rowAccessibility}>
       {content}
     </View>
   );

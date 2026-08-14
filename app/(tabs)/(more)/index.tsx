@@ -40,6 +40,54 @@ interface ShareErrorModalProps {
 }
 
 /**
+ * Error message body: title, close button, and dismiss action.
+ */
+const ShareErrorModalContent = ({
+  message,
+  onClose,
+}: {
+  message: string;
+  onClose: () => void;
+}) => {
+  const { cardColor, iconColor, textColor } = useColors();
+
+  return (
+    <ThemedView
+      style={[styles.modalContent, { backgroundColor: cardColor }]}
+      onStartShouldSetResponder={() => true}
+    >
+      <ThemedView
+        style={[styles.modalHeader, { borderBottomColor: textColor }]}
+      >
+        <ThemedText style={[styles.modalTitle, { color: textColor }]}>
+          خطأ
+        </ThemedText>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={onClose}
+          accessibilityRole="button"
+          accessibilityLabel="إغلاق رسالة الخطأ"
+        >
+          <Feather name="x" size={24} color={iconColor} />
+        </TouchableOpacity>
+      </ThemedView>
+      <ThemedText style={[styles.modalMessage, { color: textColor }]}>
+        {message}
+      </ThemedText>
+      <ThemedView style={styles.modalActions}>
+        <ThemedButton
+          variant="primary"
+          onPress={onClose}
+          style={styles.modalButton}
+        >
+          حسناً
+        </ThemedButton>
+      </ThemedView>
+    </ThemedView>
+  );
+};
+
+/**
  * Modal shown when a share action fails, with the error message and a close button.
  */
 const ShareErrorModal = ({
@@ -47,8 +95,6 @@ const ShareErrorModal = ({
   message,
   onClose,
 }: ShareErrorModalProps) => {
-  const { cardColor, iconColor, textColor } = useColors();
-
   return (
     <Modal
       animationType="fade"
@@ -63,40 +109,7 @@ const ShareErrorModal = ({
         accessibilityLabel="إغلاق نافذة الخطأ"
         accessibilityRole="button"
       >
-        <ThemedView
-          style={[styles.modalContent, { backgroundColor: cardColor }]}
-          onStartShouldSetResponder={() => true}
-        >
-          <ThemedView
-            style={[styles.modalHeader, { borderBottomColor: textColor }]}
-          >
-            <ThemedText style={[styles.modalTitle, { color: textColor }]}>
-              خطأ
-            </ThemedText>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={onClose}
-              accessibilityRole="button"
-              accessibilityLabel="إغلاق رسالة الخطأ"
-            >
-              <Feather name="x" size={24} color={iconColor} />
-            </TouchableOpacity>
-          </ThemedView>
-
-          <ThemedText style={[styles.modalMessage, { color: textColor }]}>
-            {message}
-          </ThemedText>
-
-          <ThemedView style={styles.modalActions}>
-            <ThemedButton
-              variant="primary"
-              onPress={onClose}
-              style={styles.modalButton}
-            >
-              حسناً
-            </ThemedButton>
-          </ThemedView>
-        </ThemedView>
+        <ShareErrorModalContent message={message} onClose={onClose} />
       </TouchableOpacity>
     </Modal>
   );
@@ -179,7 +192,9 @@ const MoreScreen = () => {
 
   const iconStyle = { color: accentColor };
 
-  const closeErrorModal = () => setErrorModalVisible(false);
+  const closeErrorModal = () => {
+    setErrorModalVisible(false);
+  };
 
   const sections: MoreSection[] = [
     {

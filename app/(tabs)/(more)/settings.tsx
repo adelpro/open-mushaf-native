@@ -196,10 +196,11 @@ export default function SettingsScreen() {
               activeColor={primaryColor}
               textColor={segmentTextColor}
               onSelectionChange={(index: number) => {
-                const scheme = APP_COLOR_SCHEME_KEYS[index];
-                if (scheme) {
-                  setAppColorSchemeValue(scheme);
+                if (index < 0 || index >= APP_COLOR_SCHEME_KEYS.length) {
+                  return;
                 }
+                const scheme = APP_COLOR_SCHEME_KEYS[index];
+                setAppColorSchemeValue(scheme);
               }}
             />
           </SettingsRow>
