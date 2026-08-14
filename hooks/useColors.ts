@@ -10,7 +10,7 @@ import { useAppColorScheme } from './useAppColorScheme';
  */
 export const useColors = () => {
   const colorScheme = useAppColorScheme();
-  const theme = Colors[colorScheme];
+  const theme = colorScheme === 'dark' ? Colors.dark : Colors.light;
 
   return {
     backgroundColor: theme.background,

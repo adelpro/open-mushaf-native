@@ -33,6 +33,88 @@ import {
 import { useAppColorScheme, useColors, useOrientation } from '@/hooks';
 import { isWeb } from '@/utils/isWeb';
 
+interface ShareErrorModalProps {
+  visible: boolean;
+  message: string;
+  onClose: () => void;
+}
+
+/**
+ * Modal shown when a share action fails, with the error message and a close button.
+ */
+const ShareErrorModal = ({
+  visible,
+  message,
+  onClose,
+}: ShareErrorModalProps) => {
+  const { cardColor, iconColor, textColor } = useColors();
+
+  return (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <TouchableOpacity
+        style={styles.modalOverlay}
+        activeOpacity={1}
+        onPress={onClose}
+        accessibilityLabel="إغلاق نافذة الخطأ"
+        accessibilityRole="button"
+      >
+        <ThemedView
+          style={[styles.modalContent, { backgroundColor: cardColor }]}
+          onStartShouldSetResponder={() => true}
+        >
+          <ThemedView
+            style={[styles.modalHeader, { borderBottomColor: textColor }]}
+          >
+            <ThemedText style={[styles.modalTitle, { color: textColor }]}>
+              خطأ
+            </ThemedText>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={onClose}
+              accessibilityRole="button"
+              accessibilityLabel="إغلاق رسالة الخطأ"
+            >
+              <Feather name="x" size={24} color={iconColor} />
+            </TouchableOpacity>
+          </ThemedView>
+
+          <ThemedText style={[styles.modalMessage, { color: textColor }]}>
+            {message}
+          </ThemedText>
+
+          <ThemedView style={styles.modalActions}>
+            <ThemedButton
+              variant="primary"
+              onPress={onClose}
+              style={styles.modalButton}
+            >
+              حسناً
+            </ThemedButton>
+          </ThemedView>
+        </ThemedView>
+      </TouchableOpacity>
+    </Modal>
+  );
+};
+
+interface MoreRow {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  onPress: () => void;
+}
+
+interface MoreSection {
+  title: string;
+  icon: keyof typeof Feather.glyphMap;
+  rows: MoreRow[];
+}
+
 /**
  * More tab landing screen: navigation hub to settings, bookmarks, reminders,
  * tutorial/help, contact, privacy, about, and share.
@@ -40,14 +122,8 @@ import { isWeb } from '@/utils/isWeb';
 const MoreScreen = () => {
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const {
-    cardColor,
-    iconColor,
-    textColor,
-    backgroundColor,
-    primaryColor,
-    primaryLightColor,
-  } = useColors();
+  const { iconColor, backgroundColor, primaryColor, primaryLightColor } =
+    useColors();
   const colorScheme = useAppColorScheme();
   const accentColor = colorScheme === 'dark' ? primaryLightColor : primaryColor;
   const { isLandscape } = useOrientation();
@@ -103,6 +179,93 @@ const MoreScreen = () => {
 
   const iconStyle = { color: accentColor };
 
+  const closeErrorModal = () => setErrorModalVisible(false);
+
+  const sections: MoreSection[] = [
+    {
+      title: 'المحتوى',
+      icon: 'book-open',
+      rows: [
+        {
+          title: 'الإعدادات',
+          description: 'تخصيص تجربة القراءة والمظهر والتنبيهات',
+          icon: <SettingsSVG width={22} height={22} style={iconStyle} />,
+          onPress: handleOpenSettings,
+        },
+        {
+          title: 'العلامات المرجعية',
+          description: 'عرض وإدارة العلامات المرجعية المحفوظة',
+          icon: <BookmarkSVG width={22} height={22} style={iconStyle} />,
+          onPress: handleOpenBookmarks,
+        },
+        ...(isWeb
+          ? []
+          : [
+              {
+                title: 'التذكيرات',
+                description: 'جدولة تذكيرات القراءة اليومية',
+                icon: <Feather name="bell" size={22} color={accentColor} />,
+                onPress: handleOpenReminders,
+              },
+            ]),
+      ],
+    },
+    {
+      title: 'الدعم والمساعدة',
+      icon: 'help-circle',
+      rows: [
+        {
+          title: 'جولة تعليمية',
+          description: 'تعرف على ميزات التطبيق خطوة بخطوة',
+          icon: <WelcomeSVG width={22} height={22} style={iconStyle} />,
+          onPress: handleOpenTutorial,
+        },
+        {
+          title: 'المساعدة',
+          description: 'الأسئلة الشائعة والمساعدة والدعم',
+          icon: <HelpSVG width={22} height={22} style={iconStyle} />,
+          onPress: handleOpenHelp,
+        },
+      ],
+    },
+    {
+      title: 'تواصل معنا',
+      icon: 'mail',
+      rows: [
+        {
+          title: 'تواصل معنا',
+          description: 'راسلنا واقتراحاتك تهمنا',
+          icon: <MailSVG width={22} height={22} style={iconStyle} />,
+          onPress: handleOpenContact,
+        },
+      ],
+    },
+    {
+      title: 'حول التطبيق',
+      icon: 'info',
+      rows: [
+        {
+          title: 'سياسة الخصوصية',
+          description: 'قراءة سياسة الخصوصية للتطبيق',
+          icon: <PageSVG width={22} height={22} style={iconStyle} />,
+          onPress: handleOpenPrivacy,
+        },
+        {
+          title: 'حول التطبيق',
+          description: 'معلومات الإصدار والمطور',
+          icon: <InfoSVG width={22} height={22} style={iconStyle} />,
+          onPress: handleOpenAbout,
+        },
+        {
+          title: 'شارك التطبيق',
+          description: 'شارك التطبيق مع أصدقائك',
+          icon: <ShareSVG width={22} height={22} style={iconStyle} />,
+          onPress: handleShare,
+        },
+      ],
+    },
+  ];
+
   return (
     <ScrollView
       style={{ backgroundColor }}
@@ -124,157 +287,32 @@ const MoreScreen = () => {
           </ThemedText>
         </View>
 
-        <SettingsSection title="المحتوى" icon="book-open">
-          <SettingsCard>
-            <SettingsRow
-              wrapIcon
-              showChevron
-              title="الإعدادات"
-              description="تخصيص تجربة القراءة والمظهر والتنبيهات"
-              icon={<SettingsSVG width={22} height={22} style={iconStyle} />}
-              onPress={handleOpenSettings}
-            />
-            <SettingsRow
-              wrapIcon
-              showChevron
-              title="العلامات المرجعية"
-              description="عرض وإدارة العلامات المرجعية المحفوظة"
-              icon={<BookmarkSVG width={22} height={22} style={iconStyle} />}
-              onPress={handleOpenBookmarks}
-            />
-            {!isWeb ? (
-              <SettingsRow
-                wrapIcon
-                showChevron
-                title="التذكيرات"
-                description="جدولة تذكيرات القراءة اليومية"
-                icon={<Feather name="bell" size={22} color={accentColor} />}
-                onPress={handleOpenReminders}
-              />
-            ) : null}
-          </SettingsCard>
-        </SettingsSection>
-
-        <SettingsSection title="الدعم والمساعدة" icon="help-circle">
-          <SettingsCard>
-            <SettingsRow
-              wrapIcon
-              showChevron
-              title="جولة تعليمية"
-              description="تعرف على ميزات التطبيق خطوة بخطوة"
-              icon={<WelcomeSVG width={22} height={22} style={iconStyle} />}
-              onPress={handleOpenTutorial}
-            />
-            <SettingsRow
-              wrapIcon
-              showChevron
-              title="المساعدة"
-              description="الأسئلة الشائعة والمساعدة والدعم"
-              icon={<HelpSVG width={22} height={22} style={iconStyle} />}
-              onPress={handleOpenHelp}
-            />
-          </SettingsCard>
-        </SettingsSection>
-
-        <SettingsSection title="تواصل معنا" icon="mail">
-          <SettingsCard>
-            <SettingsRow
-              wrapIcon
-              showChevron
-              title="تواصل معنا"
-              description="راسلنا واقتراحاتك تهمنا"
-              icon={<MailSVG width={22} height={22} style={iconStyle} />}
-              onPress={handleOpenContact}
-            />
-          </SettingsCard>
-        </SettingsSection>
-
-        <SettingsSection title="حول التطبيق" icon="info">
-          <SettingsCard>
-            <SettingsRow
-              wrapIcon
-              showChevron
-              title="سياسة الخصوصية"
-              description="قراءة سياسة الخصوصية للتطبيق"
-              icon={<PageSVG width={22} height={22} style={iconStyle} />}
-              onPress={handleOpenPrivacy}
-            />
-            <SettingsRow
-              wrapIcon
-              showChevron
-              title="حول التطبيق"
-              description="معلومات الإصدار والمطور"
-              icon={<InfoSVG width={22} height={22} style={iconStyle} />}
-              onPress={handleOpenAbout}
-            />
-            <SettingsRow
-              wrapIcon
-              showChevron
-              title="شارك التطبيق"
-              description="شارك التطبيق مع أصدقائك"
-              icon={<ShareSVG width={22} height={22} style={iconStyle} />}
-              onPress={handleShare}
-            />
-          </SettingsCard>
-        </SettingsSection>
-
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={errorModalVisible}
-          onRequestClose={() => {
-            setErrorModalVisible(false);
-          }}
-        >
-          <TouchableOpacity
-            style={styles.modalOverlay}
-            activeOpacity={1}
-            onPress={() => {
-              setErrorModalVisible(false);
-            }}
-            accessibilityLabel="إغلاق نافذة الخطأ"
-            accessibilityRole="button"
+        {sections.map((section) => (
+          <SettingsSection
+            key={section.title}
+            title={section.title}
+            icon={section.icon}
           >
-            <ThemedView
-              style={[styles.modalContent, { backgroundColor: cardColor }]}
-              onStartShouldSetResponder={() => true}
-            >
-              <ThemedView
-                style={[styles.modalHeader, { borderBottomColor: textColor }]}
-              >
-                <ThemedText style={[styles.modalTitle, { color: textColor }]}>
-                  خطأ
-                </ThemedText>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => {
-                    setErrorModalVisible(false);
-                  }}
-                  accessibilityRole="button"
-                  accessibilityLabel="إغلاق رسالة الخطأ"
-                >
-                  <Feather name="x" size={24} color={iconColor} />
-                </TouchableOpacity>
-              </ThemedView>
+            <SettingsCard>
+              {section.rows.map((row) => (
+                <SettingsRow
+                  key={row.title}
+                  options={{ wrapIcon: true, showChevron: true }}
+                  title={row.title}
+                  description={row.description}
+                  icon={row.icon}
+                  onPress={row.onPress}
+                />
+              ))}
+            </SettingsCard>
+          </SettingsSection>
+        ))}
 
-              <ThemedText style={[styles.modalMessage, { color: textColor }]}>
-                {errorMessage}
-              </ThemedText>
-
-              <ThemedView style={styles.modalActions}>
-                <ThemedButton
-                  variant="primary"
-                  onPress={() => {
-                    setErrorModalVisible(false);
-                  }}
-                  style={styles.modalButton}
-                >
-                  حسناً
-                </ThemedButton>
-              </ThemedView>
-            </ThemedView>
-          </TouchableOpacity>
-        </Modal>
+        <ShareErrorModal
+          visible={errorModalVisible}
+          message={errorMessage}
+          onClose={closeErrorModal}
+        />
       </ThemedView>
     </ScrollView>
   );

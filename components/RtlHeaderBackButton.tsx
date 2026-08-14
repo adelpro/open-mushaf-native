@@ -12,10 +12,10 @@ import { useRouter } from 'expo-router';
 
 import { useColors } from '@/hooks';
 
-type RtlHeaderBackButtonProps = {
+interface RtlHeaderBackButtonProps {
   tintColor?: string;
   canGoBack?: boolean;
-};
+}
 
 /**
  * Replaces the default LTR back arrow on stack screens.

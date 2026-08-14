@@ -9,9 +9,9 @@ import { StyleSheet, View } from 'react-native';
 
 import { useColors } from '@/hooks';
 
-type SettingsCardProps = {
+interface SettingsCardProps {
   children: React.ReactNode;
-};
+}
 
 /**
  * Theme-aware card container for settings rows.

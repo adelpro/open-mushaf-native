@@ -108,10 +108,12 @@ export default function SettingsScreen() {
               <Feather name="volume-2" size={22} color={segmentTextColor} />
             }
             onPress={toggleFlipSoundSwitch}
-            accessibilityRole="button"
-            accessibilityLabel="تفعيل صوت قلب الصفحة"
-            accessibilityHint="اضغط لتفعيل أو تعطيل صوت قلب الصفحة"
-            accessibilityState={{ selected: isFlipSoundEnabled }}
+            accessibility={{
+              role: 'button',
+              label: 'تفعيل صوت قلب الصفحة',
+              hint: 'اضغط لتفعيل أو تعطيل صوت قلب الصفحة',
+              state: { selected: isFlipSoundEnabled },
+            }}
             trailing={
               <Toggle
                 color={primaryColor}
@@ -132,11 +134,11 @@ export default function SettingsScreen() {
             description="تنبيه عند إتمام الورد المحدد"
             icon={<Feather name="bell" size={22} color={segmentTextColor} />}
             onPress={toggleTrackerSwitch}
-            accessibilityRole="button"
-            accessibilityLabel="تفعيل تنبيه إتمام الورد اليومي"
-            accessibilityHint="اضغط لتفعيل أو تعطيل تنبه إتمام الورد اليومي"
-            accessibilityState={{
-              selected: showTrackerNotificationValue,
+            accessibility={{
+              role: 'button',
+              label: 'تفعيل تنبيه إتمام الورد اليومي',
+              hint: 'اضغط لتفعيل أو تعطيل تنبه إتمام الورد اليومي',
+              state: { selected: showTrackerNotificationValue },
             }}
             trailing={
               <Toggle
@@ -181,8 +183,10 @@ export default function SettingsScreen() {
             title="وضع التطبيق"
             description="اختر مظهر التطبيق العام"
             icon={<Feather name="sun" size={22} color={segmentTextColor} />}
-            accessibilityRole="radiogroup"
-            accessibilityLabel="وضع التطبيق"
+            accessibility={{
+              role: 'radiogroup',
+              label: 'وضع التطبيق',
+            }}
           >
             <SegmentedControl
               options={APP_COLOR_SCHEME_LABELS}
@@ -192,7 +196,10 @@ export default function SettingsScreen() {
               activeColor={primaryColor}
               textColor={segmentTextColor}
               onSelectionChange={(index: number) => {
-                setAppColorSchemeValue(APP_COLOR_SCHEME_KEYS[index]);
+                const scheme = APP_COLOR_SCHEME_KEYS[index];
+                if (scheme) {
+                  setAppColorSchemeValue(scheme);
+                }
               }}
             />
           </SettingsRow>
@@ -205,8 +212,10 @@ export default function SettingsScreen() {
             title="تفعيل التنبيهات"
             description="اختر نوع التنبيه الذي تفضله"
             icon={<Feather name="bell" size={22} color={segmentTextColor} />}
-            accessibilityRole="radiogroup"
-            accessibilityLabel="تفعيل التنبيهات"
+            accessibility={{
+              role: 'radiogroup',
+              label: 'تفعيل التنبيهات',
+            }}
           >
             <SegmentedControlWithDisabled
               options={notificationOptions}
@@ -228,8 +237,10 @@ export default function SettingsScreen() {
             title="سمة القراءة"
             description="اختر مظهر صفحات المصحف"
             icon={<Feather name="eye" size={22} color={segmentTextColor} />}
-            accessibilityRole="radiogroup"
-            accessibilityLabel="سمة القراءة"
+            accessibility={{
+              role: 'radiogroup',
+              label: 'سمة القراءة',
+            }}
           >
             <SegmentedControl
               options={READING_THEME_LABELS}
@@ -254,8 +265,10 @@ export default function SettingsScreen() {
             icon={
               <Feather name="book-open" size={22} color={segmentTextColor} />
             }
-            accessibilityRole="radiogroup"
-            accessibilityLabel="اختيار الرواية"
+            accessibility={{
+              role: 'radiogroup',
+              label: 'اختيار الرواية',
+            }}
           >
             <SegmentedControl
               options={riwayaOptions}

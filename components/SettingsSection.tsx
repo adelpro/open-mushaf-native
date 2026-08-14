@@ -12,13 +12,13 @@ import { useAppColorScheme, useColors } from '@/hooks';
 
 import { ThemedText } from './ThemedText';
 
-type SettingsSectionProps = {
+interface SettingsSectionProps {
   /** Arabic section title shown next to the optional icon. */
   title: string;
   /** Optional Feather icon name rendered in the brand primary color. */
   icon?: keyof typeof Feather.glyphMap;
   children: React.ReactNode;
-};
+}
 
 /**
  * Renders a labeled settings group with consistent RTL spacing.

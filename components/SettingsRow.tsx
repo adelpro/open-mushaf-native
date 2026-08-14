@@ -22,41 +22,53 @@ import { useAppColorScheme, useColors } from '@/hooks';
 
 import { ThemedText } from './ThemedText';
 
-type SettingsRowProps = {
+interface SettingsRowOptions {
+  /** Render the icon inside a tinted rounded square. */
+  wrapIcon?: boolean;
+  /** Render a left-pointing (RTL) chevron after the trailing slot. */
+  showChevron?: boolean;
+}
+
+interface SettingsRowAccessibility {
+  label?: string;
+  hint?: string;
+  role?: AccessibilityRole;
+  state?: AccessibilityState;
+}
+
+interface SettingsRowProps {
   icon: React.ReactNode;
   title: string;
   description?: string;
   trailing?: React.ReactNode;
   children?: React.ReactNode;
   onPress?: () => void;
-  showChevron?: boolean;
-  wrapIcon?: boolean;
-  accessibilityLabel?: string;
-  accessibilityHint?: string;
-  accessibilityRole?: AccessibilityRole;
-  accessibilityState?: AccessibilityState;
-};
+  options?: SettingsRowOptions;
+  accessibility?: SettingsRowAccessibility;
+}
 
 /**
- * RTL-first settings row with a comfortable touch target.
+ * Renders the row body: icon | label | trailing, plus optional stacked children.
  */
-export const SettingsRow = ({
+const SettingsRowContent = ({
   icon,
   title,
   description,
   trailing,
   children,
-  onPress,
-  showChevron = false,
-  wrapIcon = false,
-  accessibilityLabel,
-  accessibilityHint,
-  accessibilityRole,
-  accessibilityState,
-}: SettingsRowProps) => {
+  options,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description?: string;
+  trailing?: React.ReactNode;
+  children?: React.ReactNode;
+  options: SettingsRowOptions;
+}) => {
   const { iconColor, primaryColor, primaryLightColor } = useColors();
   const colorScheme = useAppColorScheme();
   const accentColor = colorScheme === 'dark' ? primaryLightColor : primaryColor;
+  const { showChevron = false, wrapIcon = false } = options;
 
   const renderedIcon = wrapIcon ? (
     <View style={[styles.iconWrap, { backgroundColor: `${accentColor}22` }]}>
@@ -66,7 +78,7 @@ export const SettingsRow = ({
     icon
   );
 
-  const content = (
+  return (
     <View style={styles.container}>
       <View style={styles.mainRow}>
         {renderedIcon}
@@ -98,15 +110,41 @@ export const SettingsRow = ({
       {children ? <View style={styles.children}>{children}</View> : null}
     </View>
   );
+};
+
+/**
+ * RTL-first settings row with a comfortable touch target.
+ */
+export const SettingsRow = ({
+  icon,
+  title,
+  description,
+  trailing,
+  children,
+  onPress,
+  options = {},
+  accessibility,
+}: SettingsRowProps) => {
+  const content = (
+    <SettingsRowContent
+      icon={icon}
+      title={title}
+      description={description}
+      trailing={trailing}
+      options={options}
+    >
+      {children}
+    </SettingsRowContent>
+  );
 
   if (onPress) {
     return (
       <Pressable
         onPress={onPress}
-        accessibilityRole={accessibilityRole ?? 'button'}
-        accessibilityLabel={accessibilityLabel ?? title}
-        accessibilityHint={accessibilityHint}
-        accessibilityState={accessibilityState}
+        accessibilityRole={accessibility?.role ?? 'button'}
+        accessibilityLabel={accessibility?.label ?? title}
+        accessibilityHint={accessibility?.hint}
+        accessibilityState={accessibility?.state}
         style={({ pressed }) => [pressed && styles.pressed]}
       >
         {content}
@@ -116,10 +154,10 @@ export const SettingsRow = ({
 
   return (
     <View
-      accessibilityRole={accessibilityRole}
-      accessibilityLabel={accessibilityLabel ?? title}
-      accessibilityHint={accessibilityHint}
-      accessibilityState={accessibilityState}
+      accessibilityRole={accessibility?.role}
+      accessibilityLabel={accessibility?.label ?? title}
+      accessibilityHint={accessibility?.hint}
+      accessibilityState={accessibility?.state}
     >
       {content}
     </View>
