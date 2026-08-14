@@ -20,7 +20,7 @@ export const APP_COLOR_SCHEME_LABELS = ['داكن', 'فاتح', 'تلقائي (�
  * 2 = system), defaulting to the system scheme for out-of-range indices.
  */
 export const appColorSchemeAt = (index: number): AppColorScheme => {
-  return APP_COLOR_SCHEME_KEYS[index] ?? 'system';
+  return APP_COLOR_SCHEME_KEYS.at(index) ?? 'system';
 };
 
 /**
