@@ -29,22 +29,24 @@ import { isWeb } from '@/utils/isWeb';
 
 type SectionIconName = 'sliders' | 'book-open' | 'help-circle' | 'share-2';
 
-type MenuItemConfig = {
+const MENU_ICON_COLOR = '#FFFFFF';
+
+interface MenuItemConfig {
   key: string;
   title: string;
   subtitle: string;
   accessibilityLabel: string;
   accessibilityHint: string;
   onPress: () => void;
-  renderIcon: (color: string) => React.ReactNode;
-};
+  renderIcon: () => React.ReactNode;
+}
 
-type MenuSectionConfig = {
+interface MenuSectionConfig {
   key: string;
   title: string;
   icon: SectionIconName;
   items: MenuItemConfig[];
-};
+}
 
 /**
  * More tab home screen — grouped navigation menu for settings, content,
@@ -111,8 +113,12 @@ export default function MoreScreen() {
       onPress: () => {
         router.push('/settings');
       },
-      renderIcon: (color) => (
-        <SettingsSVG width={22} height={22} style={{ color }} />
+      renderIcon: () => (
+        <SettingsSVG
+          width={22}
+          height={22}
+          style={{ color: MENU_ICON_COLOR }}
+        />
       ),
     },
   ];
@@ -127,8 +133,12 @@ export default function MoreScreen() {
       onPress: () => {
         router.push('/reminders');
       },
-      renderIcon: (color) => (
-        <MaterialCommunityIcons name="bell-outline" size={22} color={color} />
+      renderIcon: () => (
+        <MaterialCommunityIcons
+          name="bell-outline"
+          size={22}
+          color={MENU_ICON_COLOR}
+        />
       ),
     });
   }
@@ -154,8 +164,12 @@ export default function MoreScreen() {
           onPress: () => {
             router.push('/bookmarks');
           },
-          renderIcon: (color) => (
-            <BookmarkSVG width={22} height={22} style={{ color }} />
+          renderIcon: () => (
+            <BookmarkSVG
+              width={22}
+              height={22}
+              style={{ color: MENU_ICON_COLOR }}
+            />
           ),
         },
         {
@@ -167,8 +181,12 @@ export default function MoreScreen() {
           onPress: () => {
             router.push('/tutorial');
           },
-          renderIcon: (color) => (
-            <WelcomeSVG width={22} height={22} style={{ color }} />
+          renderIcon: () => (
+            <WelcomeSVG
+              width={22}
+              height={22}
+              style={{ color: MENU_ICON_COLOR }}
+            />
           ),
         },
       ],
@@ -187,8 +205,12 @@ export default function MoreScreen() {
           onPress: () => {
             router.push('/contact');
           },
-          renderIcon: (color) => (
-            <MailSVG width={22} height={22} style={{ color }} />
+          renderIcon: () => (
+            <MailSVG
+              width={22}
+              height={22}
+              style={{ color: MENU_ICON_COLOR }}
+            />
           ),
         },
         {
@@ -200,8 +222,12 @@ export default function MoreScreen() {
           onPress: () => {
             void openHelpDocs();
           },
-          renderIcon: (color) => (
-            <HelpSVG width={22} height={22} style={{ color }} />
+          renderIcon: () => (
+            <HelpSVG
+              width={22}
+              height={22}
+              style={{ color: MENU_ICON_COLOR }}
+            />
           ),
         },
         {
@@ -213,8 +239,12 @@ export default function MoreScreen() {
           onPress: () => {
             router.push('/privacy');
           },
-          renderIcon: (color) => (
-            <PageSVG width={22} height={22} style={{ color }} />
+          renderIcon: () => (
+            <PageSVG
+              width={22}
+              height={22}
+              style={{ color: MENU_ICON_COLOR }}
+            />
           ),
         },
         {
@@ -226,8 +256,12 @@ export default function MoreScreen() {
           onPress: () => {
             router.push('/about');
           },
-          renderIcon: (color) => (
-            <InfoSVG width={22} height={22} style={{ color }} />
+          renderIcon: () => (
+            <InfoSVG
+              width={22}
+              height={22}
+              style={{ color: MENU_ICON_COLOR }}
+            />
           ),
         },
       ],
@@ -246,8 +280,12 @@ export default function MoreScreen() {
           onPress: () => {
             void handleShare();
           },
-          renderIcon: (color) => (
-            <ShareSVG width={22} height={22} style={{ color }} />
+          renderIcon: () => (
+            <ShareSVG
+              width={22}
+              height={22}
+              style={{ color: MENU_ICON_COLOR }}
+            />
           ),
         },
       ],
@@ -329,7 +367,7 @@ export default function MoreScreen() {
                           { backgroundColor: primaryColor },
                         ]}
                       >
-                        {item.renderIcon('#FFFFFF')}
+                        {item.renderIcon()}
                       </View>
                       <View style={styles.textColumn}>
                         <ThemedText
