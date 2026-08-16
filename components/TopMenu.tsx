@@ -26,6 +26,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useAtom, useAtomValue } from 'jotai/react';
 import { removeTashkeel } from 'quran-search-engine';
 import * as Progress from 'react-native-progress';
+import Animated, { SlideInUp, SlideOutUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import IslamicMarkSVG from '@/assets/svgs/islamic-mark.svg';
@@ -82,6 +83,18 @@ const JUZ_ORDINAL_NAMES = [
 
 function getJuzOrdinalName(juzNumber: number): string {
   return JUZ_ORDINAL_NAMES[juzNumber - 1] ?? String(juzNumber);
+}
+
+/** Convert `#RRGGBB` to `rgba(...)` for translucent surfaces. */
+function withAlpha(hex: string, alpha: number): string {
+  const clean = hex.replace('#', '');
+  if (clean.length !== 6) {
+    return hex;
+  }
+  const r = parseInt(clean.slice(0, 2), 16);
+  const g = parseInt(clean.slice(2, 4), 16);
+  const b = parseInt(clean.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
 type ActionButtonProps = {
@@ -193,12 +206,12 @@ export function TopMenu() {
   const surahDisplayName = `سورة ${removeTashkeel(currentSurahName)}`;
 
   // Theme tokens mapped for light/dark hierarchy (Open Mushaf palette).
-  const barBackground = ivoryColor;
+  const barBackground = withAlpha(ivoryColor, isDark ? 0.72 : 0.78);
   const accentColor = secondaryColor;
   const iconColor = isDark ? primaryLightColor : primaryColor;
   const primaryText = isDark ? textColor : primaryColor;
   const actionLabelColor = isDark ? textColor : primaryColor;
-  const actionIconBackground = cardColor;
+  const actionIconBackground = withAlpha(cardColor, isDark ? 0.55 : 0.7);
   const dividerColor = accentColor;
   const progressTrack = isDark
     ? 'rgba(98, 164, 155, 0.35)'
@@ -209,15 +222,10 @@ export function TopMenu() {
   }
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          paddingTop: Math.max(insets.top, 8),
-          paddingLeft: Math.max(insets.left, 10),
-          paddingRight: Math.max(insets.right, 10),
-        },
-      ]}
+    <Animated.View
+      entering={SlideInUp.duration(320)}
+      exiting={SlideOutUp.duration(220)}
+      style={styles.container}
       pointerEvents="box-none"
     >
       <View
@@ -225,7 +233,10 @@ export function TopMenu() {
           styles.topMenu,
           {
             backgroundColor: barBackground,
-            borderColor: isDark ? primaryColor : accentColor,
+            borderColor: withAlpha(isDark ? primaryColor : accentColor, 0.35),
+            paddingTop: Math.max(insets.top, 8),
+            paddingLeft: Math.max(insets.left, 12),
+            paddingRight: Math.max(insets.right, 12),
           },
           styles.menuShadow,
         ]}
@@ -405,7 +416,7 @@ export function TopMenu() {
           </ActionButton>
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -417,38 +428,38 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     width: '100%',
-    maxWidth: 640,
-    marginHorizontal: 'auto',
-    alignItems: 'center',
     backgroundColor: 'transparent',
   },
   topMenu: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    maxWidth: 640,
-    borderRadius: 18,
+    // Pointy top corners; soft bottom edge.
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
     borderWidth: StyleSheet.hairlineWidth,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+    borderTopWidth: 0,
+    paddingBottom: 8,
     gap: 6,
   },
   menuShadow: {
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.12,
-        shadowRadius: 6,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
       },
       android: {
-        elevation: 4,
+        elevation: 3,
       },
       default: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.12,
-        shadowRadius: 6,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
       },
     }),
   },
