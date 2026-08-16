@@ -1,5 +1,20 @@
+/**
+ * Mushaf reader TopMenu overlay — Surah/Juz context plus compact actions
+ * (daily progress, navigation, search, fullscreen).
+ *
+ * Shown when `topMenuState` is true (soft tap on the Mushaf page).
+ * Used from `app/(tabs)/index.tsx` above `MushafPage`.
+ */
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 
 import {
   Feather,
@@ -13,8 +28,7 @@ import { removeTashkeel } from 'quran-search-engine';
 import * as Progress from 'react-native-progress';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ThemedView } from '@/components/ThemedView';
-import {} from '@/constants';
+import IslamicMarkSVG from '@/assets/svgs/islamic-mark.svg';
 import { useColors, useQuranMetadata } from '@/hooks';
 import {
   bottomMenuState,
@@ -26,20 +40,123 @@ import {
 import {
   getJuzPositionByPage,
   getSurahNameByPage,
+  getSurahNumberByPage,
 } from '@/utils/quranMetadataUtils';
 
-const ICON_SIZE = 32;
+const ICON_SIZE = 20;
+const PROGRESS_SIZE = 22;
+
+/** Arabic ordinal labels for Juz 1–30 (used as "(الجزء …)"). */
+const JUZ_ORDINAL_NAMES = [
+  'الأول',
+  'الثاني',
+  'الثالث',
+  'الرابع',
+  'الخامس',
+  'السادس',
+  'السابع',
+  'الثامن',
+  'التاسع',
+  'العاشر',
+  'الحادي عشر',
+  'الثاني عشر',
+  'الثالث عشر',
+  'الرابع عشر',
+  'الخامس عشر',
+  'السادس عشر',
+  'السابع عشر',
+  'الثامن عشر',
+  'التاسع عشر',
+  'العشرون',
+  'الحادي والعشرون',
+  'الثاني والعشرون',
+  'الثالث والعشرون',
+  'الرابع والعشرون',
+  'الخامس والعشرون',
+  'السادس والعشرون',
+  'السابع والعشرون',
+  'الثامن والعشرون',
+  'التاسع والعشرون',
+  'الثلاثون',
+] as const;
+
+function getJuzOrdinalName(juzNumber: number): string {
+  return JUZ_ORDINAL_NAMES[juzNumber - 1] ?? String(juzNumber);
+}
+
+type ActionButtonProps = {
+  label: string;
+  accessibilityLabel: string;
+  accessibilityHint?: string;
+  accessibilityState?: { expanded?: boolean };
+  onPress: () => void;
+  iconBackground: string;
+  labelColor: string;
+  children: React.ReactNode;
+  compact: boolean;
+};
+
+function ActionButton({
+  label,
+  accessibilityLabel,
+  accessibilityHint,
+  accessibilityState,
+  onPress,
+  iconBackground,
+  labelColor,
+  children,
+  compact,
+}: ActionButtonProps) {
+  return (
+    <TouchableOpacity
+      style={styles.actionButton}
+      onPress={onPress}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}
+      accessibilityRole="button"
+      accessibilityState={accessibilityState}
+    >
+      <View
+        style={[styles.actionIconWrap, { backgroundColor: iconBackground }]}
+      >
+        {children}
+      </View>
+      {!compact && (
+        <Text
+          style={[styles.actionLabel, { color: labelColor }]}
+          numberOfLines={1}
+        >
+          {label}
+        </Text>
+      )}
+    </TouchableOpacity>
+  );
+}
+
 /**
  * Overlay control panel typically accessible via a soft tap on the Mushaf view.
- * Exposes core interaction triggers (Search, Bookmarks, and Settings navigators).
+ * Exposes Surah/Juz context and core actions (progress, navigation, search, fullscreen).
  *
- * @returns A structurally mapped interface block or null based on the global `topMenuState`.
+ * @returns The TopMenu bar when `topMenuState` is true; otherwise `null`.
  */
 export function TopMenu() {
-  const { tintColor, backgroundColor } = useColors();
+  const {
+    primaryColor,
+    primaryLightColor,
+    secondaryColor,
+    ivoryColor,
+    cardColor,
+    textColor,
+  } = useColors();
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
   const { surahData, thumnData } = useQuranMetadata();
   const [progressValue, setProgressValue] = useState<number>(0);
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
+  const compact = width < 380;
+
+  // Dark mode: prefer primaryLight for primary UI chrome; secondary for accents.
 
   const [showBottomMenuState, setBottomMenuState] = useAtom(bottomMenuState);
   const [showTopMenuState, setShowTopMenuState] = useAtom(topMenuState);
@@ -70,253 +187,403 @@ export function TopMenu() {
   const currentPage = page ? parseInt(page) : currentSavedPageValue;
   const isTemporary = temporary === 'true';
   const currentSurahName = getSurahNameByPage(surahData, currentPage);
-  const { thumnInJuz, juzNumber } = getJuzPositionByPage(
-    thumnData,
-    currentPage,
-  );
+  const currentSurahNumber = getSurahNumberByPage(surahData, currentPage);
+  const { juzNumber } = getJuzPositionByPage(thumnData, currentPage);
+  const juzOrdinalName = getJuzOrdinalName(juzNumber);
+  const surahDisplayName = `سورة ${removeTashkeel(currentSurahName)}`;
 
-  return showTopMenuState ? (
-    <ThemedView style={styles.container}>
-      <ThemedView
+  // Theme tokens mapped for light/dark hierarchy (Open Mushaf palette).
+  const barBackground = ivoryColor;
+  const accentColor = secondaryColor;
+  const iconColor = isDark ? primaryLightColor : primaryColor;
+  const primaryText = isDark ? textColor : primaryColor;
+  const actionLabelColor = isDark ? textColor : primaryColor;
+  const actionIconBackground = cardColor;
+  const dividerColor = accentColor;
+  const progressTrack = isDark
+    ? 'rgba(98, 164, 155, 0.35)'
+    : 'rgba(30, 82, 67, 0.2)';
+
+  if (!showTopMenuState) {
+    return null;
+  }
+
+  return (
+    <View
+      style={[
+        styles.container,
+        {
+          paddingTop: Math.max(insets.top, 8),
+          paddingLeft: Math.max(insets.left, 10),
+          paddingRight: Math.max(insets.right, 10),
+        },
+      ]}
+      pointerEvents="box-none"
+    >
+      <View
         style={[
           styles.topMenu,
           {
-            backgroundColor,
-            paddingTop: insets.top,
-            paddingLeft: insets.left,
-            paddingRight: insets.right,
+            backgroundColor: barBackground,
+            borderColor: isDark ? primaryColor : accentColor,
           },
+          styles.menuShadow,
         ]}
       >
-        <View style={styles.rightSection}>
+        {/* RTL: first child sits on the right — Surah */}
+        <View
+          style={[styles.surahSection, compact && styles.surahSectionCompact]}
+        >
           <Text
-            style={[styles.surahName, { color: tintColor }]}
-            accessibilityLabel={`السورة الحالية: ${currentSurahName}`}
+            style={[
+              styles.surahName,
+              compact && styles.surahNameCompact,
+              { color: primaryText },
+            ]}
+            numberOfLines={1}
+            accessibilityLabel={`السورة الحالية: ${surahDisplayName}`}
             accessibilityRole="header"
           >
-            {removeTashkeel(currentSurahName)}
+            {surahDisplayName}
           </Text>
-          <View style={styles.secondLineContainer}>
-            <Text style={[styles.juzPosition, { color: tintColor }]}>
-              الجزء - {juzNumber}
+          <View style={styles.surahBadge}>
+            <IslamicMarkSVG
+              width={compact ? 34 : 40}
+              height={compact ? 34 : 40}
+              style={styles.surahBadgeMark}
+            />
+            <Text
+              style={[
+                styles.surahNumber,
+                compact && styles.surahNumberCompact,
+                { color: isDark ? textColor : accentColor },
+              ]}
+            >
+              {currentSurahNumber}
             </Text>
-            <View style={styles.positionContainer}>
-              <Text style={[styles.thumnPosition, { color: tintColor }]}>
-                {thumnInJuz}
-              </Text>
-              <Text
-                style={[
-                  styles.thumnSeparator,
-                  {
-                    color: tintColor,
-                    includeFontPadding: false,
-                    textAlignVertical: 'center',
-                  },
-                ]}
-              >
-                /
-              </Text>
-              <Text
-                style={[
-                  styles.thumnTotal,
-                  {
-                    color: tintColor,
-                    includeFontPadding: false,
-                    textAlignVertical: 'center',
-                  },
-                ]}
-              >
-                16
-              </Text>
-            </View>
           </View>
         </View>
 
-        <ThemedView style={styles.leftIconsContainer}>
+        <View style={styles.ornamentDivider}>
+          <View
+            style={[styles.dividerLine, { backgroundColor: dividerColor }]}
+          />
+          <View
+            style={[styles.dividerDiamond, { backgroundColor: dividerColor }]}
+          />
+          <View
+            style={[styles.dividerLine, { backgroundColor: dividerColor }]}
+          />
+        </View>
+
+        {/* Juz */}
+        <View
+          style={styles.juzSection}
+          accessibilityLabel={`الجزء ${juzNumber}، الجزء ${juzOrdinalName}`}
+        >
+          <Text style={[styles.juzLabel, { color: accentColor }]}>الجزء</Text>
+          <Text
+            style={[
+              styles.juzNumber,
+              compact && styles.juzNumberCompact,
+              { color: primaryText },
+            ]}
+          >
+            {juzNumber}
+          </Text>
+          <Text
+            style={[
+              styles.juzName,
+              compact && styles.juzNameCompact,
+              { color: accentColor },
+            ]}
+            numberOfLines={1}
+          >
+            {`(الجزء ${juzOrdinalName})`}
+          </Text>
+        </View>
+
+        <View
+          style={[styles.plainDivider, { backgroundColor: dividerColor }]}
+        />
+
+        {/* Actions — visual LTR: تكبير، بحث، انتقال، التقدم */}
+        <View style={styles.actionsSection}>
           {!isTemporary && (
-            <TouchableOpacity
-              style={styles.icon}
+            <ActionButton
+              label="التقدم"
+              accessibilityLabel="الورد اليومي"
+              accessibilityHint="اضغط لفتح متتبع الورد اليومي"
               onPress={() => {
                 setShowTopMenuState(false);
                 router.push('/tracker');
               }}
-              accessibilityLabel="الورد اليومي"
-              accessibilityHint="اضغط لفتح متتبع الورد اليومي"
-              accessibilityRole="button"
+              iconBackground={actionIconBackground}
+              labelColor={actionLabelColor}
+              compact={compact}
             >
               <View style={styles.progressContainer}>
                 <Progress.Circle
-                  size={26}
+                  size={PROGRESS_SIZE}
                   progress={progressValue}
-                  color={tintColor}
+                  color={iconColor}
                   showsText={false}
-                  thickness={3.5}
+                  thickness={3}
                   borderWidth={0}
-                  unfilledColor={'rgba(128, 128, 128, 0.4)'}
+                  unfilledColor={progressTrack}
                 />
                 {progressValue === 1 && (
                   <View style={styles.checkmarkContainer}>
-                    <Feather name="check" size={16} color={tintColor} />
+                    <Feather name="check" size={12} color={iconColor} />
                   </View>
                 )}
               </View>
-            </TouchableOpacity>
+            </ActionButton>
           )}
 
-          <TouchableOpacity
-            style={styles.icon}
+          <ActionButton
+            label="انتقال"
+            accessibilityLabel="التنقل"
+            accessibilityHint="اضغط لفتح صفحة التنقل بين السور والأجزاء"
             onPress={() => {
               setShowTopMenuState(false);
               router.push('/navigation');
             }}
-            accessibilityLabel="التنقل"
-            accessibilityHint="اضغط لفتح صفحة التنقل بين السور والأجزاء"
-            accessibilityRole="button"
+            iconBackground={actionIconBackground}
+            labelColor={actionLabelColor}
+            compact={compact}
           >
             <Ionicons
               name="navigate-circle-outline"
               size={ICON_SIZE}
-              color={tintColor}
+              color={iconColor}
             />
-          </TouchableOpacity>
+          </ActionButton>
 
-          <TouchableOpacity
-            style={styles.icon}
+          <ActionButton
+            label="بحث"
+            accessibilityLabel="البحث"
+            accessibilityHint="اضغط لفتح صفحة البحث في القرآن"
             onPress={() => {
               setShowTopMenuState(false);
               router.push('/search');
             }}
-            accessibilityLabel="البحث"
-            accessibilityHint="اضغط لفتح صفحة البحث في القرآن"
-            accessibilityRole="button"
+            iconBackground={actionIconBackground}
+            labelColor={actionLabelColor}
+            compact={compact}
           >
-            <Ionicons name="search" size={ICON_SIZE} color={tintColor} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() => {
-              setShowTopMenuState(false);
-              toggleMenu();
-            }}
-            accessibilityRole="button"
+            <Ionicons name="search" size={ICON_SIZE} color={iconColor} />
+          </ActionButton>
+
+          <ActionButton
+            label="تكبير"
             accessibilityLabel={
               showBottomMenuState ? 'وضع ملء الشاشة' : 'إظهار القائمة'
             }
             accessibilityState={{ expanded: showBottomMenuState }}
+            onPress={() => {
+              setShowTopMenuState(false);
+              toggleMenu();
+            }}
+            iconBackground={actionIconBackground}
+            labelColor={actionLabelColor}
+            compact={compact}
           >
             {showBottomMenuState ? (
               <MaterialCommunityIcons
                 name="fit-to-screen-outline"
                 size={ICON_SIZE}
-                color={tintColor}
+                color={iconColor}
               />
             ) : (
               <MaterialIcons
                 name="fullscreen-exit"
                 size={ICON_SIZE}
-                color={tintColor}
+                color={iconColor}
               />
             )}
-          </TouchableOpacity>
-        </ThemedView>
-      </ThemedView>
-    </ThemedView>
-  ) : null;
+          </ActionButton>
+        </View>
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     zIndex: 2,
-    display: 'flex',
-    marginHorizontal: 'auto',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'transparent',
-    maxWidth: 640,
-    opacity: 0.8,
-  },
-  topMenu: {
-    height: 'auto',
-    //marginTop: 10,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'relative',
     width: '100%',
     maxWidth: 640,
-  },
-  icon: {
-    padding: 2,
-    margin: 2,
-  },
-  leftIconsContainer: {
-    flexDirection: 'row',
+    marginHorizontal: 'auto',
     alignItems: 'center',
     backgroundColor: 'transparent',
-    margin: 0,
-    padding: 0,
+  },
+  topMenu: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 640,
+    borderRadius: 18,
+    borderWidth: StyleSheet.hairlineWidth,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    gap: 6,
+  },
+  menuShadow: {
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.12,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 4,
+      },
+      default: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.12,
+        shadowRadius: 6,
+      },
+    }),
+  },
+  surahSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: 6,
+    flexShrink: 1,
+    minWidth: 0,
+    paddingHorizontal: 2,
+  },
+  surahSectionCompact: {
+    maxWidth: '28%',
+  },
+  surahName: {
+    fontFamily: 'Tajawal_700Bold',
+    fontSize: 15,
+    lineHeight: 22,
+    flexShrink: 1,
+    textAlign: 'right',
+  },
+  surahNameCompact: {
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  surahBadge: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  surahBadgeMark: {
+    position: 'absolute',
+  },
+  surahNumber: {
+    fontFamily: 'Tajawal_700Bold',
+    fontSize: 13,
+    lineHeight: 16,
+    zIndex: 1,
+  },
+  surahNumberCompact: {
+    fontSize: 11,
+  },
+  ornamentDivider: {
+    width: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    paddingVertical: 4,
+  },
+  dividerLine: {
+    width: StyleSheet.hairlineWidth,
+    flex: 1,
+    opacity: 0.7,
+  },
+  dividerDiamond: {
+    width: 7,
+    height: 7,
+    marginVertical: 3,
+    transform: [{ rotate: '45deg' }],
+    opacity: 0.9,
+  },
+  juzSection: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+    minWidth: 56,
+    flexShrink: 0,
+  },
+  juzLabel: {
+    fontFamily: 'Tajawal_500Medium',
+    fontSize: 11,
+    lineHeight: 14,
+  },
+  juzNumber: {
+    fontFamily: 'Tajawal_700Bold',
+    fontSize: 22,
+    lineHeight: 28,
+  },
+  juzNumberCompact: {
+    fontSize: 18,
+    lineHeight: 22,
+  },
+  juzName: {
+    fontFamily: 'Tajawal_500Medium',
+    fontSize: 10,
+    lineHeight: 14,
+    textAlign: 'center',
+  },
+  juzNameCompact: {
+    fontSize: 9,
+    lineHeight: 12,
+  },
+  plainDivider: {
+    width: StyleSheet.hairlineWidth,
+    alignSelf: 'stretch',
+    marginVertical: 6,
+    opacity: 0.55,
+  },
+  actionsSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: 4,
+    flexShrink: 0,
+    marginStart: 'auto',
+  },
+  actionButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 44,
+    paddingHorizontal: 2,
+  },
+  actionIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  actionLabel: {
+    fontFamily: 'Tajawal_500Medium',
+    fontSize: 10,
+    lineHeight: 14,
+    marginTop: 2,
   },
   progressContainer: {
     position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 2,
-    margin: 2,
   },
   checkmarkContainer: {
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  rightSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    marginHorizontal: 15,
-    flexShrink: 1,
-    gap: 10,
-  },
-  surahName: {
-    fontFamily: 'Tajawal_700Bold',
-    fontSize: 16,
-    lineHeight: 20,
-  },
-  secondLineContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-  },
-  juzPosition: {
-    fontFamily: 'Tajawal_700Bold',
-    fontSize: 16,
-    lineHeight: 20,
-  },
-  positionContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 3,
-  },
-  thumnPosition: {
-    fontFamily: 'Tajawal_700Bold',
-    fontSize: 16,
-    lineHeight: 20,
-  },
-  thumnSeparator: {
-    fontFamily: 'Tajawal_700Bold',
-    fontSize: 16,
-    lineHeight: 20,
-  },
-  thumnTotal: {
-    fontFamily: 'Tajawal_700Bold',
-    fontSize: 16,
-    lineHeight: 20,
   },
 });
