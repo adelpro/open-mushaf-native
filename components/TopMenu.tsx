@@ -24,7 +24,6 @@ import {
 } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useAtom, useAtomValue } from 'jotai/react';
-import { removeTashkeel } from 'quran-search-engine';
 import * as Progress from 'react-native-progress';
 import Animated, { SlideInUp, SlideOutUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -39,6 +38,7 @@ import {
   topMenuState,
 } from '@/jotai/atoms';
 import {
+  formatSurahDisplayName,
   getJuzPositionByPage,
   getSurahNameByPage,
   getSurahNumberByPage,
@@ -203,7 +203,7 @@ export function TopMenu() {
   const currentSurahNumber = getSurahNumberByPage(surahData, currentPage);
   const { juzNumber } = getJuzPositionByPage(thumnData, currentPage);
   const juzOrdinalName = getJuzOrdinalName(juzNumber);
-  const surahDisplayName = `سورة ${removeTashkeel(currentSurahName)}`;
+  const surahDisplayName = formatSurahDisplayName(currentSurahName);
 
   // Theme tokens mapped for light/dark hierarchy (Open Mushaf palette).
   const barBackground = withAlpha(ivoryColor, isDark ? 0.72 : 0.78);
@@ -241,10 +241,8 @@ export function TopMenu() {
           styles.menuShadow,
         ]}
       >
-        {/* RTL: first child sits on the right — Surah */}
-        <View
-          style={[styles.surahSection, compact && styles.surahSectionCompact]}
-        >
+        {/* RTL: first child sits on the right — Surah name above number */}
+        <View style={styles.surahSection}>
           <Text
             style={[
               styles.surahName,
@@ -252,6 +250,8 @@ export function TopMenu() {
               { color: primaryText },
             ]}
             numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.72}
             accessibilityLabel={`السورة الحالية: ${surahDisplayName}`}
             accessibilityRole="header"
           >
@@ -259,8 +259,8 @@ export function TopMenu() {
           </Text>
           <View style={styles.surahBadge}>
             <IslamicMarkSVG
-              width={compact ? 34 : 40}
-              height={compact ? 34 : 40}
+              width={compact ? 30 : 34}
+              height={compact ? 30 : 34}
               style={styles.surahBadgeMark}
             />
             <Text
@@ -464,31 +464,30 @@ const styles = StyleSheet.create({
     }),
   },
   surahSection: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    gap: 6,
+    justifyContent: 'center',
+    gap: 2,
+    flexGrow: 1,
     flexShrink: 1,
-    minWidth: 0,
-    paddingHorizontal: 2,
-  },
-  surahSectionCompact: {
-    maxWidth: '28%',
+    flexBasis: 0,
+    minWidth: 96,
+    paddingHorizontal: 4,
   },
   surahName: {
     fontFamily: 'Tajawal_700Bold',
     fontSize: 15,
-    lineHeight: 22,
-    flexShrink: 1,
-    textAlign: 'right',
+    lineHeight: 20,
+    width: '100%',
+    textAlign: 'center',
   },
   surahNameCompact: {
     fontSize: 13,
-    lineHeight: 18,
+    lineHeight: 17,
   },
   surahBadge: {
-    width: 40,
-    height: 40,
+    width: 34,
+    height: 34,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -497,12 +496,12 @@ const styles = StyleSheet.create({
   },
   surahNumber: {
     fontFamily: 'Tajawal_700Bold',
-    fontSize: 13,
-    lineHeight: 16,
+    fontSize: 12,
+    lineHeight: 15,
     zIndex: 1,
   },
   surahNumberCompact: {
-    fontSize: 11,
+    fontSize: 10,
   },
   ornamentDivider: {
     width: 10,
@@ -527,8 +526,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 4,
-    minWidth: 56,
-    flexShrink: 0,
+    minWidth: 52,
+    flexShrink: 1,
   },
   juzLabel: {
     fontFamily: 'Tajawal_500Medium',
@@ -564,19 +563,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    gap: 4,
-    flexShrink: 0,
-    marginStart: 'auto',
+    gap: 2,
+    flexShrink: 1,
   },
   actionButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 44,
-    paddingHorizontal: 2,
+    minWidth: 40,
+    paddingHorizontal: 1,
   },
   actionIconWrap: {
-    width: 36,
-    height: 36,
+    width: 34,
+    height: 34,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
