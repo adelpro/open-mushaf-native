@@ -1,7 +1,7 @@
 /**
  * StyleSheet for the Mushaf TopMenu overlay and its action buttons.
  *
- * Used by `components/TopMenu/index.tsx` and `components/TopMenu/ActionButton.tsx`.
+ * Used by TopMenu overlay pieces (`index`, `TopMenuBar`, sections, `ActionButton`).
  */
 import { Platform, StyleSheet } from 'react-native';
 

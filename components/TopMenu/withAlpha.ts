@@ -1,7 +1,7 @@
 /**
  * Hex → rgba helper for translucent TopMenu surfaces.
  *
- * Used by `components/TopMenu/index.tsx` when building bar/icon backgrounds
+ * Used by `components/TopMenu/theme.ts` when building bar/icon backgrounds
  * and border colors from theme tokens.
  */
 

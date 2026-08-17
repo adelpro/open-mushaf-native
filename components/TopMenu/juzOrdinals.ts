@@ -1,7 +1,7 @@
 /**
  * Arabic ordinal labels for Juz 1–30 (rendered as "(الجزء …)").
  *
- * Used by `components/TopMenu/index.tsx` for the Juz section caption.
+ * Used by `components/TopMenu/useMushafContext.ts` for the Juz caption.
  */
 
 const JUZ_ORDINAL_NAMES = [

@@ -2,7 +2,7 @@
  * Compact labeled icon button used in the TopMenu actions row
  * (daily progress, navigation, search, fullscreen).
  *
- * Used only by `components/TopMenu/index.tsx`.
+ * Used only by `components/TopMenu/Actions.tsx`.
  */
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
