@@ -3,7 +3,7 @@
  * complete (no empty/partial labels) after `formatSurahDisplayName`.
  *
  * Run via `yarn test`. Related production helper:
- * `utils/quranMetadataUtils.ts` → used by `components/TopMenu.tsx`.
+ * `utils/quranMetadataUtils.ts` → used by `components/TopMenu/index.tsx`.
  */
 import { removeTashkeel } from 'quran-search-engine';
 import { describe, expect, it } from 'vitest';
