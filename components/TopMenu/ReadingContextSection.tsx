@@ -19,9 +19,26 @@ interface ReadingContextSectionProps {
   theme: TopMenuTheme;
 }
 
+interface SurahNameLabelProps {
+  name: string;
+  compact: boolean;
+  color: string;
+}
+
+interface SurahNumberBadgeProps {
+  number: number;
+  compact: boolean;
+  color: string;
+}
+
+interface JuzCaptionProps {
+  label: string;
+  compact: boolean;
+  color: string;
+}
+
 export function ReadingContextSection(props: ReadingContextSectionProps) {
   const { surahName, surahNumber, juzOrdinalName, compact, theme } = props;
-  const badgeSize = compact ? 30 : 34;
   const juzLabel = `الجزء ${juzOrdinalName}`;
 
   return (
@@ -31,48 +48,81 @@ export function ReadingContextSection(props: ReadingContextSectionProps) {
     >
       <View style={styles.contextCluster}>
         <View style={styles.surahRow}>
-          <Text
-            style={[
-              styles.surahName,
-              compact && styles.surahNameCompact,
-              { color: theme.primaryText },
-            ]}
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            minimumFontScale={0.72}
-            accessibilityLabel={`السورة الحالية: ${surahName}`}
-            accessibilityRole="header"
-          >
-            {surahName}
-          </Text>
-          <View style={styles.surahBadge}>
-            <IslamicMarkSVG
-              width={badgeSize}
-              height={badgeSize}
-              style={styles.surahBadgeMark}
-            />
-            <Text
-              style={[
-                styles.surahNumber,
-                compact && styles.surahNumberCompact,
-                { color: theme.surahNumberColor },
-              ]}
-            >
-              {surahNumber}
-            </Text>
-          </View>
+          <SurahNameLabel
+            name={surahName}
+            compact={compact}
+            color={theme.primaryText}
+          />
+          <SurahNumberBadge
+            number={surahNumber}
+            compact={compact}
+            color={theme.surahNumberColor}
+          />
         </View>
-        <Text
-          style={[
-            styles.juzCaption,
-            compact && styles.juzCaptionCompact,
-            { color: theme.juzLabelColor },
-          ]}
-          numberOfLines={1}
-        >
-          {juzLabel}
-        </Text>
+        <JuzCaption
+          label={juzLabel}
+          compact={compact}
+          color={theme.juzLabelColor}
+        />
       </View>
     </View>
+  );
+}
+
+function SurahNameLabel(props: SurahNameLabelProps) {
+  const { name, compact, color } = props;
+
+  return (
+    <Text
+      style={[styles.surahName, compact && styles.surahNameCompact, { color }]}
+      numberOfLines={1}
+      adjustsFontSizeToFit
+      minimumFontScale={0.72}
+      accessibilityLabel={`السورة الحالية: ${name}`}
+      accessibilityRole="header"
+    >
+      {name}
+    </Text>
+  );
+}
+
+function SurahNumberBadge(props: SurahNumberBadgeProps) {
+  const { number, compact, color } = props;
+  const badgeSize = compact ? 30 : 34;
+
+  return (
+    <View style={styles.surahBadge}>
+      <IslamicMarkSVG
+        width={badgeSize}
+        height={badgeSize}
+        style={styles.surahBadgeMark}
+      />
+      <Text
+        style={[
+          styles.surahNumber,
+          compact && styles.surahNumberCompact,
+          { color },
+        ]}
+      >
+        {number}
+      </Text>
+    </View>
+  );
+}
+
+function JuzCaption(props: JuzCaptionProps) {
+  const { label, compact, color } = props;
+
+  return (
+    <Text
+      style={[
+        styles.juzCaption,
+        compact && styles.juzCaptionCompact,
+        { color },
+      ]}
+      numberOfLines={1}
+    >
+      {label}
+    </Text>
   );
 }
