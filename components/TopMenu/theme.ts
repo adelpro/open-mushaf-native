@@ -1,21 +1,24 @@
 /**
  * Light/dark color tokens and bar chrome styles for the Mushaf TopMenu.
  *
- * Used by `TopMenuBar`, `SurahSection`, `JuzSection`, and `Actions`.
+ * Used by `TopMenuBar`, `ReadingContextSection`, `PageSection`, and `Actions`.
  */
 import { useColorScheme } from 'react-native';
 
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useColors } from '@/hooks';
-
-import { withAlpha } from './withAlpha';
+import { withAlpha } from '@/utils/withAlpha';
 
 export interface TopMenuTheme {
   accentColor: string;
   iconColor: string;
   primaryText: string;
   surahNumberColor: string;
+  juzLabelColor: string;
+  pageBadgeFill: string;
+  pageLabelColor: string;
+  pageNumberColor: string;
   actionLabelColor: string;
   actionIconBackground: string;
   dividerColor: string;
@@ -33,6 +36,10 @@ interface ChromePalette {
   iconColor: string;
   primaryText: string;
   surahNumberColor: string;
+  juzLabelColor: string;
+  pageBadgeFill: string;
+  pageLabelColor: string;
+  pageNumberColor: string;
   actionLabelColor: string;
   borderBase: string;
   barAlpha: number;
@@ -46,12 +53,17 @@ function getChromePalette(
   primaryLightColor: string,
   secondaryColor: string,
   textColor: string,
+  cardColor: string,
 ): ChromePalette {
   if (isDark) {
     return {
       iconColor: primaryLightColor,
       primaryText: textColor,
       surahNumberColor: textColor,
+      juzLabelColor: primaryLightColor,
+      pageBadgeFill: primaryColor,
+      pageLabelColor: textColor,
+      pageNumberColor: textColor,
       actionLabelColor: textColor,
       borderBase: primaryColor,
       barAlpha: 0.72,
@@ -59,10 +71,15 @@ function getChromePalette(
       progressTrack: 'rgba(98, 164, 155, 0.35)',
     };
   }
+  // Light: primary green on ivory bar (~4.8:1 vs #F9F6EF for juz caption).
   return {
     iconColor: primaryColor,
     primaryText: primaryColor,
     surahNumberColor: secondaryColor,
+    juzLabelColor: primaryColor,
+    pageBadgeFill: cardColor,
+    pageLabelColor: primaryColor,
+    pageNumberColor: primaryColor,
     actionLabelColor: primaryColor,
     borderBase: secondaryColor,
     barAlpha: 0.78,
@@ -95,6 +112,7 @@ export function useTopMenuTheme(): TopMenuTheme {
     colors.primaryLightColor,
     colors.secondaryColor,
     colors.textColor,
+    colors.cardColor,
   );
 
   return {
@@ -102,6 +120,10 @@ export function useTopMenuTheme(): TopMenuTheme {
     iconColor: chrome.iconColor,
     primaryText: chrome.primaryText,
     surahNumberColor: chrome.surahNumberColor,
+    juzLabelColor: chrome.juzLabelColor,
+    pageBadgeFill: chrome.pageBadgeFill,
+    pageLabelColor: chrome.pageLabelColor,
+    pageNumberColor: chrome.pageNumberColor,
     actionLabelColor: chrome.actionLabelColor,
     actionIconBackground: withAlpha(colors.cardColor, chrome.iconAlpha),
     dividerColor: colors.secondaryColor,

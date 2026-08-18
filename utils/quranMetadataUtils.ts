@@ -36,7 +36,7 @@ export function getSurahNumberByPage(surahs: Surah[], page: number): number {
 
 /**
  * Builds the TopMenu Surah label: `سورة {name}` with tashkeel removed.
- * Used by `components/TopMenu.tsx` and covered by unit tests for all 114 surahs.
+ * Used by `components/TopMenu/index.tsx` and covered by unit tests for all 114 surahs.
  *
  * @param surahName - Raw Surah name from metadata (may include tashkeel).
  * @returns Display label shown in the Mushaf TopMenu.
