@@ -2,28 +2,27 @@ import type { DailyReadingRecord } from '@/jotai/atoms';
 
 import { type ChartMetric, daysAgo, type GroupBy } from './readingChart';
 
-/**
- * Number of daily records collapsed into one bucket per granularity.
- * `month` is a fixed 30-day window rather than a calendar month so every
- * bucket in the series covers the same span and stays comparable.
- */
-const BUCKET_DAYS: Record<Exclude<GroupBy, 'day'>, number> = {
-  week: 7,
-  month: 30,
-};
+// Number of daily records collapsed into one bucket per granularity. A month
+// is a fixed 30-day window rather than a calendar month so every bucket in the
+// series covers the same span and stays comparable.
+const WEEK_BUCKET_DAYS = 7;
+const MONTH_BUCKET_DAYS = 30;
 
 /** Today's in-progress tracker, before it is rolled into `readingHistory`. */
-export type DailyTrackerSnapshot = { value: number; date: string };
+export interface DailyTrackerSnapshot {
+  value: number;
+  date: string;
+}
 
 /** The aggregate figures the chart header renders above the bars. */
-export type ReadingStats = {
+export interface ReadingStats {
   total: number;
   maxValue: number;
   avg: number;
   effectiveAvg: number;
   recordsWithData: number;
   trackingStartedAt: string | null;
-};
+}
 
 /**
  * Builds one record per day for the trailing `period` days, oldest first and
@@ -127,7 +126,7 @@ export function groupDailyRecords(
 ): DailyReadingRecord[] {
   if (groupBy === 'day') return [...daily];
 
-  const size = BUCKET_DAYS[groupBy];
+  const size = groupBy === 'week' ? WEEK_BUCKET_DAYS : MONTH_BUCKET_DAYS;
   const buckets: DailyReadingRecord[] = [];
   for (let i = 0; i < daily.length; i += size) {
     const chunk = daily.slice(i, i + size);
