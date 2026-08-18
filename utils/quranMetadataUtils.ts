@@ -1,3 +1,5 @@
+import { removeTashkeel } from 'quran-search-engine';
+
 import { Surah, Thumn } from '@/types';
 
 /**
@@ -30,6 +32,18 @@ export function getSurahNumberByPage(surahs: Surah[], page: number): number {
       (index === surahs.length - 1 || page < surahs[index + 1].startingPage),
   );
   return surah ? surah.number : 1;
+}
+
+/**
+ * Builds the TopMenu Surah label: `سورة {name}` with tashkeel removed.
+ * Used by `components/TopMenu.tsx` and covered by unit tests for all 114 surahs.
+ *
+ * @param surahName - Raw Surah name from metadata (may include tashkeel).
+ * @returns Display label shown in the Mushaf TopMenu.
+ */
+export function formatSurahDisplayName(surahName: string): string {
+  const cleaned = removeTashkeel(surahName).trim();
+  return cleaned ? `سورة ${cleaned}` : '';
 }
 
 /**
