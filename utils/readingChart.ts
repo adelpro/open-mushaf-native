@@ -48,6 +48,7 @@ const toLocalDigits: (n: number) => string = (() => {
 })();
 
 export type GroupBy = 'day' | 'week' | 'month';
+export type ChartMetric = 'hizbs' | 'pages';
 export type ChartLabel = { primary: string; secondary?: string };
 
 /**

@@ -14,4 +14,6 @@ export * from './quranMetadataUtils';
 
 export * from './readingChart';
 
+export * from './readingStats';
+
 export * from './triggerHaptic';

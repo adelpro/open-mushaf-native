@@ -11,89 +11,19 @@ import {
   readingHistory,
   yesterdayPage,
 } from '@/jotai/atoms';
-import { daysAgo } from '@/utils';
+import {
+  buildDailyRecords,
+  type ChartMetric,
+  daysAgo,
+  getMetricValue,
+  type GroupBy,
+  groupDailyRecords,
+  summarizeReadingStats,
+} from '@/utils';
 
-export type ChartMetric = 'hizbs' | 'pages';
-export type GroupBy = 'day' | 'week' | 'month';
-
-// Sum a slice of daily records into a single weekly bucket. The bucket
-// inherits its `date` from the last day in the slice (the most recent day
-// in the bucket is the most informative label anchor) and computes
-// `weekStart` by walking back `chunk.length - 1` days from that anchor —
-// using the actual chunk length keeps the range accurate for the partial
-// trailing bucket that appears when the period isn't a multiple of 7
-// (e.g. 30 days → 4 full weeks + 2 days).
-const aggregateWeek = (
-  daily: readonly DailyReadingRecord[],
-): DailyReadingRecord => {
-  const end = new Date(daily[daily.length - 1].date);
-  const start = new Date(end);
-  start.setDate(end.getDate() - (daily.length - 1));
-  return {
-    date: end.toDateString(),
-    weekStart: start.toDateString(),
-    daysInBucket: daily.length,
-    hizbsCompleted: parseFloat(
-      daily.reduce((s, d) => s + d.hizbsCompleted, 0).toFixed(1),
-    ),
-    pagesRead: daily.reduce((s, d) => s + d.pagesRead, 0),
-    // A weekly bucket counts as having a record if at least one underlying
-    // day had one. An empty bucket (user didn't track at all that week)
-    // stays at 0 with hasRecord=false so the chart can render it as "no
-    // data" instead of "read 0".
-    hasRecord: daily.some((d) => d.hasRecord),
-  };
-};
-
-const aggregateByWeek = (
-  daily: readonly DailyReadingRecord[],
-): DailyReadingRecord[] => {
-  const weeks: DailyReadingRecord[] = [];
-  for (let i = 0; i < daily.length; i += 7) {
-    const chunk = daily.slice(i, i + 7);
-    if (chunk.length > 0) weeks.push(aggregateWeek(chunk));
-  }
-  return weeks;
-};
-
-// Sum a slice of daily records into a single 30-day bucket. Same shape as
-// `aggregateWeek` — the bucket inherits its `date` from the last day in the
-// slice and walks back `chunk.length - 1` days to compute the start. Today
-// only the 90-day period exposes `groupBy='month'`, so `chunk.length` is
-// always 30, but the helper accepts partial trailing buckets for robustness
-// (matches the `aggregateWeek` contract so the same `daysInBucket` field
-// drives the partial-bucket visual treatment).
-const aggregateMonth = (
-  daily: readonly DailyReadingRecord[],
-): DailyReadingRecord => {
-  const end = new Date(daily[daily.length - 1].date);
-  const start = new Date(end);
-  start.setDate(end.getDate() - (daily.length - 1));
-  return {
-    date: end.toDateString(),
-    weekStart: start.toDateString(), // bucket start; re-using the field
-    daysInBucket: daily.length,
-    hizbsCompleted: parseFloat(
-      daily.reduce((s, d) => s + d.hizbsCompleted, 0).toFixed(1),
-    ),
-    pagesRead: daily.reduce((s, d) => s + d.pagesRead, 0),
-    // Mirror `aggregateWeek`: a monthly bucket counts as recorded if any
-    // day inside it had a record. Keeps the "no data" vs "read 0"
-    // distinction intact when the user is partway through a 30-day bucket.
-    hasRecord: daily.some((d) => d.hasRecord),
-  };
-};
-
-const aggregateByMonth = (
-  daily: readonly DailyReadingRecord[],
-): DailyReadingRecord[] => {
-  const months: DailyReadingRecord[] = [];
-  for (let i = 0; i < daily.length; i += 30) {
-    const chunk = daily.slice(i, i + 30);
-    if (chunk.length > 0) months.push(aggregateMonth(chunk));
-  }
-  return months;
-};
+// Re-exported so consumers keep importing these from `@/hooks` — the chart
+// component and its props are typed against them.
+export type { ChartMetric, GroupBy };
 
 // `Constants.executionEnvironment` is `'storeClient'` only when running inside
 // Expo Go (the `expo start` dev client). In Expo Go, `react-native-mmkv` v3
@@ -107,6 +37,9 @@ const isExpoGo = Constants.executionEnvironment === 'storeClient';
 /**
  * Hook to aggregate and calculate user reading metrics for visualization in charts.
  * Processes Jotai store history against the selected tracking metric.
+ *
+ * The calculations themselves live in `@/utils/readingStats` as pure
+ * functions; this hook only wires the atoms and the period state to them.
  *
  * @param metric - The unit of measurement for charting data ('hizbs' | 'pages'). Defaults to 'hizbs'.
  * @param groupBy - Granularity for bar rendering. `'day'` (default) shows one bar per day; `'week'` buckets days into 7-day totals.
@@ -159,87 +92,31 @@ export function useReadingChartData(
     }
     // ─── END DEV_MOCK ────────────────────────────────────────────────────────
 
-    const hizbMap = new Map<string, number>();
-    const pagesMap = new Map<string, number>();
-    // Track which date strings had a real record. Used both to set
-    // `hasRecord` on each daily slot (so the chart can render "no data"
-    // vs "read 0") and to derive `trackingStartedAt` (the earliest date
-    // with a record in the current window).
-    const recordedDates = new Set<string>();
-
-    for (const entry of history) {
-      hizbMap.set(entry.date, entry.hizbsCompleted);
-      pagesMap.set(entry.date, entry.pagesRead ?? 0);
-      recordedDates.add(entry.date);
-    }
-
-    hizbMap.set(todayTracker.date, todayTracker.value);
-    pagesMap.set(todayTracker.date, todayPagesRead);
-    recordedDates.add(todayTracker.date);
-
-    // Build daily records for the current period
-    const result: DailyReadingRecord[] = [];
-    for (let i = period - 1; i >= 0; i--) {
-      const dateStr = daysAgo(i);
-      const hasRecord = recordedDates.has(dateStr);
-      result.push({
-        date: dateStr,
-        hizbsCompleted: hasRecord ? (hizbMap.get(dateStr) ?? 0) : 0,
-        pagesRead: hasRecord ? (pagesMap.get(dateStr) ?? 0) : 0,
-        hasRecord,
-      });
-    }
-    return result;
+    return buildDailyRecords(history, todayTracker, todayPagesRead, period);
   }, [history, todayTracker, todayPagesRead, period]);
 
   // When grouping by week/month, the series collapses to chunked totals.
   const chartData = useMemo(
-    () =>
-      groupBy === 'week'
-        ? aggregateByWeek(data)
-        : groupBy === 'month'
-          ? aggregateByMonth(data)
-          : data,
+    () => groupDailyRecords(data, groupBy),
     [groupBy, data],
   );
 
   const getValue = useCallback(
-    (d: DailyReadingRecord) =>
-      metric === 'pages' ? d.pagesRead : d.hizbsCompleted,
+    (d: DailyReadingRecord) => getMetricValue(d, metric),
     [metric],
   );
 
-  const maxValue = useMemo(
-    () => Math.max(1, ...chartData.map(getValue)),
-    [chartData, getValue],
+  const {
+    total,
+    maxValue,
+    avg,
+    effectiveAvg,
+    recordsWithData,
+    trackingStartedAt,
+  } = useMemo(
+    () => summarizeReadingStats(data, chartData, metric, groupBy),
+    [data, chartData, metric, groupBy],
   );
-
-  const total = useMemo(
-    () => chartData.reduce((sum, d) => sum + getValue(d), 0),
-    [chartData, getValue],
-  );
-
-  // Average: per-day when grouping is 'day', per-week when 'week'. Using
-  // `chartData.length` keeps the denominator correct even when the
-  // last bucket is partial (e.g. 90 days / 7 = 12 full weeks + 6 days).
-  const unitCount = chartData.length || 1;
-  const avg = total / unitCount;
-
-  // For the daily view only, recompute the average excluding buckets with
-  // no record so a user who started tracking 22 days ago doesn't see
-  // their 1-hizb/day pace reported as 0.24 hizb/day. Weekly/monthly
-  // averages already collapse the unrecorded stretch into zero-totals
-  // within each bucket, so we keep the simpler `avg` there.
-  const recordsWithData = data.filter((d) => d.hasRecord).length;
-  const effectiveAvg =
-    groupBy === 'day' && recordsWithData > 0 ? total / recordsWithData : avg;
-
-  // `trackingStartedAt` is the earliest recorded date in the current
-  // window — `null` when the user has no records at all (the empty state
-  // handles that). Rendered as a small caption so users who haven't yet
-  // filled the full 90-day window know the chart isn't missing data.
-  const trackingStartedAt =
-    recordsWithData > 0 ? (data.find((d) => d.hasRecord)?.date ?? null) : null;
 
   return {
     data: chartData,
