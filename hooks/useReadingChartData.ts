@@ -67,32 +67,33 @@ export function useReadingChartData(
     //      developer to see a populated chart while building the UI.
     // The mock must never override real data, so `history.length === 0` is a
     // hard requirement in both cases.
+    //
+    // The mock fabricates *history* — the same shape `readingHistory` holds —
+    // and then runs through `buildDailyRecords` exactly like the real path.
+    // Skipped days are left out of the array rather than pushed as zeros, so
+    // `hasRecord` is derived by `buildDailyRecords` instead of hardcoded here.
+    // Dev therefore exercises the production code path and shows the real
+    // untracked-vs-read-nothing distinction.
+    let source: readonly DailyReadingRecord[] = history;
     if ((isExpoGo || __DEV__) && history.length === 0) {
       const seed = (n: number) =>
         Math.abs(Math.sin(n * 9301 + 49297) * 233280) % 1;
-      const result: DailyReadingRecord[] = [];
-      for (let i = period - 1; i >= 0; i--) {
-        const dateStr = daysAgo(i);
-        const skip = seed(i) > 0.78; // ~22% of days have no reading
-        const hizbs = skip ? 0 : parseFloat((seed(i + 1) * 3 + 0.5).toFixed(1));
-        const pages = skip ? 0 : Math.round(seed(i + 2) * 12 + 1);
-        // In the dev mock every slot is "recorded" — `skip` toggles the
-        // *value* to zero but the slot itself is part of the synthetic
-        // dataset, so hasRecord stays true. This keeps the chart visually
-        // full during dev (no dashed-outline gaps) while production still
-        // gets the no-record treatment for untracked days.
-        result.push({
-          date: dateStr,
-          hizbsCompleted: hizbs,
-          pagesRead: pages,
-          hasRecord: true,
+      const mockHistory: DailyReadingRecord[] = [];
+      // Today is deliberately omitted: `buildDailyRecords` always takes it
+      // from the live tracker, so an entry here would just be overwritten.
+      for (let i = period - 1; i >= 1; i--) {
+        if (seed(i) > 0.78) continue; // ~22% of days were never tracked
+        mockHistory.push({
+          date: daysAgo(i),
+          hizbsCompleted: parseFloat((seed(i + 1) * 3 + 0.5).toFixed(1)),
+          pagesRead: Math.round(seed(i + 2) * 12 + 1),
         });
       }
-      return result;
+      source = mockHistory;
     }
     // ─── END DEV_MOCK ────────────────────────────────────────────────────────
 
-    return buildDailyRecords(history, todayTracker, todayPagesRead, period);
+    return buildDailyRecords(source, todayTracker, todayPagesRead, period);
   }, [history, todayTracker, todayPagesRead, period]);
 
   // When grouping by week/month, the series collapses to chunked totals.
