@@ -15,3 +15,5 @@ export * from './quranMetadataUtils';
 export * from './readingChart';
 
 export * from './triggerHaptic';
+
+export * from './withAlpha';

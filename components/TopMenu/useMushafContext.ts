@@ -19,6 +19,7 @@ import { getJuzOrdinalName } from './juzOrdinals';
 
 export interface MushafContext {
   isTemporary: boolean;
+  currentPage: number;
   surahDisplayName: string;
   currentSurahNumber: number;
   juzNumber: number;
@@ -37,6 +38,7 @@ export function useMushafContext(): MushafContext {
 
   return {
     isTemporary: temporary === 'true',
+    currentPage,
     surahDisplayName: formatSurahDisplayName(
       getSurahNameByPage(surahData, currentPage),
     ),

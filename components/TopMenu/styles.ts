@@ -48,23 +48,38 @@ export const styles = StyleSheet.create({
       },
     }),
   },
-  surahSection: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 2,
+  contextSection: {
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
-    minWidth: 96,
-    paddingHorizontal: 4,
+    minWidth: 0,
+    // RTL: flex-start = next to the page badge (physical right).
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingHorizontal: 6,
+  },
+  contextCluster: {
+    maxWidth: '100%',
+    flexShrink: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    gap: 2,
+  },
+  surahRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: 6,
+    maxWidth: '100%',
+    flexShrink: 1,
   },
   surahName: {
     fontFamily: 'Tajawal_700Bold',
     fontSize: 15,
     lineHeight: 20,
-    width: '100%',
-    textAlign: 'center',
+    flexShrink: 1,
+    minWidth: 0,
+    textAlign: 'right',
   },
   surahNameCompact: {
     fontSize: 13,
@@ -75,6 +90,7 @@ export const styles = StyleSheet.create({
     height: 34,
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
   surahBadgeMark: {
     position: 'absolute',
@@ -88,55 +104,55 @@ export const styles = StyleSheet.create({
   surahNumberCompact: {
     fontSize: 10,
   },
-  ornamentDivider: {
-    width: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'stretch',
-    paddingVertical: 4,
-  },
-  dividerLine: {
-    width: StyleSheet.hairlineWidth,
-    flex: 1,
-    opacity: 0.7,
-  },
-  dividerDiamond: {
-    width: 7,
-    height: 7,
-    marginVertical: 3,
-    transform: [{ rotate: '45deg' }],
-    opacity: 0.9,
-  },
-  juzSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 4,
-    minWidth: 52,
-    flexShrink: 1,
-  },
-  juzLabel: {
+  juzCaption: {
     fontFamily: 'Tajawal_500Medium',
-    fontSize: 11,
-    lineHeight: 14,
+    fontSize: 12,
+    lineHeight: 16,
+    textAlign: 'right',
+    alignSelf: 'flex-start',
   },
-  juzNumber: {
-    fontFamily: 'Tajawal_700Bold',
-    fontSize: 22,
-    lineHeight: 28,
-  },
-  juzNumberCompact: {
-    fontSize: 18,
-    lineHeight: 22,
-  },
-  juzName: {
-    fontFamily: 'Tajawal_500Medium',
+  juzCaptionCompact: {
     fontSize: 10,
     lineHeight: 14,
+  },
+  pageSection: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    paddingHorizontal: 4,
+  },
+  pageBadge: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pageBadgeMark: {
+    position: 'absolute',
+  },
+  pageBadgeContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
+    gap: 1,
+  },
+  pageLabel: {
+    fontFamily: 'Tajawal_500Medium',
+    fontSize: 8,
+    lineHeight: 10,
     textAlign: 'center',
   },
-  juzNameCompact: {
-    fontSize: 9,
-    lineHeight: 12,
+  pageLabelCompact: {
+    fontSize: 7,
+    lineHeight: 9,
+  },
+  pageNumber: {
+    fontFamily: 'Tajawal_700Bold',
+    fontSize: 15,
+    lineHeight: 17,
+    textAlign: 'center',
+  },
+  pageNumberCompact: {
+    fontSize: 13,
+    lineHeight: 15,
   },
   plainDivider: {
     width: StyleSheet.hairlineWidth,
@@ -147,9 +163,9 @@ export const styles = StyleSheet.create({
   actionsSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     gap: 2,
-    flexShrink: 1,
+    flexShrink: 0,
   },
   actionButton: {
     alignItems: 'center',

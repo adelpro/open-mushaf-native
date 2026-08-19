@@ -1,5 +1,5 @@
 /**
- * TopMenu bar layout: Surah, Juz, dividers, and compact actions.
+ * TopMenu bar layout: page (right), Surah/Juz context (left), and actions.
  *
  * Used only by `components/TopMenu/index.tsx`.
  */
@@ -7,10 +7,9 @@ import React from 'react';
 import { useWindowDimensions, View } from 'react-native';
 
 import { TopMenuActions } from './Actions';
-import { JuzSection } from './JuzSection';
-import { OrnamentDivider } from './OrnamentDivider';
+import { PageSection } from './PageSection';
+import { ReadingContextSection } from './ReadingContextSection';
 import { styles } from './styles';
-import { SurahSection } from './SurahSection';
 import { useTopMenuTheme } from './theme';
 import { useMushafContext } from './useMushafContext';
 
@@ -21,16 +20,12 @@ export function TopMenuBar() {
 
   return (
     <View style={[styles.topMenu, theme.barContainerStyle, styles.menuShadow]}>
-      <SurahSection
-        name={context.surahDisplayName}
-        number={context.currentSurahNumber}
-        compact={compact}
-        theme={theme}
-      />
-      <OrnamentDivider color={theme.dividerColor} />
-      <JuzSection
-        juzNumber={context.juzNumber}
-        ordinalName={context.juzOrdinalName}
+      {/* RTL: first child = right — page number */}
+      <PageSection page={context.currentPage} compact={compact} theme={theme} />
+      <ReadingContextSection
+        surahName={context.surahDisplayName}
+        surahNumber={context.currentSurahNumber}
+        juzOrdinalName={context.juzOrdinalName}
         compact={compact}
         theme={theme}
       />
