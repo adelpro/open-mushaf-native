@@ -58,6 +58,11 @@ export function useReadingChartData(
 
   const todayPagesRead = Math.max(0, (savedPage as number) - yesterday.value);
 
+  // True when the chart is fed generated demo history instead of the user's
+  // own records. Returned so the UI can label the stats as demo data rather
+  // than letting a developer read them as a real reading history.
+  const isDemoData = (isExpoGo || __DEV__) && history.length === 0;
+
   const data: DailyReadingRecord[] = useMemo(() => {
     // ─── DEV_MOCK: only used in Expo Go or with no real history ───────────────
     // Two paths can land us here:
@@ -75,7 +80,7 @@ export function useReadingChartData(
     // Dev therefore exercises the production code path and shows the real
     // untracked-vs-read-nothing distinction.
     let source: readonly DailyReadingRecord[] = history;
-    if ((isExpoGo || __DEV__) && history.length === 0) {
+    if (isDemoData) {
       const seed = (n: number) =>
         Math.abs(Math.sin(n * 9301 + 49297) * 233280) % 1;
       const mockHistory: DailyReadingRecord[] = [];
@@ -94,7 +99,7 @@ export function useReadingChartData(
     // ─── END DEV_MOCK ────────────────────────────────────────────────────────
 
     return buildDailyRecords(source, todayTracker, todayPagesRead, period);
-  }, [history, todayTracker, todayPagesRead, period]);
+  }, [history, todayTracker, todayPagesRead, period, isDemoData]);
 
   // When grouping by week/month, the series collapses to chunked totals.
   const chartData = useMemo(
@@ -127,6 +132,7 @@ export function useReadingChartData(
     effectiveAvg,
     recordsWithData,
     trackingStartedAt,
+    isDemoData,
     period,
     periodIndex,
     setPeriodIndex,
