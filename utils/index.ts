@@ -14,6 +14,8 @@ export * from './quranMetadataUtils';
 
 export * from './readingChart';
 
+export * from './readingMode';
+
 export * from './triggerHaptic';
 
 export * from './withAlpha';

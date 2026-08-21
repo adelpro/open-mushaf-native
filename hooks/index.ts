@@ -6,6 +6,7 @@ export * from './useImagePreloader';
 export * from './useImagesArray';
 export * from './useNotificationStyles';
 export * from './useOrientation';
+export * from './usePageAsset';
 export * from './usePageOverLay';
 export * from './usePanGestureHandler';
 export * from './useQuranMetadata';

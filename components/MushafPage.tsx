@@ -41,6 +41,7 @@ import {
   hizbNotification,
   mushafContrast,
   panGestureSensitivity,
+  readingMode,
   readingTheme,
   showTrackerNotification,
   yesterdayPage,
@@ -53,6 +54,7 @@ import { PageOverlay } from './PageOverlay';
 import { Seo } from './Seo';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
+import { VerticalMushafList } from './VerticalMushafList';
 import { useNotification } from '../Context/NotificationProvider';
 
 const audioSource = require('@/assets/sounds/page-flip-sound.mp3');
@@ -70,6 +72,7 @@ export function MushafPage() {
   const mushafContrastValue = useAtomValue(mushafContrast);
   const readingThemeValue = useAtomValue(readingTheme);
   const panGestureSensitivityValue = useAtomValue(panGestureSensitivity);
+  const readingModeValue = useAtomValue(readingMode);
   const themeConfig =
     READING_THEMES[readingThemeValue] || READING_THEMES.default;
 
@@ -187,10 +190,8 @@ export function MushafPage() {
     setDimensions({ customPageWidth: width, customPageHeight: height });
   };
 
-  const handlePageChange = useCallback(
-    (delta: number) => {
-      const page = currentPage + delta;
-
+  const handleSetPage = useCallback(
+    (page: number) => {
       // Bounds check
       if (page < 1 || page > defaultNumberOfPages) return;
       if (page === currentPage) return;
@@ -200,6 +201,19 @@ export function MushafPage() {
         page: page.toString(),
         ...(temporary ? { temporary: temporary.toString() } : {}),
       });
+    },
+    [currentPage, defaultNumberOfPages, router, temporary, setCurrentPage],
+  );
+
+  const handlePageChange = useCallback(
+    (delta: number) => {
+      const page = currentPage + delta;
+
+      // Bounds check
+      if (page < 1 || page > defaultNumberOfPages) return;
+      if (page === currentPage) return;
+
+      handleSetPage(page);
 
       if (isFlipSoundEnabled) {
         // expo-audio keeps the playhead at the end after playback finishes,
@@ -217,11 +231,9 @@ export function MushafPage() {
     [
       currentPage,
       defaultNumberOfPages,
-      router,
-      temporary,
+      handleSetPage,
       isFlipSoundEnabled,
       player,
-      setCurrentPage,
       surahData,
     ],
   );
@@ -353,6 +365,11 @@ export function MushafPage() {
     setDailyTrackerCompletedValue,
   ]);
 
+  const containerBackgroundColor =
+    colorScheme === 'dark'
+      ? `rgba(26, 26, 26, ${1 - mushafContrastValue})`
+      : themeConfig.backgroundColor || ivoryColor;
+
   // Handle errors from metadata loading
   if (metadataError) {
     return (
@@ -395,6 +412,26 @@ export function MushafPage() {
     );
   }
 
+  if (readingModeValue === 'vertical') {
+    return (
+      <>
+        <Seo
+          title={seoMetadata.title}
+          description={seoMetadata.description}
+          keywords={seoMetadata.keywords}
+        />
+        <VerticalMushafList
+          currentPage={currentPage}
+          totalPages={defaultNumberOfPages}
+          topOffset={isTemporaryNavigation ? 0 : insets.top}
+          isTemporaryNavigation={isTemporaryNavigation}
+          backgroundColor={containerBackgroundColor}
+          onVisiblePageChange={handleSetPage}
+        />
+      </>
+    );
+  }
+
   return (
     <>
       <Seo
@@ -408,10 +445,7 @@ export function MushafPage() {
             styles.imageContainer,
             animatedStyle,
             {
-              backgroundColor:
-                colorScheme === 'dark'
-                  ? `rgba(26, 26, 26, ${1 - mushafContrastValue})`
-                  : themeConfig.backgroundColor || ivoryColor,
+              backgroundColor: containerBackgroundColor,
             },
           ]}
         >

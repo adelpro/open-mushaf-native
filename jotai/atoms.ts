@@ -1,6 +1,7 @@
 import { observe } from 'jotai-effect';
 
 import { Reminder, TafseerTabs } from '@/types';
+import { ReadingMode } from '@/types/reading-mode';
 import { Riwaya } from '@/types/riwaya';
 
 import { createAtomWithStorage } from './createAtomWithStorage';
@@ -24,6 +25,10 @@ export const finishedTutorial = createAtomWithStorage<boolean | undefined>(
 export const mushafRiwaya = createAtomWithStorage<Riwaya>(
   'MushafRiwaya',
   'hafs',
+);
+export const readingMode = createAtomWithStorage<ReadingMode>(
+  'ReadingMode',
+  'horizontal',
 );
 export const tafseerTab = createAtomWithStorage<TafseerTabs>(
   'TafseerTab',
