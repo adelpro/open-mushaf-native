@@ -18,6 +18,7 @@ import { mushafContrast, readingTheme } from '@/jotai/atoms';
 import { resolvePrimaryVisiblePage } from '@/utils/verticalReading';
 
 import { PageOverlay } from './PageOverlay';
+import { ThemedText } from './ThemedText';
 
 /**
  * Props for the VerticalMushafList component.
@@ -56,9 +57,12 @@ export function VerticalMushafList({
 }: Props) {
   const listRef = useRef<FlashListRef<number>>(null);
   const visiblePageRef = useRef(currentPage);
-  const onVisiblePageChangeRef = useRef(onVisiblePageChange);
-  onVisiblePageChangeRef.current = onVisiblePageChange;
+  const onVisiblePageChangeRef = useRef<(page: number) => void>(() => {});
   const [listHeight, setListHeight] = useState(0);
+
+  useEffect(() => {
+    onVisiblePageChangeRef.current = onVisiblePageChange;
+  }, [onVisiblePageChange]);
 
   const pages = useMemo(
     () => Array.from({ length: totalPages }, (_, i) => i + 1),
@@ -70,7 +74,10 @@ export function VerticalMushafList({
   }).current;
 
   const onViewableItemsChanged = useRef(
-    (info: { viewableItems: ViewToken<number>[] }) => {
+    (info: {
+      viewableItems: ViewToken<number>[];
+      changed: ViewToken<number>[];
+    }) => {
       const page = resolvePrimaryVisiblePage(info.viewableItems);
       if (page === null || page === visiblePageRef.current) return;
       visiblePageRef.current = page;
@@ -144,7 +151,7 @@ function VerticalPageItem({
   topOffset: number;
   itemHeight: number;
 }) {
-  const { asset, isLoading } = usePageAsset(page);
+  const { asset, isLoading, error } = usePageAsset(page);
   const readingThemeValue = useAtomValue(readingTheme);
   const mushafContrastValue = useAtomValue(mushafContrast);
   const themeConfig =
@@ -179,6 +186,10 @@ function VerticalPageItem({
           contentFit="fill"
           onLayout={handleImageLayout}
         />
+      ) : !isLoading && error ? (
+        <View style={styles.itemLoading}>
+          <ThemedText type="defaultSemiBold">{error}</ThemedText>
+        </View>
       ) : (
         <View style={styles.itemLoading}>
           <ActivityIndicator size="large" color={tintColor} />

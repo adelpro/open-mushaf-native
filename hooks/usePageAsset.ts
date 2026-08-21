@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Asset } from 'expo-asset';
 import { useAtomValue } from 'jotai/react';
@@ -16,16 +16,18 @@ import { getImagesMap } from '@/utils/pageImages';
  * @returns The downloaded `asset`, an `isLoading` boolean, and an `error`
  * string (if any).
  */
-export function usePageAsset(page: number) {
+export const usePageAsset = (page: number) => {
   const [error, setError] = useState<string | null>(null);
   const [asset, setAsset] = useState<Asset | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);
-  const isMounted = useRef(true);
 
   useEffect(() => {
-    isMounted.current = true;
+    let isActive = true;
+
     setIsLoading(true);
+    setError(null);
+    setAsset(null);
 
     const loadAsset = async () => {
       try {
@@ -41,29 +43,27 @@ export function usePageAsset(page: number) {
         if (!assetToLoad.downloaded) {
           await assetToLoad.downloadAsync();
         }
-        // Only set asset if mounted
-        if (isMounted.current) {
+        if (isActive) {
           setAsset(assetToLoad);
         }
-      } catch (error) {
-        if (isMounted.current) {
+      } catch (err) {
+        if (isActive) {
           setError(
-            error instanceof Error
-              ? error.message
-              : ERROR_MESSAGES.IMAGE_NOT_FOUND,
+            err instanceof Error ? err.message : ERROR_MESSAGES.IMAGE_NOT_FOUND,
           );
           setAsset(null);
         }
       } finally {
-        if (isMounted.current) setIsLoading(false);
+        if (isActive) setIsLoading(false);
       }
     };
 
-    loadAsset();
+    void loadAsset();
+
     return () => {
-      isMounted.current = false; // Mark as unmounted
+      isActive = false;
     };
   }, [mushafRiwayaValue, page]);
 
   return { asset, isLoading, error };
-}
+};

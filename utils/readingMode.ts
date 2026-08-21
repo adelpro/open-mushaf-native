@@ -9,7 +9,7 @@ const readingModeArray: ReadingMode[] = ['horizontal', 'vertical'];
  * @param value - The ReadingMode value (e.g., 'horizontal' or 'vertical').
  * @returns The integer index of the ReadingMode in the configuration array.
  */
-export function ReadingModeByIndice(value: ReadingMode): number {
+export function getReadingModeIndex(value: ReadingMode): number {
   const index = readingModeArray.indexOf(value);
   return index !== -1 ? index : 0;
 }
@@ -21,7 +21,7 @@ export function ReadingModeByIndice(value: ReadingMode): number {
  * @throws {Error} If the provided index is out of array bounds.
  * @returns The ReadingMode value for the given index.
  */
-export function ReadingModeByValue(index: number): ReadingMode {
+export function getReadingModeByIndex(index: number): ReadingMode {
   if (index < 0 || index >= readingModeArray.length) {
     throw new Error(`Invalid index: ${index}`);
   }

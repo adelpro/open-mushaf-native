@@ -39,7 +39,10 @@ import {
   showTrackerNotification,
 } from '@/jotai/atoms';
 import { isWeb, RiwayaByIndice, RiwayaByValue } from '@/utils';
-import { ReadingModeByIndice, ReadingModeByValue } from '@/utils/readingMode';
+import {
+  getReadingModeByIndex,
+  getReadingModeIndex,
+} from '@/utils/readingMode';
 import { clearStorageAndReload } from '@/utils/storage/clearStorage';
 
 export default function SettingsScreen() {
@@ -59,6 +62,10 @@ export default function SettingsScreen() {
   const [readingModeValue, setReadingModeValue] = useAtom(readingMode);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const readingModeOptions = ['أفقي', 'عمودي'];
+
+  const handleReadingModeSelection = (index: number) => {
+    setReadingModeValue(getReadingModeByIndex(index));
+  };
 
   const toggleFlipSoundSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
@@ -334,12 +341,10 @@ export default function SettingsScreen() {
         <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
           <SegmentedControl
             options={readingModeOptions}
-            initialSelectedIndex={ReadingModeByIndice(readingModeValue)}
+            initialSelectedIndex={getReadingModeIndex(readingModeValue)}
             activeColor={primaryColor}
             textColor={primaryColor}
-            onSelectionChange={(index: number) => {
-              setReadingModeValue(ReadingModeByValue(index));
-            }}
+            onSelectionChange={handleReadingModeSelection}
           />
         </Pressable>
       </ThemedView>
