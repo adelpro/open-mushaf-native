@@ -286,7 +286,6 @@ export function MushafPage() {
         <VerticalMushafList
           currentPage={currentPage}
           totalPages={defaultNumberOfPages}
-          topOffset={topOffset}
           isTemporaryNavigation={isTemporaryNavigation}
           backgroundColor={containerBackgroundColor}
           onVisiblePageChange={handleSetPage}

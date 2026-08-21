@@ -28,8 +28,6 @@ type Props = {
   currentPage: number;
   /** Total number of Mushaf pages to render. */
   totalPages: number;
-  /** Offset applied to the verse overlay to align with the top of the page. */
-  topOffset: number;
   /** Whether the reader is in a temporary (non-saved) navigation session. */
   isTemporaryNavigation: boolean;
   /** Background color applied behind the pages (theme / night mode). */
@@ -50,7 +48,6 @@ type Props = {
 export function VerticalMushafList({
   currentPage,
   totalPages,
-  topOffset,
   isTemporaryNavigation,
   backgroundColor,
   onVisiblePageChange,
@@ -117,11 +114,7 @@ export function VerticalMushafList({
             ref={listRef}
             data={pages}
             renderItem={({ item }) => (
-              <VerticalPageItem
-                page={item}
-                topOffset={topOffset}
-                itemHeight={listHeight}
-              />
+              <VerticalPageItem page={item} itemHeight={listHeight} />
             )}
             keyExtractor={(item) => item.toString()}
             initialScrollIndex={currentPage - 1}
@@ -144,11 +137,9 @@ export function VerticalMushafList({
  */
 function VerticalPageItem({
   page,
-  topOffset,
   itemHeight,
 }: {
   page: number;
-  topOffset: number;
   itemHeight: number;
 }) {
   const { asset, isLoading, error } = usePageAsset(page);
@@ -195,7 +186,7 @@ function VerticalPageItem({
           <ActivityIndicator size="large" color={tintColor} />
         </View>
       )}
-      <PageOverlay index={page} dimensions={dimensions} topOffset={topOffset} />
+      <PageOverlay index={page} dimensions={dimensions} />
     </View>
   );
 }

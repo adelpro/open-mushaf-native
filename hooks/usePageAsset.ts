@@ -33,7 +33,7 @@ export const usePageAsset = (page: number) => {
       try {
         const imagesMap = getImagesMap(mushafRiwayaValue);
         if (!imagesMap) {
-          return;
+          throw new Error(ERROR_MESSAGES.IMAGE_NOT_FOUND);
         }
 
         const image = imagesMap[page];

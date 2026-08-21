@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
+  LayoutChangeEvent,
   Platform,
   StyleSheet,
   useColorScheme,
@@ -33,6 +34,7 @@ import {
 import { triggerSelectionHaptic } from '@/utils/triggerHaptic';
 
 import { PageOverlay } from './PageOverlay';
+import { ThemedText } from './ThemedText';
 
 const audioSource = require('@/assets/sounds/page-flip-sound.mp3');
 
@@ -70,7 +72,7 @@ export function HorizontalMushafPage({ handleSetPage, topOffset }: Props) {
     customPageHeight: 0,
   });
 
-  const handleImageLayout = (event: any) => {
+  const handleImageLayout = (event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;
     setDimensions({ customPageWidth: width, customPageHeight: height });
   };
@@ -163,7 +165,7 @@ export function HorizontalMushafPage({ handleSetPage, topOffset }: Props) {
         style={styles.errorContainer}
         edges={topOffset > 0 ? ['top'] : []}
       >
-        <ActivityIndicator size="large" color={tintColor} />
+        <ThemedText type="defaultSemiBold">{assetError}</ThemedText>
       </SafeAreaView>
     );
   }
