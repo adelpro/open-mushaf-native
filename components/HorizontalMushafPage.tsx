@@ -72,6 +72,7 @@ export function HorizontalMushafPage({ handleSetPage, topOffset }: Props) {
     customPageHeight: 0,
   });
 
+  // Records image dimensions used to position PageOverlay.
   const handleImageLayout = (event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;
     setDimensions({ customPageWidth: width, customPageHeight: height });
