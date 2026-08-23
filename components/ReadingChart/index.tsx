@@ -59,6 +59,7 @@ export function ReadingChart() {
     total,
     effectiveAvg,
     recordsWithData,
+    isDemoData,
     period,
     periodIndex,
     setPeriodIndex,
@@ -238,6 +239,16 @@ export function ReadingChart() {
             style={[styles.avgLabel, { color: textColor, opacity: 0.4 }]}
           >
             بدأ التتبع قبل {recordsWithData} يوماً
+          </ThemedText>
+        )}
+        {/* The chart falls back to generated history in Expo Go and in a dev
+            build with no records yet. Label it so the figures above are never
+            mistaken for a real reading history. */}
+        {isDemoData && (
+          <ThemedText
+            style={[styles.avgLabel, { color: textColor, opacity: 0.4 }]}
+          >
+            بيانات تجريبية
           </ThemedText>
         )}
       </ThemedView>

@@ -16,6 +16,8 @@ export * from './readingChart';
 
 export * from './readingMode';
 
+export * from './readingStats';
+
 export * from './triggerHaptic';
 
 export * from './withAlpha';
