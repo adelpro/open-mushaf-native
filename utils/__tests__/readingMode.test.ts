@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import type { ReadingMode } from '@/types/reading-mode';
+
 import { getReadingModeByIndex, getReadingModeIndex } from '../readingMode';
 
 describe('getReadingModeIndex', () => {
@@ -12,7 +14,8 @@ describe('getReadingModeIndex', () => {
   });
 
   it('returns 0 for an unknown value (fallback)', () => {
-    expect(getReadingModeIndex('unknown' as any)).toBe(0);
+    const invalidInput: string = 'unknown';
+    expect(getReadingModeIndex(invalidInput as ReadingMode)).toBe(0);
   });
 });
 

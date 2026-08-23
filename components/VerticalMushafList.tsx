@@ -20,6 +20,9 @@ import { resolvePrimaryVisiblePage } from '@/utils/verticalReading';
 import { PageOverlay } from './PageOverlay';
 import { ThemedText } from './ThemedText';
 
+/** Intentional no-op used for deferred callbacks and ignored rejections. */
+const noop = () => undefined;
+
 /**
  * Props for the VerticalMushafList component.
  */
@@ -54,7 +57,7 @@ export function VerticalMushafList({
 }: Props) {
   const listRef = useRef<FlashListRef<number>>(null);
   const visiblePageRef = useRef(currentPage);
-  const onVisiblePageChangeRef = useRef<(page: number) => void>(() => {});
+  const onVisiblePageChangeRef = useRef<(page: number) => void>(noop);
   const [listHeight, setListHeight] = useState(0);
 
   useEffect(() => {
@@ -93,7 +96,7 @@ export function VerticalMushafList({
         index: currentPage - 1,
         animated: false,
       })
-      .catch(() => {});
+      .catch(noop);
   }, [currentPage]);
 
   const handleListLayout = (event: LayoutChangeEvent) => {

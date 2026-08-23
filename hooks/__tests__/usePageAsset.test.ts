@@ -21,7 +21,7 @@ vi.mock('react-native-mmkv', () => ({
       mmkvStore.delete(key);
     }
     addOnValueChangedListener() {
-      return { remove: () => {} };
+      return { remove: vi.fn() };
     }
   },
 }));
@@ -32,7 +32,7 @@ vi.mock('@/utils/pageImages', () => ({
 
 vi.mock('expo-asset', () => ({
   Asset: {
-    fromModule: (id: unknown) => ({
+    fromModule: (id: number) => ({
       downloaded: false,
       downloadAsync: mockDownloadAsync,
       localUri: `mock://page-${id}`,

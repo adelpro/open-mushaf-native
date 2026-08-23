@@ -21,7 +21,7 @@ vi.mock('react-native-mmkv', () => {
         mmkvStore.delete(key);
       }
       addOnValueChangedListener() {
-        return { remove: () => {} };
+        return { remove: vi.fn() };
       }
     },
   };
