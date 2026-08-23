@@ -38,10 +38,10 @@ import { ThemedText } from './ThemedText';
 
 const audioSource = require('@/assets/sounds/page-flip-sound.mp3');
 
-type Props = {
+interface Props {
   handleSetPage: (page: number) => void;
   topOffset: number;
-};
+}
 
 export function HorizontalMushafPage({ handleSetPage, topOffset }: Props) {
   const player = useAudioPlayer(audioSource);

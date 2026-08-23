@@ -14,7 +14,7 @@ describe('getReadingModeIndex', () => {
   });
 
   it('returns 0 for an unknown value (fallback)', () => {
-    const invalidInput: string = 'unknown';
+    const invalidInput = String('unknown');
     expect(getReadingModeIndex(invalidInput as ReadingMode)).toBe(0);
   });
 });

@@ -26,7 +26,7 @@ const noop = () => undefined;
 /**
  * Props for the VerticalMushafList component.
  */
-type Props = {
+interface Props {
   /** The current page (single shared source of truth across reading modes). */
   currentPage: number;
   /** Total number of Mushaf pages to render. */
@@ -37,7 +37,7 @@ type Props = {
   backgroundColor: string;
   /** Called when the primary visible page changes while scrolling. */
   onVisiblePageChange: (page: number) => void;
-};
+}
 
 /**
  * Continuous vertical Mushaf reading mode.
