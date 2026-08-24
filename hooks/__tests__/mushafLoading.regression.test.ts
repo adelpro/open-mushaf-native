@@ -51,7 +51,11 @@ describe('mushaf loading/error regression', () => {
     isLoading = false;
 
     expect(isLoading).toBe(false);
-    expect(asset!.localUri).toBe('mock://page-page-5');
+    expect(asset).not.toBeNull();
+    if (!asset) {
+      throw new Error('Expected asset to be loaded');
+    }
+    expect(asset.localUri).toBe('mock://page-page-5');
   });
 
   it('failed asset load exposes the exact user-facing error message', () => {
