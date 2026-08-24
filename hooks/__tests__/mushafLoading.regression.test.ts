@@ -35,7 +35,6 @@ describe('mushaf loading/error regression', () => {
   it('isLoading is true while asset downloads and clears on success', async () => {
     mockGetImagesMap.mockReturnValue({ 5: 'page-5' });
     let isLoading = true;
-    let asset: { localUri: string } | null = null;
 
     const imagesMap = getImagesMap('hafs');
     const image = (imagesMap as Record<number, unknown>)[5];
@@ -47,14 +46,10 @@ describe('mushaf loading/error regression', () => {
       downloadAsync: mockDownloadAsync,
     };
     await assetToLoad.downloadAsync();
-    asset = { localUri: assetToLoad.localUri };
+    const asset = { localUri: assetToLoad.localUri };
     isLoading = false;
 
     expect(isLoading).toBe(false);
-    expect(asset).not.toBeNull();
-    if (!asset) {
-      throw new Error('Expected asset to be loaded');
-    }
     expect(asset.localUri).toBe('mock://page-page-5');
   });
 
