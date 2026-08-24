@@ -24,25 +24,21 @@ vi.mock('expo-asset', () => ({
 
 vi.mock('react-native-mmkv', () => ({
   MMKV: class {
-    getString() {
-      return null;
-    }
-    set() {}
-    delete() {}
-    addOnValueChangedListener() {
-      return { remove: vi.fn() };
-    }
+    getString = vi.fn(() => null);
+    set = vi.fn();
+    delete = vi.fn();
+    addOnValueChangedListener = vi.fn(() => ({ remove: vi.fn() }));
   },
 }));
 
 describe('mushaf loading/error regression', () => {
   it('isLoading is true while asset downloads and clears on success', async () => {
-    mockGetImagesMap.mockReturnValue({ 5: 'page-5' } as any);
+    mockGetImagesMap.mockReturnValue({ 5: 'page-5' });
     let isLoading = true;
     let asset: { localUri: string } | null = null;
 
     const imagesMap = getImagesMap('hafs');
-    const image = (imagesMap as Record<number, unknown>)?.[5];
+    const image = (imagesMap as Record<number, unknown>)[5];
     expect(image).toBeTruthy();
     expect(isLoading).toBe(true);
 
@@ -55,15 +51,15 @@ describe('mushaf loading/error regression', () => {
     isLoading = false;
 
     expect(isLoading).toBe(false);
-    expect(asset?.localUri).toBe('mock://page-page-5');
+    expect(asset!.localUri).toBe('mock://page-page-5');
   });
 
-  it('failed asset load exposes the exact user-facing error message', async () => {
-    mockGetImagesMap.mockReturnValue({ 99: undefined } as any);
+  it('failed asset load exposes the exact user-facing error message', () => {
+    mockGetImagesMap.mockReturnValue({ 99: undefined });
     let error: string | null = null;
 
     const imagesMap = getImagesMap('hafs');
-    const image = (imagesMap as Record<number, unknown>)?.[99];
+    const image = (imagesMap as Record<number, unknown>)[99];
     if (!image) error = ERROR_MESSAGES.IMAGE_NOT_FOUND;
 
     expect(error).toBe(ERROR_MESSAGES.IMAGE_NOT_FOUND);
