@@ -3,6 +3,7 @@ import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 
+import { useColors } from '@/hooks';
 import { SearchOptions } from '@/types';
 
 import { ThemedButton } from './ThemedButton';
@@ -19,6 +20,14 @@ export function SearchAdvancedOptions({
   toggleOption,
 }: SearchAdvancedOptionsProps) {
   const [modalVisible, setModalVisible] = useState(false);
+  const { cardColor, iconColor, textColor } = useColors();
+
+  // The pill surface must follow the theme; a hardcoded white background left the
+  // themed label text invisible in dark mode.
+  const themedOption = {
+    backgroundColor: cardColor,
+    borderColor: iconColor,
+  };
 
   return (
     <ThemedView style={styles.container}>
@@ -151,6 +160,7 @@ export function SearchAdvancedOptions({
           <Pressable
             style={[
               styles.optionButton,
+              themedOption,
               advancedOptions.lemma && styles.optionActive,
               advancedOptions.isRegex && styles.optionDisabled,
             ]}
@@ -170,6 +180,7 @@ export function SearchAdvancedOptions({
           <Pressable
             style={[
               styles.optionButton,
+              themedOption,
               advancedOptions.root && styles.optionActive,
               advancedOptions.isRegex && styles.optionDisabled,
             ]}
@@ -189,6 +200,7 @@ export function SearchAdvancedOptions({
           <Pressable
             style={[
               styles.optionButton,
+              themedOption,
               advancedOptions.fuzzy && styles.optionActive,
               advancedOptions.isRegex && styles.optionDisabled,
             ]}
@@ -208,6 +220,7 @@ export function SearchAdvancedOptions({
           <Pressable
             style={[
               styles.optionButton,
+              themedOption,
               advancedOptions.semantic && styles.optionActive,
               advancedOptions.isRegex && styles.optionDisabled,
             ]}
@@ -231,6 +244,7 @@ export function SearchAdvancedOptions({
           <Pressable
             style={[
               styles.regexButton,
+              { backgroundColor: cardColor },
               advancedOptions.isRegex && styles.regexActive,
             ]}
             onPress={() => toggleOption('isRegex')}
@@ -249,7 +263,7 @@ export function SearchAdvancedOptions({
               Regex (تعابير نمطية)
             </ThemedText>
           </Pressable>
-          <ThemedText style={styles.regexHint}>
+          <ThemedText style={[styles.regexHint, { color: textColor }]}>
             يلغي تفعيل الخيارات الأخرى
           </ThemedText>
         </View>
@@ -299,8 +313,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#ddd',
-    backgroundColor: '#fff',
   },
   optionActive: {
     backgroundColor: '#e3f2fd',
@@ -308,8 +320,6 @@ const styles = StyleSheet.create({
   },
   optionDisabled: {
     opacity: 0.5,
-    backgroundColor: '#f5f5f5',
-    borderColor: '#eee',
   },
   optionActiveText: {
     color: '#1976d2',
@@ -317,7 +327,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   optionDisabledText: {
-    color: '#999',
+    opacity: 0.6,
   },
   divider: {
     height: 1,
@@ -337,7 +347,6 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     borderWidth: 1.5,
     borderColor: '#d32f2f',
-    backgroundColor: '#fff',
   },
   regexActive: {
     backgroundColor: '#d32f2f',
@@ -352,7 +361,7 @@ const styles = StyleSheet.create({
   },
   regexHint: {
     fontSize: 11,
-    color: '#666',
+    opacity: 0.7,
   },
   // Modal Styles
   modalOverlay: {
