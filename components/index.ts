@@ -38,3 +38,4 @@ export * from './TimePicker';
 export * from './TopMenu';
 export * from './TopTabs';
 export * from './TutorialGuide';
+export * from './VerticalMushafList';

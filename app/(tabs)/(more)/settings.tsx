@@ -34,10 +34,15 @@ import {
   mushafContrast,
   mushafRiwaya,
   panGestureSensitivity,
+  readingMode,
   readingTheme,
   showTrackerNotification,
 } from '@/jotai/atoms';
 import { isWeb, RiwayaByIndice, RiwayaByValue } from '@/utils';
+import {
+  getReadingModeByIndex,
+  getReadingModeIndex,
+} from '@/utils/readingMode';
 import { clearStorageAndReload } from '@/utils/storage/clearStorage';
 
 export default function SettingsScreen() {
@@ -54,7 +59,13 @@ export default function SettingsScreen() {
   );
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const [readingThemeValue, setReadingThemeValue] = useAtom(readingTheme);
+  const [readingModeValue, setReadingModeValue] = useAtom(readingMode);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const readingModeOptions = ['أفقي', 'عمودي'];
+
+  const handleReadingModeSelection = (index: number) => {
+    setReadingModeValue(getReadingModeByIndex(index));
+  };
 
   const toggleFlipSoundSwitch = () => {
     setIsFlipSoundEnabled((previousState) => !previousState);
@@ -299,6 +310,41 @@ export default function SettingsScreen() {
             onSelectionChange={(index: number) => {
               setReadingThemeValue(READING_THEME_KEYS[index]);
             }}
+          />
+        </Pressable>
+      </ThemedView>
+
+      <ThemedView
+        style={[
+          styles.settingsSection,
+          styles.columnSection,
+          { backgroundColor: cardColor },
+        ]}
+      >
+        <ThemedView
+          style={[
+            styles.fullWidthContainer,
+            styles.iconTextContainer,
+            { backgroundColor: cardColor },
+          ]}
+        >
+          <Feather
+            name="columns"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedText type="defaultSemiBold" style={styles.itemText}>
+            وضع القراءة:
+          </ThemedText>
+        </ThemedView>
+        <Pressable style={styles.fullWidth} accessibilityRole="radiogroup">
+          <SegmentedControl
+            options={readingModeOptions}
+            initialSelectedIndex={getReadingModeIndex(readingModeValue)}
+            activeColor={primaryColor}
+            textColor={primaryColor}
+            onSelectionChange={handleReadingModeSelection}
           />
         </Pressable>
       </ThemedView>
