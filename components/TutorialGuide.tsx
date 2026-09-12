@@ -88,10 +88,12 @@ export function TutorialGuide() {
     setIndex((prev) => prev + 1);
   };
 
-  const actionButtonStyle = { gap: isEndNotReached ? 0 : 5 };
-  const actionButtonTitle = isEndNotReached ? 'التالى' : 'إنتهاء';
-  const actionButtonIcon = isEndNotReached ? NextSVG : CheckedSVG;
-  const actionButtonPress = isEndNotReached ? incrementIndex : finishTutorial;
+  const nextButtonStyle = { gap: isEndNotReached ? 0 : 5 };
+  const nextButtonTitle = isEndNotReached ? 'التالى' : 'إنتهاء';
+  const nextButtonIcon = isEndNotReached ? NextSVG : CheckedSVG;
+  const nextButtonPressAction = isEndNotReached
+    ? incrementIndex
+    : finishTutorial;
 
   return (
     <GestureDetector gesture={gestureHandler}>
@@ -156,11 +158,11 @@ export function TutorialGuide() {
               </View>
 
               <ThemedAppButton
-                style={actionButtonStyle}
+                style={nextButtonStyle}
                 variant="primary"
-                title={actionButtonTitle}
-                icon={actionButtonIcon}
-                onPress={actionButtonPress}
+                title={nextButtonTitle}
+                icon={nextButtonIcon}
+                onPress={nextButtonPressAction}
               />
 
               <View style={styles.closeButtonContainer}>
