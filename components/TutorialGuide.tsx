@@ -26,7 +26,12 @@ import NextSVG from '@/assets/svgs/next.svg';
 import { ThemedAppButton } from '@/components/ThemedAppButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { fontNames, getPanThreshold, PAN_GESTURE_CONFIG, SLIDES } from '@/constants';
+import {
+  fontNames,
+  getPanThreshold,
+  PAN_GESTURE_CONFIG,
+  SLIDES,
+} from '@/constants';
 import { useColors, useOrientation } from '@/hooks';
 import { finishedTutorial, panGestureSensitivity } from '@/jotai/atoms';
 import { isRTL } from '@/utils';
