@@ -16,10 +16,11 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
-import { Stack } from 'expo-router';
+import { Redirect, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
+import { useAtomValue } from 'jotai';
 import { HelmetProvider } from 'react-helmet-async';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -27,6 +28,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ErrorBoundary, Notification, Seo } from '@/components';
 import { NotificationProvider } from '@/Context/NotificationProvider';
 import { useDailyTrackerReset } from '@/hooks';
+import { finishedTutorial } from '@/jotai/atoms';
 import { isRTL } from '@/utils';
 import { setupNotificationChannel } from '@/utils/notifications';
 
@@ -38,6 +40,7 @@ SplashScreen.setOptions({ fade: true, duration: 1000 });
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const finishedTutorialValue = useAtomValue(finishedTutorial);
 
   // Handle daily tracker reset on date change
   useDailyTrackerReset();
@@ -117,6 +120,7 @@ export default function RootLayout() {
               <ThemeProvider
                 value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
               >
+                {!finishedTutorialValue && <Redirect href="/tutorial" />}
                 <Stack
                   screenOptions={{
                     headerTitleStyle: { fontFamily: 'Tajawal_700Bold' },
@@ -149,7 +153,10 @@ export default function RootLayout() {
                   />
                   <Stack.Screen
                     name="tutorial"
-                    options={{ headerShown: true, title: 'جولة تعليمية' }}
+                    options={{
+                      headerShown: !!finishedTutorialValue,
+                      title: 'جولة تعليمية',
+                    }}
                   />
                   <Stack.Screen
                     name="tracker"

@@ -11,14 +11,8 @@ import {
   Seo,
   ThemedView,
   TopMenu,
-  TutorialGuide,
 } from '@/components';
-import {
-  currentAppVersion,
-  finishedTutorial,
-  mushafRiwaya,
-  topMenuState,
-} from '@/jotai/atoms';
+import { currentAppVersion, mushafRiwaya, topMenuState } from '@/jotai/atoms';
 import { getAppVersion, isWeb } from '@/utils';
 
 export default function HomeScreen() {
@@ -26,7 +20,6 @@ export default function HomeScreen() {
   const [showChangeLogs, setShowChangeLogs] = useState<boolean>(false);
   const setCurrentVersionValue = useSetAtom(currentAppVersion);
   const currentAppVersionValue = useAtomValue(currentAppVersion);
-  const finishedTutorialValue = useAtomValue(finishedTutorial);
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);
 
   useEffect(() => {
@@ -49,9 +42,7 @@ export default function HomeScreen() {
       <ReadingPositionBanner />
       <ChangeLogs visible={showChangeLogs} onClose={handleCloseChangeLogs} />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
-        {!finishedTutorialValue ? (
-          <TutorialGuide />
-        ) : mushafRiwayaValue === undefined ? (
+        {mushafRiwayaValue === undefined ? (
           <SelectRiwaya />
         ) : (
           <>
