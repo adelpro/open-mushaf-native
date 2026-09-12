@@ -290,8 +290,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#E0E0E0',
   },
   activeDot: {
-    width: 15,
-    height: 15,
+    width: 20,
+    height: 8,
   },
   button: {
     height: 50,
