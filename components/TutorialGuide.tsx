@@ -22,7 +22,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import CheckedSVG from '@/assets/svgs/checked.svg';
 import NextSVG from '@/assets/svgs/next.svg';
-import { ThemedButton } from '@/components/ThemedButton';
+import { ThemedAppButton } from '@/components/ThemedAppButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { PAN_GESTURE_CONFIG, SLIDES } from '@/constants';
@@ -44,7 +44,9 @@ export function TutorialGuide() {
   const { isLandscape } = useOrientation();
   const panGestureSensitivityValue = useAtomValue(panGestureSensitivity);
   const [index, setIndex] = useState(0);
+
   const currentSlide = SLIDES[Math.max(0, Math.min(index, SLIDES.length - 1))];
+  const isEndNotReached = index < SLIDES.length - 1;
 
   const finishTutorial = () => {
     setFinishedTutorial(true);
@@ -81,6 +83,15 @@ export function TutorialGuide() {
         }
       });
   }, [isLandscape, panGestureSensitivityValue]);
+
+  const incrementIndex = () => {
+    setIndex((prev) => prev + 1);
+  };
+
+  const actionButtonStyle = { gap: isEndNotReached ? 0 : 5 };
+  const actionButtonTitle = isEndNotReached ? 'التالى' : 'إنتهاء';
+  const actionButtonIcon = isEndNotReached ? NextSVG : CheckedSVG;
+  const actionButtonPress = isEndNotReached ? incrementIndex : finishTutorial;
 
   return (
     <GestureDetector gesture={gestureHandler}>
@@ -144,39 +155,14 @@ export function TutorialGuide() {
                 ))}
               </View>
 
-              <ThemedButton
-                onPress={
-                  index < SLIDES.length - 1
-                    ? () => {
-                        setIndex(index + 1);
-                      }
-                    : finishTutorial
-                }
+              <ThemedAppButton
+                style={actionButtonStyle}
                 variant="primary"
-                style={styles.button}
-              >
-                <View style={styles.buttonContent}>
-                  {index < SLIDES.length - 1 ? (
-                    <>
-                      <Text style={styles.buttonText}>التالي</Text>
-                      <NextSVG
-                        width={24}
-                        height={24}
-                        style={styles.buttonIcon}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <Text style={styles.buttonText}>إنتهاء</Text>
-                      <CheckedSVG
-                        width={24}
-                        height={24}
-                        style={styles.buttonIcon}
-                      />
-                    </>
-                  )}
-                </View>
-              </ThemedButton>
+                title={actionButtonTitle}
+                icon={actionButtonIcon}
+                onPress={actionButtonPress}
+              />
+
               <View style={styles.closeButtonContainer}>
                 <Pressable onPress={finishTutorial}>
                   <Text
@@ -274,6 +260,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderTopWidth: 1,
     borderTopColor: 'rgba(0,0,0,0.1)',
+    paddingHorizontal: 20,
   },
   dotsContainer: {
     justifyContent: 'center',
@@ -292,28 +279,5 @@ const styles = StyleSheet.create({
   activeDot: {
     width: 20,
     height: 8,
-  },
-  button: {
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    maxWidth: 300,
-    marginTop: 10,
-  },
-  buttonContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    flexDirection: 'row',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 20,
-    fontFamily: 'Tajawal_500Medium',
-    paddingHorizontal: 5,
-  },
-  buttonIcon: {
-    color: 'white',
   },
 });
