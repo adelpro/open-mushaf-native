@@ -1,44 +1,24 @@
 import React, { CSSProperties, FunctionComponent, SVGProps } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  type TouchableOpacityProps,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 import { useColors } from '@/hooks';
 
-/**
- * Expanding default properties native to `TouchableOpacityProps`.
- * Added standardized coloring parameters referencing Jotai styling atoms.
- */
-export type ThemedAppButtonProps = TouchableOpacityProps &
+import { ThemedButtonProps } from './ThemedButton';
+
+type ThemedAppButtonProps = ThemedButtonProps &
   (
     | {
         title: string;
         icon?: FunctionComponent<SVGProps<SVGSVGElement>>;
       }
     | {
-        title?: never;
+        title?: string;
         icon: FunctionComponent<SVGProps<SVGSVGElement>>;
       }
   ) & {
     iconStyle?: CSSProperties;
     iconSize?: number;
     disabled?: boolean;
-    lightColor?: string;
-    darkColor?: string;
-    /** Enforces a standardized stylistic approach via internal switch evaluation. */
-    variant?:
-      | 'default'
-      | 'primary'
-      | 'secondary'
-      | 'outlined-primary'
-      | 'outlined-secondary'
-      | 'danger'
-      | 'danger-secondary'
-      | 'outlined-danger'
-      | 'outlined-danger-secondary';
   };
 
 /**
