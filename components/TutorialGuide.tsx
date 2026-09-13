@@ -48,6 +48,9 @@ export function TutorialGuide() {
 
   const currentSlide = SLIDES[Math.max(0, Math.min(index, SLIDES.length - 1))];
   const isEndNotReached = index < SLIDES.length - 1;
+  const nextButtonStyle = { flex: 1, gap: isEndNotReached ? 0 : 5 };
+  const nextButtonTitle = isEndNotReached ? 'التالى' : 'إنتهاء';
+  const nextButtonIcon = isEndNotReached ? NextSVG : CheckedSVG;
 
   useEffect(() => {
     setIsPrevDisabled(index === 0);
@@ -89,16 +92,7 @@ export function TutorialGuide() {
       });
   }, [isLandscape, panGestureSensitivityValue]);
 
-  const incrementIndex = () => {
-    setIndex((prev) => prev + 1);
-  };
-
-  const nextButtonStyle = { flex: 1, gap: isEndNotReached ? 0 : 5 };
-  const nextButtonTitle = isEndNotReached ? 'التالى' : 'إنتهاء';
-  const nextButtonIcon = isEndNotReached ? NextSVG : CheckedSVG;
-  const nextButtonPressAction = isEndNotReached
-    ? incrementIndex
-    : finishTutorial;
+  const nextButtonPressAction = isEndNotReached ? handleNext : finishTutorial;
 
   return (
     <GestureDetector gesture={gestureHandler}>
