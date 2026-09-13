@@ -1,5 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import { usePathname, useRouter } from 'expo-router';
 import { useAtomValue, useSetAtom } from 'jotai/react';
@@ -112,6 +119,17 @@ export function TutorialGuide() {
                 <ThemedText style={styles.description}>
                   {currentSlide.description}
                 </ThemedText>
+                {currentSlide.features && (
+                  <TouchableOpacity
+                    style={styles.linkTextContainer}
+                    activeOpacity={0.9}
+                    onPress={() => {}}
+                  >
+                    <ThemedText style={styles.linkText} suppressHighlighting>
+                      للتعرف على المزايا المتوفرة
+                    </ThemedText>
+                  </TouchableOpacity>
+                )}
               </View>
             </ThemedView>
 
@@ -233,6 +251,17 @@ const styles = StyleSheet.create({
   },
   ScrollContent: {
     flex: 1,
+  },
+  linkTextContainer: {
+    marginTop: 10,
+    paddingTop: 2.5,
+    paddingHorizontal: 10,
+    backgroundColor: '#8bd2c9',
+    borderRadius: 20,
+  },
+  linkText: {
+    fontSize: 13,
+    color: 'black',
   },
   dot: {
     width: 5,
