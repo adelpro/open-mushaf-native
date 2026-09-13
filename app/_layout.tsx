@@ -158,6 +158,7 @@ export default function RootLayout() {
                       title: 'جولة تعليمية',
                     }}
                   />
+                  <Stack.Screen name="featureDetails" />
                   <Stack.Screen
                     name="tracker"
                     options={{ headerShown: true, title: 'الورد اليومي' }}

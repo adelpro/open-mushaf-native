@@ -94,6 +94,13 @@ export function TutorialGuide() {
 
   const nextButtonPressAction = isEndNotReached ? handleNext : finishTutorial;
 
+  const handleNavToFeatureDetails = () => {
+    router.navigate({
+      pathname: '/featureDetails',
+      params: { slideId: currentSlide.id },
+    });
+  };
+
   return (
     <GestureDetector gesture={gestureHandler}>
       <Animated.View
@@ -123,7 +130,7 @@ export function TutorialGuide() {
                   <TouchableOpacity
                     style={styles.linkTextContainer}
                     activeOpacity={0.9}
-                    onPress={() => {}}
+                    onPress={handleNavToFeatureDetails}
                   >
                     <ThemedText style={styles.linkText} suppressHighlighting>
                       للتعرف على المزايا المتوفرة

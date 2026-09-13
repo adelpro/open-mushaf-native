@@ -2,16 +2,19 @@ import { OnBoardingSlide } from '@/types';
 
 export const SLIDES: OnBoardingSlide[] = [
   {
+    id: 1,
     title: 'مرحبا!',
     description: 'مرحبا بك في تطبيق المصحف',
     image: require('@/assets/images/icon-large.png'),
   },
   {
+    id: 2,
     title: 'المصحف',
     description: `يمكنك التنقل بين الصفحات عن طريق السحب نحو اليمين أو نحو اليسار`,
     image: require('@/assets/tutorial/mushaf.png'),
   },
   {
+    id: 3,
     title: 'القائمة العلوية',
     description:
       'تعرض القائمة العلوية معلومات الصفحة الحالية مثل اسم السورة ورقمها، ورقم الجزء واسمه الترتيبي.',
@@ -32,6 +35,7 @@ export const SLIDES: OnBoardingSlide[] = [
     image: require('@/assets/tutorial/top-menu.png'),
   },
   {
+    id: 4,
     title: 'التفسير',
     description: 'يمكنك إظهار قائمة التفسير بالضغط مطولا على صفحة المصحف.',
     features: [
@@ -48,6 +52,7 @@ export const SLIDES: OnBoardingSlide[] = [
     image: require('@/assets/tutorial/tafseer.png'),
   },
   {
+    id: 5,
     title: 'البحث',
     description:
       'يمكنك الوصول إلى صفحة البحث من القائمة العلوية في المصحف، وتتيح لك البحث في نص القرآن الكريم.',
@@ -62,6 +67,7 @@ export const SLIDES: OnBoardingSlide[] = [
     image: require('@/assets/tutorial/search.png'),
   },
   {
+    id: 6,
     title: 'التنقل',
     description: 'يمكنك الوصول إلى صفحة التنقل من القائمة العلوية في المصحف.',
     features: [
@@ -78,6 +84,7 @@ export const SLIDES: OnBoardingSlide[] = [
     image: require('@/assets/tutorial/navigation.png'),
   },
   {
+    id: 7,
     title: 'الورد اليومي',
     description:
       'تابع تقدمك اليومي في قراءة القرآن من خلال شريط التقدم الذي يعرض نسبة الإنجاز.',
@@ -98,6 +105,7 @@ export const SLIDES: OnBoardingSlide[] = [
     image: require('@/assets/tutorial/tracker.png'),
   },
   {
+    id: 8,
     title: 'الإعدادات',
     description: 'يمكنك تخصيص تجربة استخدام التطبيق من خلال صفحة الإعدادات.',
     features: [
