@@ -7,5 +7,5 @@ export interface OnBoardingSlide {
   title: string;
   description: string;
   image: ImageSourcePropType;
-  features?: AppFeature[];
+  details?: AppFeature[];
 }

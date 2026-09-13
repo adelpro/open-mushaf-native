@@ -17,7 +17,7 @@ export default function FeatureDetails() {
     <>
       <Stack.Screen options={{ title: slide.title }} />
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        {slide.features?.map((item, index) => {
+        {slide.details?.map((item, index) => {
           return (
             <View key={index} style={styles.itemContainer}>
               <View

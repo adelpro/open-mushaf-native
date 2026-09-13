@@ -126,7 +126,7 @@ export function TutorialGuide() {
                 <ThemedText style={styles.description}>
                   {currentSlide.description}
                 </ThemedText>
-                {currentSlide.features && (
+                {currentSlide.details && (
                   <TouchableOpacity
                     style={styles.linkTextContainer}
                     activeOpacity={0.9}
