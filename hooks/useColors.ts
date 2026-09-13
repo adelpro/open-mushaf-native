@@ -25,7 +25,7 @@ export const useColors = () => {
     cardColor: theme.card,
     ivoryColor: theme.ivory,
     tabIconDefaultColor: theme.tabIconDefault,
-    disabledIconColor: theme.disabledIconColor,
+    disabledIconColor: theme.disabledIcon,
 
     // Text Highlight colors
     directColor: theme.directColor,

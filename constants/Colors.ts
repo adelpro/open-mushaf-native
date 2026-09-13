@@ -18,7 +18,7 @@ export const Colors = {
     dangerLight: '#FFCDD2',
     ivory: '#F9F6EF',
     card: '#FFFFFF',
-    disabledIconColor: '#CCCCCC',
+    disabledIcon: '#CCCCCC',
 
     // Text Highlight colors
     directColor: '#FFD700',
@@ -39,7 +39,7 @@ export const Colors = {
     dangerLight: '#E57373',
     ivory: '#2E2E2E',
     card: '#1E1E1E',
-    disabledIconColor: '#323232',
+    disabledIcon: '#323232',
 
     // Text Highlight colors
     directColor: '#FFA000',

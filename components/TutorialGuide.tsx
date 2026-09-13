@@ -172,12 +172,9 @@ export function TutorialGuide() {
                 />
               </View>
 
-              <Pressable
-                style={styles.closeButtonContainer}
-                onPress={finishTutorial}
-              >
+              <Pressable style={styles.skipContainer} onPress={finishTutorial}>
                 <Text
-                  style={[styles.closeButtonText, { color: primaryLightColor }]}
+                  style={[styles.skipText, { color: primaryLightColor }]}
                   suppressHighlighting
                   onPress={finishTutorial}
                 >
@@ -200,10 +197,10 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 640,
   },
-  closeButtonContainer: {
+  skipContainer: {
     marginTop: 17,
   },
-  closeButtonText: {
+  skipText: {
     fontFamily: fontNames.regular,
     fontSize: 16,
   },
