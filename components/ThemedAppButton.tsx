@@ -12,7 +12,7 @@ import { useColors } from '@/hooks';
  * Expanding default properties native to `TouchableOpacityProps`.
  * Added standardized coloring parameters referencing Jotai styling atoms.
  */
-export type ThemedButtonProps = TouchableOpacityProps &
+export type ThemedAppButtonProps = TouchableOpacityProps &
   (
     | {
         title: string;
@@ -60,7 +60,7 @@ export function ThemedAppButton({
   disabled = false,
   children,
   ...rest
-}: ThemedButtonProps) {
+}: ThemedAppButtonProps) {
   const {
     primaryColor,
     secondaryColor,
