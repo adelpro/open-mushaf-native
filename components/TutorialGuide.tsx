@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Image,
   Pressable,
@@ -44,9 +44,14 @@ export function TutorialGuide() {
   const { isLandscape } = useOrientation();
   const panGestureSensitivityValue = useAtomValue(panGestureSensitivity);
   const [index, setIndex] = useState(0);
+  const [isPrevDisabled, setIsPrevDisabled] = useState(false);
 
   const currentSlide = SLIDES[Math.max(0, Math.min(index, SLIDES.length - 1))];
   const isEndNotReached = index < SLIDES.length - 1;
+
+  useEffect(() => {
+    setIsPrevDisabled(index === 0);
+  }, [index]);
 
   const finishTutorial = () => {
     setFinishedTutorial(true);
@@ -88,7 +93,7 @@ export function TutorialGuide() {
     setIndex((prev) => prev + 1);
   };
 
-  const nextButtonStyle = { gap: isEndNotReached ? 0 : 5 };
+  const nextButtonStyle = { flex: 1, gap: isEndNotReached ? 0 : 5 };
   const nextButtonTitle = isEndNotReached ? 'التالى' : 'إنتهاء';
   const nextButtonIcon = isEndNotReached ? NextSVG : CheckedSVG;
   const nextButtonPressAction = isEndNotReached
@@ -156,14 +161,22 @@ export function TutorialGuide() {
                   />
                 ))}
               </View>
-
-              <ThemedAppButton
-                style={nextButtonStyle}
-                variant="primary"
-                title={nextButtonTitle}
-                icon={nextButtonIcon}
-                onPress={nextButtonPressAction}
-              />
+              <View style={styles.actionButtonsContainer}>
+                <ThemedAppButton
+                  style={styles.prevButton}
+                  variant="outlined-primary"
+                  icon={NextSVG}
+                  disabled={isPrevDisabled}
+                  onPress={handlePrev}
+                />
+                <ThemedAppButton
+                  style={nextButtonStyle}
+                  variant="primary"
+                  title={nextButtonTitle}
+                  icon={nextButtonIcon}
+                  onPress={nextButtonPressAction}
+                />
+              </View>
 
               <View style={styles.closeButtonContainer}>
                 <Pressable onPress={finishTutorial}>
@@ -281,5 +294,14 @@ const styles = StyleSheet.create({
   activeDot: {
     width: 20,
     height: 8,
+  },
+  actionButtonsContainer: {
+    flexDirection: 'row',
+    gap: 15,
+    width: '100%',
+  },
+  prevButton: {
+    transform: [{ rotate: '-180deg' }],
+    width: 60,
   },
 });

@@ -12,25 +12,34 @@ import { useColors } from '@/hooks';
  * Expanding default properties native to `TouchableOpacityProps`.
  * Added standardized coloring parameters referencing Jotai styling atoms.
  */
-export type ThemedButtonProps = TouchableOpacityProps & {
-  title: string;
-  icon?: FunctionComponent<SVGProps<SVGSVGElement>>;
-  iconStyle?: CSSProperties;
-  iconSize?: number;
-  lightColor?: string;
-  darkColor?: string;
-  /** Enforces a standardized stylistic approach via internal switch evaluation. */
-  variant?:
-    | 'default'
-    | 'primary'
-    | 'secondary'
-    | 'outlined-primary'
-    | 'outlined-secondary'
-    | 'danger'
-    | 'danger-secondary'
-    | 'outlined-danger'
-    | 'outlined-danger-secondary';
-};
+export type ThemedButtonProps = TouchableOpacityProps &
+  (
+    | {
+        title: string;
+        icon?: FunctionComponent<SVGProps<SVGSVGElement>>;
+      }
+    | {
+        title?: never;
+        icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+      }
+  ) & {
+    iconStyle?: CSSProperties;
+    iconSize?: number;
+    disabled?: boolean;
+    lightColor?: string;
+    darkColor?: string;
+    /** Enforces a standardized stylistic approach via internal switch evaluation. */
+    variant?:
+      | 'default'
+      | 'primary'
+      | 'secondary'
+      | 'outlined-primary'
+      | 'outlined-secondary'
+      | 'danger'
+      | 'danger-secondary'
+      | 'outlined-danger'
+      | 'outlined-danger-secondary';
+  };
 
 /**
  * A generalized accessible interaction element overriding pure `TouchableOpacity` behaviors
@@ -41,13 +50,14 @@ export type ThemedButtonProps = TouchableOpacityProps & {
  */
 export function ThemedAppButton({
   style,
-  title,
+  title = '',
   icon: Icon = undefined,
   iconStyle = undefined,
   iconSize = 24,
   lightColor,
   darkColor,
   variant = 'default',
+  disabled = false,
   children,
   ...rest
 }: ThemedButtonProps) {
@@ -57,6 +67,7 @@ export function ThemedAppButton({
     dangerColor,
     dangerLightColor,
     backgroundColor,
+    disabledIconColor,
   } = useColors();
   const getVariantStyles = () => {
     switch (variant) {
@@ -117,6 +128,7 @@ export function ThemedAppButton({
   };
 
   const variantStyles = getVariantStyles();
+  const iconColor = disabled ? disabledIconColor : variantStyles.color;
 
   return (
     <TouchableOpacity
@@ -131,15 +143,20 @@ export function ThemedAppButton({
         style,
       ]}
       activeOpacity={0.8}
+      disabled={disabled}
       {...rest}
     >
-      <Text style={[styles.text, { color: variantStyles.color }]}>{title}</Text>
+      {!!title && (
+        <Text style={[styles.text, { color: variantStyles.color }]}>
+          {title}
+        </Text>
+      )}
       {Icon && (
         <Icon
           style={iconStyle}
           width={iconSize}
           height={iconSize}
-          color={variantStyles.color}
+          color={iconColor}
         />
       )}
     </TouchableOpacity>
@@ -150,8 +167,6 @@ const styles = StyleSheet.create({
   base: {
     borderRadius: 8,
     height: 50,
-    width: '100%',
-    maxWidth: 640,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
