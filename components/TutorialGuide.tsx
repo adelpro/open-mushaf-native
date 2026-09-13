@@ -25,7 +25,7 @@ import NextSVG from '@/assets/svgs/next.svg';
 import { ThemedAppButton } from '@/components/ThemedAppButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { PAN_GESTURE_CONFIG, SLIDES } from '@/constants';
+import { fontNames, PAN_GESTURE_CONFIG, SLIDES } from '@/constants';
 import { useColors, useOrientation } from '@/hooks';
 import { finishedTutorial, panGestureSensitivity } from '@/jotai/atoms';
 import { isRTL } from '@/utils';
@@ -172,25 +172,18 @@ export function TutorialGuide() {
                 />
               </View>
 
-              <View style={styles.closeButtonContainer}>
-                <Pressable onPress={finishTutorial}>
-                  <Text
-                    style={[
-                      styles.closeButtonText,
-                      { color: primaryLightColor },
-                    ]}
-                  >
-                    تخطي
-                  </Text>
-                </Pressable>
-                <View
-                  style={{
-                    width: 24,
-                    height: 24,
-                    backgroundColor: 'transparent',
-                  }}
-                />
-              </View>
+              <Pressable
+                style={styles.closeButtonContainer}
+                onPress={finishTutorial}
+              >
+                <Text
+                  style={[styles.closeButtonText, { color: primaryLightColor }]}
+                  suppressHighlighting
+                  onPress={finishTutorial}
+                >
+                  تخطي
+                </Text>
+              </Pressable>
             </ThemedView>
           </SafeAreaView>
         </ThemedView>
@@ -202,28 +195,17 @@ export function TutorialGuide() {
 const styles = StyleSheet.create({
   animatedContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     margin: 'auto',
-    padding: 2,
     width: '100%',
     maxWidth: 640,
-    position: 'relative',
   },
   closeButtonContainer: {
-    flexDirection: 'row',
-    margin: 5,
-    marginTop: 10,
-    width: '100%',
-    maxWidth: 300,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 17,
   },
   closeButtonText: {
-    fontFamily: 'Tajawal_400Regular',
-    fontSize: 18,
-    paddingHorizontal: 5,
-    textAlign: 'center',
+    fontFamily: fontNames.regular,
+    fontSize: 16,
   },
   safeArea: {
     width: '100%',
