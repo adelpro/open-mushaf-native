@@ -1,5 +1,13 @@
-import React, { CSSProperties, FunctionComponent, SVGProps } from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { FC } from 'react';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
+
+import type { SvgProps } from 'react-native-svg';
 
 import { useColors } from '@/hooks';
 
@@ -9,14 +17,14 @@ type ThemedAppButtonProps = ThemedButtonProps &
   (
     | {
         title: string;
-        icon?: FunctionComponent<SVGProps<SVGSVGElement>>;
+        icon?: FC<SvgProps>;
       }
     | {
         title?: string;
-        icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+        icon: FC<SvgProps>;
       }
   ) & {
-    iconStyle?: CSSProperties;
+    iconStyle?: ViewStyle;
     iconSize?: number;
     disabled?: boolean;
   };
@@ -150,7 +158,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.2)',
+    boxShadow:
+      Platform.OS === 'web' ? '0px 5px 5px rgba(0, 0, 0, 0.2)' : undefined,
+    shadowColor: 'black',
+    shadowOpacity: 0.3,
+    shadowRadius: 3.5,
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
     elevation: 5,
   },
   text: {

@@ -158,6 +158,7 @@ export function TutorialGuide() {
               <View style={styles.actionButtonsContainer}>
                 <ThemedAppButton
                   style={styles.prevButton}
+                  iconStyle={styles.prevButtonIcon}
                   variant="outlined-primary"
                   icon={NextSVG}
                   disabled={isPrevDisabled}
@@ -274,7 +275,9 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   prevButton: {
-    transform: [{ rotate: '-180deg' }],
     width: 60,
+  },
+  prevButtonIcon: {
+    transform: [{ rotate: '180deg' }],
   },
 });
