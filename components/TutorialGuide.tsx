@@ -1,12 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { usePathname, useRouter } from 'expo-router';
 import { useAtomValue, useSetAtom } from 'jotai/react';
@@ -106,41 +99,21 @@ export function TutorialGuide() {
             style={[styles.safeArea, { backgroundColor }]}
             edges={['top']}
           >
-            <ScrollView>
-              <ThemedView style={styles.ScrollContent}>
-                <Image
-                  source={currentSlide.image}
-                  style={styles.image}
-                  resizeMode="contain"
-                />
-
-                <View style={styles.textContainer}>
-                  <ThemedText style={styles.title}>
-                    {currentSlide.title}
-                  </ThemedText>
-                  {Array.isArray(currentSlide.description) ? (
-                    currentSlide.description.map((item, i) => (
-                      <ThemedText
-                        key={i}
-                        style={[
-                          styles.description,
-                          item.align !== 'start' && { textAlign: 'center' },
-                        ]}
-                      >
-                        {item.align === 'start' ? '✓ ' : ''}
-                        {item.text}
-                      </ThemedText>
-                    ))
-                  ) : (
-                    <ThemedText
-                      style={[styles.description, { textAlign: 'center' }]}
-                    >
-                      {currentSlide.description}
-                    </ThemedText>
-                  )}
-                </View>
-              </ThemedView>
-            </ScrollView>
+            <ThemedView style={styles.ScrollContent}>
+              <Image
+                source={currentSlide.image}
+                style={styles.image}
+                resizeMode="contain"
+              />
+              <View style={styles.textContainer}>
+                <ThemedText style={styles.title}>
+                  {currentSlide.title}
+                </ThemedText>
+                <ThemedText style={styles.description}>
+                  {currentSlide.description}
+                </ThemedText>
+              </View>
+            </ThemedView>
 
             <ThemedView style={styles.controlsContainer}>
               <View style={styles.dotsContainer}>
@@ -237,10 +210,11 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
+    textAlign: 'center',
     paddingHorizontal: 10,
     width: '95%',
     marginBottom: 10,
-    fontFamily: 'Tajawal_400Regular',
+    fontFamily: fontNames.regular,
   },
   controlsContainer: {
     width: '100%',
@@ -257,7 +231,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     flexDirection: 'row',
   },
-  ScrollContent: {},
+  ScrollContent: {
+    flex: 1,
+  },
   dot: {
     width: 5,
     height: 5,
