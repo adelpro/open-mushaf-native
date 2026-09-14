@@ -173,5 +173,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Tajawal_500Medium',
     fontSize: 20,
     marginTop: 5,
+    lineHeight: 25,
   },
 });
