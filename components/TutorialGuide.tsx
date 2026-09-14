@@ -196,10 +196,6 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 640,
   },
-  skipText: {
-    fontFamily: fontNames.regular,
-    fontSize: 16,
-  },
   safeArea: {
     flex: 1,
     width: '100%',
@@ -212,6 +208,9 @@ const styles = StyleSheet.create({
   mainContentContainer: {
     flex: 1,
     paddingHorizontal: 20,
+  },
+  ScrollContent: {
+    flex: 1,
   },
   textContainer: {
     flex: 1,
@@ -238,9 +237,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-  },
-  ScrollContent: {
-    flex: 1,
   },
   linkTextContainer: {
     marginTop: 10,
@@ -275,5 +271,9 @@ const styles = StyleSheet.create({
   },
   prevButtonIcon: {
     transform: [{ rotate: '180deg' }],
+  },
+  skipText: {
+    fontFamily: fontNames.regular,
+    fontSize: 16,
   },
 });
