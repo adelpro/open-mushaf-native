@@ -25,7 +25,6 @@ import CheckedSVG from '@/assets/svgs/checked.svg';
 import NextSVG from '@/assets/svgs/next.svg';
 import { ThemedAppButton } from '@/components/ThemedAppButton';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import {
   fontNames,
   getPanThreshold,
