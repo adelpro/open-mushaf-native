@@ -19,7 +19,7 @@ import Animated, {
   FadeOutRight,
   runOnJS,
 } from 'react-native-reanimated';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import CheckedSVG from '@/assets/svgs/checked.svg';
 import NextSVG from '@/assets/svgs/next.svg';
@@ -37,6 +37,7 @@ import { isRTL } from '@/utils';
  * @returns An `Animated.View` containing swipe controls and feature outlines.
  */
 export function TutorialGuide() {
+  const { top } = useSafeAreaInsets();
   const router = useRouter();
   const pathname = usePathname();
   const { primaryColor, primaryLightColor, backgroundColor } = useColors();
@@ -101,6 +102,10 @@ export function TutorialGuide() {
     });
   };
 
+  const scrollContainerStyle = useMemo(() => {
+    return [styles.safeArea, { paddingTop: top, backgroundColor }];
+  }, [backgroundColor, top]);
+
   return (
     <GestureDetector gesture={gestureHandler}>
       <Animated.View
@@ -108,82 +113,78 @@ export function TutorialGuide() {
         exiting={isRTL ? FadeOutRight.duration(500) : FadeOutLeft.duration(500)}
         style={styles.animatedContainer}
       >
-        <SafeAreaView
-          style={[styles.safeArea, { backgroundColor }]}
-          edges={['top']}
+        <ScrollView
+          style={scrollContainerStyle}
+          contentContainerStyle={styles.scrollContentContainer}
         >
-          <ScrollView contentContainerStyle={styles.scrollContentContainer}>
-            <Image
-              source={currentSlide.image}
-              style={[styles.image, { height: isLandscape ? 360 : 230 }]}
-              resizeMode="contain"
-            />
+          <Image
+            source={currentSlide.image}
+            style={[styles.image, { height: isLandscape ? 360 : 230 }]}
+            resizeMode="contain"
+          />
 
-            <View style={styles.innerContentContainer}>
-              <View style={styles.textsContainer}>
-                <ThemedText style={styles.title}>
-                  {currentSlide.title}
-                </ThemedText>
-                <ThemedText style={styles.description}>
-                  {currentSlide.description}
-                </ThemedText>
-                {currentSlide.details && (
-                  <TouchableOpacity
-                    style={styles.linkTextContainer}
-                    activeOpacity={0.9}
-                    onPress={handleNavToFeatureDetails}
-                  >
-                    <ThemedText style={styles.linkText} suppressHighlighting>
-                      للتعرف على المزايا المتوفرة
-                    </ThemedText>
-                  </TouchableOpacity>
-                )}
-              </View>
-
-              <View style={styles.controlsContainer}>
-                <View style={styles.dotsContainer}>
-                  {SLIDES.map((_, i) => (
-                    <View
-                      key={i}
-                      style={[
-                        styles.dot,
-                        i === index && styles.activeDot,
-                        i === index && { backgroundColor: primaryColor },
-                      ]}
-                    />
-                  ))}
-                </View>
-                <View style={styles.actionButtonsContainer}>
-                  <ThemedAppButton
-                    style={styles.prevButton}
-                    iconStyle={styles.prevButtonIcon}
-                    variant="outlined-primary"
-                    icon={NextSVG}
-                    disabled={isPrevDisabled}
-                    onPress={handlePrev}
-                  />
-                  <ThemedAppButton
-                    style={nextButtonStyle}
-                    variant="primary"
-                    title={nextButtonTitle}
-                    icon={nextButtonIcon}
-                    onPress={nextButtonPressAction}
-                  />
-                </View>
-
-                <Pressable onPress={finishTutorial}>
-                  <Text
-                    style={[styles.skipText, { color: primaryLightColor }]}
-                    suppressHighlighting
-                    onPress={finishTutorial}
-                  >
-                    تخطي
-                  </Text>
-                </Pressable>
-              </View>
+          <View style={styles.innerContentContainer}>
+            <View style={styles.textsContainer}>
+              <ThemedText style={styles.title}>{currentSlide.title}</ThemedText>
+              <ThemedText style={styles.description}>
+                {currentSlide.description}
+              </ThemedText>
+              {currentSlide.details && (
+                <TouchableOpacity
+                  style={styles.linkTextContainer}
+                  activeOpacity={0.9}
+                  onPress={handleNavToFeatureDetails}
+                >
+                  <ThemedText style={styles.linkText} suppressHighlighting>
+                    للتعرف على المزايا المتوفرة
+                  </ThemedText>
+                </TouchableOpacity>
+              )}
             </View>
-          </ScrollView>
-        </SafeAreaView>
+
+            <View style={styles.controlsContainer}>
+              <View style={styles.dotsContainer}>
+                {SLIDES.map((_, i) => (
+                  <View
+                    key={i}
+                    style={[
+                      styles.dot,
+                      i === index && styles.activeDot,
+                      i === index && { backgroundColor: primaryColor },
+                    ]}
+                  />
+                ))}
+              </View>
+              <View style={styles.actionButtonsContainer}>
+                <ThemedAppButton
+                  style={styles.prevButton}
+                  iconStyle={styles.prevButtonIcon}
+                  variant="outlined-primary"
+                  icon={NextSVG}
+                  disabled={isPrevDisabled}
+                  onPress={handlePrev}
+                />
+                <ThemedAppButton
+                  style={nextButtonStyle}
+                  variant="primary"
+                  title={nextButtonTitle}
+                  icon={nextButtonIcon}
+                  onPress={nextButtonPressAction}
+                />
+              </View>
+
+              <Pressable onPress={finishTutorial}>
+                <Text
+                  style={[styles.skipText, { color: primaryLightColor }]}
+                  suppressHighlighting
+                  onPress={finishTutorial}
+                >
+                  تخطي
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </ScrollView>
       </Animated.View>
     </GestureDetector>
   );
