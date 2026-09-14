@@ -67,11 +67,8 @@ export default function RootLayout() {
         I18nManager.allowRTL(true);
         I18nManager.forceRTL(true);
 
-        if (__DEV__) {
-          console.info('Reloading app to apply RTL');
-        } else {
-          await Updates.reloadAsync();
-        }
+        console.info('Reloading app to apply RTL');
+        await Updates.reloadAsync();
       }
     }
 
