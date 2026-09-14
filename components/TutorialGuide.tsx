@@ -112,7 +112,7 @@ export function TutorialGuide() {
           style={[styles.safeArea, { backgroundColor }]}
           edges={['top']}
         >
-          <ScrollView contentContainerStyle={styles.ScrollContent}>
+          <ScrollView contentContainerStyle={styles.scrollContentContainer}>
             <Image
               source={currentSlide.image}
               style={styles.image}
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
   },
-  ScrollContent: {
+  scrollContentContainer: {
     flexGrow: 1,
   },
   textContainer: {
