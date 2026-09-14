@@ -206,12 +206,12 @@ const styles = StyleSheet.create({
     height: 300,
     alignSelf: 'center',
   },
+  scrollContentContainer: {
+    flexGrow: 1,
+  },
   innerContentContainer: {
     flex: 1,
     paddingHorizontal: 20,
-  },
-  scrollContentContainer: {
-    flexGrow: 1,
   },
   textsContainer: {
     flex: 1,
