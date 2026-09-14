@@ -115,7 +115,7 @@ export function TutorialGuide() {
           <ScrollView contentContainerStyle={styles.scrollContentContainer}>
             <Image
               source={currentSlide.image}
-              style={styles.image}
+              style={[styles.image, { height: isLandscape ? 360 : 230 }]}
               resizeMode="contain"
             />
 
@@ -208,9 +208,11 @@ const styles = StyleSheet.create({
   },
   scrollContentContainer: {
     flexGrow: 1,
+    paddingTop: 20,
   },
   innerContentContainer: {
     flex: 1,
+    marginTop: 20,
     paddingHorizontal: 20,
   },
   textsContainer: {
