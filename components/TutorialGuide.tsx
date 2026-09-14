@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import { usePathname, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useAtomValue, useSetAtom } from 'jotai/react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -39,7 +39,6 @@ import { isRTL } from '@/utils';
 export function TutorialGuide() {
   const { top } = useSafeAreaInsets();
   const router = useRouter();
-  const pathname = usePathname();
   const { primaryColor, primaryLightColor, backgroundColor } = useColors();
   const setFinishedTutorial = useSetAtom(finishedTutorial);
   const { isLandscape } = useOrientation();
@@ -59,9 +58,13 @@ export function TutorialGuide() {
 
   const finishTutorial = () => {
     setFinishedTutorial(true);
-    if (pathname !== '/') {
-      router.replace('/');
+
+    // For OnBoarding
+    if (!router.canGoBack()) {
+      return router.replace('/');
     }
+
+    router.back();
   };
 
   const handlePrev = () => {
