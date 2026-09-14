@@ -119,8 +119,8 @@ export function TutorialGuide() {
               resizeMode="contain"
             />
 
-            <View style={styles.mainContentContainer}>
-              <View style={styles.textContainer}>
+            <View style={styles.innerContentContainer}>
+              <View style={styles.textsContainer}>
                 <ThemedText style={styles.title}>
                   {currentSlide.title}
                 </ThemedText>
@@ -206,14 +206,14 @@ const styles = StyleSheet.create({
     height: 300,
     alignSelf: 'center',
   },
-  mainContentContainer: {
+  innerContentContainer: {
     flex: 1,
     paddingHorizontal: 20,
   },
   scrollContentContainer: {
     flexGrow: 1,
   },
-  textContainer: {
+  textsContainer: {
     flex: 1,
     alignItems: 'center',
     paddingBottom: 20,
