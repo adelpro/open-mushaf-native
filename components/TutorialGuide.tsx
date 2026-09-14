@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   Image,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -111,7 +112,7 @@ export function TutorialGuide() {
           style={[styles.safeArea, { backgroundColor }]}
           edges={['top']}
         >
-          <View style={styles.ScrollContent}>
+          <ScrollView contentContainerStyle={styles.ScrollContent}>
             <Image
               source={currentSlide.image}
               style={styles.image}
@@ -181,7 +182,7 @@ export function TutorialGuide() {
                 </Pressable>
               </View>
             </View>
-          </View>
+          </ScrollView>
         </SafeAreaView>
       </Animated.View>
     </GestureDetector>
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   ScrollContent: {
-    flex: 1,
+    flexGrow: 1,
   },
   textContainer: {
     flex: 1,
