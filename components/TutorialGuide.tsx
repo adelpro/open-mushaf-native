@@ -24,7 +24,6 @@ import CheckedSVG from '@/assets/svgs/checked.svg';
 import NextSVG from '@/assets/svgs/next.svg';
 import { ThemedAppButton } from '@/components/ThemedAppButton';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { fontNames, PAN_GESTURE_CONFIG, SLIDES } from '@/constants';
 import { useColors, useOrientation } from '@/hooks';
 import { finishedTutorial, panGestureSensitivity } from '@/jotai/atoms';
@@ -108,17 +107,18 @@ export function TutorialGuide() {
         exiting={isRTL ? FadeOutRight.duration(500) : FadeOutLeft.duration(500)}
         style={styles.animatedContainer}
       >
-        <ThemedView style={styles.mainContainer}>
-          <SafeAreaView
-            style={[styles.safeArea, { backgroundColor }]}
-            edges={['top']}
-          >
-            <ThemedView style={styles.ScrollContent}>
-              <Image
-                source={currentSlide.image}
-                style={styles.image}
-                resizeMode="contain"
-              />
+        <SafeAreaView
+          style={[styles.safeArea, { backgroundColor }]}
+          edges={['top']}
+        >
+          <View style={styles.ScrollContent}>
+            <Image
+              source={currentSlide.image}
+              style={styles.image}
+              resizeMode="contain"
+            />
+
+            <View style={styles.mainContentContainer}>
               <View style={styles.textContainer}>
                 <ThemedText style={styles.title}>
                   {currentSlide.title}
@@ -138,51 +138,51 @@ export function TutorialGuide() {
                   </TouchableOpacity>
                 )}
               </View>
-            </ThemedView>
 
-            <ThemedView style={styles.controlsContainer}>
-              <View style={styles.dotsContainer}>
-                {SLIDES.map((_, i) => (
-                  <View
-                    key={i}
-                    style={[
-                      styles.dot,
-                      i === index && styles.activeDot,
-                      i === index && { backgroundColor: primaryColor },
-                    ]}
+              <View style={styles.controlsContainer}>
+                <View style={styles.dotsContainer}>
+                  {SLIDES.map((_, i) => (
+                    <View
+                      key={i}
+                      style={[
+                        styles.dot,
+                        i === index && styles.activeDot,
+                        i === index && { backgroundColor: primaryColor },
+                      ]}
+                    />
+                  ))}
+                </View>
+                <View style={styles.actionButtonsContainer}>
+                  <ThemedAppButton
+                    style={styles.prevButton}
+                    iconStyle={styles.prevButtonIcon}
+                    variant="outlined-primary"
+                    icon={NextSVG}
+                    disabled={isPrevDisabled}
+                    onPress={handlePrev}
                   />
-                ))}
-              </View>
-              <View style={styles.actionButtonsContainer}>
-                <ThemedAppButton
-                  style={styles.prevButton}
-                  iconStyle={styles.prevButtonIcon}
-                  variant="outlined-primary"
-                  icon={NextSVG}
-                  disabled={isPrevDisabled}
-                  onPress={handlePrev}
-                />
-                <ThemedAppButton
-                  style={nextButtonStyle}
-                  variant="primary"
-                  title={nextButtonTitle}
-                  icon={nextButtonIcon}
-                  onPress={nextButtonPressAction}
-                />
-              </View>
+                  <ThemedAppButton
+                    style={nextButtonStyle}
+                    variant="primary"
+                    title={nextButtonTitle}
+                    icon={nextButtonIcon}
+                    onPress={nextButtonPressAction}
+                  />
+                </View>
 
-              <Pressable style={styles.skipContainer} onPress={finishTutorial}>
-                <Text
-                  style={[styles.skipText, { color: primaryLightColor }]}
-                  suppressHighlighting
-                  onPress={finishTutorial}
-                >
-                  تخطي
-                </Text>
-              </Pressable>
-            </ThemedView>
-          </SafeAreaView>
-        </ThemedView>
+                <Pressable onPress={finishTutorial}>
+                  <Text
+                    style={[styles.skipText, { color: primaryLightColor }]}
+                    suppressHighlighting
+                    onPress={finishTutorial}
+                  >
+                    تخطي
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </SafeAreaView>
       </Animated.View>
     </GestureDetector>
   );
@@ -196,64 +196,47 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 640,
   },
-  skipContainer: {
-    marginTop: 17,
-  },
   skipText: {
     fontFamily: fontNames.regular,
     fontSize: 16,
   },
   safeArea: {
-    width: '100%',
-    height: '100%',
-  },
-  mainContainer: {
     flex: 1,
     width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
   },
   image: {
     width: '100%',
     height: 300,
-    marginBottom: 10,
     alignSelf: 'center',
   },
+  mainContentContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
   textContainer: {
-    width: '100%',
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginVertical: 10,
+    paddingBottom: 20,
   },
   title: {
     fontSize: 28,
-    fontFamily: 'Tajawal_700Bold',
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
+    fontFamily: fontNames.bold,
     lineHeight: 36,
   },
   description: {
     fontSize: 16,
     textAlign: 'center',
-    paddingHorizontal: 10,
     width: '95%',
-    marginBottom: 10,
+    marginVertical: 10,
     fontFamily: fontNames.regular,
   },
   controlsContainer: {
-    width: '100%',
     alignItems: 'center',
-    paddingVertical: 15,
-    marginBottom: 10,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.1)',
-    paddingHorizontal: 20,
+    paddingVertical: 25,
   },
   dotsContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 15,
     flexDirection: 'row',
   },
   ScrollContent: {
@@ -285,6 +268,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 15,
     width: '100%',
+    marginVertical: 25,
   },
   prevButton: {
     width: 60,
