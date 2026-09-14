@@ -37,7 +37,7 @@ import { isRTL } from '@/utils';
  * @returns An `Animated.View` containing swipe controls and feature outlines.
  */
 export function TutorialGuide() {
-  const { top } = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
   const router = useRouter();
   const { primaryColor, primaryLightColor, backgroundColor } = useColors();
   const setFinishedTutorial = useSetAtom(finishedTutorial);
@@ -105,9 +105,14 @@ export function TutorialGuide() {
     });
   };
 
-  const scrollContainerStyle = useMemo(() => {
-    return [styles.safeArea, { paddingTop: top, backgroundColor }];
-  }, [backgroundColor, top]);
+  const scrollContentCtStyle = useMemo(() => {
+    return {
+      flexGrow: 1,
+      backgroundColor,
+      paddingTop: top * 1.3,
+      paddingBottom: bottom,
+    };
+  }, [backgroundColor, top, bottom]);
 
   return (
     <GestureDetector gesture={gestureHandler}>
@@ -117,8 +122,8 @@ export function TutorialGuide() {
         style={styles.animatedContainer}
       >
         <ScrollView
-          style={scrollContainerStyle}
-          contentContainerStyle={styles.scrollContentContainer}
+          style={styles.safeArea}
+          contentContainerStyle={scrollContentCtStyle}
         >
           <Image
             source={currentSlide.image}
@@ -210,10 +215,6 @@ const styles = StyleSheet.create({
     height: 300,
     alignSelf: 'center',
   },
-  scrollContentContainer: {
-    flexGrow: 1,
-    paddingTop: 20,
-  },
   innerContentContainer: {
     flex: 1,
     marginTop: 20,
@@ -222,7 +223,6 @@ const styles = StyleSheet.create({
   textsContainer: {
     flex: 1,
     alignItems: 'center',
-    paddingBottom: 20,
   },
   title: {
     fontSize: 28,
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   },
   controlsContainer: {
     alignItems: 'center',
-    paddingVertical: 25,
+    marginTop: 40,
   },
   dotsContainer: {
     justifyContent: 'center',
