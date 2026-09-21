@@ -1,6 +1,6 @@
 import type { ButtonColors, ButtonVariant } from '@/types';
 
-type ButtonStyle = (colors: ButtonColors) => {
+type ButtonStyle = (_colors: ButtonColors) => {
   backgroundColor?: string;
   borderColor: string;
   color: string;

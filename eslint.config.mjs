@@ -72,7 +72,11 @@ export default defineConfig([
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',
-        { args: 'all', ignoreRestSiblings: false },
+        {
+          args: 'all',
+          ignoreRestSiblings: false,
+          argsIgnorePattern: '^_', // Add underscore to enforce Codacy linter to ignore unused param in a function declaration type
+        },
       ],
     },
   },
