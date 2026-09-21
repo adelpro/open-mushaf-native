@@ -1,5 +1,7 @@
 export * from './getDimensionCoeff';
 
+export * from './buttonVariantStyles';
+
 export * from './getVersion';
 
 export * from './isRTL';

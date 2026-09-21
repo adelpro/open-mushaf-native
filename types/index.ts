@@ -33,3 +33,5 @@ export type { MorphologyAya } from 'quran-search-engine';
 export * from './AppFeature';
 
 export * from './OnboardingSlide';
+
+export * from './button';
