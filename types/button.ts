@@ -14,6 +14,14 @@ export type ButtonVariant =
   | 'outlined-danger-secondary'
   | 'default';
 
+export interface ButtonColors {
+  primaryColor: string;
+  secondaryColor: string;
+  dangerColor: string;
+  dangerLightColor: string;
+  backgroundColor?: string;
+}
+
 export type ThemedAppButtonProps = {
   style?: StyleProp<ViewStyle>;
   variant?: ButtonVariant;

@@ -23,3 +23,5 @@ export * from './readingStats';
 export * from './triggerHaptic';
 
 export * from './withAlpha';
+
+export * from './getButtonVariantStyles';

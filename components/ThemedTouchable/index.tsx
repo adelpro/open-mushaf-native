@@ -3,7 +3,7 @@ import { TouchableOpacity } from 'react-native';
 
 import { useColors } from '@/hooks';
 import type { ThemedAppButtonProps } from '@/types';
-import { buttonVariantStyles } from '@/utils/buttonVariantStyles';
+import { getButtonVariantStyles } from '@/utils';
 
 import { styles } from './ThemedTouchable.styles';
 
@@ -20,7 +20,7 @@ export function ThemedTouchable({
   onPress,
 }: ThemedTouchableProps) {
   const colors = useColors();
-  const variantStyles = buttonVariantStyles[variant](colors);
+  const variantStyles = getButtonVariantStyles(variant, colors);
 
   return (
     <TouchableOpacity

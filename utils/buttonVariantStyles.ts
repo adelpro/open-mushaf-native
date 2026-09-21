@@ -1,12 +1,4 @@
-import type { ButtonVariant } from '@/types';
-
-interface ButtonColors {
-  primaryColor: string;
-  secondaryColor: string;
-  dangerColor: string;
-  dangerLightColor: string;
-  backgroundColor?: string;
-}
+import type { ButtonColors, ButtonVariant } from '@/types';
 
 export const buttonVariantStyles: Record<
   ButtonVariant,

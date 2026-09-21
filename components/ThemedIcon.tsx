@@ -5,7 +5,7 @@ import { SvgProps } from 'react-native-svg';
 
 import { useColors } from '@/hooks';
 import { ButtonVariant } from '@/types';
-import { buttonVariantStyles } from '@/utils';
+import { getButtonVariantStyles } from '@/utils';
 
 interface ThemedIconProps {
   iconStyle?: StyleProp<ViewStyle>;
@@ -23,7 +23,7 @@ export function ThemedIcon({
   iconSize = 24,
 }: ThemedIconProps) {
   const colors = useColors();
-  const variantStyles = buttonVariantStyles[variant](colors);
+  const variantStyles = getButtonVariantStyles(variant, colors);
   const color = disabled ? colors.disabledIconColor : variantStyles.color;
 
   return (

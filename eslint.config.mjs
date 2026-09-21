@@ -1,7 +1,7 @@
-import { defineConfig } from 'eslint/config';
 import expoConfig from 'eslint-config-expo/flat.js';
 import prettierPlugin from 'eslint-plugin-prettier';
 import reactCompilerPlugin from 'eslint-plugin-react-compiler';
+import { defineConfig } from 'eslint/config';
 
 const ignores = [
   'dist/',
@@ -32,6 +32,14 @@ export default defineConfig([
     rules: {
       'prettier/prettier': 'error',
       'react-compiler/react-compiler': 'error',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "MemberExpression[computed=true][property.type!='Literal']",
+          message:
+            'Using dynamic expressions to access object properties (e.g., object[key]) can obfuscate property names and allow malicious actors to manipulate keys, potentially altering program behavior and introducing security vulnerabilities.',
+        },
+      ],
       'sort-imports': [
         'error',
         { ignoreCase: true, ignoreDeclarationSort: true },
