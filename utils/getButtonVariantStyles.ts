@@ -1,15 +1,15 @@
 import { ButtonColors, ButtonVariant } from '@/types';
 
-import { buttonVariantStyles } from './buttonVariantStyles';
+import { buttonVariantStyleMap } from './buttonVariantStyleMap';
 
 export function getButtonVariantStyles(
   variant: ButtonVariant,
   colors: ButtonColors,
 ) {
-  const matchingVariant = Object.entries(buttonVariantStyles).find(
+  const matchingVariant = Object.entries(buttonVariantStyleMap).find(
     ([key]) => key === variant,
   );
   const [, variantStyleFactory] = matchingVariant ?? [];
 
-  return (variantStyleFactory ?? buttonVariantStyles.default)(colors);
+  return (variantStyleFactory ?? buttonVariantStyleMap.default)(colors);
 }

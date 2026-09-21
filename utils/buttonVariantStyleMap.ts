@@ -1,6 +1,6 @@
 import type { ButtonColors, ButtonVariant } from '@/types';
 
-export const buttonVariantStyles: Record<
+export const buttonVariantStyleMap: Record<
   ButtonVariant,
   (colors: ButtonColors) => {
     backgroundColor?: string;
