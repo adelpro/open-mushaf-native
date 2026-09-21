@@ -37,7 +37,7 @@ const trackedRun = (
   hizbsCompleted: number,
   pagesRead: number,
 ): DailyReadingRecord[] =>
-  Array.from({ length: count }, (_, i) => ({
+  Array.from({ length: count }, (...[, i]) => ({
     date: day(count - 1 - i),
     hizbsCompleted,
     pagesRead,
@@ -293,7 +293,7 @@ describe('summarizeReadingStats', () => {
   /** A window of `period` days where only the newest `tracked` are recorded. */
   const partialWindow = (period: number, tracked: number) =>
     buildDailyRecords(
-      Array.from({ length: tracked - 1 }, (_, i) => record(i + 1, 1, 4)),
+      Array.from({ length: tracked - 1 }, (...[, i]) => record(i + 1, 1, 4)),
       { value: 1, date: day(0) },
       4,
       period,
@@ -383,7 +383,7 @@ describe('summarizeReadingStats', () => {
   });
 
   it('reports no tracking start when nothing in the window is recorded', () => {
-    const daily = Array.from({ length: 7 }, (_, i) => ({
+    const daily = Array.from({ length: 7 }, (...[, i]) => ({
       ...record(6 - i),
       hasRecord: false,
     }));

@@ -37,8 +37,6 @@ export type ThemedButtonProps = TouchableOpacityProps & {
  */
 export function ThemedButton({
   style,
-  lightColor,
-  darkColor,
   variant = 'default',
   children,
   ...rest

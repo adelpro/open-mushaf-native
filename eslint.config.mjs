@@ -67,9 +67,18 @@ export default defineConfig([
     },
   },
   {
-    files: ['**/*.d.ts'],
+    files: ['**/*.{ts,tsx}'],
     rules: {
       'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { args: 'all', ignoreRestSiblings: false },
+      ],
+    },
+  },
+  {
+    files: ['**/*.d.ts'],
+    rules: {
       '@typescript-eslint/no-unused-vars': 'off',
     },
   },

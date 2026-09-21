@@ -218,7 +218,7 @@ describe('shouldShowLabel', () => {
   });
 
   it('labels every fifth bar plus the last one at 30 days', () => {
-    const shown = Array.from({ length: 30 }, (_, i) =>
+    const shown = Array.from({ length: 30 }, (...[, i]) =>
       shouldShowLabel(dateStr(2026, 5, 1), i, 30),
     )
       .map((visible, i) => (visible ? i : -1))
@@ -278,7 +278,7 @@ describe('daysAgo', () => {
   it('produces a contiguous run over a full 90-day window', () => {
     freeze(2026, 5, 15);
 
-    const dates = Array.from({ length: 90 }, (_, i) => daysAgo(89 - i));
+    const dates = Array.from({ length: 90 }, (...[, i]) => daysAgo(89 - i));
 
     expect(new Set(dates).size).toBe(90);
     expect(dates[89]).toBe(dateStr(2026, 5, 15));

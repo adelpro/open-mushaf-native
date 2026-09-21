@@ -152,7 +152,7 @@ export function TutorialGuide() {
 
             <View style={styles.controlsContainer}>
               <View style={styles.dotsContainer}>
-                {SLIDES.map((_, i) => (
+                {SLIDES.map((...[, i]) => (
                   <View
                     key={i}
                     style={[

@@ -42,11 +42,8 @@ export function ThemedAppButton({
   icon: Icon = undefined,
   iconStyle = undefined,
   iconSize = 24,
-  lightColor,
-  darkColor,
   variant = 'default',
   disabled = false,
-  children,
   ...rest
 }: ThemedAppButtonProps) {
   const {
