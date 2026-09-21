@@ -1,3 +1,8 @@
+import { FC } from 'react';
+import { StyleProp, ViewStyle } from 'react-native';
+
+import { SvgProps } from 'react-native-svg';
+
 export type ButtonVariant =
   | 'primary'
   | 'secondary'
@@ -8,3 +13,22 @@ export type ButtonVariant =
   | 'outlined-danger'
   | 'outlined-danger-secondary'
   | 'default';
+
+export type ThemedAppButtonProps = {
+  style?: StyleProp<ViewStyle>;
+  variant?: ButtonVariant;
+  icon?: FC<SvgProps>;
+  iconStyle?: ViewStyle;
+  iconSize?: number;
+  disabled?: boolean;
+  onPress: () => void;
+} & (
+  | {
+      title: string;
+      icon?: FC<SvgProps>;
+    }
+  | {
+      title?: string;
+      icon: FC<SvgProps>;
+    }
+);
