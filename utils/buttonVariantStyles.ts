@@ -8,40 +8,40 @@ export const buttonVariantStyles: Record<
     color: string;
   }
 > = {
-  primary: ({ primaryColor }: ButtonColors) => ({
+  primary: ({ primaryColor }) => ({
     backgroundColor: primaryColor,
     borderColor: primaryColor,
     color: 'white',
   }),
-  secondary: ({ secondaryColor }: ButtonColors) => ({
+  secondary: ({ secondaryColor }) => ({
     backgroundColor: secondaryColor,
     borderColor: secondaryColor,
     color: 'white',
   }),
-  'outlined-primary': ({ primaryColor }: ButtonColors) => ({
+  'outlined-primary': ({ primaryColor }) => ({
     borderColor: primaryColor,
     color: primaryColor,
   }),
-  'outlined-secondary': ({ secondaryColor }: ButtonColors) => ({
+  'outlined-secondary': ({ secondaryColor }) => ({
     borderColor: secondaryColor,
     color: secondaryColor,
   }),
-  danger: ({ dangerColor }: ButtonColors) => ({
+  danger: ({ dangerColor }) => ({
     backgroundColor: dangerColor,
     borderColor: dangerColor,
     color: 'white',
   }),
-  'danger-secondary': ({ dangerLightColor }: ButtonColors) => ({
+  'danger-secondary': ({ dangerLightColor }) => ({
     backgroundColor: dangerLightColor,
     borderColor: dangerLightColor,
     color: 'white',
   }),
-  'outlined-danger': ({ dangerColor }: ButtonColors) => ({
+  'outlined-danger': ({ dangerColor }) => ({
     backgroundColor: 'transparent',
     borderColor: dangerColor,
     color: dangerColor,
   }),
-  'outlined-danger-secondary': ({ dangerLightColor }: ButtonColors) => ({
+  'outlined-danger-secondary': ({ dangerLightColor }) => ({
     backgroundColor: 'transparent',
     borderColor: dangerLightColor,
     color: dangerLightColor,
