@@ -42,7 +42,7 @@ jobs:
 
       - name: Cache Gradle Packages
         id: cache-gradle
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -53,7 +53,7 @@ jobs:
 
       - name: Cache EAS CLI
         id: cache-eas
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.eas-cli
           key: ${{ runner.os }}-eas-${{ hashFiles('**/eas.json') }}

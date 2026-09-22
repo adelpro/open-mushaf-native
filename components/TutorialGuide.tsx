@@ -25,7 +25,8 @@ import CheckedSVG from '@/assets/svgs/checked.svg';
 import NextSVG from '@/assets/svgs/next.svg';
 import { ThemedAppButton } from '@/components/ThemedAppButton';
 import { ThemedText } from '@/components/ThemedText';
-import { fontNames, PAN_GESTURE_CONFIG, SLIDES } from '@/constants';
+import { ThemedView } from '@/components/ThemedView';
+import { fontNames, getPanThreshold, PAN_GESTURE_CONFIG, SLIDES } from '@/constants';
 import { useColors, useOrientation } from '@/hooks';
 import { finishedTutorial, panGestureSensitivity } from '@/jotai/atoms';
 import { isRTL } from '@/utils';
@@ -41,7 +42,7 @@ export function TutorialGuide() {
   const router = useRouter();
   const { primaryColor, primaryLightColor, backgroundColor } = useColors();
   const setFinishedTutorial = useSetAtom(finishedTutorial);
-  const { isLandscape } = useOrientation();
+  const { isLandscape, width } = useOrientation();
   const panGestureSensitivityValue = useAtomValue(panGestureSensitivity);
   const [index, setIndex] = useState(0);
   const [isPrevDisabled, setIsPrevDisabled] = useState(false);
@@ -76,14 +77,14 @@ export function TutorialGuide() {
   };
 
   const gestureHandler = useMemo(() => {
+    // Computed on the JS thread and captured as a plain number, so the worklet
+    // below never calls into a non-worklet function on the UI thread.
+    const baseThreshold = getPanThreshold(width, isLandscape);
+
     return Gesture.Pan()
       .activeOffsetX(PAN_GESTURE_CONFIG.ACTIVATION_OFFSET_X)
       .failOffsetY(PAN_GESTURE_CONFIG.FAIL_OFFSET_Y)
       .onEnd((e) => {
-        const baseThreshold = isLandscape
-          ? PAN_GESTURE_CONFIG.LANDSCAPE_THRESHOLD
-          : PAN_GESTURE_CONFIG.PORTRAIT_THRESHOLD;
-
         const threshold = baseThreshold / panGestureSensitivityValue;
 
         if (Math.abs(e.translationX) > threshold) {
@@ -94,7 +95,7 @@ export function TutorialGuide() {
           }
         }
       });
-  }, [isLandscape, panGestureSensitivityValue]);
+  }, [isLandscape, width, panGestureSensitivityValue]);
 
   const nextButtonPressAction = isEndNotReached ? handleNext : finishTutorial;
 

@@ -1,18 +1,29 @@
+# Prettier does not read .gitignore — only node_modules is excluded for free.
+# Everything below is generated, native, cached, or binary.
+
 dist/
 android/
 ios/
+.expo/
+.remember/
+.agent/
 design/
 screenshots/
 assets/
-.expo/
-.agent/
 node_modules/
 
-*-lock.json 
+# Generated web/PWA output
+builds/
+coverage/
+
+*-lock.json
 
 # Firebase
 firebase.json
 google-services.json
 .firebase
 
+# Generated types and caches
 expo-env.d.ts
+*.tsbuildinfo
+.eslintcache

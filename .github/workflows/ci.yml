@@ -6,49 +6,47 @@ on:
   push:
     branches: [develop, staging, main]
 
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  package-manager-check:
+  policy:
+    name: Package manager policy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Detect package manager
-        id: detect
+      - name: Require Yarn and reject competing lockfiles
+        shell: bash
         run: |
-          if [ -f "yarn.lock" ]; then
-            echo "manager=yarn" >> $GITHUB_OUTPUT
-          elif [ -f "pnpm-lock.yaml" ]; then
-            echo "manager=pnpm" >> $GITHUB_OUTPUT
-          elif [ -f "package-lock.json" ]; then
-            echo "manager=npm" >> $GITHUB_OUTPUT
-          else
-            echo "manager=none" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Validate package manager
-        run: |
-          if [ "${{ steps.detect.outputs.manager }}" != "yarn" ]; then
-            echo "Expected yarn but found: ${{ steps.detect.outputs.manager }}"
-            echo "Please use yarn for this project (yarn.lock not found)"
-            exit 1
-          fi
+          set -euo pipefail
+          for lockfile in package-lock.json npm-shrinkwrap.json pnpm-lock.yaml bun.lock bun.lockb; do
+            if [[ -e "$lockfile" ]]; then
+              echo "::error::Unexpected lockfile found: $lockfile — this project uses yarn.lock only."
+              exit 1
+            fi
+          done
+          test -f yarn.lock
+          grep -q '"packageManager": "yarn@' package.json
 
   lint-and-test:
+    name: Lint and tests
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-
+    needs: policy
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '20.x'
           cache: 'yarn'
 
       - name: Install dependencies
@@ -64,7 +62,7 @@ jobs:
         run: yarn test:coverage
 
       - name: Upload coverage reports
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         if: always()
         with:
           files: ./coverage/lcov.info
@@ -73,20 +71,17 @@ jobs:
           fail_ci_if_error: false
 
   type-check:
+    name: Type check
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-
+    needs: policy
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '20.x'
           cache: 'yarn'
 
       - name: Install dependencies
@@ -95,28 +90,50 @@ jobs:
       - name: Type Check
         run: yarn type-check
 
-  build-check:
+  commitlint:
+    name: Commit message checks
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-        environment: [development, staging, production]
-
+    needs: policy
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '20.x'
           cache: 'yarn'
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build ${{ matrix.environment }}
+      - name: Validate pull request commit messages
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: yarn commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
+
+  build-check:
+    name: Web build check
+    runs-on: ubuntu-latest
+    needs: policy
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build web export
         env:
           NODE_OPTIONS: '--max-old-space-size=8192'
         run: yarn build
