@@ -25,7 +25,7 @@ import NextSVG from '@/assets/svgs/next.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { PAN_GESTURE_CONFIG, SLIDES } from '@/constants';
+import { getPanThreshold, PAN_GESTURE_CONFIG, SLIDES } from '@/constants';
 import { useColors, useOrientation } from '@/hooks';
 import { finishedTutorial, panGestureSensitivity } from '@/jotai/atoms';
 import { isRTL } from '@/utils';
@@ -41,7 +41,7 @@ export function TutorialGuide() {
   const pathname = usePathname();
   const { primaryColor, primaryLightColor, backgroundColor } = useColors();
   const setFinishedTutorial = useSetAtom(finishedTutorial);
-  const { isLandscape } = useOrientation();
+  const { isLandscape, width } = useOrientation();
   const panGestureSensitivityValue = useAtomValue(panGestureSensitivity);
   const [index, setIndex] = useState(0);
   const currentSlide = SLIDES[Math.max(0, Math.min(index, SLIDES.length - 1))];
@@ -62,14 +62,14 @@ export function TutorialGuide() {
   };
 
   const gestureHandler = useMemo(() => {
+    // Computed on the JS thread and captured as a plain number, so the worklet
+    // below never calls into a non-worklet function on the UI thread.
+    const baseThreshold = getPanThreshold(width, isLandscape);
+
     return Gesture.Pan()
       .activeOffsetX(PAN_GESTURE_CONFIG.ACTIVATION_OFFSET_X)
       .failOffsetY(PAN_GESTURE_CONFIG.FAIL_OFFSET_Y)
       .onEnd((e) => {
-        const baseThreshold = isLandscape
-          ? PAN_GESTURE_CONFIG.LANDSCAPE_THRESHOLD
-          : PAN_GESTURE_CONFIG.PORTRAIT_THRESHOLD;
-
         const threshold = baseThreshold / panGestureSensitivityValue;
 
         if (Math.abs(e.translationX) > threshold) {
@@ -80,7 +80,7 @@ export function TutorialGuide() {
           }
         }
       });
-  }, [isLandscape, panGestureSensitivityValue]);
+  }, [isLandscape, width, panGestureSensitivityValue]);
 
   return (
     <GestureDetector gesture={gestureHandler}>

@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS, useSharedValue, withSpring } from 'react-native-reanimated';
 
-import { PAN_GESTURE_CONFIG } from '@/constants';
+import { getPanThreshold, PAN_GESTURE_CONFIG } from '@/constants';
 
 import { useOrientation } from './useOrientation';
 
@@ -20,7 +20,11 @@ export const usePanGestureHandler = (
   sensitivityMultiplier: number = 1.0,
 ) => {
   const translateX = useSharedValue(0);
-  const { isLandscape } = useOrientation();
+  const { isLandscape, width } = useOrientation();
+
+  // Computed on the JS thread and captured as a plain number, so the worklet
+  // below never calls into a non-worklet function on the UI thread.
+  const baseThreshold = getPanThreshold(width, isLandscape);
 
   const panGestureHandler = useMemo(() => {
     return Gesture.Pan()
@@ -33,10 +37,6 @@ export const usePanGestureHandler = (
         );
       })
       .onEnd((e) => {
-        const baseThreshold = isLandscape
-          ? PAN_GESTURE_CONFIG.LANDSCAPE_THRESHOLD
-          : PAN_GESTURE_CONFIG.PORTRAIT_THRESHOLD;
-
         const threshold = baseThreshold / sensitivityMultiplier;
 
         if (Math.abs(e.translationX) > threshold) {
@@ -49,7 +49,7 @@ export const usePanGestureHandler = (
           stiffness: PAN_GESTURE_CONFIG.SPRING_STIFFNESS,
         }); // Smooth return
       });
-  }, [isLandscape, onPageChange, sensitivityMultiplier, translateX]);
+  }, [baseThreshold, onPageChange, sensitivityMultiplier, translateX]);
 
   return { translateX, panGestureHandler };
 };
