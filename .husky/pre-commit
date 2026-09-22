@@ -1,5 +1,13 @@
-# Exit immediately if any command exits with a non-zero status.
+#!/usr/bin/env sh
+
 set -e
 
 echo 'Linting project before committing'
-npx lint-staged
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo 'Gitleaks is required for commits. Install it from https://github.com/gitleaks/gitleaks#installation.'
+  exit 1
+fi
+
+gitleaks protect --staged --redact
+yarn lint-staged

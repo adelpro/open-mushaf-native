@@ -1,4 +1,3 @@
-/* eslint-env node */
 const { getDefaultConfig } = require('expo/metro-config');
 const { FileStore } = require('metro-cache');
 const os = require('os');

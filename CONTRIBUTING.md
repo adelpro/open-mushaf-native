@@ -85,7 +85,8 @@ yarn install
 yarn start
 ```
 
-Gitleaks scans this repo on every push, pull request, and on a daily schedule.
+Gitleaks scans this repo on every commit (via the `pre-commit` hook), push,
+pull request, and on a daily schedule.
 If your PR trips Gitleaks, rotate the exposed credential first and force-push
 a clean history — do not just delete the line in a follow-up commit. See
 [Guarded Files](#guarded-files) for the files most likely to leak secrets.
@@ -171,9 +172,11 @@ Architecture constraints that save review round-trips:
 
 **One concern per PR.** Unrelated formatting churn will be asked out.
 
-The Husky `pre-commit` hook runs `npx lint-staged`, which calls
-`npx eslint --fix --cache` and `prettier --write` on `*.{js,jsx,ts,tsx}`. Your
-staged files will be rewritten. Re-stage them before committing.
+The Husky `pre-commit` hook runs `gitleaks protect --staged` (install
+[Gitleaks](https://github.com/gitleaks/gitleaks#installation) first), then
+`yarn lint-staged`, which runs `eslint --fix --cache` and `prettier --write` on
+`*.{js,jsx,ts,tsx}`, plus `prettier --write` on `*.{json,md,yml,yaml}`. Your
+staged files may be rewritten. Re-stage them before committing.
 
 ## Guarded Files
 
@@ -199,8 +202,8 @@ Never commit real credentials into `google-services.json` or
 ## Pre-PR Quality Gate
 
 CI runs `yarn format:check`, `yarn lint`, `yarn test:coverage`,
-`yarn type-check`, and a build check across the `development`, `staging`, and
-`production` profiles. Run the same locally first.
+`yarn type-check`, a commitlint check on pull request commits, and a web build
+check (`yarn build`). Run the same locally first.
 
 Always:
 
@@ -257,9 +260,10 @@ conforming header interactively.
 
 Husky hooks:
 
-- `pre-commit` — `npx lint-staged` (ESLint `--fix` + Prettier on staged JS
-  and TS).
-- `commit-msg` — `npx commitlint --edit`.
+- `pre-commit` — `gitleaks protect --staged --redact`, then `yarn lint-staged`
+  (ESLint `--fix` + Prettier on staged JS and TS, Prettier on staged JSON, MD,
+  and YAML).
+- `commit-msg` — `yarn commitlint --edit`.
 
 Do not bypass these with `--no-verify`.
 
@@ -328,8 +332,8 @@ commit type, rather than opening a PR you do not want reviewed.
 ### What to expect from review
 
 CI runs `yarn format:check`, `yarn lint`, `yarn test:coverage` (→ Codecov),
-`yarn type-check`, and a build check across `development`, `staging`, and
-`production`, plus `detect-package-managers` and Gitleaks. All must be green
+`yarn type-check`, a web build check, a commitlint check on pull request
+commits, a Yarn-only lockfile policy check, and Gitleaks. All must be green
 before review.
 
 Maintainers review manually after CI is green. Expect questions about _why_,

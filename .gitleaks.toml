@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Known non-secret examples and generated Expo metadata"
+paths = [
+  '''^\.env\.example$''',
+  '''^expo-env\.d\.ts$''',
+]

@@ -1,3 +1,6 @@
-# Run commitlint to validate commit messages
+#!/usr/bin/env sh
 
-npx commitlint --edit "$1"
+set -e
+
+# Run commitlint to validate commit messages
+yarn commitlint --edit "$1"
