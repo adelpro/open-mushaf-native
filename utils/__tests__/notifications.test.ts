@@ -73,8 +73,8 @@ describe('syncWirdReminders', () => {
     );
     expoNotifications.setNotificationChannelAsync.mockResolvedValue(undefined);
     expoNotifications.scheduleNotificationAsync.mockImplementation(
-      async ({ identifier }: { identifier?: string }) =>
-        identifier ?? 'generated-id',
+      ({ identifier }: { identifier?: string }) =>
+        Promise.resolve(identifier ?? 'generated-id'),
     );
   });
 

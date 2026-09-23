@@ -1,9 +1,9 @@
 import type { Reminder } from '@/types/reminder';
 
-type DailyWirdProgress = {
+interface DailyWirdProgress {
   value: number;
   date: string;
-};
+}
 
 /**
  * Adds the follow-up Wird preset for users whose persisted reminders were
@@ -50,12 +50,12 @@ export const WIRD_NOTIFICATION_PREFIX = 'wird_';
 // whenever the app becomes active.
 export const WIRD_SCHEDULE_DAYS = 14;
 
-export type WirdScheduleEntry = {
+export interface WirdScheduleEntry {
   identifier: string;
   reminder: Reminder;
   date: Date;
   dateKey: string;
-};
+}
 
 /** Returns a stable local-calendar key without converting through UTC. */
 export function getLocalDateKey(date: Date): string {

@@ -152,6 +152,35 @@ export const syncReminders = async (
   return updated;
 };
 
+const scheduleWirdOccurrences = async (
+  entries: ReturnType<typeof buildWirdSchedule>,
+  scheduledIds: Set<string>,
+): Promise<void> => {
+  for (const entry of entries) {
+    if (scheduledIds.has(entry.identifier)) continue;
+
+    await Notifications.scheduleNotificationAsync({
+      identifier: entry.identifier,
+      content: {
+        title: entry.reminder.title,
+        body: entry.reminder.body ?? 'حان وقت القراءة',
+        sound: 'default',
+        data: {
+          reminderType: 'wird',
+          reminderId: entry.reminder.id,
+          dateKey: entry.dateKey,
+        },
+        ...(Platform.OS === 'android' && {
+          channelId: CHANNEL_ID,
+        }),
+      },
+      trigger: {
+        type: SchedulableTriggerInputTypes.DATE,
+        date: entry.date,
+      },
+    });
+  }
+};
 /**
  * Reconciles scheduled Wird notifications with the current reminder settings.
  *
@@ -220,30 +249,7 @@ export const syncWirdReminders = async (
     scheduled.map((notification) => notification.identifier),
   );
 
-  for (const entry of desiredSchedule) {
-    if (scheduledIds.has(entry.identifier)) continue;
-
-    await Notifications.scheduleNotificationAsync({
-      identifier: entry.identifier,
-      content: {
-        title: entry.reminder.title,
-        body: entry.reminder.body ?? 'حان وقت القراءة',
-        sound: 'default',
-        data: {
-          reminderType: 'wird',
-          reminderId: entry.reminder.id,
-          dateKey: entry.dateKey,
-        },
-        ...(Platform.OS === 'android' && {
-          channelId: CHANNEL_ID,
-        }),
-      },
-      trigger: {
-        type: SchedulableTriggerInputTypes.DATE,
-        date: entry.date,
-      },
-    });
-  }
+  await scheduleWirdOccurrences(desiredSchedule, scheduledIds);
 
   return cleanedReminders;
 };

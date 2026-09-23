@@ -40,7 +40,9 @@ export function useWirdReminderSync() {
       }
     });
 
-    return () => subscription.remove();
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   useEffect(() => {
