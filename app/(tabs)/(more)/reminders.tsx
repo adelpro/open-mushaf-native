@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
+  Linking,
   Modal,
   Platform,
   Pressable,
@@ -95,6 +96,36 @@ export default function RemindersScreen() {
     checkPermissions();
   }, []);
 
+  const hasShownExactAlarmHint = useRef(false);
+
+  const maybeShowExactAlarmHint = useCallback(() => {
+    if (
+      Platform.OS !== 'android' ||
+      Number(Platform.Version) < 31 ||
+      hasShownExactAlarmHint.current
+    ) {
+      return;
+    }
+
+    hasShownExactAlarmHint.current = true;
+
+    Alert.alert(
+      'السماح بالمنبهات والتذكيرات',
+      'على Android 12 أو أحدث، قد تحتاج إلى السماح للتطبيق باستخدام "المنبهات والتذكيرات" حتى تصل التذكيرات في وقتها المحدد.',
+      [
+        {
+          text: 'لاحقًا',
+          style: 'cancel',
+        },
+        {
+          text: 'فتح الإعدادات',
+          onPress: () => {
+            void Linking.openSettings();
+          },
+        },
+      ],
+    );
+  }, []);
   // Sync reminders with OS scheduler once when permissions are granted
   const hasSynced = useRef(false);
   useEffect(() => {
@@ -130,12 +161,23 @@ export default function RemindersScreen() {
             if (r.id !== id) return r;
 
             if (r.enabled) {
-              // Turning off
+              // Wird occurrences are reconciled centrally by
+              // useWirdReminderSync; changing the state is enough to cancel
+              // its managed one-off notifications.
+              if (r.preset === 'wird') {
+                return {
+                  ...r,
+                  enabled: false,
+                  notificationId: undefined,
+                };
+              }
+
+              // Turning off a standard reminder.
               if (r.notificationId) await cancelReminder(r.notificationId);
               return { ...r, enabled: false, notificationId: undefined };
             }
 
-            // Turning on
+            // Turning on.
             if (!permissionGranted) {
               const granted = await requestNotificationPermissions();
               setPermissionGranted(granted);
@@ -144,6 +186,17 @@ export default function RemindersScreen() {
                 return r;
               }
             }
+
+            if (r.preset === 'wird') {
+              maybeShowExactAlarmHint();
+
+              return {
+                ...r,
+                enabled: true,
+                notificationId: undefined,
+              };
+            }
+
             const notificationId = await scheduleReminder({
               ...r,
               enabled: true,
@@ -158,7 +211,7 @@ export default function RemindersScreen() {
         Alert.alert('خطأ', ERROR_MESSAGES.REMINDER_TOGGLE_FAILED);
       }
     },
-    [reminders, permissionGranted, setReminders],
+    [reminders, permissionGranted, setReminders, maybeShowExactAlarmHint],
   );
 
   /** Opens time picker for a reminder */
@@ -177,20 +230,30 @@ export default function RemindersScreen() {
         reminders.map(async (r) => {
           if (r.id !== editingReminder.id) return r;
 
-          // Cancel old if active
-          if (r.notificationId) await cancelReminder(r.notificationId);
-
           const updatedReminder = {
             ...r,
             hour: editingReminder.hour,
             minute: editingReminder.minute,
           };
 
-          // Re-schedule if enabled
+          // Wird reminders are reconciled centrally. Their identifier includes
+          // the selected time, so the old occurrences are removed and the new
+          // ones are created automatically after this state update.
+          if (r.preset === 'wird') {
+            return {
+              ...updatedReminder,
+              notificationId: undefined,
+            };
+          }
+
+          // Cancel the old standard reminder before replacing it.
+          if (r.notificationId) await cancelReminder(r.notificationId);
+
           if (updatedReminder.enabled) {
             const notificationId = await scheduleReminder(updatedReminder);
             return { ...updatedReminder, notificationId };
           }
+
           return { ...updatedReminder, notificationId: undefined };
         }),
       );

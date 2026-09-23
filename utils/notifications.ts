@@ -8,6 +8,11 @@ import {
 } from 'expo-notifications';
 
 import { Reminder } from '@/types/reminder';
+import {
+  buildWirdSchedule,
+  WIRD_NOTIFICATION_PREFIX,
+  WIRD_SCHEDULE_DAYS,
+} from '@/utils/wirdReminders';
 
 const CHANNEL_ID = 'quran-reminders';
 
@@ -117,6 +122,13 @@ export const syncReminders = async (
   const updated: Reminder[] = [];
 
   for (const reminder of reminders) {
+    // Wird reminders use individually cancellable one-off occurrences so
+    // today's notifications can be suppressed after the daily goal is met.
+    if (reminder.preset === 'wird') {
+      updated.push(reminder);
+      continue;
+    }
+
     if (
       reminder.enabled &&
       (!reminder.notificationId || !scheduledIds.has(reminder.notificationId))
@@ -138,4 +150,100 @@ export const syncReminders = async (
   }
 
   return updated;
+};
+
+/**
+ * Reconciles scheduled Wird notifications with the current reminder settings.
+ *
+ * Wird occurrences are scheduled as one-off notifications instead of repeating
+ * daily notifications. This lets the app cancel today's remaining occurrences
+ * after the daily Wird has been completed without disabling future days.
+ *
+ * Existing legacy recurring Wird notification IDs are cancelled and removed
+ * from persisted reminder state during the same reconciliation.
+ */
+export const syncWirdReminders = async (
+  reminders: Reminder[],
+  completedToday: boolean,
+  now = new Date(),
+  days = WIRD_SCHEDULE_DAYS,
+): Promise<Reminder[]> => {
+  if (Platform.OS === 'web') return reminders;
+
+  const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+
+  const legacyIds = reminders.flatMap((reminder) =>
+    reminder.preset === 'wird' && reminder.notificationId
+      ? [reminder.notificationId]
+      : [],
+  );
+
+  const desiredSchedule = buildWirdSchedule(
+    reminders,
+    completedToday,
+    now,
+    days,
+  );
+  const desiredIds = new Set(desiredSchedule.map((entry) => entry.identifier));
+
+  const managedScheduledIds = scheduled
+    .map((notification) => notification.identifier)
+    .filter((identifier) => identifier.startsWith(WIRD_NOTIFICATION_PREFIX));
+
+  const idsToCancel = new Set([
+    ...legacyIds,
+    ...managedScheduledIds.filter((identifier) => !desiredIds.has(identifier)),
+  ]);
+
+  for (const identifier of idsToCancel) {
+    await cancelReminder(identifier);
+  }
+
+  const cleanedReminders =
+    legacyIds.length > 0
+      ? reminders.map((reminder) =>
+          reminder.preset === 'wird' && reminder.notificationId
+            ? { ...reminder, notificationId: undefined }
+            : reminder,
+        )
+      : reminders;
+
+  const { status } = await Notifications.getPermissionsAsync();
+
+  if (status !== 'granted') {
+    return cleanedReminders;
+  }
+
+  await setupNotificationChannel();
+
+  const scheduledIds = new Set(
+    scheduled.map((notification) => notification.identifier),
+  );
+
+  for (const entry of desiredSchedule) {
+    if (scheduledIds.has(entry.identifier)) continue;
+
+    await Notifications.scheduleNotificationAsync({
+      identifier: entry.identifier,
+      content: {
+        title: entry.reminder.title,
+        body: entry.reminder.body ?? 'حان وقت القراءة',
+        sound: 'default',
+        data: {
+          reminderType: 'wird',
+          reminderId: entry.reminder.id,
+          dateKey: entry.dateKey,
+        },
+        ...(Platform.OS === 'android' && {
+          channelId: CHANNEL_ID,
+        }),
+      },
+      trigger: {
+        type: SchedulableTriggerInputTypes.DATE,
+        date: entry.date,
+      },
+    });
+  }
+
+  return cleanedReminders;
 };
