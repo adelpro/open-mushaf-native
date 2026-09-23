@@ -26,7 +26,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ErrorBoundary, Notification, Seo } from '@/components';
 import { NotificationProvider } from '@/Context/NotificationProvider';
-import { useDailyTrackerReset } from '@/hooks';
+import { useDailyTrackerReset, useWirdReminderSync } from '@/hooks';
 import { isRTL } from '@/utils';
 import { setupNotificationChannel } from '@/utils/notifications';
 
@@ -41,6 +41,9 @@ export default function RootLayout() {
 
   // Handle daily tracker reset on date change
   useDailyTrackerReset();
+
+  // Keep conditional daily Wird notifications synchronized.
+  useWirdReminderSync();
 
   const [fontLoaded, fontError] = useFonts({
     Amiri_400Regular,
