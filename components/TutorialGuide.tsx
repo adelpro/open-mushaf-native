@@ -23,7 +23,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import CheckedSVG from '@/assets/svgs/checked.svg';
 import NextSVG from '@/assets/svgs/next.svg';
-import { ThemedAppButton } from '@/components/ThemedAppButton';
+import { ThemedButton } from '@/components/ThemedButton';
+import { ThemedIcon } from '@/components/ThemedIcon';
 import { ThemedText } from '@/components/ThemedText';
 import {
   fontNames,
@@ -53,7 +54,6 @@ export function TutorialGuide() {
 
   const currentSlide = SLIDES[Math.max(0, Math.min(index, SLIDES.length - 1))];
   const isEndNotReached = index < SLIDES.length - 1;
-  const nextButtonStyle = { flex: 1, gap: isEndNotReached ? 0 : 5 };
   const nextButtonTitle = isEndNotReached ? 'التالى' : 'إنتهاء';
   const nextButtonIcon = isEndNotReached ? NextSVG : CheckedSVG;
 
@@ -169,21 +169,33 @@ export function TutorialGuide() {
                 ))}
               </View>
               <View style={styles.actionButtonsContainer}>
-                <ThemedAppButton
-                  style={styles.prevButton}
-                  iconStyle={styles.prevButtonIcon}
+                <ThemedButton
+                  style={styles.iconButton}
                   variant="outlined-primary"
-                  icon={NextSVG}
                   disabled={isPrevDisabled}
                   onPress={handlePrev}
-                />
-                <ThemedAppButton
-                  style={nextButtonStyle}
+                >
+                  <View style={styles.iconButtonContent}>
+                    <ThemedIcon
+                      icon={NextSVG}
+                      iconStyle={styles.prevIcon}
+                      variant="outlined-primary"
+                      disabled={isPrevDisabled}
+                    />
+                  </View>
+                </ThemedButton>
+                <ThemedButton
+                  style={styles.primaryButton}
                   variant="primary"
-                  title={nextButtonTitle}
-                  icon={nextButtonIcon}
                   onPress={nextButtonPressAction}
-                />
+                >
+                  <View style={styles.primaryButtonContent}>
+                    <ThemedText style={styles.primaryButtonText}>
+                      {nextButtonTitle}
+                    </ThemedText>
+                    <ThemedIcon icon={nextButtonIcon} variant="primary" />
+                  </View>
+                </ThemedButton>
               </View>
 
               <Pressable onPress={finishTutorial}>
@@ -278,10 +290,34 @@ const styles = StyleSheet.create({
     width: '100%',
     marginVertical: 25,
   },
-  prevButton: {
+  iconButton: {
     width: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  prevButtonIcon: {
+  iconButtonContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  primaryButton: {
+    flex: 1,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
+  primaryButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  primaryButtonText: {
+    fontFamily: fontNames.medium,
+    fontSize: 20,
+    color: 'white',
+    marginTop: 2,
+  },
+  prevIcon: {
     transform: [{ rotate: '180deg' }],
   },
   skipText: {
