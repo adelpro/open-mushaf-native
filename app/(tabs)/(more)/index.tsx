@@ -114,11 +114,7 @@ export default function MoreScreen() {
         router.push('/settings');
       },
       renderIcon: () => (
-        <SettingsSVG
-          width={22}
-          height={22}
-          style={{ color: MENU_ICON_COLOR }}
-        />
+        <SettingsSVG width={22} height={22} color={MENU_ICON_COLOR} />
       ),
     },
   ];
@@ -165,11 +161,7 @@ export default function MoreScreen() {
             router.push('/bookmarks');
           },
           renderIcon: () => (
-            <BookmarkSVG
-              width={22}
-              height={22}
-              style={{ color: MENU_ICON_COLOR }}
-            />
+            <BookmarkSVG width={22} height={22} color={MENU_ICON_COLOR} />
           ),
         },
         {
@@ -182,11 +174,7 @@ export default function MoreScreen() {
             router.push('/tutorial');
           },
           renderIcon: () => (
-            <WelcomeSVG
-              width={22}
-              height={22}
-              style={{ color: MENU_ICON_COLOR }}
-            />
+            <WelcomeSVG width={22} height={22} color={MENU_ICON_COLOR} />
           ),
         },
       ],
@@ -206,11 +194,7 @@ export default function MoreScreen() {
             router.push('/contact');
           },
           renderIcon: () => (
-            <MailSVG
-              width={22}
-              height={22}
-              style={{ color: MENU_ICON_COLOR }}
-            />
+            <MailSVG width={22} height={22} color={MENU_ICON_COLOR} />
           ),
         },
         {
@@ -223,11 +207,7 @@ export default function MoreScreen() {
             void openHelpDocs();
           },
           renderIcon: () => (
-            <HelpSVG
-              width={22}
-              height={22}
-              style={{ color: MENU_ICON_COLOR }}
-            />
+            <HelpSVG width={22} height={22} color={MENU_ICON_COLOR} />
           ),
         },
         {
@@ -240,11 +220,7 @@ export default function MoreScreen() {
             router.push('/privacy');
           },
           renderIcon: () => (
-            <PageSVG
-              width={22}
-              height={22}
-              style={{ color: MENU_ICON_COLOR }}
-            />
+            <PageSVG width={22} height={22} color={MENU_ICON_COLOR} />
           ),
         },
         {
@@ -257,11 +233,7 @@ export default function MoreScreen() {
             router.push('/about');
           },
           renderIcon: () => (
-            <InfoSVG
-              width={22}
-              height={22}
-              style={{ color: MENU_ICON_COLOR }}
-            />
+            <InfoSVG width={22} height={22} color={MENU_ICON_COLOR} />
           ),
         },
       ],
@@ -281,11 +253,7 @@ export default function MoreScreen() {
             void handleShare();
           },
           renderIcon: () => (
-            <ShareSVG
-              width={22}
-              height={22}
-              style={{ color: MENU_ICON_COLOR }}
-            />
+            <ShareSVG width={22} height={22} color={MENU_ICON_COLOR} />
           ),
         },
       ],

@@ -13,7 +13,7 @@ const MONTH_NAMES: readonly string[] = (() => {
     const fmt = new Intl.DateTimeFormat(undefined, { month: 'long' });
     // Anchor dates are arbitrary; only the month field matters, so any day
     // in each month produces the localized name.
-    return Array.from({ length: 12 }, (_, i) =>
+    return Array.from({ length: 12 }, (...[, i]) =>
       fmt.format(new Date(2026, i, 15)),
     );
   } catch {

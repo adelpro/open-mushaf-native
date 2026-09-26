@@ -41,7 +41,7 @@ export default function Navigation() {
 
     const newNumberOfAyas = Array.from(
       { length: surah.numberOfAyahs },
-      (_, i) => i + 1,
+      (...[, i]) => i + 1,
     );
     setNumberOfAyas(newNumberOfAyas);
 
@@ -73,7 +73,10 @@ export default function Navigation() {
     const selectedSurah = surahData.find((s) => s.number === surahNumber);
     if (selectedSurah) {
       setNumberOfAyas(
-        Array.from({ length: selectedSurah.numberOfAyahs }, (_, i) => i + 1),
+        Array.from(
+          { length: selectedSurah.numberOfAyahs },
+          (...[, i]) => i + 1,
+        ),
       );
       setCurrentAyaNumber(1);
     }

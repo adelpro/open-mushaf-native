@@ -1,14 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Image,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
-import { usePathname, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useAtomValue, useSetAtom } from 'jotai/react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -18,14 +19,19 @@ import Animated, {
   FadeOutRight,
   runOnJS,
 } from 'react-native-reanimated';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import CheckedSVG from '@/assets/svgs/checked.svg';
 import NextSVG from '@/assets/svgs/next.svg';
 import { ThemedButton } from '@/components/ThemedButton';
+import { ThemedIcon } from '@/components/ThemedIcon';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { getPanThreshold, PAN_GESTURE_CONFIG, SLIDES } from '@/constants';
+import {
+  fontNames,
+  getPanThreshold,
+  PAN_GESTURE_CONFIG,
+  SLIDES,
+} from '@/constants';
 import { useColors, useOrientation } from '@/hooks';
 import { finishedTutorial, panGestureSensitivity } from '@/jotai/atoms';
 import { isRTL } from '@/utils';
@@ -37,20 +43,33 @@ import { isRTL } from '@/utils';
  * @returns An `Animated.View` containing swipe controls and feature outlines.
  */
 export function TutorialGuide() {
+  const { top, bottom } = useSafeAreaInsets();
   const router = useRouter();
-  const pathname = usePathname();
   const { primaryColor, primaryLightColor, backgroundColor } = useColors();
   const setFinishedTutorial = useSetAtom(finishedTutorial);
   const { isLandscape, width } = useOrientation();
   const panGestureSensitivityValue = useAtomValue(panGestureSensitivity);
   const [index, setIndex] = useState(0);
+  const [isPrevDisabled, setIsPrevDisabled] = useState(false);
+
   const currentSlide = SLIDES[Math.max(0, Math.min(index, SLIDES.length - 1))];
+  const isEndNotReached = index < SLIDES.length - 1;
+  const nextButtonTitle = isEndNotReached ? 'التالى' : 'إنتهاء';
+  const nextButtonIcon = isEndNotReached ? NextSVG : CheckedSVG;
+
+  useEffect(() => {
+    setIsPrevDisabled(index === 0);
+  }, [index]);
 
   const finishTutorial = () => {
     setFinishedTutorial(true);
-    if (pathname !== '/') {
-      router.replace('/');
+
+    // For OnBoarding
+    if (!router.canGoBack()) {
+      return router.replace('/');
     }
+
+    router.back();
   };
 
   const handlePrev = () => {
@@ -82,6 +101,24 @@ export function TutorialGuide() {
       });
   }, [isLandscape, width, panGestureSensitivityValue]);
 
+  const nextButtonPressAction = isEndNotReached ? handleNext : finishTutorial;
+
+  const handleNavToFeatureDetails = () => {
+    router.navigate({
+      pathname: '/featureDetails',
+      params: { slideId: currentSlide.id },
+    });
+  };
+
+  const scrollContentCtStyle = useMemo(() => {
+    return {
+      flexGrow: 1,
+      backgroundColor,
+      paddingTop: top * 1.3,
+      paddingBottom: bottom,
+    };
+  }, [backgroundColor, top, bottom]);
+
   return (
     <GestureDetector gesture={gestureHandler}>
       <Animated.View
@@ -89,50 +126,38 @@ export function TutorialGuide() {
         exiting={isRTL ? FadeOutRight.duration(500) : FadeOutLeft.duration(500)}
         style={styles.animatedContainer}
       >
-        <ThemedView style={styles.mainContainer}>
-          <SafeAreaView
-            style={[styles.safeArea, { backgroundColor }]}
-            edges={['top']}
-          >
-            <ScrollView>
-              <ThemedView style={styles.ScrollContent}>
-                <Image
-                  source={currentSlide.image}
-                  style={styles.image}
-                  resizeMode="contain"
-                />
+        <ScrollView
+          style={styles.safeArea}
+          contentContainerStyle={scrollContentCtStyle}
+        >
+          <Image
+            source={currentSlide.image}
+            style={[styles.image, { height: isLandscape ? 360 : 230 }]}
+            resizeMode="contain"
+          />
 
-                <View style={styles.textContainer}>
-                  <ThemedText style={styles.title}>
-                    {currentSlide.title}
+          <View style={styles.innerContentContainer}>
+            <View style={styles.textsContainer}>
+              <ThemedText style={styles.title}>{currentSlide.title}</ThemedText>
+              <ThemedText style={styles.description}>
+                {currentSlide.description}
+              </ThemedText>
+              {currentSlide.details && (
+                <TouchableOpacity
+                  style={styles.linkTextContainer}
+                  activeOpacity={0.9}
+                  onPress={handleNavToFeatureDetails}
+                >
+                  <ThemedText style={styles.linkText} suppressHighlighting>
+                    للتعرف على المزايا المتوفرة
                   </ThemedText>
-                  {Array.isArray(currentSlide.description) ? (
-                    currentSlide.description.map((item, i) => (
-                      <ThemedText
-                        key={i}
-                        style={[
-                          styles.description,
-                          item.align !== 'start' && { textAlign: 'center' },
-                        ]}
-                      >
-                        {item.align === 'start' ? '✓ ' : ''}
-                        {item.text}
-                      </ThemedText>
-                    ))
-                  ) : (
-                    <ThemedText
-                      style={[styles.description, { textAlign: 'center' }]}
-                    >
-                      {currentSlide.description}
-                    </ThemedText>
-                  )}
-                </View>
-              </ThemedView>
-            </ScrollView>
+                </TouchableOpacity>
+              )}
+            </View>
 
-            <ThemedView style={styles.controlsContainer}>
+            <View style={styles.controlsContainer}>
               <View style={styles.dotsContainer}>
-                {SLIDES.map((_, i) => (
+                {SLIDES.map((...[, i]) => (
                   <View
                     key={i}
                     style={[
@@ -143,62 +168,48 @@ export function TutorialGuide() {
                   />
                 ))}
               </View>
-
-              <ThemedButton
-                onPress={
-                  index < SLIDES.length - 1
-                    ? () => {
-                        setIndex(index + 1);
-                      }
-                    : finishTutorial
-                }
-                variant="primary"
-                style={styles.button}
-              >
-                <View style={styles.buttonContent}>
-                  {index < SLIDES.length - 1 ? (
-                    <>
-                      <Text style={styles.buttonText}>التالي</Text>
-                      <NextSVG
-                        width={24}
-                        height={24}
-                        style={styles.buttonIcon}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <Text style={styles.buttonText}>إنتهاء</Text>
-                      <CheckedSVG
-                        width={24}
-                        height={24}
-                        style={styles.buttonIcon}
-                      />
-                    </>
-                  )}
-                </View>
-              </ThemedButton>
-              <View style={styles.closeButtonContainer}>
-                <Pressable onPress={finishTutorial}>
-                  <Text
-                    style={[
-                      styles.closeButtonText,
-                      { color: primaryLightColor },
-                    ]}
-                  >
-                    تخطي
-                  </Text>
-                </Pressable>
-                <View
-                  style={{
-                    width: 24,
-                    height: 24,
-                    backgroundColor: 'transparent',
-                  }}
-                />
+              <View style={styles.actionButtonsContainer}>
+                <ThemedButton
+                  style={styles.iconButton}
+                  variant="outlined-primary"
+                  disabled={isPrevDisabled}
+                  onPress={handlePrev}
+                >
+                  <View style={styles.iconButtonContent}>
+                    <ThemedIcon
+                      icon={NextSVG}
+                      iconStyle={styles.prevIcon}
+                      variant="outlined-primary"
+                      disabled={isPrevDisabled}
+                    />
+                  </View>
+                </ThemedButton>
+                <ThemedButton
+                  style={styles.primaryButton}
+                  variant="primary"
+                  onPress={nextButtonPressAction}
+                >
+                  <View style={styles.primaryButtonContent}>
+                    <ThemedText style={styles.primaryButtonText}>
+                      {nextButtonTitle}
+                    </ThemedText>
+                    <ThemedIcon icon={nextButtonIcon} variant="primary" />
+                  </View>
+                </ThemedButton>
               </View>
-            </ThemedView>
-          </SafeAreaView>
-        </ThemedView>
+
+              <Pressable onPress={finishTutorial}>
+                <Text
+                  style={[styles.skipText, { color: primaryLightColor }]}
+                  suppressHighlighting
+                  onPress={finishTutorial}
+                >
+                  تخطي
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </ScrollView>
       </Animated.View>
     </GestureDetector>
   );
@@ -207,81 +218,61 @@ export function TutorialGuide() {
 const styles = StyleSheet.create({
   animatedContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     margin: 'auto',
-    padding: 2,
     width: '100%',
     maxWidth: 640,
-    position: 'relative',
-  },
-  closeButtonContainer: {
-    flexDirection: 'row',
-    margin: 5,
-    marginTop: 10,
-    width: '100%',
-    maxWidth: 300,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  closeButtonText: {
-    fontFamily: 'Tajawal_400Regular',
-    fontSize: 18,
-    paddingHorizontal: 5,
-    textAlign: 'center',
   },
   safeArea: {
-    width: '100%',
-    height: '100%',
-  },
-  mainContainer: {
     flex: 1,
     width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
   },
   image: {
     width: '100%',
     height: 300,
-    marginBottom: 10,
     alignSelf: 'center',
   },
-  textContainer: {
-    width: '100%',
+  innerContentContainer: {
+    flex: 1,
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
+  textsContainer: {
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginVertical: 10,
   },
   title: {
     fontSize: 28,
-    fontFamily: 'Tajawal_700Bold',
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
+    fontFamily: fontNames.bold,
     lineHeight: 36,
   },
   description: {
     fontSize: 16,
-    paddingHorizontal: 10,
+    textAlign: 'center',
     width: '95%',
-    marginBottom: 10,
-    fontFamily: 'Tajawal_400Regular',
+    marginVertical: 10,
+    fontFamily: fontNames.regular,
   },
   controlsContainer: {
-    width: '100%',
     alignItems: 'center',
-    paddingVertical: 15,
-    marginBottom: 10,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.1)',
+    marginTop: 40,
   },
   dotsContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 15,
     flexDirection: 'row',
   },
-  ScrollContent: {},
+  linkTextContainer: {
+    marginTop: 10,
+    paddingTop: 2.5,
+    paddingHorizontal: 10,
+    backgroundColor: '#8bd2c9',
+    borderRadius: 20,
+  },
+  linkText: {
+    fontSize: 13,
+    color: 'black',
+  },
   dot: {
     width: 5,
     height: 5,
@@ -290,30 +281,47 @@ const styles = StyleSheet.create({
     backgroundColor: '#E0E0E0',
   },
   activeDot: {
-    width: 15,
-    height: 15,
+    width: 20,
+    height: 8,
   },
-  button: {
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    maxWidth: 300,
-    marginTop: 10,
-  },
-  buttonContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+  actionButtonsContainer: {
     flexDirection: 'row',
+    gap: 15,
+    width: '100%',
+    marginVertical: 25,
   },
-  buttonText: {
-    color: 'white',
+  iconButton: {
+    width: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconButtonContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  primaryButton: {
+    flex: 1,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
+  primaryButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  primaryButtonText: {
+    fontFamily: fontNames.medium,
     fontSize: 20,
-    fontFamily: 'Tajawal_500Medium',
-    paddingHorizontal: 5,
-  },
-  buttonIcon: {
     color: 'white',
+    marginTop: 2,
+  },
+  prevIcon: {
+    transform: [{ rotate: '180deg' }],
+  },
+  skipText: {
+    fontFamily: fontNames.regular,
+    fontSize: 16,
   },
 });

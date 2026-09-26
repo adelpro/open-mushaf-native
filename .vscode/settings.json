@@ -10,7 +10,8 @@
   "prettier.printWidth": 80,
   "prettier.tabWidth": 2,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.eslint": "always",
+    "source.organizeImports": "never" // Disable this to avoid conflicting with eslint ordering config
   },
   "github-actions.workflows.pinned.workflows": [
     ".github/workflows/android-build-release.yml",
