@@ -9422,6 +9422,11 @@ react-native-safe-area-context@5.6.2:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-5.6.2.tgz#283e006f5b434fb247fcb4be0971ad7473d5c560"
   integrity sha512-4XGqMNj5qjUTYywJqpdWZ9IG8jgkS3h06sfVjfw5yZQZfWnRFXczi0GnYyFyCc2EBps/qFmoCH8fez//WumdVg==
 
+react-native-schedule-exact-alarm-permission@0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-schedule-exact-alarm-permission/-/react-native-schedule-exact-alarm-permission-0.1.5.tgz#8189f5a564c675fbbfd997fc35ea4f9b5b2d0568"
+  integrity sha512-vm+vdaK9/ehY9i0k8gTxONunvtHRs31K9W5uz8yVJQEEXtxXSi1YjMZJS+YGKPhr8vrW/uxRlaGKpgu/F6lGEA==
+
 react-native-screens@~4.16.0:
   version "4.16.0"
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-4.16.0.tgz#efa42e77a092aa0b5277c9ae41391ea0240e0870"

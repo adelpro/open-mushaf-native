@@ -15,6 +15,10 @@ import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import uuid from 'expo-modules-core/src/uuid';
 import { Stack } from 'expo-router';
 import { useAtom } from 'jotai';
+import {
+  checkPermission as checkExactAlarmPermission,
+  getPermission as openExactAlarmPermissionSettings,
+} from 'react-native-schedule-exact-alarm-permission';
 import Toggle from 'react-native-toggle-input';
 
 import {
@@ -97,34 +101,58 @@ export default function RemindersScreen() {
   }, []);
 
   const hasShownExactAlarmHint = useRef(false);
+  const isCheckingExactAlarmPermission = useRef(false);
 
-  const maybeShowExactAlarmHint = useCallback(() => {
+  const maybeShowExactAlarmHint = useCallback(async () => {
     if (
       Platform.OS !== 'android' ||
       Number(Platform.Version) < 31 ||
-      hasShownExactAlarmHint.current
+      hasShownExactAlarmHint.current ||
+      isCheckingExactAlarmPermission.current
     ) {
       return;
     }
 
-    hasShownExactAlarmHint.current = true;
+    isCheckingExactAlarmPermission.current = true;
 
-    Alert.alert(
-      'السماح بالمنبهات والتذكيرات',
-      'على Android 12 أو أحدث، قد تحتاج إلى السماح للتطبيق باستخدام "المنبهات والتذكيرات" حتى تصل التذكيرات في وقتها المحدد.',
-      [
-        {
-          text: 'لاحقًا',
-          style: 'cancel',
-        },
-        {
-          text: 'فتح الإعدادات',
-          onPress: () => {
-            void Linking.openSettings();
+    try {
+      const hasExactAlarmPermission = await checkExactAlarmPermission();
+
+      if (hasExactAlarmPermission) {
+        return;
+      }
+
+      hasShownExactAlarmHint.current = true;
+
+      Alert.alert(
+        'السماح بالمنبهات والتذكيرات',
+        'فعّل صلاحية "المنبهات والتذكيرات" حتى تصل تذكيرات الورد في وقتها المحدد.',
+        [
+          {
+            text: 'لاحقًا',
+            style: 'cancel',
           },
-        },
-      ],
-    );
+          {
+            text: 'فتح الإعدادات',
+            onPress: () => {
+              try {
+                openExactAlarmPermissionSettings();
+              } catch (error) {
+                console.error(
+                  'Failed to open exact alarm permission settings:',
+                  error,
+                );
+                void Linking.openSettings();
+              }
+            },
+          },
+        ],
+      );
+    } catch (error) {
+      console.error('Failed to check exact alarm permission:', error);
+    } finally {
+      isCheckingExactAlarmPermission.current = false;
+    }
   }, []);
   // Sync reminders with OS scheduler once when permissions are granted
   const hasSynced = useRef(false);
@@ -188,7 +216,7 @@ export default function RemindersScreen() {
             }
 
             if (r.preset === 'wird') {
-              maybeShowExactAlarmHint();
+              await maybeShowExactAlarmHint();
 
               return {
                 ...r,
