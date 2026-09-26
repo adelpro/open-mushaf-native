@@ -30,8 +30,6 @@ export type ThemedInputProps = TextInputProps & {
  */
 export function ThemedTextInput({
   style,
-  lightColor,
-  darkColor,
   variant = 'default',
   ...rest
 }: ThemedInputProps) {

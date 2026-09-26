@@ -65,7 +65,7 @@ export function VerticalMushafList({
   }, [onVisiblePageChange]);
 
   const pages = useMemo(
-    () => Array.from({ length: totalPages }, (_, i) => i + 1),
+    () => Array.from({ length: totalPages }, (...[, i]) => i + 1),
     [totalPages],
   );
 

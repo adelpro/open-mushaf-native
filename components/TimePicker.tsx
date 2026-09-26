@@ -117,7 +117,7 @@ const Wheel = ({
   );
 
   const getItemLayout = useCallback(
-    (_: unknown, index: number) => ({
+    (...[, index]: [unknown, number]) => ({
       length: ITEM_HEIGHT,
       offset: ITEM_HEIGHT * index,
       index,
@@ -172,8 +172,8 @@ type TimePickerProps = {
   onChange: (time: { hour: number; minute: number }) => void;
 };
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i);
-const MINUTES = Array.from({ length: 60 }, (_, i) => i);
+const HOURS = Array.from({ length: 24 }, (...[, i]) => i);
+const MINUTES = Array.from({ length: 60 }, (...[, i]) => i);
 
 /** Custom scrollable time picker with hour and minute wheels */
 export const TimePicker = ({ hour, minute, onChange }: TimePickerProps) => {

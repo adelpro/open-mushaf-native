@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { useColors } from '@/hooks';
+import { getButtonVariantStyles } from '@/utils';
 
 /**
  * Expanding default properties native to `TouchableOpacityProps`.
@@ -37,87 +38,22 @@ export type ThemedButtonProps = TouchableOpacityProps & {
  */
 export function ThemedButton({
   style,
-  lightColor,
-  darkColor,
   variant = 'default',
   children,
   ...rest
 }: ThemedButtonProps) {
-  const {
-    primaryColor,
-    secondaryColor,
-    dangerColor,
-    dangerLightColor,
-    backgroundColor,
-  } = useColors();
+  const colors = useColors();
   const [isPressed, setIsPressed] = useState<boolean>(false);
 
-  const getVariantStyles = () => {
-    switch (variant) {
-      case 'primary':
-        return {
-          backgroundColor: primaryColor,
-          borderColor: primaryColor,
-          color: 'white',
-        };
-      case 'secondary':
-        return {
-          backgroundColor: secondaryColor,
-          borderColor: secondaryColor,
-          color: 'white',
-        };
-      case 'outlined-primary':
-        return {
-          borderColor: primaryColor,
-          color: primaryColor,
-        };
-      case 'outlined-secondary':
-        return {
-          borderColor: secondaryColor,
-          color: secondaryColor,
-        };
-      case 'danger':
-        return {
-          backgroundColor: dangerColor,
-          borderColor: dangerColor,
-          color: 'white',
-        };
-      case 'danger-secondary':
-        return {
-          backgroundColor: dangerLightColor,
-          borderColor: dangerLightColor,
-          color: 'white',
-        };
-      case 'outlined-danger':
-        return {
-          backgroundColor: 'transparent',
-          borderColor: dangerColor,
-          color: dangerColor,
-        };
-      case 'outlined-danger-secondary':
-        return {
-          backgroundColor: 'transparent',
-          borderColor: dangerLightColor,
-          color: dangerLightColor,
-        };
-      case 'default':
-      default:
-        return {
-          backgroundColor: 'blue',
-          borderColor: 'blue',
-          color: 'white',
-        };
-    }
-  };
-
-  const variantStyles = getVariantStyles();
+  const variantStyles = getButtonVariantStyles(variant, colors);
 
   return (
     <TouchableOpacity
       accessibilityRole="button"
       style={[
         {
-          backgroundColor: variantStyles.backgroundColor ?? backgroundColor,
+          backgroundColor:
+            variantStyles.backgroundColor ?? colors.backgroundColor,
           borderColor: variantStyles.borderColor,
           borderWidth: 1,
         },
