@@ -145,6 +145,17 @@ export const readingBannerCollapsedState = createAtomWithStorage<boolean>(
 );
 
 // Reading reminders
+export const WIRD_FOLLOW_UP_REMINDER: Reminder = {
+  id: 'preset-wird-follow-up',
+  title: 'متابعة الورد اليومي',
+  body: 'لم تُكمل وردك اليومي بعد، يمكنك المتابعة الآن',
+  enabled: false,
+  hour: 22,
+  minute: 0,
+  type: 'daily',
+  preset: 'wird',
+};
+
 const DEFAULT_REMINDERS: Reminder[] = [
   {
     id: 'preset-wird',
@@ -156,6 +167,7 @@ const DEFAULT_REMINDERS: Reminder[] = [
     type: 'daily',
     preset: 'wird',
   },
+  WIRD_FOLLOW_UP_REMINDER,
   {
     id: 'preset-mulk',
     title: 'سورة الملك',
