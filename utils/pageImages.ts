@@ -8,7 +8,7 @@ import { Riwaya } from '@/types/riwaya';
  * @returns The image module map for the Riwaya, or `undefined` when no
  * Riwaya has been selected yet.
  */
-export function getImagesMap(riwaya: Riwaya) {
+export function getImagesMap(riwaya: Riwaya | undefined) {
   switch (riwaya) {
     case 'hafs':
       return imagesMapHafs;
