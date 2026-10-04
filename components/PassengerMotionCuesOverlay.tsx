@@ -27,6 +27,10 @@ interface MotionSubscription {
   remove(): void;
 }
 
+function isAborted(signal: AbortSignal) {
+  return signal.aborted;
+}
+
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
 }
@@ -84,7 +88,7 @@ export function PassengerMotionCuesOverlay() {
       try {
         const available = await DeviceMotion.isAvailableAsync();
 
-        if (!available || controller.signal.aborted) return;
+        if (!available || isAborted(controller.signal)) return;
 
         const currentPermission = await DeviceMotion.getPermissionsAsync();
 
@@ -92,7 +96,7 @@ export function PassengerMotionCuesOverlay() {
           ? currentPermission
           : await DeviceMotion.requestPermissionsAsync();
 
-        if (!permission.granted || controller.signal.aborted) return;
+        if (!permission.granted || isAborted(controller.signal)) return;
 
         DeviceMotion.setUpdateInterval(UPDATE_INTERVAL_MS);
         setIsAvailable(true);
@@ -135,7 +139,7 @@ export function PassengerMotionCuesOverlay() {
           },
         );
       } catch {
-        if (!controller.signal.aborted) {
+        if (!isAborted(controller.signal)) {
           setIsAvailable(false);
         }
       }
