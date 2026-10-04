@@ -77,14 +77,14 @@ export function PassengerMotionCuesOverlay() {
   useEffect(() => {
     if (Platform.OS === 'web') return;
 
-    const lifecycle = { cancelled: false };
+    const controller = new AbortController();
     let subscription: MotionSubscription | undefined;
 
     const start = async () => {
       try {
         const available = await DeviceMotion.isAvailableAsync();
 
-        if (!available || lifecycle.cancelled) return;
+        if (!available || controller.signal.aborted) return;
 
         const currentPermission = await DeviceMotion.getPermissionsAsync();
 
@@ -92,7 +92,7 @@ export function PassengerMotionCuesOverlay() {
           ? currentPermission
           : await DeviceMotion.requestPermissionsAsync();
 
-        if (!permission.granted || lifecycle.cancelled) return;
+        if (!permission.granted || controller.signal.aborted) return;
 
         DeviceMotion.setUpdateInterval(UPDATE_INTERVAL_MS);
         setIsAvailable(true);
@@ -135,7 +135,7 @@ export function PassengerMotionCuesOverlay() {
           },
         );
       } catch {
-        if (!lifecycle.cancelled) {
+        if (!controller.signal.aborted) {
           setIsAvailable(false);
         }
       }
@@ -144,7 +144,7 @@ export function PassengerMotionCuesOverlay() {
     void start();
 
     return () => {
-      lifecycle.cancelled = true;
+      controller.abort();
       subscription?.remove();
 
       offset.stopAnimation();
