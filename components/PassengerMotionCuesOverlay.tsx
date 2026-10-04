@@ -18,10 +18,14 @@ const MOTION_SCALE = 14;
 const LOW_PASS_ALPHA = 0.22;
 const UPDATE_INTERVAL_MS = 50;
 
-type ScreenAcceleration = {
+interface ScreenAcceleration {
   x: number;
   y: number;
-};
+}
+
+interface MotionSubscription {
+  remove(): void;
+}
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
@@ -73,14 +77,14 @@ export function PassengerMotionCuesOverlay() {
   useEffect(() => {
     if (Platform.OS === 'web') return;
 
-    let cancelled = false;
-    let subscription: ReturnType<typeof DeviceMotion.addListener> | undefined;
+    const lifecycle = { cancelled: false };
+    let subscription: MotionSubscription | undefined;
 
     const start = async () => {
       try {
         const available = await DeviceMotion.isAvailableAsync();
 
-        if (!available || cancelled) return;
+        if (!available || lifecycle.cancelled) return;
 
         const currentPermission = await DeviceMotion.getPermissionsAsync();
 
@@ -88,7 +92,7 @@ export function PassengerMotionCuesOverlay() {
           ? currentPermission
           : await DeviceMotion.requestPermissionsAsync();
 
-        if (!permission.granted || cancelled) return;
+        if (!permission.granted || lifecycle.cancelled) return;
 
         DeviceMotion.setUpdateInterval(UPDATE_INTERVAL_MS);
         setIsAvailable(true);
@@ -131,7 +135,7 @@ export function PassengerMotionCuesOverlay() {
           },
         );
       } catch {
-        if (!cancelled) {
+        if (!lifecycle.cancelled) {
           setIsAvailable(false);
         }
       }
@@ -140,7 +144,7 @@ export function PassengerMotionCuesOverlay() {
     void start();
 
     return () => {
-      cancelled = true;
+      lifecycle.cancelled = true;
       subscription?.remove();
 
       offset.stopAnimation();
