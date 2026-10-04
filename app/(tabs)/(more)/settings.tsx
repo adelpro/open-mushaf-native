@@ -34,6 +34,7 @@ import {
   mushafContrast,
   mushafRiwaya,
   panGestureSensitivity,
+  passengerMotionCuesEnabled,
   readingMode,
   readingTheme,
   showTrackerNotification,
@@ -57,6 +58,8 @@ export default function SettingsScreen() {
   const [panGestureSensitivityValue, setPanGestureSensitivityValue] = useAtom(
     panGestureSensitivity,
   );
+  const [passengerMotionCuesEnabledValue, setPassengerMotionCuesEnabledValue] =
+    useAtom(passengerMotionCuesEnabled);
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
   const [readingThemeValue, setReadingThemeValue] = useAtom(readingTheme);
   const [readingModeValue, setReadingModeValue] = useAtom(readingMode);
@@ -73,6 +76,10 @@ export default function SettingsScreen() {
 
   const toggleTrackerSwitch = () => {
     setShowTrackerNotificationValue((previousState) => !previousState);
+  };
+
+  const togglePassengerMotionCuesSwitch = () => {
+    setPassengerMotionCuesEnabledValue((previousState) => !previousState);
   };
 
   const handleHizbNotificationValueChange = (value: number) => {
@@ -386,6 +393,49 @@ export default function SettingsScreen() {
           />
         </Pressable>
       </ThemedView>
+      <Pressable
+        style={[
+          styles.settingsSection,
+          { borderColor: textColor, backgroundColor: cardColor },
+        ]}
+        onPress={togglePassengerMotionCuesSwitch}
+        accessibilityRole="button"
+        accessibilityLabel="تفعيل نقاط ثبات القراءة للراكب"
+        accessibilityHint="هذه الميزة مخصصة للراكب فقط وليست للاستخدام أثناء القيادة"
+        accessibilityState={{ checked: passengerMotionCuesEnabledValue }}
+      >
+        <ThemedView style={styles.iconTextContainer}>
+          <Feather
+            name="navigation"
+            size={24}
+            color={iconColor}
+            style={styles.iconStyle}
+          />
+          <ThemedView style={{ backgroundColor: 'transparent' }}>
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.itemText, { backgroundColor: cardColor }]}
+            >
+              نقاط ثبات القراءة:
+            </ThemedText>
+            <ThemedText style={{ fontSize: 13, opacity: 0.7 }}>
+              للراكب فقط — لا تستخدم أثناء القيادة
+            </ThemedText>
+          </ThemedView>
+        </ThemedView>
+        <Toggle
+          color={primaryColor}
+          size={40}
+          circleColor={primaryColor}
+          toggle={passengerMotionCuesEnabledValue}
+          setToggle={togglePassengerMotionCuesSwitch}
+          aria-checked={passengerMotionCuesEnabledValue}
+          aria-label="نقاط ثبات القراءة للراكب"
+          accessibilityLabel="تبديل نقاط ثبات القراءة للراكب"
+          accessibilityState={{ checked: passengerMotionCuesEnabledValue }}
+        />
+      </Pressable>
+
       {!isWeb && (
         <ThemedView
           style={[

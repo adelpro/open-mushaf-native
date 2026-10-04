@@ -205,3 +205,8 @@ export type Bookmark = {
 };
 
 export const bookmarks = createAtomWithStorage<Bookmark[]>('Bookmarks', []);
+
+export const passengerMotionCuesEnabled = createAtomWithStorage<boolean>(
+  'PassengerMotionCuesEnabled',
+  false,
+);
