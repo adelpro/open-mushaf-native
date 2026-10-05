@@ -1,67 +1,23 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { ERROR_MESSAGES } from '@/constants/errorMessages';
-import { getImagesMap } from '@/utils/pageImages';
+import { getPageSource } from '@/utils/pages';
 
-const { mockGetImagesMap, mockDownloadAsync } = vi.hoisted(() => ({
-  mockGetImagesMap: vi.fn(),
-  mockDownloadAsync: vi.fn(() => Promise.resolve()),
-}));
-
-vi.mock('@/utils/pageImages', () => ({
-  getImagesMap: (...args: unknown[]) => mockGetImagesMap(...args),
-}));
-
-vi.mock('expo-asset', () => ({
-  Asset: {
-    fromModule: (id: number) => ({
-      downloaded: false,
-      downloadAsync: mockDownloadAsync,
-      localUri: `mock://page-${id}`,
-    }),
-  },
-}));
-
-vi.mock('react-native-mmkv', () => ({
-  MMKV: class {
-    getString = vi.fn(() => null);
-    set = vi.fn();
-    delete = vi.fn();
-    addOnValueChangedListener = vi.fn(() => ({ remove: vi.fn() }));
-  },
+vi.mock('@/constants', () => ({
+  quranPngPageUrl: (riwaya: string, page: number) =>
+    `https://cdn.example.test/${riwaya}/${page}.png`,
 }));
 
 describe('mushaf loading/error regression', () => {
-  it('isLoading is true while asset downloads and clears on success', async () => {
-    mockGetImagesMap.mockReturnValue({ 5: 'page-5' });
-    let isLoading = true;
+  it('resolves the current page to a CDN PNG URL', () => {
+    const source = getPageSource('hafs', 5);
 
-    const imagesMap = getImagesMap('hafs');
-    const image = (imagesMap as Record<number, unknown>)[5];
-    expect(image).toBeTruthy();
-    expect(isLoading).toBe(true);
-
-    const assetToLoad = {
-      localUri: `mock://page-${String(image)}`,
-      downloadAsync: mockDownloadAsync,
-    };
-    await assetToLoad.downloadAsync();
-    const asset = { localUri: assetToLoad.localUri };
-    isLoading = false;
-
-    expect(isLoading).toBe(false);
-    expect(asset.localUri).toBe('mock://page-page-5');
+    expect(source).toEqual({
+      kind: 'png-uri',
+      source: 'https://cdn.example.test/hafs/5.png',
+    });
   });
 
-  it('failed asset load exposes the exact user-facing error message', () => {
-    mockGetImagesMap.mockReturnValue({ 99: undefined });
-    let error: string | null = null;
-
-    const imagesMap = getImagesMap('hafs');
-    const image = (imagesMap as Record<number, unknown>)[99];
-    if (!image) error = ERROR_MESSAGES.IMAGE_NOT_FOUND;
-
-    expect(error).toBe(ERROR_MESSAGES.IMAGE_NOT_FOUND);
-    expect(error).toBe('هذه الصفحة غير متاحة حالياً.');
+  it('returns undefined when no riwaya is active', () => {
+    expect(getPageSource(undefined, 5)).toBeUndefined();
   });
 });

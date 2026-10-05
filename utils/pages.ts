@@ -1,4 +1,4 @@
-import { imagesMapHafs, imagesMapWarsh } from '@/constants';
+import { quranPngPageUrl } from '@/constants';
 import { Riwaya } from '@/types/riwaya';
 
 /**
@@ -8,13 +8,10 @@ import { Riwaya } from '@/types/riwaya';
  * @returns The image module map for the Riwaya, or `undefined` when no
  * Riwaya has been selected yet.
  */
-export function getImagesMap(riwaya: Riwaya | undefined) {
-  switch (riwaya) {
-    case 'hafs':
-      return imagesMapHafs;
-    case 'warsh':
-      return imagesMapWarsh;
-    default:
-      return undefined;
-  }
+export function getPageSource(riwaya: Riwaya | undefined, page: number) {
+  if (!riwaya) return undefined;
+  return {
+    kind: 'png-uri',
+    source: quranPngPageUrl(riwaya, page),
+  };
 }

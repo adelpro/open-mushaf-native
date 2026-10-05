@@ -1,5 +1,5 @@
 /**
- * Single source of truth for every riwaya the app supports.
+ * Single source of truth for the two riwayat the app supports.
  *
  * Adding/removing a riwaya = edit one place. The type, Arabic label,
  * CDN upstream path, and page-count maps are all derived from the
@@ -18,37 +18,13 @@ export const RIWAYAS = [
   {
     id: 'hafs',
     arabic: 'حفص',
-    upstream: 'hafs/kfqc',
+    assetDirectory: 'mushaf-elmadina-hafs-assim',
     pages: 604,
   },
   {
     id: 'warsh',
     arabic: 'ورش',
-    upstream: 'warsh/kfqc',
-    pages: 604,
-  },
-  {
-    id: 'qalon-kfqc',
-    arabic: 'قالون',
-    upstream: 'qalon/kfqc',
-    pages: 604,
-  },
-  {
-    id: 'qalon-libya-awqaf',
-    arabic: 'قالون الليبي',
-    upstream: 'qalon/libya-awqaf',
-    pages: 612,
-  },
-  {
-    id: 'douri-kfqc',
-    arabic: 'الدوري',
-    upstream: 'douri/kfqc',
-    pages: 604,
-  },
-  {
-    id: 'shubah-kfqc',
-    arabic: 'شعبة',
-    upstream: 'shubah/kfqc',
+    assetDirectory: 'mushaf-elmadina-warsh-azrak',
     pages: 604,
   },
 ] as const;
@@ -60,13 +36,13 @@ export const RIWAYA_ARABIC_LABEL: Record<Riwaya, string> = Object.fromEntries(
   RIWAYAS.map((r) => [r.id, r.arabic]),
 ) as Record<Riwaya, string>;
 
-export const RIWAYA_TO_UPSTREAM_PATH: Record<Riwaya, string> =
-  Object.fromEntries(RIWAYAS.map((r) => [r.id, r.upstream])) as Record<
+export const RIWAYA_TO_ASSET_DIRECTORY: Record<Riwaya, string> =
+  Object.fromEntries(RIWAYAS.map((r) => [r.id, r.assetDirectory])) as Record<
     Riwaya,
     string
   >;
 
-/** Page count per riwaya. `qalon-libya-awqaf` is the only non-604 edition. */
+/** Page count per supported riwaya. */
 export const RIWAYA_PAGE_COUNTS: Record<Riwaya, number> = Object.fromEntries(
   RIWAYAS.map((r) => [r.id, r.pages]),
 ) as Record<Riwaya, number>;

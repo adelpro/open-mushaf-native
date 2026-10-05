@@ -25,7 +25,8 @@
  * the Cache API.
  */
 
-import { quranSvgPageUrl } from '@/constants/svgCdn';
+import { quranPngPageUrl } from '@/constants/pngCdn';
+import { RIWAYAT_LIST } from '@/constants/riwayas';
 import { quranTafseerUrl, TafseerKey } from '@/constants/TafseerCdn';
 import { Riwaya } from '@/types';
 
@@ -59,13 +60,33 @@ async function matchInCache(
   return cache.match(url);
 }
 
+/** Create a displayable object URL for a page stored in the Cache API. */
+export async function getMushafPageUri(
+  riwaya: Riwaya,
+  page: number,
+): Promise<string | undefined> {
+  const url = quranPngPageUrl(riwaya, page);
+  const response = await matchInCache(CACHE_NAMES.mushafPack(riwaya), url);
+  if (!response || typeof URL === 'undefined' || !URL.createObjectURL) {
+    return undefined;
+  }
+  return URL.createObjectURL(await response.blob());
+}
+
+/** Release an object URL created for a cached page. */
+export function releaseMushafPageUri(uri: string): void {
+  if (typeof URL !== 'undefined' && URL.revokeObjectURL) {
+    URL.revokeObjectURL(uri);
+  }
+}
+
 /* ────── mushaf (riwaya) page cache ────── */
 
 export async function isMushafPageCached(
   riwaya: Riwaya,
   page: number,
 ): Promise<boolean> {
-  const url = quranSvgPageUrl(riwaya, page);
+  const url = quranPngPageUrl(riwaya, page);
   const cacheName = CACHE_NAMES.mushafPack(riwaya);
   const res = await matchInCache(cacheName, url);
   return res !== undefined;
@@ -74,30 +95,30 @@ export async function isMushafPageCached(
 export async function readMushafPageFromDisk(
   riwaya: Riwaya,
   page: number,
-): Promise<string> {
-  const url = quranSvgPageUrl(riwaya, page);
+): Promise<Uint8Array> {
+  const url = quranPngPageUrl(riwaya, page);
   const res = await matchInCache(CACHE_NAMES.mushafPack(riwaya), url);
   if (!res) throw new Error(`Cache miss for ${url}`);
-  return res.text();
+  return new Uint8Array(await res.arrayBuffer());
 }
 
 export async function persistMushafPage(
   riwaya: Riwaya,
   page: number,
-  xml: string,
+  bytes: Uint8Array,
 ): Promise<number> {
-  const url = quranSvgPageUrl(riwaya, page);
+  const url = quranPngPageUrl(riwaya, page);
   const cache = await openCache(CACHE_NAMES.mushafPack(riwaya));
   if (!cache) return 0;
   // Putting as a synthesized Response clones the body — same data
   // shared with the Service Worker route caches.
   await cache.put(
     new Request(url),
-    new Response(xml, {
-      headers: { 'Content-Type': 'image/svg+xml' },
+    new Response(bytes.buffer as ArrayBuffer, {
+      headers: { 'Content-Type': 'image/png' },
     }),
   );
-  return xml.length;
+  return bytes.byteLength;
 }
 
 export async function downloadMushafPage(
@@ -105,18 +126,16 @@ export async function downloadMushafPage(
   page: number,
   signal?: AbortSignal,
 ): Promise<{ bytes: number }> {
-  const url = quranSvgPageUrl(riwaya, page);
+  const url = quranPngPageUrl(riwaya, page);
   const res = await fetch(url, signal ? { signal } : undefined);
   if (!res.ok) {
     throw new Error(`HTTP ${res.status} fetching ${url}`);
   }
   // Clone the response body so we can write it to our cache without
   // consuming the original stream.
-  const cloned = res.clone();
-  const text = await res.text();
-  await persistMushafPage(riwaya, page, text);
-  void cloned.text(); // exhaust cloned body so the browser is happy
-  return { bytes: text.length };
+  const bytes = new Uint8Array(await res.arrayBuffer());
+  const byteCount = await persistMushafPage(riwaya, page, bytes);
+  return { bytes: byteCount };
 }
 
 export async function getMushafRiwayaDownloadedPages(
@@ -223,14 +242,7 @@ export async function deleteTafseer(key: TafseerKey): Promise<void> {
 
 /* ────── aggregated storage snapshot ────── */
 
-const RIWAYAS: Riwaya[] = [
-  'hafs',
-  'warsh',
-  'qalon-kfqc',
-  'qalon-libya-awqaf',
-  'douri-kfqc',
-  'shubah-kfqc',
-];
+const RIWAYAS: readonly Riwaya[] = RIWAYAT_LIST;
 
 const TAFSEER_KEYS: TafseerKey[] = [
   'baghawy',

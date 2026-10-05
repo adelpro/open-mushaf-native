@@ -8,7 +8,8 @@
 
 import { Directory, File, Paths } from 'expo-file-system';
 
-import { quranSvgPageUrl } from '@/constants/svgCdn';
+import { quranPngPageUrl } from '@/constants/pngCdn';
+import { RIWAYAT_LIST } from '@/constants/riwayas';
 import { quranTafseerUrl, TafseerKey } from '@/constants/TafseerCdn';
 import { Riwaya } from '@/types';
 
@@ -30,8 +31,25 @@ function ensureMushafDir(riwaya: Riwaya): Directory {
 
 /** Build the on-disk filename for a given page. */
 function pageFilename(page: number): string {
-  return `${String(page).padStart(3, '0')}.svg`;
+  return `${page}.png`;
 }
+
+/** Return the local file URI when a downloaded page is available. */
+export async function getMushafPageUri(
+  riwaya: Riwaya,
+  page: number,
+): Promise<string | undefined> {
+  try {
+    const dir = mushafDir(riwaya);
+    const file = new File(dir, pageFilename(page));
+    return file.info().exists ? file.uri : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Native file URIs do not need explicit cleanup. */
+export function releaseMushafPageUri(_uri: string): void {}
 
 /** Returns true if the given mushaf page is on disk. */
 export async function isMushafPageCached(
@@ -54,10 +72,10 @@ export async function isMushafPageCached(
 export async function readMushafPageFromDisk(
   riwaya: Riwaya,
   page: number,
-): Promise<string> {
+): Promise<Uint8Array> {
   const dir = ensureMushafDir(riwaya);
   const file = new File(dir, pageFilename(page));
-  return file.text();
+  return file.bytes();
 }
 
 /**
@@ -69,33 +87,33 @@ export async function readMushafPageFromDisk(
 export async function persistMushafPage(
   riwaya: Riwaya,
   page: number,
-  xml: string,
+  bytes: Uint8Array,
 ): Promise<number> {
   try {
     const dir = ensureMushafDir(riwaya);
     const file = new File(dir, pageFilename(page));
     if (!file.info().exists) file.create();
-    file.write(xml);
-    return xml.length;
+    file.write(bytes);
+    return bytes.byteLength;
   } catch {
     return 0;
   }
 }
 
-/** Fetch one page from the CDN and write it to disk. */
+/** Fetch one PNG page from the CDN and write it to disk. */
 export async function downloadMushafPage(
   riwaya: Riwaya,
   page: number,
   signal?: AbortSignal,
 ): Promise<{ bytes: number }> {
-  const url = quranSvgPageUrl(riwaya, page);
+  const url = quranPngPageUrl(riwaya, page);
   const res = await fetch(url, signal ? { signal } : undefined);
   if (!res.ok) {
     throw new Error(`HTTP ${res.status} fetching ${url}`);
   }
-  const text = await res.text();
-  const bytes = await persistMushafPage(riwaya, page, text);
-  return { bytes };
+  const bytes = new Uint8Array(await res.arrayBuffer());
+  const byteCount = await persistMushafPage(riwaya, page, bytes);
+  return { bytes: byteCount };
 }
 
 /** Number of pages currently downloaded for this riwaya (count of files). */
@@ -262,14 +280,7 @@ const TAFSEER_KEYS: TafseerKey[] = [
   'tanweer',
 ];
 
-const RIWAYAS: Riwaya[] = [
-  'hafs',
-  'warsh',
-  'qalon-kfqc',
-  'qalon-libya-awqaf',
-  'douri-kfqc',
-  'shubah-kfqc',
-];
+const RIWAYAS: readonly Riwaya[] = RIWAYAT_LIST;
 
 /**
  * Recompute per-resource and grand-total bytes used on disk by the

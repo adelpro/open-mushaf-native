@@ -37,7 +37,7 @@ export default function MoreLayout() {
       />
       <Stack.Screen
         name="downloads"
-        options={{ headerShown: true, title: 'التحميلات' }}
+        options={{ headerShown: true, title: 'التنزيلات' }}
       />
     </Stack>
   );

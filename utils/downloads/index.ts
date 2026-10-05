@@ -19,6 +19,8 @@ const impl = Platform.OS === 'web' ? webImpl : nativeImpl;
 
 export const isMushafPageCached = impl.isMushafPageCached;
 export const readMushafPageFromDisk = impl.readMushafPageFromDisk;
+export const getMushafPageUri = impl.getMushafPageUri;
+export const releaseMushafPageUri = impl.releaseMushafPageUri;
 export const persistMushafPage = impl.persistMushafPage;
 export const downloadMushafPage = impl.downloadMushafPage;
 export const getMushafRiwayaDownloadedPages =
