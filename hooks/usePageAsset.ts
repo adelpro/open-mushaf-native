@@ -7,9 +7,9 @@ import { mushafRiwaya } from '@/jotai/atoms';
 import { getMushafPageUri, releaseMushafPageUri } from '@/utils/downloads';
 import { getPageSource } from '@/utils/pages';
 
-export type PageAsset = {
+export interface PageAsset {
   localUri: string;
-};
+}
 
 /**
  * Resolve the active riwaya page from the downloaded PNG cache, falling back

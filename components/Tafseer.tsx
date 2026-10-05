@@ -119,7 +119,7 @@ export function Tafseer({ aya, surah, opacity = 1 }: Props) {
       }
     };
 
-    fetchTafseer();
+    void fetchTafseer();
   }, [selectedTab, surah, aya, cache]); // re‑fetch if surah/aya changes (even if cached data exists, we keep it; the hook `useTafseerContent` will filter by surah/aya)
 
   // Reset cache when surah or aya changes? We could keep cache but the content check might need fresh.
@@ -279,7 +279,6 @@ export function Tafseer({ aya, surah, opacity = 1 }: Props) {
           }
           return tafseerData ? (
             <ThemedView style={{ flex: 1 }}>
-              {/* @ts-ignore - HTMLView types may be incomplete */}
               <HTMLView
                 value={formattedTafseerHtml}
                 style={{

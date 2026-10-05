@@ -191,7 +191,7 @@ export default function DownloadsScreen() {
   // Refresh on focus so deltas (delete / finish) reflect immediately.
   useFocusEffect(
     useCallback(() => {
-      refreshSizes();
+      void refreshSizes();
     }, [refreshSizes]),
   );
 
@@ -205,7 +205,7 @@ export default function DownloadsScreen() {
         break;
       }
     }
-    if (anyDone) refreshSizes();
+    if (anyDone) void refreshSizes();
   }, [progressMap, refreshSizes]);
 
   const handleDownload = useCallback(
@@ -363,7 +363,9 @@ export default function DownloadsScreen() {
           totalCount={RIWAYAS.length}
           downloadedCount={downloaded.length}
           expanded={riwayaSectionExpanded}
-          onToggle={() => setRiwayaSectionExpanded((v) => !v)}
+          onToggle={() => {
+            setRiwayaSectionExpanded((v) => !v);
+          }}
         >
           {sortByStatus(
             rows.map((row) => {
@@ -426,7 +428,9 @@ export default function DownloadsScreen() {
           totalCount={TAFSEER_KEYS.length}
           downloadedCount={downloadedTafseersList.length}
           expanded={tafseerSectionExpanded}
-          onToggle={() => setTafseerSectionExpanded((v) => !v)}
+          onToggle={() => {
+            setTafseerSectionExpanded((v) => !v);
+          }}
         >
           {sortByStatus(
             tafseerRows.map((row) => {

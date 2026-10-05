@@ -22,8 +22,9 @@ const DEFAULT_CDN_BASE =
   'https://cdn.jsdelivr.net/gh/adelpro/open-mushaf-native@v4.0.0/assets/tafaseer';
 
 export const TAFSEER_CDN_BASE: string =
-  (typeof process !== 'undefined' && process.env?.EXPO_PUBLIC_TAFSEER_CDN) ||
-  DEFAULT_CDN_BASE;
+  typeof process !== 'undefined'
+    ? (process.env?.EXPO_PUBLIC_TAFSEER_CDN ?? DEFAULT_CDN_BASE)
+    : DEFAULT_CDN_BASE;
 
 /**
  * Canonical tafseer list — order here is the display order in the
