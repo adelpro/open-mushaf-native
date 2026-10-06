@@ -31,7 +31,7 @@ export default function HomeScreen() {
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);
   const firstLaunchSeen = useAtomValue(firstLaunchSeenDownloads);
   const setFirstLaunchSeen = useSetAtom(firstLaunchSeenDownloads);
-  const [, setDownloadedRiwayat] = useAtom(downloadedRiwayat);
+  const [downloadedRiwayas, setDownloadedRiwayat] = useAtom(downloadedRiwayat);
   const { startRiwaya } = useMushafDownload();
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export default function HomeScreen() {
       <ReadingPositionBanner />
       <ChangeLogs visible={showChangeLogs} onClose={handleCloseChangeLogs} />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
-        {mushafRiwayaValue === undefined ? (
+        {mushafRiwayaValue === undefined || downloadedRiwayas.length === 0 ? (
           <SelectRiwaya />
         ) : (
           <>
