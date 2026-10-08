@@ -98,23 +98,21 @@ jobs:
           arch: x86_64
           profile: pixel_6
           disable-animations: true
+          # NOTE: android-emulator-runner runs each line as its own `sh -c`, so
+          # multi-line shell constructs (if/then/fi, for/do/done) break. Keep every
+          # line self-contained.
           script: |
-            set -e
             adb wait-for-device
             echo "Installing APK..."
             adb install -r android/app/build/outputs/apk/debug/app-debug.apk
             echo "Launching com.adelpro.openmushafnative/.MainActivity ..."
             adb shell am start -W -n com.adelpro.openmushafnative/.MainActivity
-            sleep 8
-            PID=$(adb shell pidof com.adelpro.openmushafnative | tr -d '\r')
+            sleep 10
             adb exec-out screencap -p > screen.png || true
             adb logcat -d > logcat.txt || true
-            if [ -z "$PID" ]; then
-              echo "::error::App process not running after launch (crash on start?) - see the android-smoke-artifacts artifact (logcat.txt)"
-              exit 1
-            fi
-            echo "OK: app is running, pid=$PID"
-            adb shell dumpsys window displays | grep -iE 'mCurrentFocus|mFocusedApp' || true
+            adb shell dumpsys window displays | grep -iE "mCurrentFocus|mFocusedApp" || true
+            test -n "$(adb shell pidof com.adelpro.openmushafnative | tr -d '\r')" || { echo "::error::App process not running after launch (crash on start?) - see logcat.txt artifact"; exit 1; }
+            echo "OK: app process is running"
 
       - name: Upload smoke artifacts
         if: always()
