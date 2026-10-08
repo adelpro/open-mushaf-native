@@ -44,3 +44,6 @@ firebase-debug.log
 .github\copilot-instructions.md
 coverage/
 *.tsbuildinfo
+
+# Dev / build logs
+*.log
