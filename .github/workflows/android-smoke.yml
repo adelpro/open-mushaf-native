@@ -43,11 +43,20 @@ jobs:
           distribution: temurin
           java-version: '22'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Accept Android SDK licenses
-        run: yes | sdkmanager --licenses > /dev/null 2>&1 || true
+      # The ubuntu runner already ships the Android SDK (ANDROID_HOME is preset),
+      # it is just not on PATH. Do NOT use android-actions/setup-android@v3 here:
+      # it runs `sdkmanager tools`, and the legacy 'tools' package was removed
+      # from the SDK repository, so it fails with "Failed to find package 'tools'".
+      - name: Set up Android SDK (use runner's preinstalled SDK)
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDK="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          echo "ANDROID_SDK_ROOT=$SDK"
+          CMDLINE="$(ls -d "$SDK"/cmdline-tools/*/bin 2>/dev/null | head -n1)"
+          echo "cmdtools=$CMDLINE"
+          echo "$CMDLINE" >> "$GITHUB_PATH"
+          yes | "$CMDLINE/sdkmanager" --licenses > /dev/null 2>&1 || true
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
