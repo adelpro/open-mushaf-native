@@ -404,7 +404,7 @@ export default function SettingsScreen() {
         accessibilityHint="هذه الميزة مخصصة للراكب فقط وليست للاستخدام أثناء القيادة"
         accessibilityState={{ checked: passengerMotionCuesEnabledValue }}
       >
-                   <ThemedView
+        <ThemedView
           style={[styles.iconTextContainer, { alignItems: 'flex-start' }]}
         >
           <Feather
