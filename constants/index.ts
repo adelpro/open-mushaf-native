@@ -1,10 +1,9 @@
+export * from './riwayas';
+export * from './pngCdn';
+
 export * from './Colors';
 
 export * from './fontNames';
-
-export * from './imagesMapWarsh';
-
-export * from './imagesMapHafs';
 
 export * from './slides';
 

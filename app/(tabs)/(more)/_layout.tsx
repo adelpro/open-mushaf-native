@@ -35,6 +35,10 @@ export default function MoreLayout() {
         name="reminders"
         options={{ headerShown: true, title: 'التذكيرات' }}
       />
+      <Stack.Screen
+        name="downloads"
+        options={{ headerShown: true, title: 'التنزيلات' }}
+      />
     </Stack>
   );
 }

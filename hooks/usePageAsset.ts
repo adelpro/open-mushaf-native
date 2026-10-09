@@ -1,24 +1,23 @@
 import { useEffect, useState } from 'react';
 
-import { Asset } from 'expo-asset';
 import { useAtomValue } from 'jotai/react';
 
 import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import { mushafRiwaya } from '@/jotai/atoms';
-import { getImagesMap } from '@/utils/pageImages';
+import { getMushafPageUri, releaseMushafPageUri } from '@/utils/downloads';
+import { getPageSource } from '@/utils/pages';
+
+export interface PageAsset {
+  localUri: string;
+}
 
 /**
- * Hook to download and expose the Mushaf page image asset for a single page.
- * Shared by the horizontal reader (`useImagesArray`) and the vertical
- * reader (each virtualized page item loads its own asset).
- *
- * @param page - The 1-based page number to load.
- * @returns The downloaded `asset`, an `isLoading` boolean, and an `error`
- * string (if any).
+ * Resolve the active riwaya page from the downloaded PNG cache, falling back
+ * to the remote PNG CDN when the page is not cached yet.
  */
 export const usePageAsset = (page: number) => {
   const [error, setError] = useState<string | null>(null);
-  const [asset, setAsset] = useState<Asset | null>(null);
+  const [asset, setAsset] = useState<PageAsset | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);
 
@@ -29,22 +28,21 @@ export const usePageAsset = (page: number) => {
     setError(null);
     setAsset(null);
 
+    let cachedUri: string | undefined;
+
     const loadAsset = async () => {
       try {
-        const imagesMap = getImagesMap(mushafRiwayaValue);
-        if (!imagesMap) {
+        const pageSource = getPageSource(mushafRiwayaValue, page);
+        if (!pageSource) {
           throw new Error(ERROR_MESSAGES.IMAGE_NOT_FOUND);
         }
 
-        const image = imagesMap[page];
-        if (!image) throw new Error(ERROR_MESSAGES.IMAGE_NOT_FOUND);
+        // Prefer an explicitly downloaded page. The CDN remains the normal
+        // online fallback when this page has not been cached.
+        cachedUri = await getMushafPageUri(mushafRiwayaValue, page);
 
-        const assetToLoad = Asset.fromModule(image);
-        if (!assetToLoad.downloaded) {
-          await assetToLoad.downloadAsync();
-        }
         if (isActive) {
-          setAsset(assetToLoad);
+          setAsset({ localUri: cachedUri ?? pageSource.source });
         }
       } catch (err) {
         if (isActive) {
@@ -62,6 +60,7 @@ export const usePageAsset = (page: number) => {
 
     return () => {
       isActive = false;
+      if (cachedUri) releaseMushafPageUri(cachedUri);
     };
   }, [mushafRiwayaValue, page]);
 

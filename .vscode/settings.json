@@ -22,12 +22,15 @@
   },
   "typescript.experimental.useTsgo": true,
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "chat.tools.terminal.autoApprove": {
     "/^npx tsc --noEmit -p tsconfig\\.json; \\$LASTEXITCODE$/": {
       "approve": true,
       "matchCommandLine": true
     }
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   }
 }
