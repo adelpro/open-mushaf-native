@@ -5567,6 +5567,13 @@ expo-secure-store@~15.0.8:
   resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-15.0.8.tgz#678065599bb76061b5a85b15b9426bf7a11089ae"
   integrity sha512-lHnzvRajBu4u+P99+0GEMijQMFCOYpWRO4dWsXSuMt77+THPIGjzNvVKrGSl6mMrLsfVaKL8BpwYZLGlgA+zAw==
 
+expo-sensors@~15.0.8:
+  version "15.0.8"
+  resolved "https://registry.yarnpkg.com/expo-sensors/-/expo-sensors-15.0.8.tgz#9ffe3413e726381d3d5949fe1e19667c0e5288b7"
+  integrity sha512-ttibOSCYjFAMIfjV+vVukO1v7GKlbcPRfxcRqbTaSMGneewDwVSXbGFImY530fj1BR3mWq4n9jHnuDp8tAEY9g==
+  dependencies:
+    invariant "^2.2.4"
+
 expo-server@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/expo-server/-/expo-server-1.0.7.tgz#fe700518f73651cb0736e79e3a4f2f8b2e2671b7"

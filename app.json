@@ -82,6 +82,12 @@
           "imageWidth": 200
         }
       ],
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Allow Open Mushaf to use device motion for passenger reading cues."
+        }
+      ],
       "expo-web-browser",
       "expo-router",
       "expo-font",
