@@ -7,6 +7,8 @@ Supports **Android**, **iOS**, **Web**, and **macOS**, featuring **offline Quran
 <div align="center">
   <img src="https://raw.githubusercontent.com/adelpro/open-mushaf-native/main/design/banner/banner.png"
   alt="Open-Mushaf Banner" width="900" />
+
+  **[▶ Watch the intro video](design/video/intro-landscape.mp4)** · [9:16 version](design/video/intro-vertical.mp4)
 </div>
 
 ---
