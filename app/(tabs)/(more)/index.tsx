@@ -16,6 +16,7 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import BookmarkSVG from '@/assets/svgs/bookmark.svg';
+import DownloadSVG from '@/assets/svgs/download.svg';
 import HelpSVG from '@/assets/svgs/help.svg';
 import InfoSVG from '@/assets/svgs/info.svg';
 import MailSVG from '@/assets/svgs/mail.svg';
@@ -115,6 +116,19 @@ export default function MoreScreen() {
       },
       renderIcon: () => (
         <SettingsSVG width={22} height={22} color={MENU_ICON_COLOR} />
+      ),
+    },
+    {
+      key: 'downloads',
+      title: 'التنزيلات',
+      subtitle: 'إدارة تنزيلات المصحف والتفسير',
+      accessibilityLabel: 'التنزيلات',
+      accessibilityHint: 'انتقل إلى صفحة إدارة التنزيلات',
+      onPress: () => {
+        router.push('/downloads');
+      },
+      renderIcon: () => (
+        <DownloadSVG width={22} height={22} color={MENU_ICON_COLOR} />
       ),
     },
   ];

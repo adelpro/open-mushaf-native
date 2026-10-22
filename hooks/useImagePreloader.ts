@@ -1,16 +1,15 @@
 import { useEffect, useRef } from 'react';
 
-import { Asset } from 'expo-asset';
+import { Image } from 'expo-image';
 import { useAtomValue } from 'jotai/react';
 
-import { imagesMapHafs, imagesMapWarsh } from '@/constants';
+import { quranPngPageUrl } from '@/constants';
 import { mushafRiwaya } from '@/jotai/atoms';
 
 import { useQuranMetadata } from './useQuranMetadata';
 
 /**
- * Hook to preload images for smoother page navigation.
- * Preloads the current page, the previous page, and the next two pages into the Expo Asset cache.
+ * Preload nearby remote PNG pages for smoother navigation.
  *
  * @param currentPage - The page number currently being viewed.
  * @returns null - This hook is only utilized for its side-effects.
@@ -22,13 +21,6 @@ export function useImagePreloader(currentPage: number) {
   const { defaultNumberOfPages } = specsData;
 
   useEffect(() => {
-    // Skip if riwaya is not defined
-    if (mushafRiwayaValue === undefined) return;
-
-    const imagesMap =
-      mushafRiwayaValue === 'hafs' ? imagesMapHafs : imagesMapWarsh;
-    if (!imagesMap) return;
-
     // Calculate pages to preload (current, previous one, next two)
     const pagesToPreload = [
       currentPage,
@@ -44,21 +36,12 @@ export function useImagePreloader(currentPage: number) {
 
     if (newPagesToPreload.length === 0) return;
 
-    // Preload new pages
     const preloadImages = async () => {
       try {
-        const assetsToLoad = newPagesToPreload
-          .map((page) => imagesMap[page])
-          .filter(Boolean)
-          .map((image) => Asset.fromModule(image));
-
-        // Start downloading all assets in parallel
         await Promise.all(
-          assetsToLoad.map(async (asset) => {
-            if (!asset.downloaded) {
-              await asset.downloadAsync();
-            }
-          }),
+          newPagesToPreload.map((page) =>
+            Image.prefetch(quranPngPageUrl(mushafRiwayaValue, page)),
+          ),
         );
 
         // Mark these pages as preloaded
@@ -88,5 +71,5 @@ export function useImagePreloader(currentPage: number) {
     preloadImages();
   }, [currentPage, defaultNumberOfPages, mushafRiwayaValue]);
 
-  return null; // This hook doesn't return anything
+  return null;
 }
