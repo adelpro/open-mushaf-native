@@ -1,68 +1,68 @@
 ---
 version: alpha
 name: mushaf-native-design-system
-description: "open-mushaf-native is an offline Quran mushaf reader for Android, iOS, web and macOS. It reads as paper: warm ivory page tints, one deep green primary, a muted brass secondary, and Amiri scripture headings against Tajawal interface text. Layout is RTL first and capped at a 640 pixel column, and every page is an image canvas that a reading theme tints rather than redraws."
+description: 'open-mushaf-native is an offline Quran mushaf reader for Android, iOS, web and macOS. It reads as paper: warm ivory page tints, one deep green primary, a muted brass secondary, and Amiri scripture headings against Tajawal interface text. Layout is RTL first and capped at a 640 pixel column, and every page is an image canvas that a reading theme tints rather than redraws.'
 
 colors:
-  background: "#FAF8F6"
-  background-dark: "#121212"
-  text: "#1B1B1B"
-  text-dark: "#EDEDED"
-  tint: "#1E5243"
-  tint-dark: "#F1F3F4"
-  icon: "#6D6D6D"
-  icon-dark: "#A0A0A0"
-  ivory: "#F9F6EF"
-  ivory-dark: "#2E2E2E"
-  card: "#FFFFFF"
-  card-dark: "#1E1E1E"
-  primary: "#1E5243"
-  primaryLight: "#62A49B"
-  secondary: "#C2B280"
-  secondary-dark: "#A0A07E"
-  danger: "#C62828"
-  danger-dark: "#EF5350"
-  dangerLight: "#FFCDD2"
-  dangerLight-dark: "#E57373"
-  sepia: "#F4E8D1"
-  directColor: "#FFD700"
-  directColor-dark: "#FFA000"
-  relatedColor: "#4FC3F7"
-  relatedColor-dark: "#03A9F4"
-  fuzzyColor: "#FF8A65"
-  fuzzyColor-dark: "#FF5722"
+  background: '#FAF8F6'
+  background-dark: '#121212'
+  text: '#1B1B1B'
+  text-dark: '#EDEDED'
+  tint: '#1E5243'
+  tint-dark: '#F1F3F4'
+  icon: '#6D6D6D'
+  icon-dark: '#A0A0A0'
+  ivory: '#F9F6EF'
+  ivory-dark: '#2E2E2E'
+  card: '#FFFFFF'
+  card-dark: '#1E1E1E'
+  primary: '#1E5243'
+  primaryLight: '#62A49B'
+  secondary: '#C2B280'
+  secondary-dark: '#A0A07E'
+  danger: '#C62828'
+  danger-dark: '#EF5350'
+  dangerLight: '#FFCDD2'
+  dangerLight-dark: '#E57373'
+  sepia: '#F4E8D1'
+  directColor: '#FFD700'
+  directColor-dark: '#FFA000'
+  relatedColor: '#4FC3F7'
+  relatedColor-dark: '#03A9F4'
+  fuzzyColor: '#FF8A65'
+  fuzzyColor-dark: '#FF5722'
 
 typography:
   display:
-    fontFamily: "Tajawal_700Bold"
-    fontSize: "42px"
+    fontFamily: 'Tajawal_700Bold'
+    fontSize: '42px'
     fontWeight: 700
-    lineHeight: "48px"
+    lineHeight: '48px'
   title:
-    fontFamily: "Tajawal_700Bold"
-    fontSize: "32px"
+    fontFamily: 'Tajawal_700Bold'
+    fontSize: '32px'
     fontWeight: 700
-    lineHeight: "32px"
+    lineHeight: '32px'
   scripture:
-    fontFamily: "Amiri_400Regular"
-    fontSize: "22px"
+    fontFamily: 'Amiri_400Regular'
+    fontSize: '22px'
     fontWeight: 400
-    lineHeight: "24px"
+    lineHeight: '24px'
   body:
-    fontFamily: "Tajawal_400Regular"
-    fontSize: "16px"
+    fontFamily: 'Tajawal_400Regular'
+    fontSize: '16px'
     fontWeight: 400
-    lineHeight: "24px"
+    lineHeight: '24px'
   label:
-    fontFamily: "Tajawal_500Medium"
-    fontSize: "20px"
+    fontFamily: 'Tajawal_500Medium'
+    fontSize: '20px'
     fontWeight: 500
-    lineHeight: "25px"
+    lineHeight: '25px'
   caption:
-    fontFamily: "Tajawal_500Medium"
-    fontSize: "12px"
+    fontFamily: 'Tajawal_500Medium'
+    fontSize: '12px'
     fontWeight: 500
-    lineHeight: "16px"
+    lineHeight: '16px'
 ---
 
 ## Overview
