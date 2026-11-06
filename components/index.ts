@@ -30,6 +30,8 @@ export * from './SurahCard';
 export * from './SurahList';
 export * from './Tafseer';
 export * from './TafseerPopup';
+export * from './TermsContentArabic';
+export * from './TermsContentEnglish';
 export * from './ThemedButton';
 export * from './ThemedText';
 export * from './ThemedTextInput';
