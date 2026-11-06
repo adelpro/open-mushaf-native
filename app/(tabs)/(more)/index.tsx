@@ -125,6 +125,18 @@ export default function MoreScreen() {
         </ThemedButton>
         <ThemedButton
           onPress={() => {
+            router.push('/terms');
+          }}
+          variant="primary"
+          style={styles.button}
+        >
+          <View style={styles.buttonContent}>
+            <PageSVG width={24} height={24} style={styles.svg} />
+            <Text style={styles.buttonText}>شروط الاستخدام</Text>
+          </View>
+        </ThemedButton>
+        <ThemedButton
+          onPress={() => {
             router.push('/contact');
           }}
           variant="primary"

@@ -20,6 +20,10 @@ export default function MoreLayout() {
         options={{ headerShown: true, title: 'الخصوصية' }}
       />
       <Stack.Screen
+        name="terms"
+        options={{ headerShown: true, title: 'شروط الاستخدام' }}
+      />
+      <Stack.Screen
         name="settings"
         options={{ headerShown: true, title: 'الاعدادات' }}
       />
