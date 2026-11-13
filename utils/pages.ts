@@ -8,7 +8,10 @@ import { Riwaya } from '@/types/riwaya';
  * @returns The image module map for the Riwaya, or `undefined` when no
  * Riwaya has been selected yet.
  */
-export function getPageSource(riwaya: Riwaya | undefined, page: number) {
+export function getPageSource(
+  riwaya: Riwaya | undefined,
+  page: number,
+): { kind: 'png-uri'; source: string } | undefined {
   if (!riwaya) return undefined;
   return {
     kind: 'png-uri',

@@ -51,3 +51,12 @@ export const RIWAYA_PAGE_COUNTS: Record<Riwaya, number> = Object.fromEntries(
 export const RIWAYAT_LIST: readonly Riwaya[] = RIWAYAS.map(
   (r) => r.id,
 ) as readonly Riwaya[];
+
+export function getRiwayaMetadata(id: Riwaya) {
+  const entry = RIWAYAS.find((item) => item.id === id);
+  if (!entry) throw new Error('Unsupported riwaya');
+  return entry;
+}
+export function getRiwayaLabel(id: Riwaya): string {
+  return getRiwayaMetadata(id).arabic;
+}

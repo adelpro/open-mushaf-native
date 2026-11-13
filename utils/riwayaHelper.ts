@@ -8,5 +8,7 @@ export function getRiwayaIndex(riwaya: Riwaya): number {
 }
 
 export function getRiwayaByIndex(index: number): Riwaya {
-  return RIWAYA_OPTIONS[index] ?? RIWAYA_OPTIONS[0];
+  return (
+    RIWAYA_OPTIONS.find((_, optionIndex) => optionIndex === index) ?? 'hafs'
+  );
 }

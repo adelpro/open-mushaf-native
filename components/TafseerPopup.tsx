@@ -39,8 +39,9 @@ type Props = {
 export function TafseerPopup({ show, setShow, aya, surah }: Props) {
   const colorScheme = useColorScheme();
   const theme = colorScheme === 'dark' ? 'dark' : 'light';
-  const tintColor = Colors[theme].tint;
-  const backgroundColor = Colors[theme].background;
+  const tintColor = (theme === 'dark' ? Colors.dark : Colors.light).tint;
+  const backgroundColor = (theme === 'dark' ? Colors.dark : Colors.light)
+    .background;
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [opacity, setOpacity] = useState(1);

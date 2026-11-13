@@ -1,7 +1,7 @@
 /**
  * Hook for managing a single tafseer offline download at a time. Mirrors
  * `useMushafDownload` but operates on one `TafseerKey` (each tafseer
- * JSON is one ~3 MB file instead of 604 small files, so there's no
+ * JSON is one file (up to about 36 MB) instead of 604 small files, so there's no
  * loop — just one fetch + persist).
  *
  *   const { startTafseer, cancel, isBusy, progress } = useTafseerDownload();
@@ -16,16 +16,24 @@
  * (not just stops new work).
  */
 
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo } from 'react';
 
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 
 import { TafseerKey } from '@/constants/TafseerCdn';
+import { downloadedTafseers } from '@/jotai/atoms';
 import {
   deleteTafseer,
   downloadTafseer,
   isTafseerCached,
 } from '@/utils/downloads';
+import {
+  acquireDownload,
+  cancelDownload,
+  isDownloadCancelled,
+  releaseDownload,
+  throwIfAborted,
+} from '@/utils/downloads/coordinator';
 import { DownloadProgress, resourceKeyOf } from '@/utils/downloads/types';
 
 // The download progress atom is owned by useMushafDownload; consumers
@@ -36,59 +44,53 @@ import { downloadProgressAtom } from './useMushafDownload';
 // -- the hook --------------------------------------------------------
 export function useTafseerDownload() {
   const [progressMap, setProgressMap] = useAtom(downloadProgressAtom);
-  const abortRef = useRef<AbortController | null>(null);
+  const setDownloaded = useSetAtom(downloadedTafseers);
 
   const isBusy = useMemo(
     () =>
       Object.values(progressMap).some(
-        (p) => p?.status === 'downloading' || p?.status === 'queued',
+        (p) => p.status === 'downloading' || p.status === 'queued',
       ),
     [progressMap],
   );
 
   const cancel = useCallback(() => {
-    abortRef.current?.abort();
+    cancelDownload();
   }, []);
 
   const startTafseer = useCallback(
     async (key: TafseerKey): Promise<void> => {
-      if (abortRef.current) {
-        throw new Error('تنزيل آخر قيد التقدم بالفعل.');
-      }
       const id = resourceKeyOf({ kind: 'tafseer', key });
-      const abort = new AbortController();
-      abortRef.current = abort;
-
-      // Skip if already on disk.
-      if (await isTafseerCached(key)) {
-        setProgressMap((prev) => ({
-          ...prev,
-          [id]: { downloaded: 1, total: 1, status: 'done' },
-        }));
-        return;
-      }
-
+      const abort = acquireDownload();
       setProgressMap((prev) => ({
         ...prev,
-        [id]: { downloaded: 0, total: 1, status: 'downloading' },
+        [id]: { downloaded: 0, total: 1, status: 'queued' },
       }));
-
+      let wasCached = false;
       try {
-        if (abort.signal.aborted) {
+        // Skip if already on disk.
+        const cached = await isTafseerCached(key);
+        wasCached = cached;
+        throwIfAborted(abort.signal);
+        if (cached) {
+          setDownloaded((prev) => (prev.includes(key) ? prev : [...prev, key]));
           setProgressMap((prev) => ({
             ...prev,
-            [id]: { downloaded: 0, total: 1, status: 'cancelled' },
+            [id]: { downloaded: 1, total: 1, status: 'done' },
           }));
           return;
         }
-        await downloadTafseer(key, abort.signal);
-        if (abort.signal.aborted) {
-          setProgressMap((prev) => ({
-            ...prev,
-            [id]: { downloaded: 0, total: 1, status: 'cancelled' },
-          }));
-          return;
-        }
+
+        setProgressMap((prev) => ({
+          ...prev,
+          [id]: { downloaded: 0, total: 1, status: 'downloading' },
+        }));
+
+        throwIfAborted(abort.signal);
+        const result = await downloadTafseer(key, abort.signal);
+        if (result.bytes <= 0) throw new Error('Tafseer persistence failed');
+        throwIfAborted(abort.signal);
+        setDownloaded((prev) => (prev.includes(key) ? prev : [...prev, key]));
         const final: DownloadProgress = {
           downloaded: 1,
           total: 1,
@@ -96,12 +98,29 @@ export function useTafseerDownload() {
         };
         setProgressMap((prev) => ({ ...prev, [id]: final }));
       } catch (err) {
-        if (abort.signal.aborted) {
+        setDownloaded((prev) => prev.filter((value) => value !== key));
+        if (isDownloadCancelled(abort.signal)) {
+          if (!wasCached) {
+            try {
+              await deleteTafseer(key);
+            } catch (cleanupError) {
+              setProgressMap((prev) => ({
+                ...prev,
+                [id]: {
+                  downloaded: 0,
+                  total: 1,
+                  status: 'error',
+                  error: 'Could not remove cancelled download',
+                },
+              }));
+              throw cleanupError;
+            }
+          }
           setProgressMap((prev) => ({
             ...prev,
             [id]: { downloaded: 0, total: 1, status: 'cancelled' },
           }));
-          return;
+          throwIfAborted(abort.signal);
         }
         setProgressMap((prev) => ({
           ...prev,
@@ -114,10 +133,10 @@ export function useTafseerDownload() {
         }));
         throw err;
       } finally {
-        abortRef.current = null;
+        releaseDownload(abort);
       }
     },
-    [setProgressMap],
+    [setProgressMap, setDownloaded],
   );
 
   return {

@@ -7,14 +7,11 @@
  * The on-disk layout for native becomes a logical cache namespace
  * for web:
  *
- *   Per-riwaya SVG:  `caches.open('mushaf-download-<riwaya>')`
+ *   Per-riwaya PNG:  `caches.open('mushaf-download-<riwaya>')`
  *   Per-tafseer JSON: `caches.open('tafseer-download-<key>')`
  *
- * Each entry is keyed by the full CDN URL so the same cache entry
- * can also be requested by the `mushaf-svgs` and `tafseer-data`
- * service-worker routes (they overlap intentionally so the SW cache
- * + our explicit cache share one body per URL — disk budget is
- * cheaper this way).
+ * Cache entries are keyed by full CDN URL. Explicit download caches and
+ * Workbox runtime caches are separate namespaces and can contain duplicate bodies.
  *
  * **Web "is downloaded" tracking.** The MMKV-backed
  * `downloadedRiwayat` / `downloadedTafseers` atoms persist on web
@@ -26,11 +23,17 @@
  */
 
 import { quranPngPageUrl } from '@/constants/pngCdn';
-import { RIWAYAT_LIST } from '@/constants/riwayas';
-import { quranTafseerUrl, TafseerKey } from '@/constants/TafseerCdn';
+import { getRiwayaMetadata, RIWAYAT_LIST } from '@/constants/riwayas';
+import {
+  quranTafseerUrl,
+  TafseerKey,
+  TAFSEERS_LIST,
+} from '@/constants/TafseerCdn';
 import { Riwaya } from '@/types';
 
-import { RIWAYA_PAGE_COUNTS, SVG_PAGE_BYTES_ESTIMATE } from './shared';
+import { throwIfAborted } from './coordinator';
+import { SVG_PAGE_BYTES_ESTIMATE } from './shared';
+import { parseTafseer, utf8ByteLength, validatePng } from './validation';
 
 // All cache names live in one object so the service-worker cleanup
 // allowlist (see `public/service-worker.js`) and this file can
@@ -57,7 +60,11 @@ async function matchInCache(
 ): Promise<Response | undefined> {
   const cache = await openCache(cacheName);
   if (!cache) return undefined;
-  return cache.match(url);
+  try {
+    return await cache.match(url);
+  } catch {
+    return undefined;
+  }
 }
 
 /** Create a displayable object URL for a page stored in the Cache API. */
@@ -67,15 +74,27 @@ export async function getMushafPageUri(
 ): Promise<string | undefined> {
   const url = quranPngPageUrl(riwaya, page);
   const response = await matchInCache(CACHE_NAMES.mushafPack(riwaya), url);
-  if (!response || typeof URL === 'undefined' || !URL.createObjectURL) {
+  if (
+    !response ||
+    typeof URL === 'undefined' ||
+    typeof URL.createObjectURL !== 'function'
+  ) {
     return undefined;
   }
-  return URL.createObjectURL(await response.blob());
+  try {
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    validatePng(bytes);
+    return URL.createObjectURL(
+      new Blob([bytes.buffer as ArrayBuffer], { type: 'image/png' }),
+    );
+  } catch {
+    return undefined;
+  }
 }
 
 /** Release an object URL created for a cached page. */
 export function releaseMushafPageUri(uri: string): void {
-  if (typeof URL !== 'undefined' && URL.revokeObjectURL) {
+  if (typeof URL !== 'undefined' && typeof URL.revokeObjectURL === 'function') {
     URL.revokeObjectURL(uri);
   }
 }
@@ -89,7 +108,13 @@ export async function isMushafPageCached(
   const url = quranPngPageUrl(riwaya, page);
   const cacheName = CACHE_NAMES.mushafPack(riwaya);
   const res = await matchInCache(cacheName, url);
-  return res !== undefined;
+  if (!res) return false;
+  try {
+    validatePng(new Uint8Array(await res.arrayBuffer()));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export async function readMushafPageFromDisk(
@@ -99,26 +124,53 @@ export async function readMushafPageFromDisk(
   const url = quranPngPageUrl(riwaya, page);
   const res = await matchInCache(CACHE_NAMES.mushafPack(riwaya), url);
   if (!res) throw new Error(`Cache miss for ${url}`);
-  return new Uint8Array(await res.arrayBuffer());
+  const bytes = new Uint8Array(await res.arrayBuffer());
+  validatePng(bytes);
+  return bytes;
 }
 
 export async function persistMushafPage(
   riwaya: Riwaya,
   page: number,
   bytes: Uint8Array,
+  signal?: AbortSignal,
 ): Promise<number> {
+  validatePng(bytes);
+  throwIfAborted(signal);
   const url = quranPngPageUrl(riwaya, page);
   const cache = await openCache(CACHE_NAMES.mushafPack(riwaya));
-  if (!cache) return 0;
+  if (!cache) throw new Error('Cache storage unavailable');
+  throwIfAborted(signal);
   // Putting as a synthesized Response clones the body — same data
   // shared with the Service Worker route caches.
-  await cache.put(
-    new Request(url),
-    new Response(bytes.buffer as ArrayBuffer, {
-      headers: { 'Content-Type': 'image/png' },
-    }),
-  );
-  return bytes.byteLength;
+  let committed = false;
+  try {
+    await cache.put(
+      new Request(url),
+      new Response(bytes.slice().buffer as ArrayBuffer, {
+        headers: { 'Content-Type': 'image/png' },
+      }),
+    );
+    committed = true;
+    if (signal?.aborted) {
+      await cache.delete(url);
+      throwIfAborted(signal);
+    }
+    const saved = await cache.match(url);
+    if (!saved) throw new Error('Page cache commit failed');
+    const persisted = new Uint8Array(await saved.arrayBuffer());
+    validatePng(persisted);
+    if (
+      persisted.length !== bytes.length ||
+      !persisted.every((value, i) => value === bytes[i])
+    )
+      throw new Error('Page cache verification failed');
+    throwIfAborted(signal);
+    return bytes.byteLength;
+  } catch (error) {
+    if (committed) await cache.delete(url);
+    throw error;
+  }
 }
 
 export async function downloadMushafPage(
@@ -134,7 +186,12 @@ export async function downloadMushafPage(
   // Clone the response body so we can write it to our cache without
   // consuming the original stream.
   const bytes = new Uint8Array(await res.arrayBuffer());
-  const byteCount = await persistMushafPage(riwaya, page, bytes);
+  throwIfAborted(signal);
+  validatePng(bytes);
+  const byteCount = await persistMushafPage(riwaya, page, bytes, signal);
+  if (byteCount !== bytes.byteLength || byteCount === 0)
+    throw new Error('Page persistence failed');
+  throwIfAborted(signal);
   return { bytes: byteCount };
 }
 
@@ -144,8 +201,11 @@ export async function getMushafRiwayaDownloadedPages(
   // The Cache API doesn't expose a count helper; iterate keys.
   const cache = await openCache(CACHE_NAMES.mushafPack(riwaya));
   if (!cache) return 0;
-  const requests = await cache.keys();
-  return requests.length;
+  let count = 0;
+  for (let page = 1; page <= riwayaTotalPages(riwaya); page++) {
+    if (await isMushafPageCached(riwaya, page)) count++;
+  }
+  return count;
 }
 
 export async function getMushafRiwayaDirSizeBytes(
@@ -170,44 +230,67 @@ export async function deleteMushafRiwaya(riwaya: Riwaya): Promise<void> {
 }
 
 export function riwayaTotalPages(riwaya: Riwaya): number {
-  return RIWAYA_PAGE_COUNTS[riwaya];
+  return getRiwayaMetadata(riwaya).pages;
 }
 
 export const riwayaEstimatedBytes = (riwaya: Riwaya): number =>
-  RIWAYA_PAGE_COUNTS[riwaya] * SVG_PAGE_BYTES_ESTIMATE;
+  getRiwayaMetadata(riwaya).pages * SVG_PAGE_BYTES_ESTIMATE;
 
 /* ────── tafseer cache ────── */
 
 export async function isTafseerCached(key: TafseerKey): Promise<boolean> {
-  const cache = await openCache(CACHE_NAMES.tafseer(key));
-  if (!cache) return false;
-  const res = await cache.match(quranTafseerUrl(key));
-  return res !== undefined;
+  return (await readTafseerFromDisk(key)) !== null;
 }
 
 export async function readTafseerFromDisk(
   key: TafseerKey,
 ): Promise<string | null> {
-  const cache = await openCache(CACHE_NAMES.tafseer(key));
-  if (!cache) return null;
-  const res = await cache.match(quranTafseerUrl(key));
+  const res = await matchInCache(
+    CACHE_NAMES.tafseer(key),
+    quranTafseerUrl(key),
+  );
   if (!res) return null;
-  return res.text();
+  try {
+    const text = await res.text();
+    parseTafseer(text, key);
+    return text;
+  } catch {
+    return null;
+  }
 }
 
 export async function persistTafseer(
   key: TafseerKey,
   json: string,
+  signal?: AbortSignal,
 ): Promise<number> {
+  parseTafseer(json, key);
+  throwIfAborted(signal);
   const cache = await openCache(CACHE_NAMES.tafseer(key));
-  if (!cache) return 0;
-  await cache.put(
-    new Request(quranTafseerUrl(key)),
-    new Response(json, {
-      headers: { 'Content-Type': 'application/json' },
-    }),
-  );
-  return json.length;
+  if (!cache) throw new Error('Cache storage unavailable');
+  throwIfAborted(signal);
+  let committed = false;
+  try {
+    await cache.put(
+      new Request(quranTafseerUrl(key)),
+      new Response(json, {
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    );
+    committed = true;
+    if (signal?.aborted) {
+      await cache.delete(quranTafseerUrl(key));
+      throwIfAborted(signal);
+    }
+    const saved = await cache.match(quranTafseerUrl(key));
+    if (!saved || (await saved.text()) !== json)
+      throw new Error('Tafseer cache commit failed');
+    throwIfAborted(signal);
+    return utf8ByteLength(json);
+  } catch (error) {
+    if (committed) await cache.delete(quranTafseerUrl(key));
+    throw error;
+  }
 }
 
 export async function downloadTafseer(
@@ -220,7 +303,12 @@ export async function downloadTafseer(
     throw new Error(`HTTP ${res.status} fetching ${url}`);
   }
   const text = await res.text();
-  const bytes = await persistTafseer(key, text);
+  throwIfAborted(signal);
+  parseTafseer(text, key);
+  const bytes = await persistTafseer(key, text, signal);
+  if (bytes !== utf8ByteLength(text) || bytes === 0)
+    throw new Error('Tafseer persistence failed');
+  throwIfAborted(signal);
   return { bytes };
 }
 
@@ -244,36 +332,31 @@ export async function deleteTafseer(key: TafseerKey): Promise<void> {
 
 const RIWAYAS: readonly Riwaya[] = RIWAYAT_LIST;
 
-const TAFSEER_KEYS: TafseerKey[] = [
-  'baghawy',
-  'earab',
-  'katheer',
-  'maany',
-  'muyassar',
-  'nozool-wahidy',
-  'qortoby',
-  'saady',
-  'tabary',
-  'tanweer',
-];
+const TAFSEER_KEYS = TAFSEERS_LIST;
 
 export async function getStorageSnapshot(): Promise<{
   totalBytes: number;
   byRiwaya: Partial<Record<Riwaya, number>>;
   byTafseer: Partial<Record<TafseerKey, number>>;
 }> {
-  const byRiwaya: Partial<Record<Riwaya, number>> = {};
-  let total = 0;
-  for (const r of RIWAYAS) {
-    const bytes = await getMushafRiwayaDirSizeBytes(r);
-    byRiwaya[r] = bytes;
-    total += bytes;
-  }
-  const byTafseer: Partial<Record<TafseerKey, number>> = {};
-  for (const k of TAFSEER_KEYS) {
-    const bytes = await getTafseerFileSizeBytes(k);
-    byTafseer[k] = bytes;
-    total += bytes;
-  }
-  return { totalBytes: total, byRiwaya, byTafseer };
+  const riwayaEntries = await Promise.all(
+    RIWAYAS.map(
+      async (riwaya) =>
+        [riwaya, await getMushafRiwayaDirSizeBytes(riwaya)] as const,
+    ),
+  );
+  const tafseerEntries = await Promise.all(
+    TAFSEER_KEYS.map(
+      async (key) => [key, await getTafseerFileSizeBytes(key)] as const,
+    ),
+  );
+  const totalBytes = [...riwayaEntries, ...tafseerEntries].reduce(
+    (sum, [, bytes]) => sum + bytes,
+    0,
+  );
+  return {
+    totalBytes,
+    byRiwaya: Object.fromEntries(riwayaEntries),
+    byTafseer: Object.fromEntries(tafseerEntries),
+  };
 }

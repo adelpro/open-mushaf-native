@@ -5,7 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import { useAtom } from 'jotai/react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { RIWAYA_ARABIC_LABEL, riwayaOptions } from '@/constants';
+import { getRiwayaLabel, riwayaOptions } from '@/constants';
 import { useNotification } from '@/Context/NotificationProvider';
 import {
   useColors,
@@ -13,7 +13,7 @@ import {
   useDownloadStatus,
   useMushafDownload,
 } from '@/hooks';
-import { downloadedRiwayat, mushafRiwaya } from '@/jotai/atoms';
+import { mushafRiwaya } from '@/jotai/atoms';
 import { resourceKeyOf } from '@/utils/downloads';
 import { getRiwayaByIndex } from '@/utils/riwayaHelper';
 
@@ -37,16 +37,20 @@ import { ThemedView } from './ThemedView';
  */
 export function SelectRiwaya() {
   const [mushafRiwayaValue, setMushafRiwayaValue] = useAtom(mushafRiwaya);
-  const [, setDownloadedRiwayat] = useAtom(downloadedRiwayat);
   const { primaryColor, iconColor } = useColors();
   const { downloadedRiwayaList, riwayaIsDownloaded } = useDownloadStatus();
   const { notify } = useNotification();
   const { startRiwaya, cancel: cancelDownload } = useMushafDownload();
-  const progress =
-    useDownloadProgress()[
-      resourceKeyOf({ kind: 'mushaf', riwaya: mushafRiwayaValue })
-    ];
-  const isDownloading = progress?.status === 'downloading';
+  const progressMap = useDownloadProgress();
+  const resourceId = resourceKeyOf({
+    kind: 'mushaf',
+    riwaya: mushafRiwayaValue,
+  });
+  const progress = Object.entries(progressMap).find(
+    ([key]) => key === resourceId,
+  )?.[1];
+  const isDownloading =
+    progress?.status === 'downloading' || progress?.status === 'queued';
   const isDownloaded = riwayaIsDownloaded(mushafRiwayaValue);
 
   const handleDownload = useCallback(async () => {
@@ -56,31 +60,20 @@ export function SelectRiwaya() {
     }
     try {
       await startRiwaya(mushafRiwayaValue);
-      setDownloadedRiwayat((previous) =>
-        previous.includes(mushafRiwayaValue)
-          ? previous
-          : [...previous, mushafRiwayaValue],
-      );
       notify(
-        `تم تنزيل ${RIWAYA_ARABIC_LABEL[mushafRiwayaValue]} بنجاح`,
+        `تم تنزيل ${getRiwayaLabel(mushafRiwayaValue)} بنجاح`,
         `select-riwaya-${mushafRiwayaValue}-done`,
         'success',
       );
-    } catch {
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') return;
       notify(
-        `فشل تنزيل ${RIWAYA_ARABIC_LABEL[mushafRiwayaValue]} — حاول مرة أخرى`,
+        `فشل تنزيل ${getRiwayaLabel(mushafRiwayaValue)} — حاول مرة أخرى`,
         `select-riwaya-${mushafRiwayaValue}-error`,
         'error',
       );
     }
-  }, [
-    cancelDownload,
-    isDownloading,
-    mushafRiwayaValue,
-    notify,
-    setDownloadedRiwayat,
-    startRiwaya,
-  ]);
+  }, [cancelDownload, isDownloading, mushafRiwayaValue, notify, startRiwaya]);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
@@ -103,7 +96,9 @@ export function SelectRiwaya() {
                   accessibilityLabel={option}
                   accessibilityRole="radio"
                   accessibilityState={{ selected: isActive }}
-                  onPress={() => setMushafRiwayaValue(riwaya)}
+                  onPress={() => {
+                    setMushafRiwayaValue(riwaya);
+                  }}
                   style={({ pressed }) => [
                     styles.riwayaCard,
                     {
@@ -140,10 +135,12 @@ export function SelectRiwaya() {
                 ? 'إلغاء تنزيل الرواية'
                 : isDownloaded
                   ? 'الرواية محمّلة'
-                  : `تنزيل ${RIWAYA_ARABIC_LABEL[mushafRiwayaValue]}`
+                  : `تنزيل ${getRiwayaLabel(mushafRiwayaValue)}`
             }
             disabled={isDownloaded && !isDownloading}
-            onPress={handleDownload}
+            onPress={() => {
+              void handleDownload();
+            }}
             style={({ pressed }) => [
               styles.downloadButton,
               {
@@ -167,7 +164,7 @@ export function SelectRiwaya() {
               ]}
             >
               {isDownloading
-                ? `إلغاء التنزيل${progress?.total ? ` ${progress.downloaded}/${progress.total}` : ''}`
+                ? `إلغاء التنزيل${progress.total ? ` ${progress.downloaded}/${progress.total}` : ''}`
                 : isDownloaded
                   ? 'الرواية محمّلة دون اتصال'
                   : 'تنزيل الرواية للقراءة دون اتصال'}
@@ -195,7 +192,7 @@ export function SelectRiwaya() {
               ]}
             >
               {downloadedRiwayaList.length > 0
-                ? `محمّل: ${downloadedRiwayaList.map((r) => RIWAYA_ARABIC_LABEL[r]).join(' · ')}`
+                ? `محمّل: ${downloadedRiwayaList.map((r) => getRiwayaLabel(r)).join(' · ')}`
                 : 'لا توجد روايات محمّلة — افتح الإعدادات > التنزيلات'}
             </ThemedText>
           </View>

@@ -39,7 +39,15 @@ export const usePageAsset = (page: number) => {
 
         // Prefer an explicitly downloaded page. The CDN remains the normal
         // online fallback when this page has not been cached.
-        cachedUri = await getMushafPageUri(mushafRiwayaValue, page);
+        try {
+          cachedUri = await getMushafPageUri(mushafRiwayaValue, page);
+        } catch {
+          // Browser storage can be unavailable while the CDN remains readable.
+        }
+        if (!isActive && cachedUri) {
+          releaseMushafPageUri(cachedUri);
+          cachedUri = undefined;
+        }
 
         if (isActive) {
           setAsset({ localUri: cachedUri ?? pageSource.source });

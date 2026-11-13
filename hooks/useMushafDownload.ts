@@ -26,10 +26,11 @@
  * its cards.
  */
 
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo } from 'react';
 
-import { atom, useAtom, useAtomValue } from 'jotai';
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 
+import { downloadedRiwayat } from '@/jotai/atoms';
 import { Riwaya } from '@/types';
 import {
   downloadMushafPage,
@@ -38,6 +39,14 @@ import {
   readMushafPageFromDisk,
   riwayaTotalPages,
 } from '@/utils/downloads';
+import {
+  abortableDelay,
+  acquireDownload,
+  cancelDownload,
+  isDownloadCancelled,
+  releaseDownload,
+  throwIfAborted,
+} from '@/utils/downloads/coordinator';
 import {
   DownloadProgress,
   ProgressMap,
@@ -59,22 +68,21 @@ export const downloadProgressAtom = atom<ProgressMap>({});
 // it. `Promise.all([...workers])` waits for all workers to drain the
 // queue. The cursor++ is non-atomic in JS (single-threaded) but the
 // pattern is the standard async-pool idiom.
-async function boundedMap<T, R>(
+async function boundedMap<T>(
   items: readonly T[],
   concurrency: number,
-  fn: (item: T, index: number) => Promise<R>,
-): Promise<R[]> {
-  const results: R[] = new Array(items.length);
+  fn: (item: T, index: number) => Promise<void>,
+): Promise<void> {
   let cursor = 0;
   const worker = async () => {
     while (cursor < items.length) {
       const idx = cursor++;
-      results[idx] = await fn(items[idx], idx);
+      const item = items.at(idx);
+      if (item !== undefined) await fn(item, idx);
     }
   };
   const workers = Array.from({ length: concurrency }, () => worker());
   await Promise.all(workers);
-  return results;
 }
 
 // -- retry helper ---------------------------------------------------
@@ -89,135 +97,134 @@ async function downloadWithRetry(
   signal: AbortSignal,
   onRetry?: (attempt: number) => void,
 ): Promise<{ bytes: number }> {
-  const maxAttempts = RETRY_DELAY_MS.length + 1;
-  let lastError: unknown = null;
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    if (signal.aborted) {
-      throw new DOMException('Aborted', 'AbortError');
-    }
+  let attempt = 0;
+  for (;;) {
+    throwIfAborted(signal);
     try {
       return await downloadMushafPage(riwaya, page, signal);
-    } catch (err) {
-      if (signal.aborted) throw err;
-      lastError = err;
-      if (attempt >= RETRY_DELAY_MS.length) break;
-      const delay = RETRY_DELAY_MS[attempt] ?? 0;
-      onRetry?.(attempt + 1);
-      await new Promise((r) => setTimeout(r, delay));
+    } catch (error) {
+      throwIfAborted(signal);
+      const delay = RETRY_DELAY_MS.at(attempt++);
+      // The worker catches exhausted retries and records a failed page.
+      if (delay === undefined) throw error;
+      onRetry?.(attempt);
+      await abortableDelay(delay, signal);
     }
   }
-  throw lastError instanceof Error
-    ? lastError
-    : new Error('Download failed after retries');
 }
 
 // -- the hook --------------------------------------------------------
 export function useMushafDownload(options?: { concurrency?: number }) {
   const concurrency = options?.concurrency ?? DEFAULT_CONCURRENCY;
   const [progressMap, setProgressMap] = useAtom(downloadProgressAtom);
-  const abortRef = useRef<AbortController | null>(null);
+  const setDownloaded = useSetAtom(downloadedRiwayat);
 
   const isBusy = useMemo(
     () =>
       Object.values(progressMap).some(
-        (p) => p?.status === 'downloading' || p?.status === 'queued',
+        (p) => p.status === 'downloading' || p.status === 'queued',
       ),
     [progressMap],
   );
 
   const cancel = useCallback(() => {
-    abortRef.current?.abort();
+    cancelDownload();
   }, []);
 
   const startRiwaya = useCallback(
     async (riwaya: Riwaya): Promise<void> => {
-      if (abortRef.current) {
-        throw new Error('تنزيل آخر قيد التقدم بالفعل.');
-      }
+      if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 32)
+        throw new Error('Invalid download concurrency');
       const total = riwayaTotalPages(riwaya);
       const id = resourceKeyOf({ kind: 'mushaf', riwaya });
-      const abort = new AbortController();
-      abortRef.current = abort;
-
-      // Pages we'll actually fetch. Skip pages already on disk so
-      // re-running a download that crashed partway finishes quickly.
-      const pending: number[] = [];
-      for (let page = 1; page <= total; page++) {
-        const cached = await isMushafPageCached(riwaya, page);
-        if (!cached) pending.push(page);
-      }
-
+      const abort = acquireDownload();
+      let doneCount = 0;
       setProgressMap((prev) => ({
         ...prev,
-        [id]: {
-          downloaded: total - pending.length,
-          total,
-          status: 'downloading',
-        },
+        [id]: { downloaded: 0, total, status: 'queued' },
       }));
-
-      // Throttled progress emit: only update state every `EMIT_EVERY`
-      // completed pages to keep React renders cheap on the 604-page
-      // hafs download.
-      const EMIT_EVERY = 4;
-      let doneCount = total - pending.length;
-      let emittedAt = doneCount;
-      const emitProgress = (force = false) => {
-        if (!force && doneCount - emittedAt < EMIT_EVERY) return;
-        emittedAt = doneCount;
-        const snap: DownloadProgress = {
-          downloaded: doneCount,
-          total,
-          status: 'downloading',
-        };
-        setProgressMap((prev) => ({ ...prev, [id]: snap }));
-      };
-
-      let errorCount = 0;
       try {
-        if (abort.signal.aborted) {
-          setProgressMap((prev) => ({
-            ...prev,
-            [id]: {
-              downloaded: doneCount,
-              total,
-              status: 'cancelled',
-            },
-          }));
-          return;
+        // Pages we'll actually fetch. Skip pages already on disk so
+        // re-running a download that crashed partway finishes quickly.
+        const pending: number[] = [];
+        for (let page = 1; page <= total; page++) {
+          throwIfAborted(abort.signal);
+          const cached = await isMushafPageCached(riwaya, page);
+          if (!cached) pending.push(page);
         }
+
+        setProgressMap((prev) => ({
+          ...prev,
+          [id]: {
+            downloaded: total - pending.length,
+            total,
+            status: 'downloading',
+          },
+        }));
+
+        // Throttled progress emit: only update state every `EMIT_EVERY`
+        // completed pages to keep React renders cheap on the 604-page
+        // hafs download.
+        const EMIT_EVERY = 4;
+        doneCount = total - pending.length;
+        let emittedAt = doneCount;
+        const emitProgress = (force = false) => {
+          if (!force && doneCount - emittedAt < EMIT_EVERY) return;
+          emittedAt = doneCount;
+          const snap: DownloadProgress = {
+            downloaded: doneCount,
+            total,
+            status: 'downloading',
+          };
+          setProgressMap((prev) => ({ ...prev, [id]: snap }));
+        };
+
+        let errorCount = 0;
+        throwIfAborted(abort.signal);
         await boundedMap(pending, concurrency, async (page) => {
-          if (abort.signal.aborted) return;
+          if (isDownloadCancelled(abort.signal)) return;
           try {
-            await downloadWithRetry(riwaya, page, abort.signal);
+            const result = await downloadWithRetry(riwaya, page, abort.signal);
+            if (result.bytes <= 0) throw new Error('Page persistence failed');
+            throwIfAborted(abort.signal);
             doneCount++;
             emitProgress();
           } catch {
             // AbortError → just bail; otherwise count the page as a
             // permanent failure but keep the loop running so other
             // pages still land.
-            if (abort.signal.aborted) return;
+            if (isDownloadCancelled(abort.signal)) return;
             errorCount++;
             // Final emit on errors so the UI sees the gap.
             emitProgress(true);
           }
         });
-        const final: DownloadProgress = abort.signal.aborted
-          ? {
-              downloaded: doneCount,
-              total,
-              status: 'cancelled',
-            }
-          : errorCount > 0
-            ? { downloaded: doneCount, total, status: 'error' }
-            : { downloaded: total, total, status: 'done' };
-        emitProgress(true);
-        setProgressMap((prev) => ({ ...prev, [id]: final }));
+        throwIfAborted(abort.signal);
+        if (errorCount > 0 || doneCount !== total)
+          throw new Error('Some pages failed to download');
+        setDownloaded((prev) =>
+          prev.includes(riwaya) ? prev : [...prev, riwaya],
+        );
+        setProgressMap((prev) => ({
+          ...prev,
+          [id]: { downloaded: total, total, status: 'done' },
+        }));
+      } catch (error) {
+        setDownloaded((prev) => prev.filter((value) => value !== riwaya));
+        setProgressMap((prev) => ({
+          ...prev,
+          [id]: {
+            downloaded: doneCount,
+            total,
+            status: abort.signal.aborted ? 'cancelled' : 'error',
+          },
+        }));
+        throw error;
       } finally {
-        abortRef.current = null;
+        releaseDownload(abort);
       }
     },
-    [concurrency, setProgressMap],
+    [concurrency, setProgressMap, setDownloaded],
   );
 
   // Read from disk on demand for a one-shot accessor. Used by the
