@@ -224,3 +224,7 @@ export const firstLaunchSeenDownloads = createAtomWithStorage<boolean>(
   'FirstLaunchSeenDownloads',
   false,
 );
+export const passengerMotionCuesEnabled = createAtomWithStorage<boolean>(
+  'PassengerMotionCuesEnabled',
+  false,
+);

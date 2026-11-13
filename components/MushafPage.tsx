@@ -23,6 +23,7 @@ import {
   dailyTrackerGoal,
   hizbNotification,
   mushafContrast,
+  passengerMotionCuesEnabled,
   readingMode,
   readingTheme,
   showTrackerNotification,
@@ -32,6 +33,7 @@ import { calculateThumnsBetweenPages } from '@/utils/hizbProgress';
 import { getSEOMetadataByPage } from '@/utils/quranMetadataUtils';
 
 import { HorizontalMushafPage } from './HorizontalMushafPage';
+import { PassengerMotionCuesOverlay } from './PassengerMotionCuesOverlay';
 import { Seo } from './Seo';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -49,6 +51,9 @@ export function MushafPage() {
   const mushafContrastValue = useAtomValue(mushafContrast);
   const readingThemeValue = useAtomValue(readingTheme);
   const readingModeValue = useAtomValue(readingMode);
+  const passengerMotionCuesEnabledValue = useAtomValue(
+    passengerMotionCuesEnabled,
+  );
   const themeConfig =
     READING_THEMES[readingThemeValue] || READING_THEMES.default;
 
@@ -290,6 +295,7 @@ export function MushafPage() {
           backgroundColor={containerBackgroundColor}
           onVisiblePageChange={handleSetPage}
         />
+        {passengerMotionCuesEnabledValue && <PassengerMotionCuesOverlay />}
       </>
     );
   }
@@ -305,6 +311,7 @@ export function MushafPage() {
         handleSetPage={handleSetPage}
         topOffset={topOffset}
       />
+      {passengerMotionCuesEnabledValue && <PassengerMotionCuesOverlay />}
     </>
   );
 }

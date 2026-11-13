@@ -238,6 +238,19 @@ export default function MoreScreen() {
           ),
         },
         {
+          key: 'terms',
+          title: 'شروط الاستخدام',
+          subtitle: 'القواعد والشروط لاستخدام خدماتنا',
+          accessibilityLabel: 'شروط الاستخدام',
+          accessibilityHint: 'انتقل إلى صفحة شروط الاستخدام',
+          onPress: () => {
+            router.push('/terms');
+          },
+          renderIcon: () => (
+            <Feather name="file-text" size={22} color={MENU_ICON_COLOR} />
+          ),
+        },
+        {
           key: 'about',
           title: 'حول التطبيق',
           subtitle: 'الإصدار والمعلومات القانونية',
