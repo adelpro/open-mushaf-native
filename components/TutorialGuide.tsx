@@ -3,7 +3,6 @@ import {
   Image,
   Pressable,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -26,15 +25,12 @@ import NextSVG from '@/assets/svgs/next.svg';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedIcon } from '@/components/ThemedIcon';
 import { ThemedText } from '@/components/ThemedText';
-import {
-  fontNames,
-  getPanThreshold,
-  PAN_GESTURE_CONFIG,
-  SLIDES,
-} from '@/constants';
+import { getPanThreshold, PAN_GESTURE_CONFIG, SLIDES } from '@/constants';
 import { useColors, useOrientation } from '@/hooks';
 import { finishedTutorial, panGestureSensitivity } from '@/jotai/atoms';
 import { isRTL } from '@/utils';
+
+import { styles } from './TutorialGuide.styles';
 
 /**
  * An interactive, paginated onboarding tutorial shown on initial app load.
@@ -119,8 +115,115 @@ export function TutorialGuide() {
     };
   }, [backgroundColor, top, bottom]);
 
-  return (
-    <GestureDetector gesture={gestureHandler}>
+  function renderActionButtonsContainer() {
+    function renderIconButton() {
+      return (
+        <ThemedButton
+          style={styles.iconButton}
+          variant="outlined-primary"
+          disabled={isPrevDisabled}
+          onPress={handlePrev}
+        >
+          <View style={styles.iconButtonContent}>
+            <ThemedIcon
+              icon={NextSVG}
+              iconStyle={styles.prevIcon}
+              variant="outlined-primary"
+              disabled={isPrevDisabled}
+            />
+          </View>
+        </ThemedButton>
+      );
+    }
+    return (
+      <View style={styles.actionButtonsContainer}>
+        {renderIconButton()}
+        <ThemedButton
+          style={styles.primaryButton}
+          variant="primary"
+          onPress={nextButtonPressAction}
+        >
+          <View style={styles.primaryButtonContent}>
+            <ThemedText style={styles.primaryButtonText}>
+              {nextButtonTitle}
+            </ThemedText>
+            <ThemedIcon icon={nextButtonIcon} variant="primary" />
+          </View>
+        </ThemedButton>
+      </View>
+    );
+  }
+
+  function renderInnerContentContainer() {
+    function renderControlsContainer() {
+      function renderDotsContainer() {
+        return (
+          <View style={styles.dotsContainer}>
+            {SLIDES.map((...[, i]) => {
+              return (
+                <View
+                  key={i}
+                  style={[
+                    styles.dot,
+                    i === index && styles.activeDot,
+                    i === index && { backgroundColor: primaryColor },
+                  ]}
+                />
+              );
+            })}
+          </View>
+        );
+      }
+      return (
+        <View style={styles.controlsContainer}>
+          {renderDotsContainer()}
+          {renderActionButtonsContainer()}
+
+          <Pressable onPress={finishTutorial}>
+            <Text
+              style={[styles.skipText, { color: primaryLightColor }]}
+              suppressHighlighting
+              onPress={finishTutorial}
+            >
+              تخطي
+            </Text>
+          </Pressable>
+        </View>
+      );
+    }
+
+    function renderTextsContainer() {
+      return (
+        <View style={styles.textsContainer}>
+          <ThemedText style={styles.title}>{currentSlide.title}</ThemedText>
+          <ThemedText style={styles.description}>
+            {currentSlide.description}
+          </ThemedText>
+          {currentSlide.details && (
+            <TouchableOpacity
+              style={styles.linkTextContainer}
+              activeOpacity={0.9}
+              onPress={handleNavToFeatureDetails}
+            >
+              <ThemedText style={styles.linkText} suppressHighlighting>
+                للتعرف على المزايا المتوفرة
+              </ThemedText>
+            </TouchableOpacity>
+          )}
+        </View>
+      );
+    }
+    return (
+      <View style={styles.innerContentContainer}>
+        {renderTextsContainer()}
+
+        {renderControlsContainer()}
+      </View>
+    );
+  }
+
+  function renderAnimatedContainer() {
+    return (
       <Animated.View
         entering={isRTL ? FadeInLeft.duration(500) : FadeInRight.duration(500)}
         exiting={isRTL ? FadeOutRight.duration(500) : FadeOutLeft.duration(500)}
@@ -136,192 +239,14 @@ export function TutorialGuide() {
             resizeMode="contain"
           />
 
-          <View style={styles.innerContentContainer}>
-            <View style={styles.textsContainer}>
-              <ThemedText style={styles.title}>{currentSlide.title}</ThemedText>
-              <ThemedText style={styles.description}>
-                {currentSlide.description}
-              </ThemedText>
-              {currentSlide.details && (
-                <TouchableOpacity
-                  style={styles.linkTextContainer}
-                  activeOpacity={0.9}
-                  onPress={handleNavToFeatureDetails}
-                >
-                  <ThemedText style={styles.linkText} suppressHighlighting>
-                    للتعرف على المزايا المتوفرة
-                  </ThemedText>
-                </TouchableOpacity>
-              )}
-            </View>
-
-            <View style={styles.controlsContainer}>
-              <View style={styles.dotsContainer}>
-                {SLIDES.map((...[, i]) => (
-                  <View
-                    key={i}
-                    style={[
-                      styles.dot,
-                      i === index && styles.activeDot,
-                      i === index && { backgroundColor: primaryColor },
-                    ]}
-                  />
-                ))}
-              </View>
-              <View style={styles.actionButtonsContainer}>
-                <ThemedButton
-                  style={styles.iconButton}
-                  variant="outlined-primary"
-                  disabled={isPrevDisabled}
-                  onPress={handlePrev}
-                >
-                  <View style={styles.iconButtonContent}>
-                    <ThemedIcon
-                      icon={NextSVG}
-                      iconStyle={styles.prevIcon}
-                      variant="outlined-primary"
-                      disabled={isPrevDisabled}
-                    />
-                  </View>
-                </ThemedButton>
-                <ThemedButton
-                  style={styles.primaryButton}
-                  variant="primary"
-                  onPress={nextButtonPressAction}
-                >
-                  <View style={styles.primaryButtonContent}>
-                    <ThemedText style={styles.primaryButtonText}>
-                      {nextButtonTitle}
-                    </ThemedText>
-                    <ThemedIcon icon={nextButtonIcon} variant="primary" />
-                  </View>
-                </ThemedButton>
-              </View>
-
-              <Pressable onPress={finishTutorial}>
-                <Text
-                  style={[styles.skipText, { color: primaryLightColor }]}
-                  suppressHighlighting
-                  onPress={finishTutorial}
-                >
-                  تخطي
-                </Text>
-              </Pressable>
-            </View>
-          </View>
+          {renderInnerContentContainer()}
         </ScrollView>
       </Animated.View>
+    );
+  }
+  return (
+    <GestureDetector gesture={gestureHandler}>
+      {renderAnimatedContainer()}
     </GestureDetector>
   );
 }
-
-const styles = StyleSheet.create({
-  animatedContainer: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 'auto',
-    width: '100%',
-    maxWidth: 640,
-  },
-  safeArea: {
-    flex: 1,
-    width: '100%',
-  },
-  image: {
-    width: '100%',
-    height: 300,
-    alignSelf: 'center',
-  },
-  innerContentContainer: {
-    flex: 1,
-    marginTop: 20,
-    paddingHorizontal: 20,
-  },
-  textsContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 28,
-    fontFamily: fontNames.bold,
-    lineHeight: 36,
-  },
-  description: {
-    fontSize: 16,
-    textAlign: 'center',
-    width: '95%',
-    marginVertical: 10,
-    fontFamily: fontNames.regular,
-  },
-  controlsContainer: {
-    alignItems: 'center',
-    marginTop: 40,
-  },
-  dotsContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  linkTextContainer: {
-    marginTop: 10,
-    paddingTop: 2.5,
-    paddingHorizontal: 10,
-    backgroundColor: '#8bd2c9',
-    borderRadius: 20,
-  },
-  linkText: {
-    fontSize: 13,
-    color: 'black',
-  },
-  dot: {
-    width: 5,
-    height: 5,
-    borderRadius: 4,
-    marginHorizontal: 5,
-    backgroundColor: '#E0E0E0',
-  },
-  activeDot: {
-    width: 20,
-    height: 8,
-  },
-  actionButtonsContainer: {
-    flexDirection: 'row',
-    gap: 15,
-    width: '100%',
-    marginVertical: 25,
-  },
-  iconButton: {
-    width: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconButtonContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  primaryButton: {
-    flex: 1,
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-  },
-  primaryButtonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-  },
-  primaryButtonText: {
-    fontFamily: fontNames.medium,
-    fontSize: 20,
-    color: 'white',
-    marginTop: 2,
-  },
-  prevIcon: {
-    transform: [{ rotate: '180deg' }],
-  },
-  skipText: {
-    fontFamily: fontNames.regular,
-    fontSize: 16,
-  },
-});

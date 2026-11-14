@@ -1,0 +1,167 @@
+import { StyleSheet } from 'react-native';
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 40,
+    gap: 12,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontFamily: 'Tajawal_700Bold',
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  card: {
+    borderRadius: 12,
+    padding: 14,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  cardTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontFamily: 'Tajawal_700Bold',
+  },
+  timeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 4,
+  },
+  timeText: {
+    fontSize: 16,
+    fontFamily: 'Tajawal_400Regular',
+  },
+  dayBadge: {
+    fontSize: 14,
+    fontFamily: 'Tajawal_700Bold',
+    marginStart: 8,
+  },
+  editIcon: {
+    marginStart: 'auto',
+  },
+  deleteRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 8,
+    paddingTop: 8,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: 'rgba(0,0,0,0.1)',
+  },
+  deleteText: {
+    fontSize: 14,
+    fontFamily: 'Tajawal_400Regular',
+  },
+  addButton: {
+    marginTop: 12,
+    height: 48,
+    alignSelf: 'center',
+  },
+  addButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  addButtonText: {
+    fontSize: 16,
+    fontFamily: 'Tajawal_700Bold',
+    textAlignVertical: 'center',
+  },
+  warningBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    padding: 12,
+    borderRadius: 10,
+  },
+  warningText: {
+    fontSize: 14,
+    fontFamily: 'Tajawal_400Regular',
+    flex: 1,
+  },
+  // Modal styles (consistent with existing patterns)
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 20,
+  },
+  modalContent: {
+    width: '90%',
+    maxWidth: 400,
+    borderRadius: 12,
+    padding: 16,
+    elevation: 5,
+    alignSelf: 'center',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    minHeight: 40,
+    backgroundColor: 'transparent',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontFamily: 'Tajawal_700Bold',
+    textAlignVertical: 'center',
+  },
+  modalMessage: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+    fontFamily: 'Tajawal_400Regular',
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    width: '100%',
+    marginTop: 12,
+  },
+  modalActionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: 'transparent',
+    width: '100%',
+    gap: 12,
+  },
+  modalButton: {
+    width: '40%',
+    maxWidth: 140,
+  },
+  titleInput: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 16,
+    fontFamily: 'Tajawal_400Regular',
+    marginBottom: 12,
+    textAlign: 'right',
+  },
+});

@@ -39,28 +39,23 @@ const searchCache = new LRUCache<string, any>(100);
  * Hook to interface with the core Quran search engine.
  * Processes queries, normalizes Arabic text, and fetches matches across the loaded metadata.
  */
-export function useQuranSearch({
-  quranData,
-  morphologyData,
-  wordMap,
-  semanticMap,
-  phoneticMap,
-  invertedIndex,
-  query,
-  advancedOptions,
-  fuseInstance,
-  page,
-  limit,
-}: UseQuranSearchProps) {
+export function useQuranSearch(props: UseQuranSearchProps) {
+  const {
+    quranData,
+    morphologyData,
+    wordMap,
+    semanticMap,
+    phoneticMap,
+    invertedIndex,
+    query,
+    advancedOptions,
+    fuseInstance,
+    page,
+    limit,
+  } = props;
+
   const [pageResults, setPageResults] = useState<QuranText[]>([]);
-  const [counts, setCounts] = useState<Counts>({
-    simple: 0,
-    lemma: 0,
-    root: 0,
-    fuzzy: 0,
-    semantic: 0,
-    total: 0,
-  });
+  const [counts, setCounts] = useState<Counts>(EMPTY_COUNTS);
 
   // Convert morphology array to Map format for the package
   const morphologyMap = useMemo(() => {
@@ -85,14 +80,7 @@ export function useQuranSearch({
   useEffect(() => {
     if (!quranData || quranData.length === 0) {
       setPageResults([]);
-      setCounts({
-        simple: 0,
-        lemma: 0,
-        root: 0,
-        fuzzy: 0,
-        semantic: 0,
-        total: 0,
-      });
+      setCounts(EMPTY_COUNTS);
       return;
     }
 
@@ -101,14 +89,7 @@ export function useQuranSearch({
 
     if (!processedQuery) {
       setPageResults([]);
-      setCounts({
-        simple: 0,
-        lemma: 0,
-        root: 0,
-        fuzzy: 0,
-        semantic: 0,
-        total: 0,
-      });
+      setCounts(EMPTY_COUNTS);
       return;
     }
 
@@ -133,27 +114,13 @@ export function useQuranSearch({
         searchCache,
       );
 
-      setCounts({
-        simple: response.counts.simple || 0,
-        lemma: response.counts.lemma || 0,
-        root: response.counts.root || 0,
-        fuzzy: response.counts.fuzzy || 0,
-        semantic: (response.counts as any).semantic || 0,
-        total: response.counts.total || 0,
-      });
+      setCounts(getSearchCounts(response));
 
       setPageResults((response.results as QuranText[]) || []);
     } catch (error) {
       console.error('Search error:', error);
       setPageResults([]);
-      setCounts({
-        simple: 0,
-        lemma: 0,
-        root: 0,
-        fuzzy: 0,
-        semantic: 0,
-        total: 0,
-      });
+      setCounts(EMPTY_COUNTS);
     }
   }, [
     query,
@@ -172,3 +139,23 @@ export function useQuranSearch({
 
   return { pageResults, counts };
 }
+
+function getSearchCounts(response: SearchResponse<QuranText>): Counts {
+  return {
+    simple: response.counts.simple || 0,
+    lemma: response.counts.lemma || 0,
+    root: response.counts.root || 0,
+    fuzzy: response.counts.fuzzy || 0,
+    semantic: (response.counts as any).semantic || 0,
+    total: response.counts.total || 0,
+  };
+}
+
+const EMPTY_COUNTS: Counts = {
+  simple: 0,
+  lemma: 0,
+  root: 0,
+  fuzzy: 0,
+  semantic: 0,
+  total: 0,
+};

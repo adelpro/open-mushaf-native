@@ -1,4 +1,3 @@
-import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { Feather, Ionicons } from '@expo/vector-icons';
@@ -33,16 +32,18 @@ interface SearchInputProps {
  * @param props - Component dependencies and hooks passing.
  * @returns A cohesive `<TextInput>` based input bar element.
  */
-export function SearchInput({
-  value,
-  onChangeText,
-  isTyping,
-  isSearching,
-  showOptions,
-  setShowOptions,
-  primaryColor,
-  secondaryColor,
-}: SearchInputProps) {
+export function SearchInput(props: SearchInputProps) {
+  const {
+    value,
+    onChangeText,
+    isTyping,
+    isSearching,
+    showOptions,
+    setShowOptions,
+    primaryColor,
+    secondaryColor,
+  } = props;
+
   return (
     <ThemedView style={styles.searchContainer}>
       <ThemedTextInput

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
   ScrollView,
-  StyleSheet,
   TouchableOpacity,
   useColorScheme,
   View,
@@ -15,7 +14,7 @@ import {
   ThemedView,
 } from '@/components';
 import { Colors } from '@/constants/Colors';
-import { isRTL } from '@/utils';
+import { styles } from '@/styles/screens/terms.styles';
 
 /**
  * Public Terms of Service route (`/terms`), reachable on the web at
@@ -32,43 +31,41 @@ export default function TermsScreen() {
   const currentColor = Colors[colorScheme ?? 'light'].tint;
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
 
-  return (
-    <ThemedView style={styles.container}>
-      <Seo
-        title="المصحف المفتوح - شروط الاستخدام"
-        description="شروط استخدام خدمات Quran.us.kg: الاستخدام المقبول، دقة المحتوى القرآني، الملكية الفكرية، واجهات API وخوادم MCP، والمسؤولية."
-        url="https://quran.us.kg/terms"
-        canonical="https://quran.us.kg/terms"
-      />
+  function renderTab() {
+    return (
+      <TouchableOpacity
+        style={[
+          styles.tab,
+          selectedTab === 'arabic' && {
+            backgroundColor,
+            borderBottomWidth: 2,
+            borderBottomColor: currentColor,
+          },
+        ]}
+        onPress={() => {
+          setSelectedTab('arabic');
+        }}
+        accessibilityRole="tab"
+        accessibilityLabel="العربية"
+        accessibilityState={{ selected: selectedTab === 'arabic' }}
+        accessibilityHint="اضغط لعرض شروط الاستخدام بالعربية"
+      >
+        <ThemedText
+          style={[
+            styles.tabText,
+            selectedTab === 'arabic' && { color: currentColor },
+          ]}
+        >
+          العربية
+        </ThemedText>
+      </TouchableOpacity>
+    );
+  }
 
-      <View style={styles.column}>
-        <ThemedView style={styles.tabContainer}>
-          <TouchableOpacity
-            style={[
-              styles.tab,
-              selectedTab === 'arabic' && {
-                backgroundColor,
-                borderBottomWidth: 2,
-                borderBottomColor: currentColor,
-              },
-            ]}
-            onPress={() => {
-              setSelectedTab('arabic');
-            }}
-            accessibilityRole="tab"
-            accessibilityLabel="العربية"
-            accessibilityState={{ selected: selectedTab === 'arabic' }}
-            accessibilityHint="اضغط لعرض شروط الاستخدام بالعربية"
-          >
-            <ThemedText
-              style={[
-                styles.tabText,
-                selectedTab === 'arabic' && { color: currentColor },
-              ]}
-            >
-              العربية
-            </ThemedText>
-          </TouchableOpacity>
+  function renderColumn() {
+    function renderTabContainer() {
+      function renderTab2() {
+        return (
           <TouchableOpacity
             style={[
               styles.tab,
@@ -95,8 +92,27 @@ export default function TermsScreen() {
               English
             </ThemedText>
           </TouchableOpacity>
+        );
+      }
+      return (
+        <ThemedView style={styles.tabContainer}>
+          {renderTab()}
+          {renderTab2()}
         </ThemedView>
-      </View>
+      );
+    }
+    return <View style={styles.column}>{renderTabContainer()}</View>;
+  }
+  return (
+    <ThemedView style={styles.container}>
+      <Seo
+        title="المصحف المفتوح - شروط الاستخدام"
+        description="شروط استخدام خدمات Quran.us.kg: الاستخدام المقبول، دقة المحتوى القرآني، الملكية الفكرية، واجهات API وخوادم MCP، والمسؤولية."
+        url="https://quran.us.kg/terms"
+        canonical="https://quran.us.kg/terms"
+      />
+
+      {renderColumn()}
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -111,37 +127,3 @@ export default function TermsScreen() {
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  column: {
-    width: '100%',
-    maxWidth: 640,
-    alignSelf: 'center',
-    paddingHorizontal: 20,
-  },
-  tabContainer: {
-    flexDirection: isRTL ? 'row' : 'row-reverse',
-    justifyContent: 'space-around',
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  tabText: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  scrollContent: {
-    width: '100%',
-    maxWidth: 640,
-    alignSelf: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 24,
-    paddingBottom: 48,
-  },
-});

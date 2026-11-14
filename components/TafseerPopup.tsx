@@ -1,5 +1,5 @@
 import React, { Suspense, useCallback, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, StyleSheet, useColorScheme } from 'react-native';
+import { ActivityIndicator, useColorScheme } from 'react-native';
 
 import BottomSheet, {
   BottomSheetBackdrop,
@@ -14,6 +14,7 @@ import {
 import { Colors } from '@/constants/Colors';
 
 import { Tafseer } from './Tafseer';
+import { styles } from './TafseerPopup.styles';
 import { ThemedView } from './ThemedView';
 /**
  * Shared props connecting the parent overlay coordinates to this popup component.
@@ -38,8 +39,11 @@ type Props = {
  */
 export function TafseerPopup({ show, setShow, aya, surah }: Props) {
   const colorScheme = useColorScheme();
-  const tintColor = Colors[colorScheme ?? 'light'].tint;
-  const backgroundColor = Colors[colorScheme ?? 'light'].background;
+  const theme = colorScheme === 'dark' ? 'dark' : 'light';
+  const tintColor = (theme === 'dark' ? Colors.dark : Colors.light).tint;
+  const backgroundColor = (theme === 'dark' ? Colors.dark : Colors.light)
+    .background;
+
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [opacity, setOpacity] = useState(1);
   const animatedPosition = useSharedValue(0);
@@ -61,8 +65,8 @@ export function TafseerPopup({ show, setShow, aya, surah }: Props) {
     [setShow],
   );
 
-  const renderBackdrop = useCallback(
-    (props: any) => (
+  const renderBackdrop = useCallback((props: any) => {
+    return (
       <BottomSheetBackdrop
         {...props}
         disappearsOnIndex={-1}
@@ -70,20 +74,18 @@ export function TafseerPopup({ show, setShow, aya, surah }: Props) {
         opacity={0.6}
         onPress={() => bottomSheetRef.current?.close()}
       />
-    ),
-    [],
-  );
+    );
+  }, []);
 
-  const renderHandle = useCallback(
-    () => (
+  const renderHandle = useCallback(() => {
+    return (
       <ThemedView style={styles.resizer}>
         <ThemedView
           style={[styles.resizerIcon, { backgroundColor: tintColor }]}
         />
       </ThemedView>
-    ),
-    [tintColor],
-  );
+    );
+  }, [tintColor]);
 
   if (!show) return null;
 
@@ -113,21 +115,3 @@ export function TafseerPopup({ show, setShow, aya, surah }: Props) {
     </BottomSheet>
   );
 }
-
-const styles = StyleSheet.create({
-  content: {
-    flexGrow: 1,
-    paddingHorizontal: 2,
-    paddingBottom: 2,
-  },
-  resizer: {
-    alignSelf: 'center',
-    paddingVertical: 10,
-  },
-  resizerIcon: {
-    width: 80,
-    height: 3,
-    borderRadius: 3,
-    alignSelf: 'center',
-  },
-});

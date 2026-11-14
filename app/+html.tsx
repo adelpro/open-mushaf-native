@@ -7,8 +7,90 @@ import { ScrollViewStyleReset } from 'expo-router/html';
  * The contents of this function only run in Node.js environments and do not have access to the DOM or browser APIs.
  */
 export default function Root({ children }: PropsWithChildren) {
-  return (
-    <html lang="ar" dir="rtl">
+  function renderDiv() {
+    function renderDiv2() {
+      return (
+        <div
+          id="sw-spinner"
+          style={{
+            display: 'inline-block',
+            width: '20px',
+            height: '20px',
+            marginRight: '10px',
+            marginLeft: '10px',
+            borderRadius: '50%',
+            border: '3px solid rgba(255,255,255,0.3)',
+            borderTopColor: 'white',
+            animation: 'spin 1s linear infinite',
+            verticalAlign: 'middle',
+          }}
+        ></div>
+      );
+    }
+    return (
+      <div
+        id="sw-notification"
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          padding: '16px 24px',
+          borderRadius: '8px',
+          zIndex: 10000,
+          display: 'none',
+          fontFamily: 'Tajawal_400Regular, Arial, sans-serif',
+          fontSize: '16px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+          textAlign: 'center',
+          minWidth: '250px',
+          maxWidth: '90%',
+          transition: 'opacity 0.3s ease-in-out',
+          opacity: '1',
+          borderColor: '#CCC',
+          backgroundColor: '#333',
+          color: '#FFF',
+        }}
+      >
+        {/* Add loading spinner */}
+        {renderDiv2()}
+        <span
+          id="sw-status-message"
+          style={{
+            verticalAlign: 'middle',
+          }}
+        ></span>
+      </div>
+    );
+  }
+
+  function renderBody() {
+    return (
+      <body style={{ overscrollBehavior: 'none' }}>
+        {children}
+
+        {/* Enhanced Floating Notification Area */}
+        {renderDiv()}
+
+        {/* Add animation keyframes */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `,
+          }}
+        />
+
+        {/* Enhanced Script to handle Service Worker messages for the notification */}
+        <script dangerouslySetInnerHTML={{ __html: notificationHandler }} />
+      </body>
+    );
+  }
+
+  function renderHead() {
+    return (
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -19,34 +101,19 @@ export default function Root({ children }: PropsWithChildren) {
         />
 
         {/* Preload Amiri and Tajawal fonts */}
-        <link
-          rel="preload"
-          href="https://fonts.gstatic.com/s/amiri/v24/J7aRnpd8CGxBHpUrtLMA7w.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="https://fonts.gstatic.com/s/amiri/v24/J7acnpd8CGxBHp2VkaY6zp5yGw.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="https://fonts.gstatic.com/s/tajawal/v9/Iura6YBj_oCad4k1nzSBC45I.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="https://fonts.gstatic.com/s/tajawal/v9/Iurf6YBj_oCad4k1l5qjHrRpiYlJ.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
+        {FONT_PRELOADS.map((href) => {
+          return (
+            <link
+              key={href}
+              rel="preload"
+              href={href}
+              as="font"
+              type="font/woff2"
+              crossOrigin="anonymous"
+            />
+          );
+        })}
+
         {/* Digital Asset Links for Android App Links */}
         <link rel="assetlinks.json" href="/.well-known/assetlinks.json" />
         {/*} <!-- Safari PWA specific tags -->*/}
@@ -56,51 +123,17 @@ export default function Root({ children }: PropsWithChildren) {
           content="black-translucent"
         />
         {/*<!-- Safari splash screens -->*/}
-        <link
-          rel="apple-touch-startup-image"
-          href="splash/apple-splash-2048-2732.png"
-          media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
-        />
-        <link
-          rel="apple-touch-startup-image"
-          href="splash/apple-splash-1668-2388.png"
-          media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
-        />
-        <link
-          rel="apple-touch-startup-image"
-          href="splash/apple-splash-1536-2048.png"
-          media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
-        />
-        <link
-          rel="apple-touch-startup-image"
-          href="splash/apple-splash-1125-2436.png"
-          media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
-        />
-        <link
-          rel="apple-touch-startup-image"
-          href="splash/apple-splash-1242-2688.png"
-          media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
-        />
-        <link
-          rel="apple-touch-startup-image"
-          href="splash/apple-splash-828-1792.png"
-          media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
-        />
-        <link
-          rel="apple-touch-startup-image"
-          href="splash/apple-splash-1242-2208.png"
-          media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
-        />
-        <link
-          rel="apple-touch-startup-image"
-          href="splash/apple-splash-750-1334.png"
-          media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
-        />
-        <link
-          rel="apple-touch-startup-image"
-          href="splash/apple-splash-640-1136.png"
-          media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
-        />
+        {SPLASH_SCREENS.map(({ href, media }) => {
+          return (
+            <link
+              key={href}
+              rel="apple-touch-startup-image"
+              href={href}
+              media={media}
+            />
+          );
+        })}
+
         {/*<!-- Apple touch icon -->*/}
         <link
           rel="apple-touch-icon"
@@ -124,72 +157,12 @@ export default function Root({ children }: PropsWithChildren) {
         <style dangerouslySetInnerHTML={{ __html: responsiveBackground }} />
         {/* Add any additional <head> elements that you want globally available on web... */}
       </head>
-      <body style={{ overscrollBehavior: 'none' }}>
-        {children}
-
-        {/* Enhanced Floating Notification Area */}
-        <div
-          id="sw-notification"
-          style={{
-            position: 'fixed',
-            bottom: '20px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            padding: '16px 24px',
-            borderRadius: '8px',
-            zIndex: 10000,
-            display: 'none',
-            fontFamily: 'Tajawal_400Regular, Arial, sans-serif',
-            fontSize: '16px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-            textAlign: 'center',
-            minWidth: '250px',
-            maxWidth: '90%',
-            transition: 'opacity 0.3s ease-in-out',
-            opacity: '1',
-            borderColor: '#CCC',
-            backgroundColor: '#333',
-            color: '#FFF',
-          }}
-        >
-          {/* Add loading spinner */}
-          <div
-            id="sw-spinner"
-            style={{
-              display: 'inline-block',
-              width: '20px',
-              height: '20px',
-              marginRight: '10px',
-              marginLeft: '10px',
-              borderRadius: '50%',
-              border: '3px solid rgba(255,255,255,0.3)',
-              borderTopColor: 'white',
-              animation: 'spin 1s linear infinite',
-              verticalAlign: 'middle',
-            }}
-          ></div>
-          <span
-            id="sw-status-message"
-            style={{
-              verticalAlign: 'middle',
-            }}
-          ></span>
-        </div>
-
-        {/* Add animation keyframes */}
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-        `,
-          }}
-        />
-
-        {/* Enhanced Script to handle Service Worker messages for the notification */}
-        <script dangerouslySetInnerHTML={{ __html: notificationHandler }} />
-      </body>
+    );
+  }
+  return (
+    <html lang="ar" dir="rtl">
+      {renderHead()}
+      {renderBody()}
     </html>
   );
 }
@@ -341,3 +314,57 @@ if ('serviceWorker' in navigator) {
 // navigator.serviceWorker.controller.postMessage({ type: 'SW_STATE_UPDATE', message: 'Another message, stays until hidden.' });
 // navigator.serviceWorker.controller.postMessage({ type: 'SW_STATE_UPDATE', hide: true });
 `;
+
+const FONT_PRELOADS = [
+  'https://fonts.gstatic.com/s/amiri/v24/J7aRnpd8CGxBHpUrtLMA7w.woff2',
+  'https://fonts.gstatic.com/s/amiri/v24/J7acnpd8CGxBHp2VkaY6zp5yGw.woff2',
+  'https://fonts.gstatic.com/s/tajawal/v9/Iura6YBj_oCad4k1nzSBC45I.woff2',
+  'https://fonts.gstatic.com/s/tajawal/v9/Iurf6YBj_oCad4k1l5qjHrRpiYlJ.woff2',
+];
+const SPLASH_SCREENS = [
+  {
+    href: 'splash/apple-splash-2048-2732.png',
+    media:
+      '(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)',
+  },
+  {
+    href: 'splash/apple-splash-1668-2388.png',
+    media:
+      '(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)',
+  },
+  {
+    href: 'splash/apple-splash-1536-2048.png',
+    media:
+      '(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)',
+  },
+  {
+    href: 'splash/apple-splash-1125-2436.png',
+    media:
+      '(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)',
+  },
+  {
+    href: 'splash/apple-splash-1242-2688.png',
+    media:
+      '(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)',
+  },
+  {
+    href: 'splash/apple-splash-828-1792.png',
+    media:
+      '(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)',
+  },
+  {
+    href: 'splash/apple-splash-1242-2208.png',
+    media:
+      '(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)',
+  },
+  {
+    href: 'splash/apple-splash-750-1334.png',
+    media:
+      '(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)',
+  },
+  {
+    href: 'splash/apple-splash-640-1136.png',
+    media:
+      '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)',
+  },
+];

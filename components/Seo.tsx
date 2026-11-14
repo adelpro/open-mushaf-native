@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Helmet } from 'react-helmet-async';
 
 /**
@@ -32,16 +30,18 @@ type Props = {
  * @param props - Injected config metadata overwriting the hardcoded defaults.
  * @returns A `Helmet` block.
  */
-export function Seo({
-  title = 'Open Mushaf',
-  description = 'A modern and minimalist Quran Mushaf application',
-  image = 'https://open-mushaf-native.web.app/og-image.png',
-  url = 'https://open-mushaf-native.web.app',
-  canonical,
-  keywords = 'quran, mushaf, islam, holy book, reading quran',
-  locale = 'ar_DZ',
-  structuredData,
-}: Props) {
+export function Seo(props: Props) {
+  const {
+    title = 'Open Mushaf',
+    description = 'A modern and minimalist Quran Mushaf application',
+    image = 'https://open-mushaf-native.web.app/og-image.png',
+    url = 'https://open-mushaf-native.web.app',
+    canonical,
+    keywords = 'quran, mushaf, islam, holy book, reading quran',
+    locale = 'ar_DZ',
+    structuredData,
+  } = props;
+
   return (
     <Helmet>
       <title>{title}</title>

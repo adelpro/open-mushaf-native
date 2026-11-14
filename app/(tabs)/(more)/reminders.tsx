@@ -1,17 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Linking,
   Modal,
   Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import uuid from 'expo-modules-core/src/uuid';
 import { Stack } from 'expo-router';
 import { useAtom } from 'jotai';
@@ -19,60 +16,25 @@ import {
   checkPermission as checkExactAlarmPermission,
   getPermission as openExactAlarmPermissionSettings,
 } from 'react-native-schedule-exact-alarm-permission';
-import Toggle from 'react-native-toggle-input';
 
-import {
-  ThemedButton,
-  ThemedText,
-  ThemedTextInput,
-  ThemedView,
-  TimePicker,
-} from '@/components';
+import { ThemedView } from '@/components';
+import { ModalContent } from '@/components/reminders/ModalContent';
+import { ModalContent2 } from '@/components/reminders/ModalContent2';
+import { ModalOverlay } from '@/components/reminders/ModalOverlay';
+import { ReminderCard } from '@/components/reminders/ReminderCard';
+import { ReminderListView } from '@/components/reminders/ReminderListView';
+import { ReminderModal } from '@/components/reminders/ReminderModal';
 import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import { useColors } from '@/hooks';
 import { remindersAtom } from '@/jotai/atoms';
-import { Reminder, ReminderPreset } from '@/types/reminder';
+import { styles } from '@/styles/screens/reminders.styles';
+import { Reminder } from '@/types/reminder';
 import {
   cancelReminder,
   requestNotificationPermissions,
   scheduleReminder,
   syncReminders,
 } from '@/utils/notifications';
-
-/** Maps day-of-week number to Arabic label */
-const DAY_LABELS: Record<number, string> = {
-  1: 'الأحد',
-  2: 'الاثنين',
-  3: 'الثلاثاء',
-  4: 'الأربعاء',
-  5: 'الخميس',
-  6: 'الجمعة',
-  7: 'السبت',
-};
-
-/** Returns a formatted time string based on system preferences */
-const formatTimeArabic = (hour: number, minute: number): string => {
-  const period = hour >= 12 ? 'م' : 'ص';
-  const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-  const formatNumber = (n: number) => n.toString().padStart(2, '0');
-  return `${formatNumber(displayHour)}:${formatNumber(minute)} ${period}`;
-};
-
-/** Returns a preset icon name */
-const getPresetIcon = (
-  preset: ReminderPreset,
-): React.ComponentProps<typeof MaterialCommunityIcons>['name'] => {
-  switch (preset) {
-    case 'wird':
-      return 'book-open-page-variant-outline';
-    case 'mulk':
-      return 'moon-waning-crescent';
-    case 'kahf':
-      return 'calendar-week';
-    case 'custom':
-      return 'bell-outline';
-  }
-};
 
 export default function RemindersScreen() {
   const [reminders, setReminders] = useAtom(remindersAtom);
@@ -337,479 +299,121 @@ export default function RemindersScreen() {
   );
 
   /** Renders a single reminder card */
-  const renderReminderCard = (reminder: Reminder) => (
-    <ThemedView
-      key={reminder.id}
-      style={[styles.card, { backgroundColor: cardColor }]}
-    >
-      <View style={styles.cardHeader}>
-        <View style={styles.cardTitleRow}>
-          <MaterialCommunityIcons
-            name={getPresetIcon(reminder.preset)}
-            size={22}
-            color={reminder.enabled ? primaryColor : iconColor}
-          />
-          <ThemedText style={[styles.cardTitle, { color: textColor }]}>
-            {reminder.title}
-          </ThemedText>
-        </View>
-        <Toggle
-          color={primaryColor}
-          size={26}
-          filled={true}
-          circleColor="white"
-          toggle={reminder.enabled}
-          setToggle={() => handleToggle(reminder.id)}
-        />
-      </View>
+  const renderReminderCard = (reminder: Reminder) => {
+    return (
+      <ReminderCard
+        key={reminder.id}
+        reminder={reminder}
+        primaryColor={primaryColor}
+        iconColor={iconColor}
+        textColor={textColor}
+        cardColor={cardColor}
+        dangerColor={dangerColor}
+        handleToggle={handleToggle}
+        handleEditTime={handleEditTime}
+        setDeleteConfirmId={setDeleteConfirmId}
+      />
+    );
+  };
 
-      <TouchableOpacity
-        style={styles.timeRow}
-        onPress={() => handleEditTime(reminder)}
-        activeOpacity={0.6}
-        accessibilityLabel={`تعديل وقت التذكير ${formatTimeArabic(reminder.hour, reminder.minute)}`}
-        accessibilityHint="اضغط لتغيير وقت التذكير"
-        accessibilityRole="button"
-      >
-        <Feather name="clock" size={16} color={iconColor} />
-        <ThemedText style={[styles.timeText, { color: textColor }]}>
-          {formatTimeArabic(reminder.hour, reminder.minute)}
-        </ThemedText>
-        {reminder.type === 'weekly' && reminder.dayOfWeek && (
-          <ThemedText style={[styles.dayBadge, { color: primaryColor }]}>
-            {DAY_LABELS[reminder.dayOfWeek]}
-          </ThemedText>
-        )}
-        <Feather
-          name="edit-2"
-          size={14}
-          color={iconColor}
-          style={styles.editIcon}
-        />
-      </TouchableOpacity>
+  const renderModalContent = () => {
+    return (
+      <ModalContent
+        cardColor={cardColor}
+        textColor={textColor}
+        setTimePickerVisible={setTimePickerVisible}
+        setEditingReminder={setEditingReminder}
+        iconColor={iconColor}
+        editingReminder={editingReminder}
+        handleTimeSave={handleTimeSave}
+      />
+    );
+  };
 
-      {/* Delete button for custom reminders only */}
-      {reminder.preset === 'custom' && (
-        <TouchableOpacity
-          style={styles.deleteRow}
-          onPress={() => setDeleteConfirmId(reminder.id)}
-          activeOpacity={0.6}
-          accessibilityLabel={`حذف تذكير ${reminder.title}`}
-          accessibilityHint="اضغط لحذف هذا التذكير"
-          accessibilityRole="button"
-        >
-          <Feather name="trash-2" size={16} color={dangerColor} />
-          <ThemedText style={[styles.deleteText, { color: dangerColor }]}>
-            حذف
-          </ThemedText>
-        </TouchableOpacity>
-      )}
-    </ThemedView>
-  );
-
-  return (
-    <ThemedView style={styles.container}>
-      <Stack.Screen options={{ title: 'التذكيرات' }} />
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Permission warning */}
-        {permissionGranted === false && (
-          <ThemedView
-            style={[
-              styles.warningBanner,
-              { backgroundColor: dangerColor + '15' },
-            ]}
-          >
-            <Feather name="alert-circle" size={18} color={dangerColor} />
-            <ThemedText style={[styles.warningText, { color: dangerColor }]}>
-              لم يتم السماح بالإشعارات. فعّل الإشعارات من إعدادات الجهاز.
-            </ThemedText>
-          </ThemedView>
-        )}
-
-        {/* Preset reminders section */}
-        <ThemedText style={[styles.sectionTitle, { color: textColor }]}>
-          التذكيرات المقترحة
-        </ThemedText>
-        {reminders.filter((r) => r.preset !== 'custom').map(renderReminderCard)}
-
-        {/* Custom reminders section */}
-        {reminders.some((r) => r.preset === 'custom') && (
-          <>
-            <ThemedText style={[styles.sectionTitle, { color: textColor }]}>
-              تذكيرات مخصصة
-            </ThemedText>
-            {reminders
-              .filter((r) => r.preset === 'custom')
-              .map(renderReminderCard)}
-          </>
-        )}
-
-        {/* Add custom reminder button */}
-        <ThemedButton
-          variant="outlined-primary"
-          onPress={() => setAddModalVisible(true)}
-          style={styles.addButton}
-        >
-          <ThemedView style={styles.addButtonContent}>
-            <Feather name="plus" size={20} color={primaryColor} />
-            <ThemedText style={[styles.addButtonText, { color: primaryColor }]}>
-              إضافة تذكير
-            </ThemedText>
-          </ThemedView>
-        </ThemedButton>
-      </ScrollView>
-
-      {/* Time Picker Modal */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={timePickerVisible}
-        onRequestClose={() => {
-          setTimePickerVisible(false);
-          setEditingReminder(null);
-        }}
-      >
+  function renderModal() {
+    function renderModalOverlay() {
+      return (
         <View style={styles.modalOverlay}>
           <Pressable
             style={StyleSheet.absoluteFill}
-            onPress={() => {
-              setTimePickerVisible(false);
-              setEditingReminder(null);
-            }}
+            onPress={() => setAddModalVisible(false)}
           />
-          <ThemedView
-            style={[styles.modalContent, { backgroundColor: cardColor }]}
-          >
-            <ThemedView
-              style={[styles.modalHeader, { borderBottomColor: textColor }]}
-            >
-              <ThemedText style={[styles.modalTitle, { color: textColor }]}>
-                اختر الوقت
-              </ThemedText>
-              <TouchableOpacity
-                onPress={() => {
-                  setTimePickerVisible(false);
-                  setEditingReminder(null);
-                }}
-                accessibilityLabel="إغلاق"
-                accessibilityRole="button"
-              >
-                <Feather name="x" size={24} color={iconColor} />
-              </TouchableOpacity>
-            </ThemedView>
-
-            {editingReminder && (
-              <TimePicker
-                hour={editingReminder.hour}
-                minute={editingReminder.minute}
-                onChange={({ hour, minute }) =>
-                  setEditingReminder((prev) =>
-                    prev ? { ...prev, hour, minute } : null,
-                  )
-                }
-              />
-            )}
-
-            <ThemedView style={styles.modalActions}>
-              <ThemedButton
-                variant="primary"
-                onPress={handleTimeSave}
-                style={styles.modalButton}
-              >
-                حفظ
-              </ThemedButton>
-            </ThemedView>
-          </ThemedView>
+          <ModalContent2
+            cardColor={cardColor}
+            textColor={textColor}
+            setAddModalVisible={setAddModalVisible}
+            iconColor={iconColor}
+            newTitle={newTitle}
+            setNewTitle={setNewTitle}
+            newHour={newHour}
+            newMinute={newMinute}
+            setNewHour={setNewHour}
+            setNewMinute={setNewMinute}
+            handleAddCustom={handleAddCustom}
+          />
         </View>
-      </Modal>
-
-      {/* Add Custom Reminder Modal */}
+      );
+    }
+    return (
       <Modal
         animationType="fade"
         transparent={true}
         visible={addModalVisible}
         onRequestClose={() => setAddModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <Pressable
-            style={StyleSheet.absoluteFill}
-            onPress={() => setAddModalVisible(false)}
-          />
-          <ThemedView
-            style={[styles.modalContent, { backgroundColor: cardColor }]}
-          >
-            <ThemedView
-              style={[styles.modalHeader, { borderBottomColor: textColor }]}
-            >
-              <ThemedText style={[styles.modalTitle, { color: textColor }]}>
-                تذكير جديد
-              </ThemedText>
-              <TouchableOpacity
-                onPress={() => setAddModalVisible(false)}
-                accessibilityLabel="إغلاق"
-                accessibilityRole="button"
-              >
-                <Feather name="x" size={24} color={iconColor} />
-              </TouchableOpacity>
-            </ThemedView>
-
-            <ThemedTextInput
-              value={newTitle}
-              onChangeText={setNewTitle}
-              placeholder="عنوان التذكير"
-              style={[
-                styles.titleInput,
-                { color: textColor, borderColor: iconColor },
-              ]}
-            />
-
-            <TimePicker
-              hour={newHour}
-              minute={newMinute}
-              onChange={({ hour, minute }) => {
-                setNewHour(hour);
-                setNewMinute(minute);
-              }}
-            />
-
-            <ThemedView style={styles.modalActions}>
-              <ThemedButton
-                variant="primary"
-                onPress={handleAddCustom}
-                style={styles.modalButton}
-              >
-                إضافة
-              </ThemedButton>
-            </ThemedView>
-          </ThemedView>
-        </View>
+        {renderModalOverlay()}
       </Modal>
+    );
+  }
 
-      {/* Delete Confirmation Modal */}
+  function renderModal2() {
+    return (
       <Modal
         animationType="fade"
         transparent={true}
         visible={deleteConfirmId !== null}
         onRequestClose={() => setDeleteConfirmId(null)}
       >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setDeleteConfirmId(null)}
-          accessibilityLabel="إغلاق نافذة تأكيد الحذف"
-          accessibilityRole="button"
-        >
-          <ThemedView
-            style={[styles.modalContent, { backgroundColor: cardColor }]}
-            onStartShouldSetResponder={() => true}
-          >
-            <ThemedView
-              style={[styles.modalHeader, { borderBottomColor: textColor }]}
-            >
-              <ThemedText style={[styles.modalTitle, { color: textColor }]}>
-                حذف التذكير
-              </ThemedText>
-              <TouchableOpacity
-                onPress={() => setDeleteConfirmId(null)}
-                accessibilityLabel="إغلاق"
-                accessibilityRole="button"
-              >
-                <Feather name="x" size={24} color={iconColor} />
-              </TouchableOpacity>
-            </ThemedView>
-
-            <ThemedText style={[styles.modalMessage, { color: textColor }]}>
-              هل أنت متأكد من حذف هذا التذكير؟
-            </ThemedText>
-
-            <ThemedView style={styles.modalActionsRow}>
-              <ThemedButton
-                variant="outlined-primary"
-                onPress={() => setDeleteConfirmId(null)}
-                style={styles.modalButton}
-              >
-                إلغاء
-              </ThemedButton>
-              <ThemedButton
-                variant="danger"
-                onPress={() => deleteConfirmId && handleDelete(deleteConfirmId)}
-                style={styles.modalButton}
-              >
-                حذف
-              </ThemedButton>
-            </ThemedView>
-          </ThemedView>
-        </TouchableOpacity>
+        <ModalOverlay
+          cardColor={cardColor}
+          textColor={textColor}
+          setDeleteConfirmId={setDeleteConfirmId}
+          iconColor={iconColor}
+          deleteConfirmId={deleteConfirmId}
+          handleDelete={handleDelete}
+        />
       </Modal>
-    </ThemedView>
-  );
-}
+    );
+  }
+  function renderScreenContent() {
+    return (
+      <ThemedView style={styles.container}>
+        <Stack.Screen options={{ title: 'التذكيرات' }} />
+        <ReminderListView
+          permissionGranted={permissionGranted}
+          dangerColor={dangerColor}
+          textColor={textColor}
+          reminders={reminders}
+          renderReminderCard={renderReminderCard}
+          setAddModalVisible={setAddModalVisible}
+          primaryColor={primaryColor}
+        />
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 16,
-    paddingBottom: 40,
-    gap: 12,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontFamily: 'Tajawal_700Bold',
-    marginTop: 8,
-    marginBottom: 4,
-  },
-  card: {
-    borderRadius: 12,
-    padding: 14,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  cardTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    flex: 1,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontFamily: 'Tajawal_700Bold',
-  },
-  timeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingVertical: 4,
-  },
-  timeText: {
-    fontSize: 16,
-    fontFamily: 'Tajawal_400Regular',
-  },
-  dayBadge: {
-    fontSize: 14,
-    fontFamily: 'Tajawal_700Bold',
-    marginStart: 8,
-  },
-  editIcon: {
-    marginStart: 'auto',
-  },
-  deleteRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 8,
-    paddingTop: 8,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(0,0,0,0.1)',
-  },
-  deleteText: {
-    fontSize: 14,
-    fontFamily: 'Tajawal_400Regular',
-  },
-  addButton: {
-    marginTop: 12,
-    height: 48,
-    alignSelf: 'center',
-  },
-  addButtonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  addButtonText: {
-    fontSize: 16,
-    fontFamily: 'Tajawal_700Bold',
-    textAlignVertical: 'center',
-  },
-  warningBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    padding: 12,
-    borderRadius: 10,
-  },
-  warningText: {
-    fontSize: 14,
-    fontFamily: 'Tajawal_400Regular',
-    flex: 1,
-  },
-  // Modal styles (consistent with existing patterns)
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 5,
-    paddingVertical: 20,
-  },
-  modalContent: {
-    width: '90%',
-    maxWidth: 400,
-    borderRadius: 12,
-    padding: 16,
-    elevation: 5,
-    alignSelf: 'center',
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    minHeight: 40,
-    backgroundColor: 'transparent',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontFamily: 'Tajawal_700Bold',
-    textAlignVertical: 'center',
-  },
-  modalMessage: {
-    fontSize: 16,
-    marginBottom: 20,
-    textAlign: 'center',
-    fontFamily: 'Tajawal_400Regular',
-  },
-  modalActions: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    width: '100%',
-    marginTop: 12,
-  },
-  modalActionsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: 'transparent',
-    width: '100%',
-    gap: 12,
-  },
-  modalButton: {
-    width: '40%',
-    maxWidth: 140,
-  },
-  titleInput: {
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
-    fontFamily: 'Tajawal_400Regular',
-    marginBottom: 12,
-    textAlign: 'right',
-  },
-});
+        {/* Time Picker Modal */}
+        <ReminderModal
+          timePickerVisible={timePickerVisible}
+          setTimePickerVisible={setTimePickerVisible}
+          setEditingReminder={setEditingReminder}
+          renderModalContent={renderModalContent}
+        />
+
+        {/* Add Custom Reminder Modal */}
+        {renderModal()}
+
+        {/* Delete Confirmation Modal */}
+        {renderModal2()}
+      </ThemedView>
+    );
+  }
+  return renderScreenContent();
+}

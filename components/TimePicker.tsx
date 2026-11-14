@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   FlatList,
   ListRenderItemInfo,
@@ -125,19 +125,8 @@ const Wheel = ({
     [],
   );
 
-  return (
-    <View style={[styles.wheelContainer, { backgroundColor: cardColor }]}>
-      {/* Selection highlight band */}
-      <View
-        style={[
-          styles.selectionBand,
-          {
-            backgroundColor: primaryColor + '18',
-            borderColor: primaryColor + '40',
-          },
-        ]}
-        pointerEvents="none"
-      />
+  function renderFlatList() {
+    return (
       <FlatList
         ref={flatListRef}
         data={data}
@@ -156,6 +145,22 @@ const Wheel = ({
           paddingVertical: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2),
         }}
       />
+    );
+  }
+  return (
+    <View style={[styles.wheelContainer, { backgroundColor: cardColor }]}>
+      {/* Selection highlight band */}
+      <View
+        style={[
+          styles.selectionBand,
+          {
+            backgroundColor: primaryColor + '18',
+            borderColor: primaryColor + '40',
+          },
+        ]}
+        pointerEvents="none"
+      />
+      {renderFlatList()}
     </View>
   );
 };

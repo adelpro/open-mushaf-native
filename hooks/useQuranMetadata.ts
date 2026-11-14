@@ -43,56 +43,20 @@ export function useQuranMetadata(): QuranMetadata {
         setIsLoading(true);
         setError(null);
 
-        // Use conditional imports instead of template literals
-        if (mushafRiwayaValue === 'hafs') {
-          // Load Hafs metadata
-          const [
-            thumnModule,
-            hizbModule,
-            surahModule,
-            ayaModule,
-            specsModule,
-            chapterModule,
-          ] = await Promise.all([
-            import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/thumn.json'),
-            import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/hizb.json'),
-            import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/surah.json'),
-            import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/aya.json'),
-            import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/specs.json'),
-            import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/chapter.json'),
-          ]);
-
-          setThumnData(thumnModule.default);
-          setHizbData(hizbModule.default);
-          setSurahData(surahModule.default as Surah[]);
-          setAyaData(ayaModule.default.coordinates as Page[]);
-          setSpecsData(specsModule.default);
-          setChapterData(chapterModule.default);
-        } else {
-          // Load Warsh metadata (default)
-          const [
-            thumnModule,
-            hizbModule,
-            surahModule,
-            ayaModule,
-            specsModule,
-            chapterModule,
-          ] = await Promise.all([
-            import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/thumn.json'),
-            import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.json'),
-            import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json'),
-            import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/aya.json'),
-            import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json'),
-            import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/chapter.json'),
-          ]);
-
-          setThumnData(thumnModule.default);
-          setHizbData(hizbModule.default);
-          setSurahData(surahModule.default as Surah[]);
-          setAyaData(ayaModule.default.coordinates as Page[]);
-          setSpecsData(specsModule.default);
-          setChapterData(chapterModule.default);
-        }
+        const [
+          thumnModule,
+          hizbModule,
+          surahModule,
+          ayaModule,
+          specsModule,
+          chapterModule,
+        ] = await loadRiwayaMetadata(mushafRiwayaValue);
+        setThumnData(thumnModule.default);
+        setHizbData(hizbModule.default);
+        setSurahData(surahModule.default as Surah[]);
+        setAyaData(ayaModule.default.coordinates as Page[]);
+        setSpecsData(specsModule.default);
+        setChapterData(chapterModule.default);
 
         const [qurandata] = await Promise.all([
           import('@/assets/quran-metadata/shared/quran.json'),
@@ -120,4 +84,24 @@ export function useQuranMetadata(): QuranMetadata {
     isLoading,
     error,
   };
+}
+
+async function loadRiwayaMetadata(riwaya: string) {
+  return riwaya === 'hafs'
+    ? Promise.all([
+        import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/thumn.json'),
+        import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/hizb.json'),
+        import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/surah.json'),
+        import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/aya.json'),
+        import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/specs.json'),
+        import('@/assets/quran-metadata/mushaf-elmadina-hafs-assim/chapter.json'),
+      ])
+    : Promise.all([
+        import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/thumn.json'),
+        import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/hizb.json'),
+        import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/surah.json'),
+        import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/aya.json'),
+        import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/specs.json'),
+        import('@/assets/quran-metadata/mushaf-elmadina-warsh-azrak/chapter.json'),
+      ]);
 }

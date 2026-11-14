@@ -25,11 +25,11 @@ export function useTafseerContent({
   );
 
   let tafseerText = '';
-  if (!ayaTafseer?.text || ayaTafseer?.text === '<p></p>') {
+  if (!ayaTafseer?.text || ayaTafseer.text === '<p></p>') {
     tafseerText = '<p>لا يوجد تفسير.</p>';
   } else {
     // If !ayaTafseer?.text is false, ayaTafseer and ayaTafseer.text are guaranteed to be defined.
-    tafseerText = `<div>${ayaTafseer.text}</div>`;
+    tafseerText = `<div>${sanitizeTafseerHtml(ayaTafseer.text)}</div>`;
   }
   return tafseerText;
 }
@@ -59,4 +59,28 @@ export function hasNoTafseerContent({
     return true; // No tafseer content
   }
   return false; // Tafseer content exists
+}
+
+// Only these complete, attribute-free tokens may reach the HTML renderer.
+const FORMATTING_TAGS = new Map(
+  ['p', 'div', 'br', 'b', 'strong', 'i', 'em', 'span', 'sup', 'sub'].flatMap(
+    (tag) => [
+      ['<' + tag + '>', '<' + tag + '>'],
+      ['</' + tag + '>', '</' + tag + '>'],
+    ],
+  ),
+);
+
+export function sanitizeTafseerHtml(value: string): string {
+  return value
+    .split(/(<[^>]*>)/g)
+    .map((token) => {
+      if (token.startsWith('<') && token.endsWith('>')) {
+        const normalized = token.toLowerCase().replace(/\s*\/>$/, '>');
+        return FORMATTING_TAGS.get(normalized) ?? '';
+      }
+      // Encode leftover delimiters as well, including incomplete/malformed tags.
+      return token.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    })
+    .join('');
 }

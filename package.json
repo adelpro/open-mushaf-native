@@ -48,7 +48,11 @@
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "clean:all": "rimraf node_modules .expo android ios",
     "fresh": "yarn clean:all && yarn install && yarn prebuild",
-    "docs:start": "cd docs && npx fumapress"
+    "docs:start": "cd docs && npx fumapress",
+    "check:codacy": "node scripts/check-codacy-findings.mjs",
+    "codacy": "node scripts/codacy-local.mjs",
+    "codacy:install": "npm install --prefix .expo/codacy-cli --no-save --package-lock=false @codacy/analysis-cli@0.29.1",
+    "codacy:check": "node scripts/codacy-local.mjs analyze --tool ESLint9 --tool jackson --tool Lizard --output-format json --output .expo/codacy-analysis/local-results.json"
   },
   "jest": {
     "preset": "jest-expo"
@@ -81,6 +85,7 @@
     "expo-build-properties": "~1.0.10",
     "expo-constants": "~18.0.12",
     "expo-dev-client": "~6.0.21",
+    "expo-file-system": "~19.0.23",
     "expo-font": "~14.0.10",
     "expo-haptics": "~15.0.8",
     "expo-image": "~3.0.11",

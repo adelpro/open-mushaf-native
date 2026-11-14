@@ -1,4 +1,3 @@
-import React from 'react';
 import { Appearance } from 'react-native';
 
 import { getDefaultStore } from 'jotai';
@@ -39,55 +38,8 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
   const currentPage = store.get(currentSavedPage);
   const riwaya = store.get(mushafRiwaya) || 'warsh';
 
-  let dailyCompleted = 0;
-  let currentSurahNumber = 1;
-  let currentHizbNumber = 1;
-
-  try {
-    // Validate Daily Goal Date
-    const today = new Date().toDateString();
-    if (dailyCompletedData.date === today) {
-      dailyCompleted = dailyCompletedData.value;
-    } else {
-      dailyCompleted = 0;
-    }
-
-    let surahs: Surah[] = [];
-    let thumns: Thumn[] = [];
-
-    // Load metadata files based on Riwaya
-    if (riwaya === 'hafs') {
-      surahs = hafsSurahs as Surah[];
-      thumns = hafsThumns;
-    } else {
-      // Default to Warsh
-      surahs = warshSurahs as Surah[];
-      thumns = warshThumns;
-    }
-
-    // Calculate Reading Position
-    if (surahs.length > 0) {
-      currentSurahNumber = getSurahNumberByPage(surahs, currentPage);
-    }
-    if (thumns.length > 0) {
-      const { juzNumber } = getJuzPositionByPage(thumns, currentPage);
-      // Approx mapping if based on Juz, but we want exact Hizb from Thumn data.
-      // getJuzPositionByPage returns juzNumber, but we can look up the thumn directly.
-      const thumn = thumns.find(
-        (t: any, index: number) =>
-          currentPage >= t.startingPage &&
-          (index === thumns.length - 1 ||
-            currentPage < thumns[index + 1].startingPage),
-      );
-      if (thumn) {
-        currentHizbNumber = thumn.hizb_number;
-      } else {
-        currentHizbNumber = juzNumber * 2; // Fallback
-      }
-    }
-  } catch (e) {
-    console.error('Error parsing widget data', e);
-  }
+  const { dailyCompleted, currentSurahNumber, currentHizbNumber } =
+    getWidgetPosition({ dailyCompletedData, currentPage, riwaya });
 
   const colorScheme = Appearance.getColorScheme() ?? 'light';
 
@@ -100,27 +52,49 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     colorScheme,
   };
 
-  switch (props.widgetAction) {
-    case 'WIDGET_ADDED':
-    case 'WIDGET_UPDATE':
-    case 'WIDGET_RESIZED':
-      props.renderWidget(<Widget {...widgetProps} />);
-      break;
-
-    case 'WIDGET_DELETED':
-      // Handle widget deleted (remove widget data if you stored it somewhere)
-      break;
-
-    case 'WIDGET_CLICK':
-      // For now, just re-render with same props
-      if (props.clickAction === 'OPEN_APP') {
-        props.renderWidget(<Widget {...widgetProps} />);
-      } else {
-        props.renderWidget(<Widget {...widgetProps} />);
-      }
-      break;
-
-    default:
-      break;
+  if (
+    [
+      'WIDGET_ADDED',
+      'WIDGET_UPDATE',
+      'WIDGET_RESIZED',
+      'WIDGET_CLICK',
+    ].includes(props.widgetAction)
+  ) {
+    props.renderWidget(<Widget {...widgetProps} />);
   }
+}
+
+function getWidgetPosition(snapshot: {
+  dailyCompletedData: { date: string; value: number };
+  currentPage: number;
+  riwaya: string;
+}) {
+  const { dailyCompletedData, currentPage, riwaya } = snapshot;
+  let dailyCompleted = 0,
+    currentSurahNumber = 1,
+    currentHizbNumber = 1;
+  try {
+    dailyCompleted =
+      dailyCompletedData.date === new Date().toDateString()
+        ? dailyCompletedData.value
+        : 0;
+    const surahs = (riwaya === 'hafs' ? hafsSurahs : warshSurahs) as Surah[];
+    const thumns = riwaya === 'hafs' ? hafsThumns : warshThumns;
+    if (surahs.length > 0)
+      currentSurahNumber = getSurahNumberByPage(surahs, currentPage);
+    if (thumns.length > 0)
+      currentHizbNumber = getWidgetHizb(thumns, currentPage);
+  } catch (error) {
+    console.error('Error parsing widget data', error);
+  }
+  return { dailyCompleted, currentSurahNumber, currentHizbNumber };
+}
+function getWidgetHizb(thumns: Thumn[], page: number) {
+  const { juzNumber } = getJuzPositionByPage(thumns, page);
+  const thumn = thumns.find(
+    (t, index) =>
+      page >= t.startingPage &&
+      (index === thumns.length - 1 || page < thumns[index + 1].startingPage),
+  );
+  return thumn ? thumn.hizb_number : juzNumber * 2;
 }

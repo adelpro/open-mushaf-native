@@ -1,0 +1,83 @@
+import { StyleSheet } from 'react-native';
+
+export const styles = StyleSheet.create({
+  safeArea: {
+    width: '100%',
+    height: '100%',
+    paddingHorizontal: 20,
+    margin: 10,
+  },
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+  },
+  contentContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 600,
+    flexDirection: 'column',
+  },
+  itemText: {
+    fontSize: 20,
+    fontFamily: 'Tajawal_700Bold',
+    paddingVertical: 8,
+    paddingHorizontal: 5,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  riwayaList: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  riwayaCard: {
+    width: '48%',
+    maxWidth: 220,
+    aspectRatio: 1,
+    minWidth: 0,
+    padding: 12,
+    borderWidth: 2,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  riwayaCardText: {
+    width: '100%',
+    fontSize: 17,
+    textAlign: 'center',
+  },
+  downloadButton: {
+    minHeight: 42,
+    width: '100%',
+    maxWidth: 420,
+    marginTop: 16,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  downloadedHintRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    marginTop: 10,
+  },
+  downloadedHint: {
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  downloadButtonText: {
+    fontSize: 14,
+    textAlign: 'center',
+  },
+});

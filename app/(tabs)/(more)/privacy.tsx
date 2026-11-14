@@ -1,10 +1,5 @@
-import React, { useState } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-} from 'react-native';
+import { useState } from 'react';
+import { ScrollView, TouchableOpacity, useColorScheme } from 'react-native';
 
 import {
   PrivacyContentArabic,
@@ -14,7 +9,7 @@ import {
   ThemedView,
 } from '@/components';
 import { Colors } from '@/constants/Colors';
-import { isRTL } from '@/utils';
+import { styles } from '@/styles/screens/privacy.styles';
 
 export default function PrivacyScreen() {
   const [selectedTab, setSelectedTab] = useState('arabic'); // Default to Arabic
@@ -22,14 +17,9 @@ export default function PrivacyScreen() {
   const currentColor = Colors[colorScheme ?? 'light'].tint;
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
 
-  return (
-    <ThemedView style={styles.container}>
-      <Seo
-        title="المصحف المفتوح - سياسة الخصوصية"
-        description="سياسة الخصوصية للمصحف المفتوح - معلومات حول كيفية جمع واستخدام وحماية بياناتك"
-      />
-      {/* Tab Selection */}
-      <ThemedView style={styles.tabContainer}>
+  function renderTabContainer() {
+    function renderTab() {
+      return (
         <TouchableOpacity
           style={[
             styles.tab,
@@ -54,6 +44,11 @@ export default function PrivacyScreen() {
             العربية
           </ThemedText>
         </TouchableOpacity>
+      );
+    }
+
+    function renderTab2() {
+      return (
         <TouchableOpacity
           style={[
             styles.tab,
@@ -78,7 +73,23 @@ export default function PrivacyScreen() {
             English
           </ThemedText>
         </TouchableOpacity>
+      );
+    }
+    return (
+      <ThemedView style={styles.tabContainer}>
+        {renderTab()}
+        {renderTab2()}
       </ThemedView>
+    );
+  }
+  return (
+    <ThemedView style={styles.container}>
+      <Seo
+        title="المصحف المفتوح - سياسة الخصوصية"
+        description="سياسة الخصوصية للمصحف المفتوح - معلومات حول كيفية جمع واستخدام وحماية بياناتك"
+      />
+      {/* Tab Selection */}
+      {renderTabContainer()}
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {selectedTab === 'arabic' ? (
@@ -102,39 +113,3 @@ export default function PrivacyScreen() {
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  tabContainer: {
-    flexDirection: isRTL ? 'row' : 'row-reverse',
-    justifyContent: 'space-around',
-    marginBottom: 20,
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  tabText: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  scrollContent: {
-    paddingBottom: 40,
-  },
-  link: {
-    marginTop: 20,
-    alignItems: 'center',
-    height: 48,
-    justifyContent: 'center',
-  },
-  linkText: {
-    fontSize: 16,
-    color: Colors.light.tint,
-    textDecorationLine: 'underline',
-  },
-});

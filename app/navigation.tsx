@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -12,6 +12,7 @@ import {
   ThemedView,
 } from '@/components';
 import { useColors, useCurrentPage, useQuranMetadata } from '@/hooks';
+import { styles } from '@/styles/screens/navigation.styles';
 
 export default function Navigation() {
   const router = useRouter();
@@ -97,7 +98,7 @@ export default function Navigation() {
     }
   };
 
-  if (isLoading) {
+  function renderLoading() {
     return (
       <ThemedView style={styles.container}>
         <ThemedView style={styles.loadingContainer}>
@@ -106,8 +107,9 @@ export default function Navigation() {
       </ThemedView>
     );
   }
+  if (isLoading) return renderLoading();
 
-  if (error) {
+  function renderLoadError() {
     return (
       <ThemedView style={styles.container}>
         <ThemedView style={styles.errorContainer}>
@@ -116,16 +118,11 @@ export default function Navigation() {
       </ThemedView>
     );
   }
+  if (error) return renderLoadError();
 
-  return (
-    <ThemedView style={styles.container}>
-      <Seo
-        title="المصحف المفتوح - التنقل"
-        description="تصفح صفحات وسور وآيات القرآن الكريم بسهولة باستخدام واجهة التنقل في المصحف المفتوح"
-      />
-      <ThemedView
-        style={[styles.navigationSection, { backgroundColor: cardColor }]}
-      >
+  function renderNavigationSection() {
+    function renderLabelContainer() {
+      return (
         <ThemedView
           style={[styles.labelContainer, { backgroundColor: cardColor }]}
         >
@@ -144,6 +141,13 @@ export default function Navigation() {
             الانتقال إلى الصفحة:
           </ThemedText>
         </ThemedView>
+      );
+    }
+    return (
+      <ThemedView
+        style={[styles.navigationSection, { backgroundColor: cardColor }]}
+      >
+        {renderLabelContainer()}
         <PageNavigator
           currentPage={currentPage}
           totalPages={defaultNumberOfPages}
@@ -152,10 +156,12 @@ export default function Navigation() {
           iconColor={iconColor}
         />
       </ThemedView>
+    );
+  }
 
-      <ThemedView
-        style={[styles.navigationSection, { backgroundColor: cardColor }]}
-      >
+  function renderNavigationSection2() {
+    function renderLabelContainer2() {
+      return (
         <ThemedView
           style={[styles.labelContainer, { backgroundColor: cardColor }]}
         >
@@ -174,6 +180,13 @@ export default function Navigation() {
             الانتقال إلى الآية:
           </ThemedText>
         </ThemedView>
+      );
+    }
+    return (
+      <ThemedView
+        style={[styles.navigationSection, { backgroundColor: cardColor }]}
+      >
+        {renderLabelContainer2()}
         <SurahAyaNavigator
           currentSurah={currentSurah}
           currentAya={currentAyaNumber}
@@ -185,55 +198,17 @@ export default function Navigation() {
           cardColor={cardColor}
         />
       </ThemedView>
+    );
+  }
+  return (
+    <ThemedView style={styles.container}>
+      <Seo
+        title="المصحف المفتوح - التنقل"
+        description="تصفح صفحات وسور وآيات القرآن الكريم بسهولة باستخدام واجهة التنقل في المصحف المفتوح"
+      />
+      {renderNavigationSection()}
+
+      {renderNavigationSection2()}
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 15,
-    margin: 2,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    alignSelf: 'center',
-    width: '100%',
-    maxWidth: 640,
-  },
-  loadingContainer: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  errorContainer: {
-    flex: 1,
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  navigationSection: {
-    marginVertical: 15,
-    borderRadius: 10,
-    padding: 10,
-    width: '100%',
-    elevation: 3,
-    maxWidth: 640,
-  },
-  labelContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginBottom: 8,
-  },
-  label: {
-    fontSize: 20,
-    fontFamily: 'Tajawal_700Bold',
-    textAlign: 'right',
-  },
-  icon: {
-    marginHorizontal: 5,
-  },
-});

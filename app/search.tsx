@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, FlatList } from 'react-native';
 
 import morphologyDataRaw from '@/assets/search/quran-morphology.json';
 import wordMapJSON from '@/assets/search/word-map.json';
@@ -21,6 +21,7 @@ import {
   useQuranMetadata,
   useQuranSearch,
 } from '@/hooks';
+import { styles } from '@/styles/screens/search.styles';
 import { SearchOptions } from '@/types';
 
 const MORPH = morphologyDataRaw;
@@ -37,13 +38,9 @@ export default function Search() {
   const [inputText, setInputText] = useState('');
   const [query, setQuery] = useState('');
   const [showOptions, setShowOptions] = useState(false);
-  const [advancedOptions, setAdvancedOptions] = useState<SearchOptions>({
-    lemma: false,
-    root: false,
-    fuzzy: false,
-    semantic: false,
-    isRegex: false,
-  });
+  const [advancedOptions, setAdvancedOptions] = useState<SearchOptions>(
+    DEFAULT_SEARCH_OPTIONS,
+  );
   const [selectedAya, setSelectedAya] = useState({ aya: 0, surah: 0 });
   const [page, setPage] = useState(1);
   const [results, setResults] = useState<any[]>([]);
@@ -111,47 +108,37 @@ export default function Search() {
     });
   };
 
-  if (isLoading)
+  function renderLoading() {
     return (
       <ThemedView style={styles.container}>
         <ActivityIndicator size="large" color={tintColor} />
       </ThemedView>
     );
+  }
+  if (isLoading) return renderLoading();
 
-  if (error)
+  function renderLoadError() {
     return (
       <ThemedView style={styles.container}>
         <ThemedText type="defaultSemiBold">{error}</ThemedText>
       </ThemedView>
     );
+  }
+  if (error) return renderLoadError();
 
-  const selectedLabels: string[] = [];
-  if (advancedOptions.lemma) selectedLabels.push(`صيغة: ${counts.lemma}`);
-  if (advancedOptions.root) selectedLabels.push(`جذر: ${counts.root}`);
-  if (advancedOptions.fuzzy) selectedLabels.push(`تقريبي: ${counts.fuzzy}`);
-  if (advancedOptions.semantic)
-    selectedLabels.push(`دلالي: ${(counts as any).semantic || 0}`);
-  if (advancedOptions.isRegex) selectedLabels.push(`النمط (Regex)`);
-
-  const counterText =
-    query.trim() === ''
-      ? ''
-      : selectedLabels.length > 0
-        ? `عدد النتائج: ${counts.total} (${selectedLabels.join('، ')})`
-        : `عدد النتائج: ${counts.total} (نص)`;
+  const counterText = getSearchCounter(query, advancedOptions, counts);
 
   const isBusy = isTyping || isOptionChanging;
-  const showNoResults =
-    !isBusy &&
-    !isLoading &&
-    query.trim() !== '' &&
-    pageResults !== undefined &&
-    pageResults !== null &&
-    results.length === 0 &&
-    pageResults.length === 0;
+  const showNoResults = hasNoSearchResults({
+    isBusy,
+    isLoading,
+    query,
+    pageResults,
+    results,
+  });
 
-  return (
-    <ThemedView style={styles.container}>
+  function renderSearchInput() {
+    return (
       <SearchInput
         value={inputText}
         onChangeText={(text: string) => {
@@ -170,60 +157,44 @@ export default function Search() {
         primaryColor={primaryColor}
         secondaryColor={secondaryColor}
       />
+    );
+  }
 
-      {showOptions && (
-        <SearchAdvancedOptions
-          advancedOptions={advancedOptions}
-          toggleOption={toggleOption}
-        />
-      )}
-
-      {query ? (
-        <ThemedText style={styles.resultCount}>{counterText}</ThemedText>
-      ) : null}
-
-      {(counts as any)?.range &&
-      (counts as any).range > 0 &&
-      results.length > 0 ? (
-        <ThemedView
+  function renderThemedView() {
+    return (
+      <ThemedView
+        style={{
+          backgroundColor: '#e8f5e9',
+          padding: 12,
+          borderRadius: 8,
+          marginBottom: 10,
+          borderColor: '#4caf50',
+          borderWidth: 1,
+        }}
+      >
+        <ThemedText
           style={{
-            backgroundColor: '#e8f5e9',
-            padding: 12,
-            borderRadius: 8,
-            marginBottom: 10,
-            borderColor: '#4caf50',
-            borderWidth: 1,
+            textAlign: 'center',
+            color: '#2e7d32',
+            fontWeight: 'bold',
           }}
         >
-          <ThemedText
-            style={{
-              textAlign: 'center',
-              color: '#2e7d32',
-              fontWeight: 'bold',
-            }}
-          >
-            بحث بالنطاق: تم العثور على {(counts as any).range} آية.
-            {'\n'}يمكنك الضغط على أي من النتائج أسفله للانتقال مباشرة للآية.
-          </ThemedText>
-        </ThemedView>
-      ) : null}
+          بحث بالنطاق: تم العثور على {(counts as any).range} آية.
+          {'\n'}يمكنك الضغط على أي من النتائج أسفله للانتقال مباشرة للآية.
+        </ThemedText>
+      </ThemedView>
+    );
+  }
 
-      <SearchColorLegend />
-
-      {isBusy && results.length === 0 ? (
-        <FlatList
-          data={[1, 2, 3, 4, 5, 6]}
-          keyExtractor={(item) => item.toString()}
-          renderItem={() => <SearchSkeleton />}
-          showsVerticalScrollIndicator={false}
-        />
-      ) : (
-        <FlatList
-          ref={listRef}
-          data={results}
-          style={{ opacity: isBusy && results.length > 0 ? 0.5 : 1 }}
-          keyExtractor={(item) => item.gid.toString()}
-          renderItem={({ item }) => (
+  function renderFlatList() {
+    return (
+      <FlatList
+        ref={listRef}
+        data={results}
+        style={{ opacity: isBusy && results.length > 0 ? 0.5 : 1 }}
+        keyExtractor={(item) => item.gid.toString()}
+        renderItem={({ item }) => {
+          return (
             <SearchResultItem
               item={item}
               onSelectAya={(selected: { aya: number; surah: number }) =>
@@ -231,54 +202,138 @@ export default function Search() {
               }
               disabled={isBusy && results.length > 0}
             />
-          )}
-          onEndReached={() => {
-            if (!hasMore || isLoadingMore) return;
-            setIsLoadingMore(true);
-            setPage((prev) => prev + 1);
-          }}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={
-            isLoadingMore ? (
-              <ThemedView style={{ paddingVertical: 12 }}>
-                <ActivityIndicator size="small" color={tintColor} />
-              </ThemedView>
-            ) : null
-          }
-          ListEmptyComponent={
-            !query.trim() && !inputText.trim() ? (
-              <SearchEmptyState
-                type="initial"
-                primaryColor={primaryColor}
-                dangerColor={dangerColor}
-              />
-            ) : showNoResults ? (
-              <SearchEmptyState
-                type="no-results"
-                primaryColor={primaryColor}
-                dangerColor={dangerColor}
-              />
-            ) : null
-          }
+          );
+        }}
+        onEndReached={() => {
+          if (!hasMore || isLoadingMore) return;
+          setIsLoadingMore(true);
+          setPage((prev) => prev + 1);
+        }}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          isLoadingMore ? (
+            <ThemedView style={{ paddingVertical: 12 }}>
+              <ActivityIndicator size="small" color={tintColor} />
+            </ThemedView>
+          ) : null
+        }
+        ListEmptyComponent={
+          !query.trim() && !inputText.trim() ? (
+            <SearchEmptyState
+              type="initial"
+              primaryColor={primaryColor}
+              dangerColor={dangerColor}
+            />
+          ) : showNoResults ? (
+            <SearchEmptyState
+              type="no-results"
+              primaryColor={primaryColor}
+              dangerColor={dangerColor}
+            />
+          ) : null
+        }
+      />
+    );
+  }
+  function renderScreenContent() {
+    return (
+      <ThemedView style={styles.container}>
+        {renderSearchInput()}
+
+        {showOptions && (
+          <SearchAdvancedOptions
+            advancedOptions={advancedOptions}
+            toggleOption={toggleOption}
+          />
+        )}
+
+        {query ? (
+          <ThemedText style={styles.resultCount}>{counterText}</ThemedText>
+        ) : null}
+
+        {(counts as any)?.range &&
+        (counts as any).range > 0 &&
+        results.length > 0
+          ? renderThemedView()
+          : null}
+
+        <SearchColorLegend />
+
+        {isBusy && results.length === 0 ? (
+          <FlatList
+            data={[1, 2, 3, 4, 5, 6]}
+            keyExtractor={(item) => item.toString()}
+            renderItem={() => {
+              return <SearchSkeleton />;
+            }}
+            showsVerticalScrollIndicator={false}
+          />
+        ) : (
+          renderFlatList()
+        )}
+
+        <TafseerPopup
+          show={selectedAya.aya > 0}
+          setShow={() => setSelectedAya({ aya: 0, surah: 0 })}
+          aya={selectedAya.aya}
+          surah={selectedAya.surah}
         />
-      )}
 
-      <TafseerPopup
-        show={selectedAya.aya > 0}
-        setShow={() => setSelectedAya({ aya: 0, surah: 0 })}
-        aya={selectedAya.aya}
-        surah={selectedAya.surah}
-      />
-
-      <Seo
-        title="البحث - المصحف المفتوح"
-        description="البحث في آيات القرآن الكريم"
-      />
-    </ThemedView>
-  );
+        <Seo
+          title="البحث - المصحف المفتوح"
+          description="البحث في آيات القرآن الكريم"
+        />
+      </ThemedView>
+    );
+  }
+  return renderScreenContent();
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  resultCount: { textAlign: 'right', marginBottom: 6, fontSize: 14 },
-});
+function getSearchCounter(
+  query: string,
+  advancedOptions: SearchOptions,
+  counts: ReturnType<typeof useQuranSearch>['counts'],
+) {
+  const selectedLabels: string[] = [];
+  if (advancedOptions.lemma) selectedLabels.push(`صيغة: ${counts.lemma}`);
+  if (advancedOptions.root) selectedLabels.push(`جذر: ${counts.root}`);
+  if (advancedOptions.fuzzy) selectedLabels.push(`تقريبي: ${counts.fuzzy}`);
+  if (advancedOptions.semantic)
+    selectedLabels.push(`دلالي: ${(counts as any).semantic || 0}`);
+  if (advancedOptions.isRegex) selectedLabels.push(`النمط (Regex)`);
+
+  const counterText =
+    query.trim() === ''
+      ? ''
+      : selectedLabels.length > 0
+        ? `عدد النتائج: ${counts.total} (${selectedLabels.join('، ')})`
+        : `عدد النتائج: ${counts.total} (نص)`;
+
+  return counterText;
+}
+function hasNoSearchResults(state: {
+  isBusy: boolean;
+  isLoading: boolean;
+  query: string;
+  pageResults: unknown[] | null | undefined;
+  results: unknown[];
+}) {
+  const { isBusy, isLoading, query, pageResults, results } = state;
+  const showNoResults =
+    !isBusy &&
+    !isLoading &&
+    query.trim() !== '' &&
+    pageResults !== undefined &&
+    pageResults !== null &&
+    results.length === 0 &&
+    pageResults.length === 0;
+  return showNoResults;
+}
+
+const DEFAULT_SEARCH_OPTIONS: SearchOptions = {
+  lemma: false,
+  root: false,
+  fuzzy: false,
+  semantic: false,
+  isRegex: false,
+};

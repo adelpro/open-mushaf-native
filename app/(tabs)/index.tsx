@@ -12,8 +12,16 @@ import {
   ThemedView,
   TopMenu,
 } from '@/components';
-import { currentAppVersion, mushafRiwaya, topMenuState } from '@/jotai/atoms';
+import { RIWAYAT_LIST } from '@/constants';
+import { useMushafDownload } from '@/hooks';
+import {
+  currentAppVersion,
+  firstLaunchSeenDownloads,
+  mushafRiwaya,
+  topMenuState,
+} from '@/jotai/atoms';
 import { getAppVersion, isWeb } from '@/utils';
+import { downloadFirstLaunchBatch } from '@/utils/downloads/firstLaunch';
 
 export default function HomeScreen() {
   const setShowTopMenu = useSetAtom(topMenuState);
@@ -21,18 +29,34 @@ export default function HomeScreen() {
   const setCurrentVersionValue = useSetAtom(currentAppVersion);
   const currentAppVersionValue = useAtomValue(currentAppVersion);
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);
+  const firstLaunchSeen = useAtomValue(firstLaunchSeenDownloads);
+  const setFirstLaunchSeen = useSetAtom(firstLaunchSeenDownloads);
+  const { startRiwaya } = useMushafDownload();
 
   useEffect(() => {
     const appVersion = getAppVersion();
     const show = !isWeb && currentAppVersionValue !== appVersion;
     setShowChangeLogs(show);
   }, [currentAppVersionValue]);
+  // download all riwaya on first app launch
+  useEffect(() => {
+    if (firstLaunchSeen) return;
+    let active = true;
+    void downloadFirstLaunchBatch(RIWAYAT_LIST, startRiwaya, () => active).then(
+      (complete) => {
+        if (complete) setFirstLaunchSeen(true);
+      },
+    );
+    return () => {
+      active = false;
+    };
+  }, [firstLaunchSeen, setFirstLaunchSeen, startRiwaya]);
 
   const handleCloseChangeLogs = useCallback(() => {
     setShowChangeLogs(false);
     setCurrentVersionValue(getAppVersion());
   }, [setCurrentVersionValue]);
-
+  console.log(mushafRiwayaValue);
   return (
     <ThemedView style={styles.container}>
       <Seo

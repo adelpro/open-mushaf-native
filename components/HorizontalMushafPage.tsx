@@ -1,9 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   LayoutChangeEvent,
   Platform,
-  StyleSheet,
   useColorScheme,
 } from 'react-native';
 
@@ -33,6 +32,7 @@ import {
 } from '@/jotai/atoms';
 import { triggerSelectionHaptic } from '@/utils/triggerHaptic';
 
+import { styles } from './HorizontalMushafPage.styles';
 import { PageOverlay } from './PageOverlay';
 import { ThemedText } from './ThemedText';
 
@@ -67,16 +67,7 @@ export function HorizontalMushafPage({ handleSetPage, topOffset }: Props) {
 
   useImagePreloader(currentPage);
 
-  const [dimensions, setDimensions] = useState({
-    customPageWidth: 0,
-    customPageHeight: 0,
-  });
-
-  // Records image dimensions used to position PageOverlay.
-  const handleImageLayout = (event: LayoutChangeEvent) => {
-    const { width, height } = event.nativeEvent.layout;
-    setDimensions({ customPageWidth: width, customPageHeight: height });
-  };
+  const { dimensions, handleImageLayout } = usePageDimensions();
 
   const handlePageChange = useCallback(
     (delta: number) => {
@@ -149,7 +140,7 @@ export function HorizontalMushafPage({ handleSetPage, topOffset }: Props) {
     };
   });
 
-  if (assetIsLoading) {
+  function renderAssetLoading() {
     return (
       <SafeAreaView
         style={styles.loadingContainer}
@@ -159,8 +150,9 @@ export function HorizontalMushafPage({ handleSetPage, topOffset }: Props) {
       </SafeAreaView>
     );
   }
+  if (assetIsLoading) return renderAssetLoading();
 
-  if (assetError) {
+  function renderAssetError() {
     return (
       <SafeAreaView
         style={styles.errorContainer}
@@ -170,55 +162,72 @@ export function HorizontalMushafPage({ handleSetPage, topOffset }: Props) {
       </SafeAreaView>
     );
   }
+  if (assetError) return renderAssetError();
 
-  return (
-    <GestureDetector gesture={panGestureHandler}>
-      <Animated.View style={[styles.imageContainer, animatedStyle]}>
+  function renderImage() {
+    return (
+      <Image
+        style={[
+          styles.image,
+          {
+            width: '100%',
+            height: undefined,
+            aspectRatio: 0.7,
+          },
+          colorScheme === 'dark' && {
+            opacity: mushafContrastValue,
+          },
+          colorScheme !== 'dark' &&
+            themeConfig.imageOpacity < 1 && {
+              opacity: themeConfig.imageOpacity,
+            },
+        ]}
+        source={{ uri: asset?.localUri }}
+        contentFit="fill"
+        onLayout={handleImageLayout}
+      />
+    );
+  }
+
+  function renderImageContainer() {
+    function renderSafeAreaView() {
+      function renderContent() {
+        function renderImage2() {
+          return (
+            <Image
+              style={[
+                styles.image,
+                { width: '100%' },
+                colorScheme === 'dark' && {
+                  opacity: mushafContrastValue,
+                },
+                colorScheme !== 'dark' &&
+                  themeConfig.imageOpacity < 1 && {
+                    opacity: themeConfig.imageOpacity,
+                  },
+              ]}
+              source={{ uri: asset?.localUri }}
+              contentFit="fill"
+              onLayout={handleImageLayout}
+            />
+          );
+        }
+        return (
+          <Fragment>
+            {isLandscape ? (
+              <ScrollView style={styles.scrollContainer}>
+                {renderImage()}
+              </ScrollView>
+            ) : (
+              renderImage2()
+            )}
+          </Fragment>
+        );
+      }
+      return (
         <SafeAreaView style={{ flex: 1 }} edges={topOffset > 0 ? ['top'] : []}>
           {asset?.localUri ? (
-            <>
-              {isLandscape ? (
-                <ScrollView style={styles.scrollContainer}>
-                  <Image
-                    style={[
-                      styles.image,
-                      {
-                        width: '100%',
-                        height: undefined,
-                        aspectRatio: 0.7,
-                      },
-                      colorScheme === 'dark' && {
-                        opacity: mushafContrastValue,
-                      },
-                      colorScheme !== 'dark' &&
-                        themeConfig.imageOpacity < 1 && {
-                          opacity: themeConfig.imageOpacity,
-                        },
-                    ]}
-                    source={{ uri: asset?.localUri }}
-                    contentFit="fill"
-                    onLayout={handleImageLayout}
-                  />
-                </ScrollView>
-              ) : (
-                <Image
-                  style={[
-                    styles.image,
-                    { width: '100%' },
-                    colorScheme === 'dark' && {
-                      opacity: mushafContrastValue,
-                    },
-                    colorScheme !== 'dark' &&
-                      themeConfig.imageOpacity < 1 && {
-                        opacity: themeConfig.imageOpacity,
-                      },
-                  ]}
-                  source={{ uri: asset?.localUri }}
-                  contentFit="fill"
-                  onLayout={handleImageLayout}
-                />
-              )}
-            </>
+            renderContent()
           ) : (
             <ActivityIndicator size="large" color={tintColor} />
           )}
@@ -228,37 +237,32 @@ export function HorizontalMushafPage({ handleSetPage, topOffset }: Props) {
             topOffset={topOffset}
           />
         </SafeAreaView>
+      );
+    }
+    return (
+      <Animated.View style={[styles.imageContainer, animatedStyle]}>
+        {renderSafeAreaView()}
       </Animated.View>
+    );
+  }
+  return (
+    <GestureDetector gesture={panGestureHandler}>
+      {renderImageContainer()}
     </GestureDetector>
   );
 }
 
-const styles = StyleSheet.create({
-  imageContainer: {
-    width: '100%',
-    height: '100%',
-    maxWidth: 640,
-    overflow: 'hidden',
-  },
-  scrollContainer: {
-    width: '100%',
-    height: '100%',
-    maxWidth: 640,
-  },
-  image: {
-    flex: 1,
-  },
-  errorContainer: {
-    width: '100%',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  loadingContainer: {
-    width: '100%',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+function usePageDimensions() {
+  const [dimensions, setDimensions] = useState({
+    customPageWidth: 0,
+    customPageHeight: 0,
+  });
+
+  // Records image dimensions used to position PageOverlay.
+  const handleImageLayout = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    setDimensions({ customPageWidth: width, customPageHeight: height });
+  };
+
+  return { dimensions, handleImageLayout };
+}
