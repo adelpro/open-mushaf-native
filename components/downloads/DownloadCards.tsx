@@ -42,34 +42,23 @@ interface RiwayaCardProps {
   onDelete: () => void;
 }
 
-export function RiwayaCard({
-  row,
-  isDone,
-  isDownloading,
-  progress,
-  primaryColor,
-  dangerColor,
-  textColor,
-  onDownload,
-  onCancel,
-  onDelete,
-}: RiwayaCardProps) {
-  const ratio =
-    progress && progress.total > 0
-      ? Math.min(1, progress.downloaded / progress.total)
-      : isDone
-        ? 1
-        : 0;
-  return (
-    <View
-      style={[
-        styles.card,
-        {
-          backgroundColor: 'rgba(255,255,255,0.04)',
-          borderColor: textColor + '22',
-        },
-      ]}
-    >
+export function RiwayaCard(props: RiwayaCardProps) {
+  const {
+    row,
+    isDone,
+    isDownloading,
+    progress,
+    primaryColor,
+    dangerColor,
+    textColor,
+    onDownload,
+    onCancel,
+    onDelete,
+  } = props;
+  const ratio = getDownloadRatio(progress, isDone);
+
+  function renderCardHeader() {
+    return (
       <View style={styles.cardHeader}>
         <ThemedText type="defaultSemiBold" style={styles.riwayaName}>
           {getRiwayaLabel(row.riwaya)}
@@ -93,6 +82,64 @@ export function RiwayaCard({
           </ThemedText>
         )}
       </View>
+    );
+  }
+
+  function renderCardActions() {
+    function renderContent() {
+      return (
+        <>
+          <ActionChip
+            iconName="download"
+            iconColor={primaryColor}
+            label="تنزيل"
+            onPress={onDownload}
+            disabled={progress?.status === 'downloading'}
+          />
+          {row.pagesDownloaded > 0 && (
+            <ActionChip
+              iconName="trash-2"
+              iconColor={dangerColor}
+              label="حذف"
+              onPress={onDelete}
+            />
+          )}
+        </>
+      );
+    }
+    return (
+      <View style={styles.cardActions}>
+        {isDownloading ? (
+          <ActionChip
+            iconName="x-circle"
+            iconColor={dangerColor}
+            label="إلغاء"
+            onPress={onCancel}
+          />
+        ) : isDone ? (
+          <ActionChip
+            iconName="trash-2"
+            iconColor={dangerColor}
+            label="حذف"
+            onPress={onDelete}
+          />
+        ) : (
+          renderContent()
+        )}
+      </View>
+    );
+  }
+  return (
+    <View
+      style={[
+        styles.card,
+        {
+          backgroundColor: 'rgba(255,255,255,0.04)',
+          borderColor: textColor + '22',
+        },
+      ]}
+    >
+      {renderCardHeader()}
 
       <ThemedText
         style={[styles.cardMeta, row.bytes === 0 && { opacity: 0.7 }]}
@@ -115,31 +162,7 @@ export function RiwayaCard({
         />
       </View>
 
-      <View style={styles.cardActions}>
-        {isDownloading ? (
-          <ActionChip
-            iconName="x-circle"
-            iconColor={dangerColor}
-            label="إلغاء"
-            onPress={onCancel}
-          />
-        ) : isDone ? (
-          <ActionChip
-            iconName="trash-2"
-            iconColor={dangerColor}
-            label="حذف"
-            onPress={onDelete}
-          />
-        ) : (
-          <ActionChip
-            iconName="download"
-            iconColor={primaryColor}
-            label="تنزيل"
-            onPress={onDownload}
-            disabled={progress?.status === 'downloading'}
-          />
-        )}
-      </View>
+      {renderCardActions()}
     </View>
   );
 }
@@ -191,32 +214,26 @@ interface TafseerCardProps {
   onDelete: () => void;
 }
 
-export function TafseerCard({
-  row,
-  isDownloading,
-  progress,
-  primaryColor,
-  dangerColor,
-  textColor,
-  onDownload,
-  onCancel,
-  onDelete,
-}: TafseerCardProps) {
+export function TafseerCard(props: TafseerCardProps) {
+  const {
+    row,
+    isDownloading,
+    progress,
+    primaryColor,
+    dangerColor,
+    textColor,
+    onDownload,
+    onCancel,
+    onDelete,
+  } = props;
   const ratio = isDownloading
     ? Math.max(0, Math.min(1, (progress?.downloaded ?? 0) / 1))
     : row.cached
       ? 1
       : 0;
-  return (
-    <View
-      style={[
-        styles.card,
-        {
-          backgroundColor: 'rgba(255,255,255,0.04)',
-          borderColor: textColor + '22',
-        },
-      ]}
-    >
+
+  function renderCardHeader2() {
+    return (
       <View style={styles.cardHeader}>
         <ThemedText type="defaultSemiBold" style={styles.riwayaName}>
           {getTafseerLabel(row.key)}
@@ -235,21 +252,11 @@ export function TafseerCard({
           </ThemedText>
         )}
       </View>
+    );
+  }
 
-      <ThemedText style={styles.cardMeta}>{formatBytes(row.bytes)}</ThemedText>
-
-      <View style={styles.progressBarTrack}>
-        <View
-          style={[
-            styles.progressBarFill,
-            {
-              width: `${ratio * 100}%`,
-              backgroundColor: row.cached ? primaryColor : primaryColor + 'AA',
-            },
-          ]}
-        />
-      </View>
-
+  function renderCardActions2() {
+    return (
       <View style={styles.cardActions}>
         {isDownloading ? (
           <ActionChip
@@ -274,6 +281,46 @@ export function TafseerCard({
           />
         )}
       </View>
+    );
+  }
+  return (
+    <View
+      style={[
+        styles.card,
+        {
+          backgroundColor: 'rgba(255,255,255,0.04)',
+          borderColor: textColor + '22',
+        },
+      ]}
+    >
+      {renderCardHeader2()}
+
+      <ThemedText style={styles.cardMeta}>{formatBytes(row.bytes)}</ThemedText>
+
+      <View style={styles.progressBarTrack}>
+        <View
+          style={[
+            styles.progressBarFill,
+            {
+              width: `${ratio * 100}%`,
+              backgroundColor: row.cached ? primaryColor : primaryColor + 'AA',
+            },
+          ]}
+        />
+      </View>
+
+      {renderCardActions2()}
     </View>
   );
+}
+
+function getDownloadRatio(
+  progress: RiwayaCardProps['progress'],
+  isDone: boolean,
+) {
+  return progress && progress.total > 0
+    ? Math.min(1, progress.downloaded / progress.total)
+    : isDone
+      ? 1
+      : 0;
 }

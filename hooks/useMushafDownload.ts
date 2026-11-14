@@ -28,7 +28,7 @@
 
 import { useCallback, useMemo } from 'react';
 
-import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { atom, useAtom, useAtomValue, useSetAtom, useStore } from 'jotai';
 
 import { downloadedRiwayat } from '@/jotai/atoms';
 import { Riwaya } from '@/types';
@@ -115,6 +115,7 @@ async function downloadWithRetry(
 
 // -- the hook --------------------------------------------------------
 export function useMushafDownload(options?: { concurrency?: number }) {
+  const store = useStore();
   const concurrency = options?.concurrency ?? DEFAULT_CONCURRENCY;
   const [progressMap, setProgressMap] = useAtom(downloadProgressAtom);
   const setDownloaded = useSetAtom(downloadedRiwayat);
@@ -133,11 +134,12 @@ export function useMushafDownload(options?: { concurrency?: number }) {
 
   const startRiwaya = useCallback(
     async (riwaya: Riwaya): Promise<void> => {
-      if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 32)
-        throw new Error('Invalid download concurrency');
+      validateConcurrency(concurrency);
       const total = riwayaTotalPages(riwaya);
       const id = resourceKeyOf({ kind: 'mushaf', riwaya });
       const abort = acquireDownload();
+      const wasDownloaded = store.get(downloadedRiwayat).includes(riwaya);
+      let cacheKnownIncomplete = false;
       let doneCount = 0;
       setProgressMap((prev) => ({
         ...prev,
@@ -150,7 +152,10 @@ export function useMushafDownload(options?: { concurrency?: number }) {
         for (let page = 1; page <= total; page++) {
           throwIfAborted(abort.signal);
           const cached = await isMushafPageCached(riwaya, page);
-          if (!cached) pending.push(page);
+          if (!cached) {
+            cacheKnownIncomplete = true;
+            pending.push(page);
+          }
         }
 
         setProgressMap((prev) => ({
@@ -210,6 +215,14 @@ export function useMushafDownload(options?: { concurrency?: number }) {
           [id]: { downloaded: total, total, status: 'done' },
         }));
       } catch (error) {
+        // An interrupted read-only scan cannot invalidate an existing pack.
+        if (wasDownloaded && !cacheKnownIncomplete) {
+          setProgressMap((prev) => ({
+            ...prev,
+            [id]: { downloaded: total, total, status: 'done' },
+          }));
+          throw error;
+        }
         setDownloaded((prev) => prev.filter((value) => value !== riwaya));
         setProgressMap((prev) => ({
           ...prev,
@@ -224,7 +237,7 @@ export function useMushafDownload(options?: { concurrency?: number }) {
         releaseDownload(abort);
       }
     },
-    [concurrency, setProgressMap, setDownloaded],
+    [concurrency, setProgressMap, setDownloaded, store],
   );
 
   // Read from disk on demand for a one-shot accessor. Used by the
@@ -259,3 +272,8 @@ export function useDownloadProgress(): ProgressMap {
 /** Re-export so other modules can build their own controllers
  *  with the same helpers (e.g. for tafseer). */
 export { downloadTafseer };
+
+function validateConcurrency(concurrency: number) {
+  if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 32)
+    throw new Error('Invalid download concurrency');
+}

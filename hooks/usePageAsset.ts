@@ -39,11 +39,7 @@ export const usePageAsset = (page: number) => {
 
         // Prefer an explicitly downloaded page. The CDN remains the normal
         // online fallback when this page has not been cached.
-        try {
-          cachedUri = await getMushafPageUri(mushafRiwayaValue, page);
-        } catch {
-          // Browser storage can be unavailable while the CDN remains readable.
-        }
+        cachedUri = await getOptionalCachedPage(mushafRiwayaValue, page);
         if (!isActive && cachedUri) {
           releaseMushafPageUri(cachedUri);
           cachedUri = undefined;
@@ -54,9 +50,7 @@ export const usePageAsset = (page: number) => {
         }
       } catch (err) {
         if (isActive) {
-          setError(
-            err instanceof Error ? err.message : ERROR_MESSAGES.IMAGE_NOT_FOUND,
-          );
+          setError(getAssetError(err));
           setAsset(null);
         }
       } finally {
@@ -74,3 +68,21 @@ export const usePageAsset = (page: number) => {
 
   return { asset, isLoading, error };
 };
+
+function getAssetError(error: unknown) {
+  return error instanceof Error
+    ? error.message
+    : ERROR_MESSAGES.IMAGE_NOT_FOUND;
+}
+
+async function getOptionalCachedPage(
+  riwaya: Parameters<typeof getMushafPageUri>[0],
+  page: number,
+) {
+  try {
+    return await getMushafPageUri(riwaya, page);
+  } catch {
+    // Browser storage can be unavailable while the CDN remains readable.
+    return undefined;
+  }
+}

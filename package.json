@@ -49,7 +49,10 @@
     "clean:all": "rimraf node_modules .expo android ios",
     "fresh": "yarn clean:all && yarn install && yarn prebuild",
     "docs:start": "cd docs && npx fumapress",
-    "check:codacy": "node scripts/check-codacy-findings.mjs"
+    "check:codacy": "node scripts/check-codacy-findings.mjs",
+    "codacy": "node scripts/codacy-local.mjs",
+    "codacy:install": "npm install --prefix .expo/codacy-cli --no-save --package-lock=false @codacy/analysis-cli@0.29.1",
+    "codacy:check": "node scripts/codacy-local.mjs analyze --tool ESLint9 --tool jackson --tool Lizard --output-format json --output .expo/codacy-analysis/local-results.json"
   },
   "jest": {
     "preset": "jest-expo"

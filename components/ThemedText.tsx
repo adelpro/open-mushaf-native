@@ -1,6 +1,8 @@
-import { StyleSheet, Text, type TextProps } from 'react-native';
+import { Text, type TextProps } from 'react-native';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
+
+import { styles } from './ThemedText.styles';
 
 /**
  * Props for the ThemedText component.
@@ -46,34 +48,3 @@ export function ThemedText({
     />
   );
 }
-
-const styles = StyleSheet.create({
-  default: {
-    fontFamily: 'Tajawal_400Regular',
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  defaultSemiBold: {
-    fontFamily: 'Tajawal_400Regular',
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '600',
-  },
-  title: {
-    fontFamily: 'Tajawal_700Bold',
-    fontSize: 32,
-    fontWeight: 'bold',
-    lineHeight: 32,
-  },
-  subtitle: {
-    fontFamily: 'Tajawal_700Bold',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  link: {
-    fontFamily: 'Tajawal_400Regular',
-    lineHeight: 30,
-    fontSize: 16,
-    color: '#0a7ea4',
-  },
-});

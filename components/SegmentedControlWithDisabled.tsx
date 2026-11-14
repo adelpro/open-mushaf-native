@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { SegmentedControlProps } from '@/types';
@@ -13,17 +13,19 @@ import { ThemedView } from './ThemedView';
  * @param props - Mapped stylistic hooks and handlers bounding the tabs.
  * @returns A bordered horizontal toggle block tracking disabled arrays.
  */
-export function SegmentedControlWithDisabled({
-  options,
-  onSelectionChange,
-  initialSelectedIndex = 0,
-  activeColor = '#007AFF',
-  textColor = '#000',
-  activeTextColor = '#fff',
-  disabledTextColor = '#999',
-  activeDisabledColor = '#E0E0E0',
-  disabledIndices = [],
-}: SegmentedControlProps) {
+export function SegmentedControlWithDisabled(props: SegmentedControlProps) {
+  const {
+    options,
+    onSelectionChange,
+    initialSelectedIndex = 0,
+    activeColor = '#007AFF',
+    textColor = '#000',
+    activeTextColor = '#fff',
+    disabledTextColor = '#999',
+    activeDisabledColor = '#E0E0E0',
+    disabledIndices = [],
+  } = props;
+
   // Default to -1;
   const [selectedIndex, setSelectedIndex] = useState(
     initialSelectedIndex !== undefined ? initialSelectedIndex : -1,
@@ -46,6 +48,25 @@ export function SegmentedControlWithDisabled({
     <ThemedView style={styles.container}>
       {options.map((option, index) => {
         const isDisabled = disabledIndices.includes(index);
+
+        function renderOptionText() {
+          return (
+            <ThemedText
+              style={[
+                styles.optionText,
+                {
+                  color: isDisabled
+                    ? disabledTextColor
+                    : index === selectedIndex
+                      ? activeTextColor
+                      : textColor,
+                },
+              ]}
+            >
+              {option}
+            </ThemedText>
+          );
+        }
         return (
           <TouchableOpacity
             key={index}
@@ -64,20 +85,7 @@ export function SegmentedControlWithDisabled({
               disabled: isDisabled,
             }}
           >
-            <ThemedText
-              style={[
-                styles.optionText,
-                {
-                  color: isDisabled
-                    ? disabledTextColor
-                    : index === selectedIndex
-                      ? activeTextColor
-                      : textColor,
-                },
-              ]}
-            >
-              {option}
-            </ThemedText>
+            {renderOptionText()}
           </TouchableOpacity>
         );
       })}

@@ -19,47 +19,67 @@ export function validatePng(bytes: Uint8Array): void {
     const length = view.getUint32(offset);
     const type = String.fromCharCode(...bytes.subarray(offset + 4, offset + 8));
     if (length > bytes.length - offset - 12) throw new Error('Truncated PNG');
-    if (
-      offset === 8 &&
-      (type !== 'IHDR' ||
-        length !== 13 ||
-        !view.getUint32(offset + 8) ||
-        !view.getUint32(offset + 12))
-    )
-      throw new Error('Invalid PNG header');
+    if (offset === 8) validatePngHeader(view, type, length);
     if (type === 'IDAT' && length > 0) hasData = true;
-    let crc = 0xffffffff;
-    for (let i = offset + 4; i < offset + 8 + length; i++) {
-      crc = CRC_TABLE[(crc ^ bytes[i]) & 0xff] ^ (crc >>> 8);
-    }
-    if ((crc ^ 0xffffffff) >>> 0 !== view.getUint32(offset + 8 + length))
-      throw new Error('Corrupt PNG checksum');
+    validatePngChecksum(bytes, view, offset, length);
     offset += length + 12;
     if (type === 'IEND') {
-      if (length !== 0 || offset !== bytes.length || !hasData)
-        throw new Error('Invalid PNG end');
+      validatePngEnd(length, offset, bytes.length, hasData);
       return;
     }
   }
   throw new Error('Incomplete PNG');
 }
 
+function validatePngEnd(
+  length: number,
+  offset: number,
+  total: number,
+  hasData: boolean,
+) {
+  if (length !== 0 || offset !== total || !hasData)
+    throw new Error('Invalid PNG end');
+}
+
+function validatePngHeader(view: DataView, type: string, length: number) {
+  if (
+    type !== 'IHDR' ||
+    length !== 13 ||
+    !view.getUint32(16) ||
+    !view.getUint32(20)
+  )
+    throw new Error('Invalid PNG header');
+}
+
+function validatePngChecksum(
+  bytes: Uint8Array,
+  view: DataView,
+  offset: number,
+  length: number,
+) {
+  let crc = 0xffffffff;
+  for (let i = offset + 4; i < offset + 8 + length; i++) {
+    crc = CRC_TABLE[(crc ^ bytes[i]) & 0xff] ^ (crc >>> 8);
+  }
+  if ((crc ^ 0xffffffff) >>> 0 !== view.getUint32(offset + 8 + length))
+    throw new Error('Corrupt PNG checksum');
+}
+
+function isTafseerRow(row: TafseerAya | null | undefined): boolean {
+  return Boolean(
+    row &&
+    Number.isInteger(row.sura) &&
+    row.sura >= 1 &&
+    Number.isInteger(row.aya) &&
+    row.aya >= 1 &&
+    typeof row.text === 'string',
+  );
+}
+
 // Validate structure and completeness; preserve source metadata, including legacy typos.
 export function parseTafseer(json: string, key?: TafseerKey): TafseerAya[] {
   const data: unknown = JSON.parse(json);
-  if (
-    !Array.isArray(data) ||
-    data.length === 0 ||
-    !data.every(
-      (row) =>
-        row &&
-        Number.isInteger(row.sura) &&
-        row.sura >= 1 &&
-        Number.isInteger(row.aya) &&
-        row.aya >= 1 &&
-        typeof row.text === 'string',
-    )
-  )
+  if (!Array.isArray(data) || data.length === 0 || !data.every(isTafseerRow))
     throw new Error('Invalid tafseer data');
   if (key && data.length !== (key === 'nozool-wahidy' ? 506 : 6236)) {
     throw new Error('Incomplete tafseer dataset');

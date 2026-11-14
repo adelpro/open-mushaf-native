@@ -101,11 +101,67 @@ export default function RootLayout() {
     return null;
   }
 
-  return (
-    <ErrorBoundary>
-      <NotificationProvider>
-        <HelmetProvider>
-          <Seo />
+  function renderThemeProvider() {
+    function renderStack() {
+      return (
+        <Stack
+          screenOptions={{
+            headerTitleStyle: { fontFamily: 'Tajawal_700Bold' },
+            contentStyle: {
+              maxWidth: 640,
+              alignSelf: 'center',
+              width: '100%',
+            },
+          }}
+        >
+          <Stack.Screen
+            name="(tabs)"
+            options={{ headerShown: false, title: 'الرئيسية' }}
+          />
+          <Stack.Screen name="+not-found" />
+          <Stack.Screen
+            name="search"
+            options={{
+              title: 'بحث',
+              headerTitleStyle: {
+                fontFamily: 'Tajawal_400Regular',
+              },
+            }}
+          />
+          <Stack.Screen
+            name="navigation"
+            options={{
+              title: 'تنقل',
+            }}
+          />
+          <Stack.Screen
+            name="tutorial"
+            options={{
+              headerShown: !!finishedTutorialValue,
+              title: 'جولة تعليمية',
+            }}
+          />
+          <Stack.Screen name="featureDetails" />
+          <Stack.Screen
+            name="tracker"
+            options={{ headerShown: true, title: 'الورد اليومي' }}
+          />
+        </Stack>
+      );
+    }
+    return (
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        {!finishedTutorialValue && <Redirect href="/tutorial" />}
+        {renderStack()}
+        <Notification />
+      </ThemeProvider>
+    );
+  }
+
+  function renderNotificationProvider() {
+    function renderHelmetProvider() {
+      function renderGestureHandlerRootView() {
+        return (
           <GestureHandlerRootView
             style={{
               flex: 1,
@@ -117,59 +173,21 @@ export default function RootLayout() {
           >
             <SafeAreaProvider>
               <StatusBar style="auto" />
-              <ThemeProvider
-                value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-              >
-                {!finishedTutorialValue && <Redirect href="/tutorial" />}
-                <Stack
-                  screenOptions={{
-                    headerTitleStyle: { fontFamily: 'Tajawal_700Bold' },
-                    contentStyle: {
-                      maxWidth: 640,
-                      alignSelf: 'center',
-                      width: '100%',
-                    },
-                  }}
-                >
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{ headerShown: false, title: 'الرئيسية' }}
-                  />
-                  <Stack.Screen name="+not-found" />
-                  <Stack.Screen
-                    name="search"
-                    options={{
-                      title: 'بحث',
-                      headerTitleStyle: {
-                        fontFamily: 'Tajawal_400Regular',
-                      },
-                    }}
-                  />
-                  <Stack.Screen
-                    name="navigation"
-                    options={{
-                      title: 'تنقل',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="tutorial"
-                    options={{
-                      headerShown: !!finishedTutorialValue,
-                      title: 'جولة تعليمية',
-                    }}
-                  />
-                  <Stack.Screen name="featureDetails" />
-                  <Stack.Screen
-                    name="tracker"
-                    options={{ headerShown: true, title: 'الورد اليومي' }}
-                  />
-                </Stack>
-                <Notification />
-              </ThemeProvider>
+              {renderThemeProvider()}
             </SafeAreaProvider>
           </GestureHandlerRootView>
+        );
+      }
+      return (
+        <HelmetProvider>
+          <Seo />
+          {renderGestureHandlerRootView()}
         </HelmetProvider>
-      </NotificationProvider>
-    </ErrorBoundary>
-  );
+      );
+    }
+    return (
+      <NotificationProvider>{renderHelmetProvider()}</NotificationProvider>
+    );
+  }
+  return <ErrorBoundary>{renderNotificationProvider()}</ErrorBoundary>;
 }

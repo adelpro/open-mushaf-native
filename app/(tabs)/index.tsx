@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
-import { useAtom, useAtomValue, useSetAtom } from 'jotai/react';
+import { useAtomValue, useSetAtom } from 'jotai/react';
 
 import {
   ChangeLogs,
@@ -16,12 +16,12 @@ import { RIWAYAT_LIST } from '@/constants';
 import { useMushafDownload } from '@/hooks';
 import {
   currentAppVersion,
-  downloadedRiwayat,
   firstLaunchSeenDownloads,
   mushafRiwaya,
   topMenuState,
 } from '@/jotai/atoms';
 import { getAppVersion, isWeb } from '@/utils';
+import { downloadFirstLaunchBatch } from '@/utils/downloads/firstLaunch';
 
 export default function HomeScreen() {
   const setShowTopMenu = useSetAtom(topMenuState);
@@ -31,7 +31,6 @@ export default function HomeScreen() {
   const mushafRiwayaValue = useAtomValue(mushafRiwaya);
   const firstLaunchSeen = useAtomValue(firstLaunchSeenDownloads);
   const setFirstLaunchSeen = useSetAtom(firstLaunchSeenDownloads);
-  const [downloadedRiwayas, setDownloadedRiwayat] = useAtom(downloadedRiwayat);
   const { startRiwaya } = useMushafDownload();
 
   useEffect(() => {
@@ -42,21 +41,16 @@ export default function HomeScreen() {
   // download all riwaya on first app launch
   useEffect(() => {
     if (firstLaunchSeen) return;
-    void (async () => {
-      for (const riwaya of RIWAYAT_LIST) {
-        try {
-          await startRiwaya(riwaya);
-          setDownloadedRiwayat((previous) =>
-            previous.includes(riwaya) ? previous : [...previous, riwaya],
-          );
-        } catch {
-          // The downloads screen can retry a failed first-launch download.
-        } finally {
-          setFirstLaunchSeen(true);
-        }
-      }
-    })();
-  }, [firstLaunchSeen, setDownloadedRiwayat, setFirstLaunchSeen, startRiwaya]);
+    let active = true;
+    void downloadFirstLaunchBatch(RIWAYAT_LIST, startRiwaya, () => active).then(
+      (complete) => {
+        if (complete) setFirstLaunchSeen(true);
+      },
+    );
+    return () => {
+      active = false;
+    };
+  }, [firstLaunchSeen, setFirstLaunchSeen, startRiwaya]);
 
   const handleCloseChangeLogs = useCallback(() => {
     setShowChangeLogs(false);
@@ -72,7 +66,7 @@ export default function HomeScreen() {
       <ReadingPositionBanner />
       <ChangeLogs visible={showChangeLogs} onClose={handleCloseChangeLogs} />
       <Pressable style={styles.content} onPress={() => setShowTopMenu(true)}>
-        {mushafRiwayaValue === undefined || downloadedRiwayas.length === 0 ? (
+        {mushafRiwayaValue === undefined ? (
           <SelectRiwaya />
         ) : (
           <>

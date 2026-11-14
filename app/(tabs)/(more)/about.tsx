@@ -1,8 +1,7 @@
-import { StyleSheet } from 'react-native';
-
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { ExternalLink, Seo, ThemedText, ThemedView } from '@/components';
+import { styles } from '@/styles/screens/about.styles';
 import { ExternalLinkType } from '@/types';
 import { getAppVersion, getBuildVersion } from '@/utils';
 
@@ -55,24 +54,11 @@ export default function AboutScreen() {
     'صور عالية الجودة من مجمع الملك فهد لطباعة المصحف الشريف.',
   ];
 
-  return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <Seo
-        title="المصحف المفتوح - حول التطبيق"
-        description="معلومات عن تطبيق المصحف المفتوح - المصادر والميزات"
-      />
-      <ThemedView style={styles.mainContent}>
-        <ThemedText
-          type="title"
-          style={styles.title}
-          accessible={true}
-          accessibilityLabel="المصادر"
-        >
-          المصادر
-        </ThemedText>
-
-        <ThemedView style={styles.listContainer}>
-          {sourcesList.map(({ text, link, label }, index) => (
+  function renderListContainer() {
+    return (
+      <ThemedView style={styles.listContainer}>
+        {sourcesList.map(({ text, link, label }, index) => {
+          return (
             <ThemedView style={styles.listItem} key={index} accessible={true}>
               <ThemedText style={styles.bullet}>•</ThemedText>
               <ThemedText style={styles.listText}>
@@ -88,8 +74,61 @@ export default function AboutScreen() {
                 </ExternalLink>
               </ThemedText>
             </ThemedView>
-          ))}
+          );
+        })}
+      </ThemedView>
+    );
+  }
+
+  function renderListContainer2() {
+    function renderListItem() {
+      return (
+        <ThemedView style={styles.listItem}>
+          <ThemedText style={styles.bullet}>•</ThemedText>
+          <ThemedText style={styles.listText}>
+            البرنامج مفتوح المصدر:&nbsp;
+            <ExternalLink
+              href="https://github.com/adelpro/open-mushaf-native"
+              style={styles.link}
+              accessible={true}
+              accessibilityLabel="Open Mushaf Native repository"
+              accessibilityHint="فتح الرابط إلى مستودع Open Mushaf Native"
+            >
+              open-mushaf-native
+            </ExternalLink>
+          </ThemedText>
         </ThemedView>
+      );
+    }
+    return (
+      <ThemedView style={styles.listContainer}>
+        {featuresList.map((feature, index) => {
+          return (
+            <ThemedView style={styles.listItem} key={index} accessible={true}>
+              <ThemedText style={styles.bullet}>•</ThemedText>
+              <ThemedText style={styles.listText}>{feature}</ThemedText>
+            </ThemedView>
+          );
+        })}
+
+        {renderListItem()}
+      </ThemedView>
+    );
+  }
+
+  function renderMainContent() {
+    return (
+      <ThemedView style={styles.mainContent}>
+        <ThemedText
+          type="title"
+          style={styles.title}
+          accessible={true}
+          accessibilityLabel="المصادر"
+        >
+          المصادر
+        </ThemedText>
+
+        {renderListContainer()}
 
         <ThemedText
           type="title"
@@ -100,30 +139,7 @@ export default function AboutScreen() {
           الميزات
         </ThemedText>
 
-        <ThemedView style={styles.listContainer}>
-          {featuresList.map((feature, index) => (
-            <ThemedView style={styles.listItem} key={index} accessible={true}>
-              <ThemedText style={styles.bullet}>•</ThemedText>
-              <ThemedText style={styles.listText}>{feature}</ThemedText>
-            </ThemedView>
-          ))}
-
-          <ThemedView style={styles.listItem}>
-            <ThemedText style={styles.bullet}>•</ThemedText>
-            <ThemedText style={styles.listText}>
-              البرنامج مفتوح المصدر:&nbsp;
-              <ExternalLink
-                href="https://github.com/adelpro/open-mushaf-native"
-                style={styles.link}
-                accessible={true}
-                accessibilityLabel="Open Mushaf Native repository"
-                accessibilityHint="فتح الرابط إلى مستودع Open Mushaf Native"
-              >
-                open-mushaf-native
-              </ExternalLink>
-            </ThemedText>
-          </ThemedView>
-        </ThemedView>
+        {renderListContainer2()}
 
         <ThemedText style={styles.copyright} accessible={true}>
           © {new Date().getFullYear()} Open-Mushaf. جميع الحقوق محفوظة.
@@ -137,68 +153,15 @@ export default function AboutScreen() {
           الإصدار: {`${appVersion} (${buildVersion})`}
         </ThemedText>
       </ThemedView>
+    );
+  }
+  return (
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <Seo
+        title="المصحف المفتوح - حول التطبيق"
+        description="معلومات عن تطبيق المصحف المفتوح - المصادر والميزات"
+      />
+      {renderMainContent()}
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    maxWidth: 640,
-    alignSelf: 'center',
-    margin: 2,
-  },
-  mainContent: {
-    flex: 1,
-    height: '100%',
-    maxWidth: 600,
-    paddingHorizontal: 22,
-    alignSelf: 'center',
-    alignItems: 'flex-start',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginVertical: 5,
-  },
-  listContainer: {
-    marginBottom: 5,
-    paddingLeft: 16,
-    alignItems: 'flex-start',
-  },
-  listItem: {
-    marginBottom: 10,
-    flexDirection: 'row',
-  },
-  bullet: {
-    marginStart: 10,
-    marginEnd: 5,
-    fontWeight: '500',
-  },
-  listText: {
-    fontSize: 16,
-    lineHeight: 22,
-    textAlign: 'left',
-  },
-  link: {
-    color: '#1E90FF',
-    textDecorationLine: 'underline',
-  },
-  versionText: {
-    fontSize: 12,
-    color: '#888',
-    textAlign: 'center',
-    marginTop: 5,
-    alignSelf: 'center',
-  },
-  copyright: {
-    fontSize: 12,
-    color: '#888',
-    textAlign: 'center',
-    marginTop: 10,
-    width: '100%',
-    alignSelf: 'center',
-  },
-});

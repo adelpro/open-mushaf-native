@@ -1,5 +1,4 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -14,6 +13,7 @@ import {
 import { useColors, useCurrentPage } from '@/hooks';
 import { readingBannerCollapsedState, yesterdayPage } from '@/jotai/atoms';
 
+import { styles } from './ReadingPositionBanner.styles';
 import { ThemedButton } from './ThemedButton';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -64,28 +64,9 @@ export function ReadingPositionBanner() {
     });
   };
 
-  return (
-    <ThemedView
-      style={[
-        styles.container,
-        {
-          height: HEIGHT + insets.top,
-          paddingTop: insets.top,
-          paddingLeft: insets.left,
-          paddingRight: insets.right,
-          backgroundColor: cardColor,
-        },
-      ]}
-    >
-      <TouchableOpacity
-        style={styles.toggleIcon}
-        onPress={toggleCollapse}
-        accessibilityRole="button"
-        accessibilityLabel={
-          isCollapsed ? 'توسيع شريط موضع القراءة' : 'طي شريط موضع القراءة'
-        }
-        accessibilityHint="اضغط لتبديل عرض خيارات موضع القراءة"
-      >
+  function renderToggleIcon() {
+    function renderHeaderContainer() {
+      return (
         <ThemedView
           style={[styles.headerContainer, { backgroundColor: 'transparent' }]}
         >
@@ -103,107 +84,103 @@ export function ReadingPositionBanner() {
             color={tintColor}
           />
         </ThemedView>
+      );
+    }
+    return (
+      <TouchableOpacity
+        style={styles.toggleIcon}
+        onPress={toggleCollapse}
+        accessibilityRole="button"
+        accessibilityLabel={
+          isCollapsed ? 'توسيع شريط موضع القراءة' : 'طي شريط موضع القراءة'
+        }
+        accessibilityHint="اضغط لتبديل عرض خيارات موضع القراءة"
+      >
+        {renderHeaderContainer()}
       </TouchableOpacity>
+    );
+  }
+
+  function renderButton() {
+    return (
+      <ThemedButton
+        variant="primary"
+        style={[styles.button]}
+        onPress={handleSaveCurrentPosition}
+        accessibilityLabel="حفظ موضع الحالي"
+        accessibilityHint={`حفظ موضع الحالي ${currentPage}`}
+      >
+        <ThemedView style={styles.buttonContent}>
+          <FontAwesome6 name="bookmark" size={24} color="white" />
+          <ThemedText
+            style={{
+              fontFamily: 'Tajawal_400Regular',
+              backgroundColor: 'transparent',
+              color: 'white',
+            }}
+          >
+            حفظ
+          </ThemedText>
+        </ThemedView>
+      </ThemedButton>
+    );
+  }
+
+  function renderButton2() {
+    function renderButtonContent() {
+      return (
+        <ThemedView
+          style={[styles.buttonContent, { backgroundColor: 'transparent' }]}
+        >
+          <Feather name="arrow-up-right" size={24} color={primaryColor} />
+          <ThemedText
+            style={{
+              fontFamily: 'Tajawal_400Regular',
+              color: primaryColor,
+              backgroundColor: 'transparent',
+            }}
+          >
+            العودة
+          </ThemedText>
+        </ThemedView>
+      );
+    }
+    return (
+      <ThemedButton
+        variant="outlined-primary"
+        style={[styles.button, { backgroundColor: cardColor }]}
+        onPress={handleReturnToSavedPosition}
+        accessibilityLabel="العودة إلى موضع القراءة"
+        accessibilityHint={`العودة إلى موضع القراءة ${currentSavedPage}`}
+      >
+        {renderButtonContent()}
+      </ThemedButton>
+    );
+  }
+  return (
+    <ThemedView
+      style={[
+        styles.container,
+        {
+          height: HEIGHT + insets.top,
+          paddingTop: insets.top,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+          backgroundColor: cardColor,
+        },
+      ]}
+    >
+      {renderToggleIcon()}
 
       {!isCollapsed && (
         <ThemedView
           style={[styles.buttonsContainer, { backgroundColor: cardColor }]}
         >
-          <ThemedButton
-            variant="primary"
-            style={[styles.button]}
-            onPress={handleSaveCurrentPosition}
-            accessibilityLabel="حفظ موضع الحالي"
-            accessibilityHint={`حفظ موضع الحالي ${currentPage}`}
-          >
-            <ThemedView style={styles.buttonContent}>
-              <FontAwesome6 name="bookmark" size={24} color="white" />
-              <ThemedText
-                style={{
-                  fontFamily: 'Tajawal_400Regular',
-                  backgroundColor: 'transparent',
-                  color: 'white',
-                }}
-              >
-                حفظ
-              </ThemedText>
-            </ThemedView>
-          </ThemedButton>
+          {renderButton()}
 
-          <ThemedButton
-            variant="outlined-primary"
-            style={[styles.button, { backgroundColor: cardColor }]}
-            onPress={handleReturnToSavedPosition}
-            accessibilityLabel="العودة إلى موضع القراءة"
-            accessibilityHint={`العودة إلى موضع القراءة ${currentSavedPage}`}
-          >
-            <ThemedView
-              style={[styles.buttonContent, { backgroundColor: 'transparent' }]}
-            >
-              <Feather name="arrow-up-right" size={24} color={primaryColor} />
-              <ThemedText
-                style={{
-                  fontFamily: 'Tajawal_400Regular',
-                  color: primaryColor,
-                  backgroundColor: 'transparent',
-                }}
-              >
-                العودة
-              </ThemedText>
-            </ThemedView>
-          </ThemedButton>
+          {renderButton2()}
         </ThemedView>
       )}
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    width: '100%',
-    maxWidth: 640,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginHorizontal: 'auto',
-    elevation: 2,
-    gap: 15,
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-  },
-  text: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    textAlign: 'right',
-    flexShrink: 1,
-    marginRight: 10,
-  },
-  button: {
-    width: 150,
-    minWidth: 120,
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 10,
-    width: '100%',
-    marginTop: 5,
-  },
-  buttonContent: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    gap: 10,
-  },
-  toggleIcon: {
-    width: '100%',
-    padding: 2,
-    margin: 2,
-  },
-});

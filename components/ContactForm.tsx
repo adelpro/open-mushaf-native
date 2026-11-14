@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text } from 'react-native';
+import { useState } from 'react';
+import { ActivityIndicator, ScrollView, Text } from 'react-native';
 
 import { FontAwesome } from '@expo/vector-icons';
 
@@ -8,6 +8,7 @@ import { CONTACT_FORM_RATE_LIMIT_CONFIG } from '@/constants/ratelimitConfig';
 import { useColors } from '@/hooks';
 import { checkRateLimit, RateLimitError } from '@/utils/rateLimiter';
 
+import { styles } from './ContactForm.styles';
 import { ThemedButton } from './ThemedButton';
 import { ThemedText } from './ThemedText';
 import { ThemedTextInput } from './ThemedTextInput';
@@ -156,8 +157,36 @@ export function ContactForm() {
     }
   };
 
-  return (
-    <ThemedView style={styles.container}>
+  function renderDisabledButton() {
+    return (
+      <ThemedButton
+        style={[
+          isLoading && styles.disabledButton,
+          isLoading && { backgroundColor: secondaryColor },
+        ]}
+        variant="primary"
+        onPress={handleSubmit}
+        accessibilityLabel={isLoading ? 'Sending message' : 'Submit the form'}
+        accessibilityRole="button"
+        accessibilityState={{ disabled: isLoading }}
+      >
+        {isLoading ? (
+          <Text>
+            جاري الإرسال&nbsp;&nbsp;
+            <ActivityIndicator size="small" color="#fff" />
+          </Text>
+        ) : (
+          <Text>
+            إرسال&nbsp;&nbsp;
+            <FontAwesome name="send-o" size={24} />
+          </Text>
+        )}
+      </ThemedButton>
+    );
+  }
+
+  function renderScroll() {
+    return (
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
@@ -204,69 +233,9 @@ export function ContactForm() {
           accessibilityLabel="الرسالة - يرجى إدخال رسالتك"
         />
 
-        <ThemedButton
-          style={[
-            isLoading && styles.disabledButton,
-            isLoading && { backgroundColor: secondaryColor },
-          ]}
-          variant="primary"
-          onPress={handleSubmit}
-          accessibilityLabel={isLoading ? 'Sending message' : 'Submit the form'}
-          accessibilityRole="button"
-          accessibilityState={{ disabled: isLoading }}
-        >
-          {isLoading ? (
-            <Text>
-              جاري الإرسال&nbsp;&nbsp;
-              <ActivityIndicator size="small" color="#fff" />
-            </Text>
-          ) : (
-            <Text>
-              إرسال&nbsp;&nbsp;
-              <FontAwesome name="send-o" size={24} />
-            </Text>
-          )}
-        </ThemedButton>
+        {renderDisabledButton()}
       </ScrollView>
-    </ThemedView>
-  );
+    );
+  }
+  return <ThemedView style={styles.container}>{renderScroll()}</ThemedView>;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-    maxWidth: 640,
-    alignSelf: 'center',
-    margin: 5,
-  },
-  scroll: {
-    flex: 1,
-    width: '100%',
-  },
-  scrollContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 5,
-    marginStart: 10,
-    alignSelf: 'flex-start',
-  },
-  input: {
-    padding: 10,
-    marginBottom: 15,
-    width: '100%',
-    marginHorizontal: 10,
-    textAlign: 'right',
-  },
-  messageInput: {
-    height: 100,
-    textAlignVertical: 'top',
-  },
-  disabledButton: {
-    backgroundColor: '#999',
-  },
-});

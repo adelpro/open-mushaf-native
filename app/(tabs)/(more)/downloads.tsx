@@ -117,16 +117,17 @@ function DownloadsContent(model: DownloadsModel) {
   );
 }
 
-function StorageSummary({
-  primaryColor,
-  cardColor,
-  textColor,
-  downloaded,
-  downloadedTafseersList,
-  totalBytes,
-  quotaBytes,
-  quotaFraction,
-}: DownloadsModel) {
+function StorageSummary(model: DownloadsModel) {
+  const {
+    primaryColor,
+    cardColor,
+    textColor,
+    downloaded,
+    downloadedTafseersList,
+    totalBytes,
+    quotaBytes,
+    quotaFraction,
+  } = model;
   return (
     <ThemedView
       style={[
@@ -169,20 +170,21 @@ function StorageSummary({
   );
 }
 
-function RiwayaDownloads({
-  primaryColor,
-  dangerColor,
-  textColor,
-  iconColor,
-  downloaded,
-  progressMap,
-  rows,
-  riwayaSectionExpanded,
-  setRiwayaSectionExpanded,
-  handleDownload,
-  handleCancel,
-  handleDelete,
-}: DownloadsModel) {
+function RiwayaDownloads(model: DownloadsModel) {
+  const {
+    primaryColor,
+    dangerColor,
+    textColor,
+    iconColor,
+    downloaded,
+    progressMap,
+    rows,
+    riwayaSectionExpanded,
+    setRiwayaSectionExpanded,
+    handleDownload,
+    handleCancel,
+    handleDelete,
+  } = model;
   return (
     <CollapsibleSection
       title="الروايات"
@@ -252,19 +254,20 @@ function RiwayaDownloads({
   );
 }
 
-function TafseerDownloads({
-  primaryColor,
-  dangerColor,
-  textColor,
-  downloadedTafseersList,
-  progressMap,
-  tafseerRows,
-  tafseerSectionExpanded,
-  setTafseerSectionExpanded,
-  handleTafseerDownload,
-  handleTafseerCancel,
-  handleTafseerDelete,
-}: DownloadsModel) {
+function TafseerDownloads(model: DownloadsModel) {
+  const {
+    primaryColor,
+    dangerColor,
+    textColor,
+    downloadedTafseersList,
+    progressMap,
+    tafseerRows,
+    tafseerSectionExpanded,
+    setTafseerSectionExpanded,
+    handleTafseerDownload,
+    handleTafseerCancel,
+    handleTafseerDelete,
+  } = model;
   return (
     <CollapsibleSection
       title="التفاسير"

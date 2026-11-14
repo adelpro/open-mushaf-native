@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -7,6 +7,7 @@ import { ListTabs } from '@/types';
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
+import { styles } from './TopTabs.styles';
 
 /**
  * Navigation state hooks mapping to available tabs.
@@ -34,17 +35,8 @@ export function TopTabs({ activeTab, setActiveTab }: Props) {
     setActiveTab(tab);
   };
 
-  return (
-    <ThemedView
-      style={[
-        styles.container,
-        {
-          paddingTop: isLandscape ? 0 : top,
-          paddingLeft: left,
-          paddingRight: right,
-        },
-      ]}
-    >
+  function renderTab() {
+    return (
       <TouchableOpacity
         onPress={() => handleTabPress('surahs')}
         style={[
@@ -70,7 +62,11 @@ export function TopTabs({ activeTab, setActiveTab }: Props) {
           السور
         </ThemedText>
       </TouchableOpacity>
+    );
+  }
 
+  function renderTab2() {
+    return (
       <TouchableOpacity
         onPress={() => handleTabPress('juzs')}
         style={[
@@ -96,28 +92,22 @@ export function TopTabs({ activeTab, setActiveTab }: Props) {
           الأجزاء
         </ThemedText>
       </TouchableOpacity>
+    );
+  }
+  return (
+    <ThemedView
+      style={[
+        styles.container,
+        {
+          paddingTop: isLandscape ? 0 : top,
+          paddingLeft: left,
+          paddingRight: right,
+        },
+      ]}
+    >
+      {renderTab()}
+
+      {renderTab2()}
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-  },
-  tab: {
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    width: 200,
-    alignItems: 'center',
-  },
-  tabText: {
-    fontSize: 24,
-    lineHeight: 32,
-    fontFamily: 'Tajawal_500Medium',
-  },
-  activeTabText: {
-    fontFamily: 'Tajawal_700Bold',
-  },
-});

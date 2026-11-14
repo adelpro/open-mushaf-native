@@ -120,6 +120,10 @@ for (const result of results) {
         `${result.filePath}: runtime indexing of ${node.expression.text} reintroduces a reported sink`,
       );
     }
+    checkFunction(node);
+    ts.forEachChild(node, visit);
+  };
+  function checkFunction(node) {
     if (ts.isFunctionLike(node) && node.body) {
       const name = node.name?.getText(source);
       const isTafseerAnonymous =
@@ -149,8 +153,7 @@ for (const result of results) {
         );
       }
     }
-    ts.forEachChild(node, visit);
-  };
+  }
   visit(source);
   if (
     result.filePath

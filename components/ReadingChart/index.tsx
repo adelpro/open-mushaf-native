@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   LayoutChangeEvent,
   Pressable,
@@ -30,6 +24,7 @@ import {
 import { ChartMetric, GroupBy, useColors, useReadingChartData } from '@/hooks';
 import { formatLabel, getPosStyle, shouldShowLabel } from '@/utils';
 
+import { ReadingChartStats } from './ReadingChartStats';
 import { SegmentedControl } from '../SegmentControl';
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
@@ -66,22 +61,8 @@ export function ReadingChart() {
     getValue,
   } = useReadingChartData(metric, groupBy);
 
-  const isPages = metric === 'pages';
-  const unitLabel = isPages ? 'صفحة' : 'حزب';
-  const totalLabel = isPages ? 'إجمالي الصفحات' : 'إجمالي الأحزاب';
-  // "per day" / "per week" / "per month" — matches the granularity the user
-  // is looking at.
-  const avgSuffix =
-    groupBy === 'month' ? 'شهر' : groupBy === 'week' ? 'أسبوع' : 'يوم';
-  // When grouping the bar count doesn't match the day window exactly
-  // (e.g. 30 days → 5 weekly buckets, 90 days → 3 monthly buckets). Show
-  // the actual bucket count so the user can see why the chart has N bars.
-  const periodLabelSuffix =
-    groupBy === 'month'
-      ? `في آخر ${data.length} ${data.length === 1 ? 'شهر' : 'أشهر'}`
-      : groupBy === 'week'
-        ? `في آخر ${data.length} ${data.length === 1 ? 'أسبوع' : 'أسابيع'}`
-        : `في ${CHART_PERIODS[periodIndex].label}`;
+  const { isPages, unitLabel, totalLabel, avgSuffix, periodLabelSuffix } =
+    getChartLabels(metric, groupBy, data.length, periodIndex);
 
   const [selectedBar, setSelectedBar] = useState<number>(period - 1);
   const scrollRef = useRef<ScrollView>(null);
@@ -187,132 +168,113 @@ export function ReadingChart() {
 
   const bg = { backgroundColor: cardColor };
 
-  return (
-    <ThemedView style={[styles.container, bg]}>
-      <ThemedView style={[styles.headerRow, bg]}>
-        <ThemedText style={styles.title}>إحصائيات القراءة</ThemedText>
+  function renderHeaderRow() {
+    function renderMetricToggle() {
+      return (
         <View style={[styles.metricToggle, { borderColor: primaryColor }]}>
-          {(['hizbs', 'pages'] as ChartMetric[]).map((m) => (
-            <TouchableOpacity
-              key={m}
-              onPress={() => setMetric(m)}
-              style={[
-                styles.metricBtn,
-                metric === m && { backgroundColor: primaryColor },
-              ]}
-            >
-              <ThemedText
+          {(['hizbs', 'pages'] as ChartMetric[]).map((m) => {
+            return (
+              <TouchableOpacity
+                key={m}
+                onPress={() => setMetric(m)}
                 style={[
-                  styles.metricBtnText,
-                  {
-                    color: metric === m ? onPrimaryTextColor : primaryColor,
-                  },
+                  styles.metricBtn,
+                  metric === m && { backgroundColor: primaryColor },
                 ]}
               >
-                {m === 'hizbs' ? 'أحزاب' : 'صفحات'}
-              </ThemedText>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ThemedView>
-
-      <ThemedView style={[styles.statsContainer, bg]}>
-        <ThemedText style={[styles.bigNumber, { color: primaryColor }]}>
-          {isPages ? total : total.toFixed(1)}
-        </ThemedText>
-        <ThemedText
-          style={[styles.statsLabel, { color: textColor, opacity: 0.6 }]}
-        >
-          {totalLabel} {periodLabelSuffix}
-        </ThemedText>
-        {total > 0 && (
-          <ThemedText
-            style={[styles.avgLabel, { color: textColor, opacity: 0.4 }]}
-          >
-            المعدل:{' '}
-            {isPages ? effectiveAvg.toFixed(0) : effectiveAvg.toFixed(1)}{' '}
-            {unitLabel}/{avgSuffix}
-          </ThemedText>
-        )}
-        {isPartialWindow && (
-          <ThemedText
-            style={[styles.avgLabel, { color: textColor, opacity: 0.4 }]}
-          >
-            بدأ التتبع قبل {recordsWithData} يوماً
-          </ThemedText>
-        )}
-        {/* The chart falls back to generated history in Expo Go and in a dev
-            build with no records yet. Label it so the figures above are never
-            mistaken for a real reading history. */}
-        {isDemoData && (
-          <ThemedText
-            style={[styles.avgLabel, { color: textColor, opacity: 0.4 }]}
-          >
-            بيانات تجريبية
-          </ThemedText>
-        )}
-      </ThemedView>
-
-      <ThemedView style={[styles.segmentContainer, bg]}>
-        <SegmentedControl
-          options={CHART_PERIODS.map((p) => p.label)}
-          initialSelectedIndex={periodIndex}
-          activeColor={primaryColor}
-          textColor={primaryColor}
-          onSelectionChange={handlePeriodChange}
-        />
-      </ThemedView>
-
-      {period > 7 && (
-        <ThemedView style={[styles.groupByContainer, bg]}>
-          <View style={[styles.groupByToggle, { borderColor: primaryColor }]}>
-            {(['day', 'week', 'month'] as GroupBy[])
-              // Monthly is only meaningful when the window can fit at least
-              // two full 30-day buckets, so the option is hidden outside the
-              // 90-day view (no orphan state on a 1-bar "month" view).
-              .filter((g) => g !== 'month' || period === 90)
-              .map((g) => (
-                <TouchableOpacity
-                  key={g}
-                  onPress={() => setGroupBy(g)}
+                <ThemedText
                   style={[
-                    styles.groupByBtn,
-                    groupBy === g && { backgroundColor: primaryColor },
+                    styles.metricBtnText,
+                    {
+                      color: metric === m ? onPrimaryTextColor : primaryColor,
+                    },
                   ]}
-                  accessibilityRole="button"
-                  accessibilityLabel={
-                    g === 'day'
-                      ? 'عرض يومي'
-                      : g === 'week'
-                        ? 'عرض أسبوعي'
-                        : 'عرض شهري'
-                  }
-                  accessibilityState={{ selected: groupBy === g }}
                 >
-                  <ThemedText
-                    style={[
-                      styles.groupByBtnText,
-                      {
-                        color:
-                          groupBy === g ? onPrimaryTextColor : primaryColor,
-                      },
-                    ]}
-                  >
-                    {g === 'day' ? 'يومي' : g === 'week' ? 'أسبوعي' : 'شهري'}
-                  </ThemedText>
-                </TouchableOpacity>
-              ))}
-          </View>
-        </ThemedView>
-      )}
+                  {m === 'hizbs' ? 'أحزاب' : 'صفحات'}
+                </ThemedText>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      );
+    }
+    return (
+      <ThemedView style={[styles.headerRow, bg]}>
+        <ThemedText style={styles.title}>إحصائيات القراءة</ThemedText>
+        {renderMetricToggle()}
+      </ThemedView>
+    );
+  }
 
-      <ThemedView style={[styles.chartWrapper, bg]} onLayout={onChartLayout}>
-        <Svg
-          width={CHART_PADDING.left}
-          height={chartHeight}
-          style={styles.yAxis}
-        >
-          {GRID_RATIOS.map((r) => (
+  function renderStatsContainer() {
+    return (
+      <ReadingChartStats
+        bg={bg}
+        primaryColor={primaryColor}
+        textColor={textColor}
+        isPages={isPages}
+        total={total}
+        totalLabel={totalLabel}
+        periodLabelSuffix={periodLabelSuffix}
+        effectiveAvg={effectiveAvg}
+        unitLabel={unitLabel}
+        avgSuffix={avgSuffix}
+        isPartialWindow={isPartialWindow}
+        recordsWithData={recordsWithData}
+        isDemoData={isDemoData}
+      />
+    );
+  }
+
+  function renderGroupByToggle() {
+    return (
+      <View style={[styles.groupByToggle, { borderColor: primaryColor }]}>
+        {(['day', 'week', 'month'] as GroupBy[])
+          // Monthly is only meaningful when the window can fit at least
+          // two full 30-day buckets, so the option is hidden outside the
+          // 90-day view (no orphan state on a 1-bar "month" view).
+          .filter((g) => g !== 'month' || period === 90)
+          .map((g) => {
+            return (
+              <TouchableOpacity
+                key={g}
+                onPress={() => setGroupBy(g)}
+                style={[
+                  styles.groupByBtn,
+                  groupBy === g && { backgroundColor: primaryColor },
+                ]}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  g === 'day'
+                    ? 'عرض يومي'
+                    : g === 'week'
+                      ? 'عرض أسبوعي'
+                      : 'عرض شهري'
+                }
+                accessibilityState={{ selected: groupBy === g }}
+              >
+                <ThemedText
+                  style={[
+                    styles.groupByBtnText,
+                    {
+                      color: groupBy === g ? onPrimaryTextColor : primaryColor,
+                    },
+                  ]}
+                >
+                  {g === 'day' ? 'يومي' : g === 'week' ? 'أسبوعي' : 'شهري'}
+                </ThemedText>
+              </TouchableOpacity>
+            );
+          })}
+      </View>
+    );
+  }
+
+  function renderYAxis() {
+    return (
+      <Svg width={CHART_PADDING.left} height={chartHeight} style={styles.yAxis}>
+        {GRID_RATIOS.map((r) => {
+          return (
             <SvgText
               key={r}
               x={CHART_PADDING.left - 6}
@@ -324,82 +286,123 @@ export function ReadingChart() {
             >
               {(maxValue * r).toFixed(1)}
             </SvgText>
-          ))}
-        </Svg>
+          );
+        })}
+      </Svg>
+    );
+  }
 
-        <ScrollView
-          ref={scrollRef}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.chartScroll}
-          contentContainerStyle={{ paddingRight: 8 }}
-        >
-          <ThemedView
-            style={{ width: svgWidth, backgroundColor: 'transparent' }}
-          >
-            <Svg width={svgWidth} height={chartHeight}>
-              {GRID_RATIOS.map((r) => {
-                const y = paddingTop + drawableHeight * (1 - r);
-                return (
-                  <Line
-                    key={r}
-                    x1={0}
-                    y1={y}
-                    x2={svgWidth}
-                    y2={y}
-                    stroke={textColor}
-                    strokeOpacity={0.1}
-                    strokeWidth={0.5}
-                    strokeDasharray="8 7"
-                  />
-                );
-              })}
-              {data.map((d, i) => {
-                const val = getValue(d);
-                const x = barOffset + i * (BAR_WIDTH + barGap);
-                const barH = (val / maxValue) * drawableHeight;
-                // Partial trailing week (period % 7 !== 0): render at lower
-                // opacity + dashed stroke so the user can see it's not a
-                // full 7-day week. Always tappable; only the fill changes.
-                const isPartial =
-                  d.daysInBucket !== undefined && d.daysInBucket < 7;
-                // "No record" daily slot (user wasn't tracking yet, e.g.
-                // 68 untracked days in a 90-day window when the user has
-                // only been using the app for 22 days). Render a faint
-                // dashed placeholder so the timeline reads as "missing
-                // data" rather than "the user read 0". Weekly/monthly
-                // buckets never hit this branch because their aggregation
-                // collapses unrecorded stretches into partial buckets.
-                const isUntracked = !d.hasRecord && groupBy === 'day';
-                if (val <= 0 && !isUntracked) return null;
-                const fillOpacity =
-                  selectedBar === i
-                    ? 1
-                    : isPartial
-                      ? 0.4
-                      : isUntracked
-                        ? 0.25
-                        : 0.85;
-                return (
-                  <Rect
-                    key={i}
-                    x={x}
-                    y={paddingTop + drawableHeight - barH}
-                    width={BAR_WIDTH}
-                    height={Math.max(barH, 0)}
-                    rx={BAR_RADIUS}
-                    fill={primaryColor}
-                    opacity={fillOpacity}
-                    stroke={isPartial || isUntracked ? primaryColor : 'none'}
-                    strokeWidth={isPartial || isUntracked ? 1 : 0}
-                    strokeDasharray={
-                      isPartial ? '4 3' : isUntracked ? '3 3' : undefined
-                    }
-                  />
-                );
-              })}
-            </Svg>
+  function renderXAxisRow() {
+    return (
+      <ThemedView style={[styles.xAxisRow, { backgroundColor: 'transparent' }]}>
+        {data.map((d, i) => {
+          if (!shouldShowLabel(d.date, i, period, groupBy)) return null;
+          const x = barOffset + i * (BAR_WIDTH + barGap);
+          const labelWidth = BAR_WIDTH + barGap;
+          const labelX = x - barGap / 2;
+          const { primary, secondary } = formatLabel(d, period, groupBy);
+          return (
+            <ThemedView
+              key={i}
+              style={[
+                styles.xLabelGroup,
+                { ...getPosStyle(labelX), width: labelWidth },
+              ]}
+            >
+              <ThemedText
+                numberOfLines={1}
+                style={[
+                  styles.xLabel,
+                  {
+                    color: textColor,
+                    fontSize: period <= 7 ? 10 : 9,
+                  },
+                ]}
+              >
+                {primary}
+              </ThemedText>
+              {secondary && (
+                <ThemedText
+                  numberOfLines={1}
+                  style={[styles.xLabelSecondary, { color: textColor }]}
+                >
+                  {secondary}
+                </ThemedText>
+              )}
+            </ThemedView>
+          );
+        })}
+      </ThemedView>
+    );
+  }
 
+  function renderSvg() {
+    return (
+      <Svg width={svgWidth} height={chartHeight}>
+        {GRID_RATIOS.map((r) => {
+          const y = paddingTop + drawableHeight * (1 - r);
+          return (
+            <Line
+              key={r}
+              x1={0}
+              y1={y}
+              x2={svgWidth}
+              y2={y}
+              stroke={textColor}
+              strokeOpacity={0.1}
+              strokeWidth={0.5}
+              strokeDasharray="8 7"
+            />
+          );
+        })}
+        {data.map((d, i) => {
+          const val = getValue(d);
+          const x = barOffset + i * (BAR_WIDTH + barGap);
+          const barH = (val / maxValue) * drawableHeight;
+          // Partial trailing week (period % 7 !== 0): render at lower
+          // opacity + dashed stroke so the user can see it's not a
+          // full 7-day week. Always tappable; only the fill changes.
+          const isPartial = d.daysInBucket !== undefined && d.daysInBucket < 7;
+          // "No record" daily slot (user wasn't tracking yet, e.g.
+          // 68 untracked days in a 90-day window when the user has
+          // only been using the app for 22 days). Render a faint
+          // dashed placeholder so the timeline reads as "missing
+          // data" rather than "the user read 0". Weekly/monthly
+          // buckets never hit this branch because their aggregation
+          // collapses unrecorded stretches into partial buckets.
+          const isUntracked = !d.hasRecord && groupBy === 'day';
+          if (val <= 0 && !isUntracked) return null;
+          const barStyle = getBarStyle(
+            selectedBar === i,
+            isPartial,
+            isUntracked,
+            primaryColor,
+          );
+          return (
+            <Rect
+              key={i}
+              x={x}
+              y={paddingTop + drawableHeight - barH}
+              width={BAR_WIDTH}
+              height={Math.max(barH, 0)}
+              rx={BAR_RADIUS}
+              fill={primaryColor}
+              opacity={barStyle.opacity}
+              stroke={barStyle.stroke}
+              strokeWidth={barStyle.strokeWidth}
+              strokeDasharray={barStyle.strokeDasharray}
+            />
+          );
+        })}
+      </Svg>
+    );
+  }
+
+  function renderChartWrapper() {
+    function renderChartScroll() {
+      function renderThemedView() {
+        function renderTouchLayer() {
+          return (
             <View style={[styles.touchLayer, { height: chartHeight }]}>
               {data.map((d, i) => {
                 const val = getValue(d);
@@ -416,6 +419,39 @@ export function ReadingChart() {
                 // above the bar to fit it under the y-axis labels.
                 const flipBelow = barTop < TOOLTIP_HEADROOM;
                 const tooltipTop = flipBelow ? barTop + 8 : barTop - 42;
+
+                function renderTooltip() {
+                  return (
+                    <View
+                      style={[
+                        styles.tooltip,
+                        {
+                          top: tooltipTop,
+                          backgroundColor: primaryColor,
+                        },
+                      ]}
+                    >
+                      <ThemedText
+                        style={[
+                          styles.tooltipText,
+                          { color: onPrimaryTextColor },
+                        ]}
+                      >
+                        {selectedValue}
+                      </ThemedText>
+                      <View
+                        style={[
+                          flipBelow
+                            ? styles.tooltipArrowUp
+                            : styles.tooltipArrow,
+                          flipBelow
+                            ? { borderBottomColor: primaryColor }
+                            : { borderTopColor: primaryColor },
+                        ]}
+                      />
+                    </View>
+                  );
+                }
                 return (
                   <Pressable
                     key={i}
@@ -430,85 +466,68 @@ export function ReadingChart() {
                     }}
                     onPress={() => handleBarPress(i)}
                   >
-                    {selectedBar === i && (
-                      <View
-                        style={[
-                          styles.tooltip,
-                          {
-                            top: tooltipTop,
-                            backgroundColor: primaryColor,
-                          },
-                        ]}
-                      >
-                        <ThemedText
-                          style={[
-                            styles.tooltipText,
-                            { color: onPrimaryTextColor },
-                          ]}
-                        >
-                          {selectedValue}
-                        </ThemedText>
-                        <View
-                          style={[
-                            flipBelow
-                              ? styles.tooltipArrowUp
-                              : styles.tooltipArrow,
-                            flipBelow
-                              ? { borderBottomColor: primaryColor }
-                              : { borderTopColor: primaryColor },
-                          ]}
-                        />
-                      </View>
-                    )}
+                    {selectedBar === i && renderTooltip()}
                   </Pressable>
                 );
               })}
             </View>
+          );
+        }
+        return (
+          <ThemedView
+            style={{ width: svgWidth, backgroundColor: 'transparent' }}
+          >
+            {renderSvg()}
 
-            <ThemedView
-              style={[styles.xAxisRow, { backgroundColor: 'transparent' }]}
-            >
-              {data.map((d, i) => {
-                if (!shouldShowLabel(d.date, i, period, groupBy)) return null;
-                const x = barOffset + i * (BAR_WIDTH + barGap);
-                const labelWidth = BAR_WIDTH + barGap;
-                const labelX = x - barGap / 2;
-                const { primary, secondary } = formatLabel(d, period, groupBy);
-                return (
-                  <ThemedView
-                    key={i}
-                    style={[
-                      styles.xLabelGroup,
-                      { ...getPosStyle(labelX), width: labelWidth },
-                    ]}
-                  >
-                    <ThemedText
-                      numberOfLines={1}
-                      style={[
-                        styles.xLabel,
-                        {
-                          color: textColor,
-                          fontSize: period <= 7 ? 10 : 9,
-                        },
-                      ]}
-                    >
-                      {primary}
-                    </ThemedText>
-                    {secondary && (
-                      <ThemedText
-                        numberOfLines={1}
-                        style={[styles.xLabelSecondary, { color: textColor }]}
-                      >
-                        {secondary}
-                      </ThemedText>
-                    )}
-                  </ThemedView>
-                );
-              })}
-            </ThemedView>
+            {renderTouchLayer()}
+
+            {renderXAxisRow()}
           </ThemedView>
+        );
+      }
+      return (
+        <ScrollView
+          ref={scrollRef}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={styles.chartScroll}
+          contentContainerStyle={{ paddingRight: 8 }}
+        >
+          {renderThemedView()}
         </ScrollView>
+      );
+    }
+    return (
+      <ThemedView style={[styles.chartWrapper, bg]} onLayout={onChartLayout}>
+        {renderYAxis()}
+
+        {renderChartScroll()}
       </ThemedView>
+    );
+  }
+  return (
+    <ThemedView style={[styles.container, bg]}>
+      {renderHeaderRow()}
+
+      {renderStatsContainer()}
+
+      <ThemedView style={[styles.segmentContainer, bg]}>
+        <SegmentedControl
+          options={CHART_PERIODS.map((p) => p.label)}
+          initialSelectedIndex={periodIndex}
+          activeColor={primaryColor}
+          textColor={primaryColor}
+          onSelectionChange={handlePeriodChange}
+        />
+      </ThemedView>
+
+      {period > 7 && (
+        <ThemedView style={[styles.groupByContainer, bg]}>
+          {renderGroupByToggle()}
+        </ThemedView>
+      )}
+
+      {renderChartWrapper()}
 
       {!hasAnyReading && (
         <ThemedText
@@ -519,4 +538,44 @@ export function ReadingChart() {
       )}
     </ThemedView>
   );
+}
+
+function getBarStyle(
+  selected: boolean,
+  partial: boolean,
+  untracked: boolean,
+  color: string,
+) {
+  return {
+    opacity: selected ? 1 : partial ? 0.4 : untracked ? 0.25 : 0.85,
+    stroke: partial || untracked ? color : 'none',
+    strokeWidth: partial || untracked ? 1 : 0,
+    strokeDasharray: partial ? '4 3' : untracked ? '3 3' : undefined,
+  };
+}
+
+function getChartLabels(
+  metric: ChartMetric,
+  groupBy: GroupBy,
+  barCount: number,
+  periodIndex: number,
+) {
+  const isPages = metric === 'pages';
+  const unitLabel = isPages ? 'صفحة' : 'حزب';
+  const totalLabel = isPages ? 'إجمالي الصفحات' : 'إجمالي الأحزاب';
+  // "per day" / "per week" / "per month" — matches the granularity the user
+  // is looking at.
+  const avgSuffix =
+    groupBy === 'month' ? 'شهر' : groupBy === 'week' ? 'أسبوع' : 'يوم';
+  // When grouping the bar count doesn't match the day window exactly
+  // (e.g. 30 days → 5 weekly buckets, 90 days → 3 monthly buckets). Show
+  // the actual bucket count so the user can see why the chart has N bars.
+  const periodLabelSuffix =
+    groupBy === 'month'
+      ? `في آخر ${barCount} ${barCount === 1 ? 'شهر' : 'أشهر'}`
+      : groupBy === 'week'
+        ? `في آخر ${barCount} ${barCount === 1 ? 'أسبوع' : 'أسابيع'}`
+        : `في ${CHART_PERIODS[periodIndex].label}`;
+
+  return { isPages, unitLabel, totalLabel, avgSuffix, periodLabelSuffix };
 }

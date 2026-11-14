@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  TextInput,
-  type TextInputProps,
-} from 'react-native';
+import { useState } from 'react';
+import { Platform, TextInput, type TextInputProps } from 'react-native';
 
 import { useColors } from '@/hooks/useColors';
+
+import { styles } from './ThemedTextInput.styles';
 
 /**
  * Props for the ThemedTextInput component.
@@ -74,24 +71,3 @@ export function ThemedTextInput({
     />
   );
 }
-
-const styles = StyleSheet.create({
-  default: {
-    fontFamily: 'Tajawal_400Regular',
-    fontSize: 16,
-    padding: 10,
-  },
-  outlined: {
-    fontFamily: 'Tajawal_400Regular',
-    fontSize: 16,
-    padding: 10,
-
-    borderRadius: 4,
-  },
-  rounded: {
-    fontFamily: 'Tajawal_400Regular',
-    fontSize: 16,
-    padding: 10,
-    borderRadius: 50,
-  },
-});

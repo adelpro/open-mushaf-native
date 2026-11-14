@@ -351,22 +351,38 @@ function commitFile(
       throw new Error('File commit failed');
     return expected;
   } catch (error) {
-    if (finalWritten && destination.exists) destination.delete();
+    removeFailedCommit(destination, finalWritten);
     finalWritten = false;
-    if (backup.exists && !destination.exists) backup.move(destination);
+    restoreBackup(destination, backup);
     throw error;
   } finally {
-    // move() updates the staging handle URI to the destination. Cleanup must
-    // not turn a verified commit into a failed operation.
-    try {
-      if (staging.uri.endsWith('.part') && staging.exists) staging.delete();
-    } catch {
-      /* Retained staging files are never counted as downloaded. */
-    }
-    try {
-      if (finalWritten && backup.exists) backup.delete();
-    } catch {
-      /* Harmless backup; excluded from completion checks. */
-    }
+    cleanupCommitFiles(staging, backup, finalWritten);
   }
+}
+
+function cleanupCommitFiles(
+  staging: File,
+  backup: File,
+  finalWritten: boolean,
+) {
+  // move() updates the staging handle URI to the destination. Cleanup must
+  // not turn a verified commit into a failed operation.
+  try {
+    if (staging.uri.endsWith('.part') && staging.exists) staging.delete();
+  } catch {
+    /* Retained staging files are never counted as downloaded. */
+  }
+  try {
+    if (finalWritten && backup.exists) backup.delete();
+  } catch {
+    /* Harmless backup; excluded from completion checks. */
+  }
+}
+
+function removeFailedCommit(destination: File, finalWritten: boolean) {
+  if (finalWritten && destination.exists) destination.delete();
+}
+
+function restoreBackup(destination: File, backup: File) {
+  if (backup.exists && !destination.exists) backup.move(destination);
 }

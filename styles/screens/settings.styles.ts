@@ -1,0 +1,115 @@
+import { StyleSheet } from 'react-native';
+
+export const styles = StyleSheet.create({
+  container: {
+    padding: 15,
+    margin: 2,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignSelf: 'center',
+    width: '100%',
+    maxWidth: 640,
+  },
+  settingsSection: {
+    width: '100%',
+    marginBottom: 15,
+    padding: 12,
+    borderRadius: 8,
+    elevation: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  columnSection: {
+    flexDirection: 'column',
+  },
+  rowContainer: {
+    alignItems: 'center',
+    gap: 1,
+    flexDirection: 'row',
+    width: '100%',
+  },
+  fullWidthContainer: {
+    alignItems: 'center',
+    width: '100%',
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
+  fullWidth: {
+    width: '100%',
+  },
+  itemText: {
+    fontSize: 20,
+    fontFamily: 'Tajawal_700Bold',
+    paddingVertical: 8,
+    paddingHorizontal: 5,
+    // textAlignVertical: 'center',
+    alignItems: 'baseline',
+  },
+  sliderContainer: {
+    width: '100%',
+    position: 'relative',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 20,
+  },
+  modalContent: {
+    width: '90%',
+    maxWidth: 400,
+    borderRadius: 12,
+    padding: 16,
+    elevation: 5,
+    alignSelf: 'center',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    minHeight: 40,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontFamily: 'Tajawal_700Bold',
+    textAlignVertical: 'center',
+  },
+  closeButton: {
+    padding: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalMessage: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+    fontFamily: 'Tajawal_400Regular',
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: 'transparent',
+    width: '100%',
+  },
+  modalButton: {
+    width: '40%',
+    maxWidth: 100,
+  },
+  iconTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    margin: 2,
+    marginBottom: 5,
+  },
+  iconStyle: {
+    paddingVertical: 8,
+  },
+});

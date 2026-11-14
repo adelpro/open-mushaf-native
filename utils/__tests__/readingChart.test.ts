@@ -284,7 +284,12 @@ describe('daysAgo', () => {
     expect(dates[89]).toBe(dateStr(2026, 5, 15));
     dates.forEach((d, i) => {
       if (i === 0) return;
-      const gap = Date.parse(d) - Date.parse(dates[i - 1]);
+      // Compare calendar dates: local midnight may be 23 or 25 hours apart.
+      const calendarDay = (value: string) => {
+        const date = new Date(value);
+        return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+      };
+      const gap = calendarDay(d) - calendarDay(dates[i - 1]);
       expect(gap).toBe(24 * 60 * 60 * 1000);
     });
   });

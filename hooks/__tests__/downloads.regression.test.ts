@@ -26,6 +26,7 @@ vi.mock('jotai', async () => {
     await vi.importActual<typeof import('jotai/vanilla')>('jotai/vanilla');
   return {
     ...actual,
+    useStore: () => state.store!,
     useAtom: (atom: never) => [
       state.store!.get(atom),
       (update: never) => state.store!.set(atom, update),
@@ -69,6 +70,39 @@ const deferred = <T>() => {
 };
 
 describe('shared download lifecycle', () => {
+  it.each([true, false])(
+    'preserves an old marker only if no missing page was observed (%s)',
+    async (cached) => {
+      state.store!.set(downloadedRiwayat, ['hafs']);
+      const scan = deferred<boolean>();
+      vi.mocked(isMushafPageCached).mockReturnValueOnce(scan.promise);
+      const operation = useMushafDownload().startRiwaya('hafs');
+      useMushafDownload().cancel();
+      scan.resolve(cached);
+      await expect(operation).rejects.toMatchObject({ name: 'AbortError' });
+      expect(state.store!.get(downloadedRiwayat)).toEqual(
+        cached ? ['hafs'] : [],
+      );
+      expect(
+        Object.values(state.store!.get(downloadProgressAtom))[0].status,
+      ).toBe(cached ? 'done' : 'cancelled');
+      expect(downloadMushafPage).not.toHaveBeenCalled();
+    },
+  );
+  it('preserves verified cached tafseer when cancelled during its cache probe', async () => {
+    state.store!.set(downloadedTafseers, ['muyassar']);
+    const scan = deferred<boolean>();
+    vi.mocked(isTafseerCached).mockReturnValueOnce(scan.promise);
+    const operation = useTafseerDownload().startTafseer('muyassar');
+    useTafseerDownload().cancel();
+    scan.resolve(true);
+    await expect(operation).rejects.toMatchObject({ name: 'AbortError' });
+    expect(state.store!.get(downloadedTafseers)).toEqual(['muyassar']);
+    expect(
+      Object.values(state.store!.get(downloadProgressAtom))[0],
+    ).toMatchObject({ status: 'done', downloaded: 1 });
+    expect(downloadTafseer).not.toHaveBeenCalled();
+  });
   it('cancels retry backoff without waiting for its timer', async () => {
     vi.useFakeTimers();
     vi.mocked(downloadMushafPage).mockRejectedValue(new Error('offline'));

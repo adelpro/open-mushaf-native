@@ -76,36 +76,8 @@ export function formatLabel(
 
   if (period <= 7) return { primary: AR_WEEKDAYS[end.getDay()] };
 
-  if (groupBy === 'month') {
-    const start = d.weekStart ? new Date(d.weekStart) : end;
-    const primary = `${toLocalDigits(start.getDate())}-${toLocalDigits(end.getDate())}`;
-    // Secondary line prefers year (Dec → Jan bucket) over month so the
-    // year is always visible when the bucket crosses a year boundary.
-    let secondary: string | undefined;
-    if (start.getFullYear() !== end.getFullYear()) {
-      secondary = toLocalDigits(end.getFullYear());
-    } else if (start.getMonth() !== end.getMonth()) {
-      secondary = MONTH_NAMES[end.getMonth()];
-    } else if (d.daysInBucket !== undefined && d.daysInBucket < 30) {
-      // Defensive: today the 90-day period is a multiple of 30 so partial
-      // monthly buckets never render, but the path is here for parity
-      // with the weekly partial-bucket treatment.
-      secondary = `${toLocalDigits(d.daysInBucket)} أيام`;
-    }
-    return { primary, secondary };
-  }
-
-  if (groupBy === 'week') {
-    const start = d.weekStart ? new Date(d.weekStart) : end;
-    const primary = `${toLocalDigits(start.getDate())}-${toLocalDigits(end.getDate())}`;
-    let secondary: string | undefined;
-    if (start.getMonth() !== end.getMonth()) {
-      secondary = MONTH_NAMES[end.getMonth()];
-    } else if (d.daysInBucket !== undefined && d.daysInBucket < 7) {
-      secondary = `${toLocalDigits(d.daysInBucket)} أيام`;
-    }
-    return { primary, secondary };
-  }
+  if (groupBy === 'month') return formatMonthLabel(d, end);
+  if (groupBy === 'week') return formatWeekLabel(d, end);
 
   if (period <= 30) return { primary: toLocalDigits(end.getDate()) };
   return {
@@ -165,3 +137,39 @@ export const getPosStyle = (x: number) => {
   if (isWeb) return { left: x };
   return isRTL ? { right: x } : { left: x };
 };
+
+function formatMonthLabel(
+  d: { date: string; weekStart?: string; daysInBucket?: number },
+  end: Date,
+): ChartLabel {
+  const start = d.weekStart ? new Date(d.weekStart) : end;
+  const primary = `${toLocalDigits(start.getDate())}-${toLocalDigits(end.getDate())}`;
+  // Secondary line prefers year (Dec → Jan bucket) over month so the
+  // year is always visible when the bucket crosses a year boundary.
+  let secondary: string | undefined;
+  if (start.getFullYear() !== end.getFullYear()) {
+    secondary = toLocalDigits(end.getFullYear());
+  } else if (start.getMonth() !== end.getMonth()) {
+    secondary = MONTH_NAMES[end.getMonth()];
+  } else if (d.daysInBucket !== undefined && d.daysInBucket < 30) {
+    // Defensive: today the 90-day period is a multiple of 30 so partial
+    // monthly buckets never render, but the path is here for parity
+    // with the weekly partial-bucket treatment.
+    secondary = `${toLocalDigits(d.daysInBucket)} أيام`;
+  }
+  return { primary, secondary };
+}
+function formatWeekLabel(
+  d: { date: string; weekStart?: string; daysInBucket?: number },
+  end: Date,
+): ChartLabel {
+  const start = d.weekStart ? new Date(d.weekStart) : end;
+  const primary = `${toLocalDigits(start.getDate())}-${toLocalDigits(end.getDate())}`;
+  let secondary: string | undefined;
+  if (start.getMonth() !== end.getMonth()) {
+    secondary = MONTH_NAMES[end.getMonth()];
+  } else if (d.daysInBucket !== undefined && d.daysInBucket < 7) {
+    secondary = `${toLocalDigits(d.daysInBucket)} أيام`;
+  }
+  return { primary, secondary };
+}

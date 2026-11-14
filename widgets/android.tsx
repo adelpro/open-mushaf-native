@@ -5,7 +5,6 @@
  * Layout should stay in sync with app/widget-preview.tsx.
  */
 'use no memo';
-import React from 'react';
 
 import {
   FlexWidget,
@@ -58,15 +57,7 @@ function buildRingSvg(params: {
   progressColor: string;
   label: string;
 }): string {
-  const {
-    size,
-    radius,
-    strokeWidth,
-    progress,
-    trackColor,
-    progressColor,
-    label,
-  } = params;
+  const { size, radius, progress } = params;
 
   const center = size / 2;
   // Android SVG text uses the baseline at y; offset slightly for visual centering.
@@ -74,38 +65,13 @@ function buildRingSvg(params: {
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
-  return `
-    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-      <circle
-        cx="${center}"
-        cy="${center}"
-        r="${radius}"
-        stroke="${trackColor}"
-        stroke-width="${strokeWidth}"
-        fill="none"
-      />
-      <circle
-        cx="${center}"
-        cy="${center}"
-        r="${radius}"
-        stroke="${progressColor}"
-        stroke-width="${strokeWidth}"
-        stroke-dasharray="${circumference}"
-        stroke-dashoffset="${strokeDashoffset}"
-        stroke-linecap="round"
-        fill="none"
-      />
-      <text
-        x="${center}"
-        y="${labelY}"
-        text-anchor="middle"
-        fill="${progressColor}"
-        font-size="16"
-        font-weight="700"
-        font-family="sans-serif"
-      >${label}</text>
-    </svg>
-  `;
+  return ringSvgMarkup({
+    ...params,
+    center,
+    labelY,
+    circumference,
+    strokeDashoffset,
+  });
 }
 
 export default function AndroidWidget({
@@ -116,40 +82,17 @@ export default function AndroidWidget({
   currentHizbNumber = 1,
   colorScheme = 'light',
 }: WidgetProps) {
-  const theme = colorScheme === 'dark' ? Colors.dark : Colors.light;
-  // Dark green primary has poor contrast on dark ivory; use primaryLight in dark mode.
-  const primaryColor = (
-    colorScheme === 'dark' ? theme.primaryLight : theme.primary
-  ) as HexColor;
-  const secondaryColor = theme.secondary as HexColor;
-  const bgColor = theme.ivory as HexColor;
+  const { primaryColor, secondaryColor, bgColor, trackColor } =
+    getWidgetPalette(colorScheme);
 
-  const trackColor = withHexAlpha(
-    secondaryColor,
-    colorScheme === 'dark' ? '55' : '66',
-  );
-
-  const safeGoal = Math.max(1, Number.isFinite(dailyGoal) ? dailyGoal : 1);
-  const safeCompleted = clamp(
-    Number.isFinite(dailyCompleted) ? dailyCompleted : 0,
-    0,
-    safeGoal,
-  );
-  const progress = clamp((safeCompleted / safeGoal) * 100, 0, 100);
-
-  const safePage = Math.max(1, Number.isFinite(currentPage) ? currentPage : 1);
-  const safeHizb = Math.max(
-    1,
-    Number.isFinite(currentHizbNumber) ? currentHizbNumber : 1,
-  );
-
-  // TODO: currentSurahNumber can arrive unvalidated from widget task data;
-  // clamp to integer in 1..114 before feeding surahToIconChar.
-  const safeSurah = Math.floor(
-    clamp(Number.isFinite(currentSurahNumber) ? currentSurahNumber : 1, 1, 114),
-  );
-
-  const compactWird = `${safeCompleted}/${safeGoal}`;
+  const { progress, safePage, safeHizb, safeSurah, compactWird } =
+    getWidgetProgress({
+      dailyGoal,
+      dailyCompleted,
+      currentPage,
+      currentHizbNumber,
+      currentSurahNumber,
+    });
 
   const svgString = buildRingSvg({
     size: RING_SIZE,
@@ -161,25 +104,8 @@ export default function AndroidWidget({
     label: `${Math.round(progress)}٪`,
   });
 
-  return (
-    <FlexWidget
-      style={{
-        height: 'match_parent',
-        width: 'match_parent',
-        flexDirection: 'column',
-        backgroundColor: bgColor,
-        borderRadius: 32,
-        borderWidth: 2,
-        borderColor: secondaryColor,
-        alignItems: 'center',
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        justifyContent: 'center',
-        overflow: 'hidden',
-      }}
-      clickAction="OPEN_APP"
-    >
-      {/* Header */}
+  function renderFlexWidget() {
+    return (
       <FlexWidget
         style={{
           flexDirection: 'row',
@@ -204,8 +130,107 @@ export default function AndroidWidget({
           style={{ marginHorizontal: 4, color: secondaryColor }}
         />
       </FlexWidget>
+    );
+  }
 
-      {/* Main row */}
+  function renderFlexWidget2() {
+    return (
+      <FlexWidget
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+        }}
+      >
+        <TextWidget
+          text={`الصفحة: ${safePage}`}
+          style={{
+            fontSize: 13,
+            color: primaryColor,
+          }}
+        />
+        <IconWidget
+          font="open_mushaf_icons"
+          size={14}
+          icon={'\uF002'}
+          style={{ marginHorizontal: 4, color: secondaryColor }}
+        />
+      </FlexWidget>
+    );
+  }
+
+  function renderFlexWidget3() {
+    return (
+      <FlexWidget
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+        }}
+      >
+        <TextWidget
+          text={`الحزب: ${safeHizb}`}
+          style={{
+            fontSize: 13,
+            color: primaryColor,
+          }}
+        />
+        <IconWidget
+          font="open_mushaf_icons"
+          size={14}
+          icon={'\uF3A5'}
+          style={{ marginHorizontal: 4, color: secondaryColor }}
+        />
+      </FlexWidget>
+    );
+  }
+
+  function renderFlexWidget4() {
+    function renderFlexWidget5() {
+      return (
+        <FlexWidget
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <TextWidget
+            text={`الورد: ${compactWird}`}
+            style={{
+              fontSize: 13,
+              color: primaryColor,
+            }}
+          />
+          <IconWidget
+            font="open_mushaf_icons"
+            size={14}
+            icon={'\uF259'}
+            style={{ marginHorizontal: 4, color: secondaryColor }}
+          />
+        </FlexWidget>
+      );
+    }
+    return (
+      <FlexWidget
+        style={{
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'flex-end',
+        }}
+      >
+        {renderFlexWidget2()}
+
+        {renderFlexWidget3()}
+
+        {renderFlexWidget5()}
+      </FlexWidget>
+    );
+  }
+
+  function renderFlexWidget6() {
+    return (
       <FlexWidget
         style={{
           flexDirection: 'row',
@@ -239,81 +264,150 @@ export default function AndroidWidget({
         />
 
         {/* Page / hizb / wird */}
-        <FlexWidget
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'flex-end',
-          }}
-        >
-          <FlexWidget
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-            }}
-          >
-            <TextWidget
-              text={`الصفحة: ${safePage}`}
-              style={{
-                fontSize: 13,
-                color: primaryColor,
-              }}
-            />
-            <IconWidget
-              font="open_mushaf_icons"
-              size={14}
-              icon={'\uF002'}
-              style={{ marginHorizontal: 4, color: secondaryColor }}
-            />
-          </FlexWidget>
-
-          <FlexWidget
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-            }}
-          >
-            <TextWidget
-              text={`الحزب: ${safeHizb}`}
-              style={{
-                fontSize: 13,
-                color: primaryColor,
-              }}
-            />
-            <IconWidget
-              font="open_mushaf_icons"
-              size={14}
-              icon={'\uF3A5'}
-              style={{ marginHorizontal: 4, color: secondaryColor }}
-            />
-          </FlexWidget>
-
-          <FlexWidget
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-            }}
-          >
-            <TextWidget
-              text={`الورد: ${compactWird}`}
-              style={{
-                fontSize: 13,
-                color: primaryColor,
-              }}
-            />
-            <IconWidget
-              font="open_mushaf_icons"
-              size={14}
-              icon={'\uF259'}
-              style={{ marginHorizontal: 4, color: secondaryColor }}
-            />
-          </FlexWidget>
-        </FlexWidget>
+        {renderFlexWidget4()}
       </FlexWidget>
-    </FlexWidget>
+    );
+  }
+  function renderScreenContent() {
+    return (
+      <FlexWidget
+        style={{
+          height: 'match_parent',
+          width: 'match_parent',
+          flexDirection: 'column',
+          backgroundColor: bgColor,
+          borderRadius: 32,
+          borderWidth: 2,
+          borderColor: secondaryColor,
+          alignItems: 'center',
+          paddingHorizontal: 12,
+          paddingVertical: 8,
+          justifyContent: 'center',
+          overflow: 'hidden',
+        }}
+        clickAction="OPEN_APP"
+      >
+        {/* Header */}
+        {renderFlexWidget()}
+
+        {/* Main row */}
+        {renderFlexWidget6()}
+      </FlexWidget>
+    );
+  }
+  return renderScreenContent();
+}
+
+function ringSvgMarkup(
+  params: Parameters<typeof buildRingSvg>[0] & {
+    center: number;
+    labelY: number;
+    circumference: number;
+    strokeDashoffset: number;
+  },
+) {
+  const {
+    size,
+    radius,
+    strokeWidth,
+    trackColor,
+    progressColor,
+    center,
+    circumference,
+    strokeDashoffset,
+  } = params;
+  return `
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      <circle
+        cx="${center}"
+        cy="${center}"
+        r="${radius}"
+        stroke="${trackColor}"
+        stroke-width="${strokeWidth}"
+        fill="none"
+      />
+      <circle
+        cx="${center}"
+        cy="${center}"
+        r="${radius}"
+        stroke="${progressColor}"
+        stroke-width="${strokeWidth}"
+        stroke-dasharray="${circumference}"
+        stroke-dashoffset="${strokeDashoffset}"
+        stroke-linecap="round"
+        fill="none"
+      />
+      ${ringSvgLabel(params)}
+    </svg>
+  `;
+}
+
+function getWidgetPalette(colorScheme: 'light' | 'dark') {
+  const theme = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  // Dark green primary has poor contrast on dark ivory; use primaryLight in dark mode.
+  const primaryColor = (
+    colorScheme === 'dark' ? theme.primaryLight : theme.primary
+  ) as HexColor;
+  const secondaryColor = theme.secondary as HexColor;
+  const bgColor = theme.ivory as HexColor;
+
+  const trackColor = withHexAlpha(
+    secondaryColor,
+    colorScheme === 'dark' ? '55' : '66',
   );
+
+  return { primaryColor, secondaryColor, bgColor, trackColor };
+}
+function getWidgetProgress(params: Required<Omit<WidgetProps, 'colorScheme'>>) {
+  const {
+    dailyGoal,
+    dailyCompleted,
+    currentPage,
+    currentHizbNumber,
+    currentSurahNumber,
+  } = params;
+  const safeGoal = Math.max(1, Number.isFinite(dailyGoal) ? dailyGoal : 1);
+  const safeCompleted = clamp(
+    Number.isFinite(dailyCompleted) ? dailyCompleted : 0,
+    0,
+    safeGoal,
+  );
+  const progress = clamp((safeCompleted / safeGoal) * 100, 0, 100);
+
+  const safePage = Math.max(1, Number.isFinite(currentPage) ? currentPage : 1);
+  const safeHizb = Math.max(
+    1,
+    Number.isFinite(currentHizbNumber) ? currentHizbNumber : 1,
+  );
+
+  // TODO: currentSurahNumber can arrive unvalidated from widget task data;
+  // clamp to integer in 1..114 before feeding surahToIconChar.
+  const safeSurah = Math.floor(
+    clamp(Number.isFinite(currentSurahNumber) ? currentSurahNumber : 1, 1, 114),
+  );
+
+  const compactWird = `${safeCompleted}/${safeGoal}`;
+
+  return {
+    safeGoal,
+    safeCompleted,
+    progress,
+    safePage,
+    safeHizb,
+    safeSurah,
+    compactWird,
+  };
+}
+
+function ringSvgLabel(params: Parameters<typeof ringSvgMarkup>[0]) {
+  const { center, labelY, progressColor, label } = params;
+  return `      <text
+        x="${center}"
+        y="${labelY}"
+        text-anchor="middle"
+        fill="${progressColor}"
+        font-size="16"
+        font-weight="700"
+        font-family="sans-serif"
+      >${label}</text>`;
 }

@@ -40,31 +40,7 @@ export function useDailyTrackerReset() {
           date: tracker.date,
         };
 
-        const existingIndex = historyData.findIndex(
-          (record) => record.date === tracker.date,
-        );
-
-        let updatedHistory: DailyReadingRecord[];
-
-        if (existingIndex !== -1) {
-          updatedHistory = [
-            ...historyData.slice(0, existingIndex),
-            {
-              ...entry,
-              hizbsCompleted: Math.max(
-                entry.hizbsCompleted,
-                historyData[existingIndex].hizbsCompleted,
-              ),
-              pagesRead: Math.max(
-                entry.pagesRead,
-                historyData[existingIndex].pagesRead,
-              ),
-            },
-            ...historyData.slice(existingIndex + 1),
-          ];
-        } else {
-          updatedHistory = [...historyData, entry];
-        }
+        const updatedHistory = mergeReadingHistory(historyData, entry);
 
         const maxDays = CHART_PERIODS[CHART_PERIODS.length - 1].days;
         setHistory(updatedHistory.slice(-maxDays));
@@ -98,4 +74,37 @@ export function useDailyTrackerReset() {
   useEffect(() => {
     handleReset();
   }, [handleReset]);
+}
+
+function mergeReadingHistory(
+  historyData: DailyReadingRecord[],
+  entry: DailyReadingRecord,
+): DailyReadingRecord[] {
+  const existingIndex = historyData.findIndex(
+    (record) => record.date === entry.date,
+  );
+
+  let updatedHistory: DailyReadingRecord[];
+
+  if (existingIndex !== -1) {
+    updatedHistory = [
+      ...historyData.slice(0, existingIndex),
+      {
+        ...entry,
+        hizbsCompleted: Math.max(
+          entry.hizbsCompleted,
+          historyData[existingIndex].hizbsCompleted,
+        ),
+        pagesRead: Math.max(
+          entry.pagesRead,
+          historyData[existingIndex].pagesRead,
+        ),
+      },
+      ...historyData.slice(existingIndex + 1),
+    ];
+  } else {
+    updatedHistory = [...historyData, entry];
+  }
+
+  return updatedHistory;
 }

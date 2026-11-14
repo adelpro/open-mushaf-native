@@ -91,13 +91,16 @@ export function useTafseerDownload() {
         if (result.bytes <= 0) throw new Error('Tafseer persistence failed');
         throwIfAborted(abort.signal);
         setDownloaded((prev) => (prev.includes(key) ? prev : [...prev, key]));
-        const final: DownloadProgress = {
-          downloaded: 1,
-          total: 1,
-          status: 'done',
-        };
-        setProgressMap((prev) => ({ ...prev, [id]: final }));
+        setProgressMap((prev) => ({ ...prev, [id]: completedProgress() }));
       } catch (err) {
+        if (wasCached && isDownloadCancelled(abort.signal)) {
+          setDownloaded((prev) => (prev.includes(key) ? prev : [...prev, key]));
+          setProgressMap((prev) => ({
+            ...prev,
+            [id]: { downloaded: 1, total: 1, status: 'done' },
+          }));
+          throw err;
+        }
         setDownloaded((prev) => prev.filter((value) => value !== key));
         if (isDownloadCancelled(abort.signal)) {
           if (!wasCached) {
@@ -146,4 +149,8 @@ export function useTafseerDownload() {
     progress: progressMap,
     deleteTafseer: useCallback((key: TafseerKey) => deleteTafseer(key), []),
   };
+}
+
+function completedProgress(): DownloadProgress {
+  return { downloaded: 1, total: 1, status: 'done' };
 }

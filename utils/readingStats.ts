@@ -72,8 +72,8 @@ export function buildDailyRecords(
     const hasRecord = recordedDates.has(dateStr);
     result.push({
       date: dateStr,
-      hizbsCompleted: hasRecord ? (hizbMap.get(dateStr) ?? 0) : 0,
-      pagesRead: hasRecord ? (pagesMap.get(dateStr) ?? 0) : 0,
+      hizbsCompleted: hizbMap.get(dateStr) ?? 0,
+      pagesRead: pagesMap.get(dateStr) ?? 0,
       hasRecord,
     });
   }
